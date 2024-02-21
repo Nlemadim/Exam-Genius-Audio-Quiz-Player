@@ -45,6 +45,31 @@ class AudioQuizPackage: ObservableObject, Identifiable {
         self.performance = []
     }
     
+    
+    init(id: UUID, name: String, imageUrl: String) {
+        self.id = id
+        self.name = name
+        self.acronym = ""
+        self.about = ""
+        self.imageUrl = imageUrl
+        self.category = ""
+        self.questions = []
+        self.topics = []
+        self.performance = []
+    }
+    
+    init(id: UUID, name: String, imageUrl: String, category: String) {
+        self.id = id
+        self.name = name
+        self.acronym = ""
+        self.about = ""
+        self.imageUrl = imageUrl
+        self.category = category
+        self.questions = []
+        self.topics = []
+        self.performance = []
+    }
+    
     init(id: UUID, name: String, about: String, imageUrl: String, category: String) {
         self.id = id
         self.name = name
