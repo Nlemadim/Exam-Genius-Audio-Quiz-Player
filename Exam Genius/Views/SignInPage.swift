@@ -107,11 +107,10 @@ struct SignInPage: View {
     }
     
     private func signInProcess() {
-        UserDefaults.standard.set(true, forKey: "isSignedIn")
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isSigningIn.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                UserDefaults.standard.set(true, forKey: "isSignedIn")
                 user.isSignedIn = true
                 isSigningIn.toggle()
                 appState.currentState = .signedIn

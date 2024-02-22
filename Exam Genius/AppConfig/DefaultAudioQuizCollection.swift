@@ -247,7 +247,24 @@ enum DefaultAudioQuizCollection: String, CaseIterable {
 
 extension DefaultAudioQuizCollection {
     static var allCases: [DefaultAudioQuizCollection] {
-        return [.californiaBar, .mcat, .usmleStep1, .cpaExam, .nclexRN, .pmpExam, .lsat, .comptiaAPlus, .peExam, .cfpExam, .baristaCertification, .realEstateLicensingExam, .architectRegistrationExam, .series7Exam, .gre, .toefl, .gmat, .cfa, .ccna, .bptc, .mccqe, .cehExam, .cisspExam, .csmExam, .cssgbExam, .cisaExam, .nce, .ncmhce, .swiftProgrammingLanguage]
+        
+        return [
+            .californiaBar, .mcat, .usmleStep1, .cpaExam, .nclexRN,
+            .pmpExam, .lsat, .comptiaAPlus, .peExam, .cfpExam,
+            .baristaCertification, .realEstateLicensingExam, .architectRegistrationExam,
+            .series7Exam, .gre, .toefl, .gmat, .cfa, .ccna, .bptc,
+            .mccqe, .cehExam, .cisspExam, .csmExam, .cssgbExam, .cisaExam,
+            .nce, .ncmhce, .swiftProgrammingLanguage, .actExam, .satExam,
+            .apExams, .datExam, .oatExam, .pcateExam, .vetTec,
+            .praxisExam, .feExam, .seExam, .itilCertification, .prince2Certification,
+            .sapCertification, .awsCertifiedSolutionsArchitect, .googleCloudCertified, .azureFundamentals,
+            .cybersecurityAnalystCySA, .networkPlus, .securityPlus, .linuxProfessionalInstituteCertification,
+            .certifiedCloudSecurityProfessional, .projectManagementProfessional, .certifiedSupplyChainProfessional,
+            .certifiedProductionAndInventoryManagement, .certifiedHealthcareFinancialProfessional, .certifiedManagementAccountant,
+            .certifiedPublicAccountant, .certifiedInternalAuditor, .certifiedFraudExaminer, .informationTechnologyInfrastructureLibrary,
+            .sixSigmaCertification, .tableauDesktopSpecialist, .privacyEngineering, .cloudComputing,
+            .usCitizenship, .uiUxDesign, .driversLicense, .kotlin
+        ]
     }
     
     static var freeCollection: [DefaultAudioQuizCollection] {
