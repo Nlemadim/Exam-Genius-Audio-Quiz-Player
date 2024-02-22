@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B2E96862B87C852001D8D7B /* BuildButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96852B87C852001D8D7B /* BuildButton.swift */; };
+		0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96872B87C85A001D8D7B /* UIExtensions.swift */; };
+		0B2E968A2B87CA0C001D8D7B /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96892B87CA0C001D8D7B /* CustomNavBar.swift */; };
+		0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */; };
 		0BB9DE052B865831004F848A /* AudioQuizPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */; };
 		0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE012B865830004F848A /* LaunchPage.swift */; };
 		0BB9DE072B865831004F848A /* SignInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE022B865830004F848A /* SignInPage.swift */; };
@@ -22,7 +26,6 @@
 		0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE162B865885004F848A /* AudioQuizCollectionView.swift */; };
 		0BB9DE282B8659DC004F848A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB9DE272B8659DC004F848A /* Assets.xcassets */; };
 		0BB9DE2C2B865E10004F848A /* DefaultAudioQuizCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE2B2B865E0F004F848A /* DefaultAudioQuizCollection.swift */; };
-		0BB9DE302B867B81004F848A /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE2F2B867B81004F848A /* UIExtensions.swift */; };
 		0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFAD2B86563E00E9B7A9 /* Exam_GeniusApp.swift */; };
 		0BBCBFB02B86563E00E9B7A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFAF2B86563E00E9B7A9 /* ContentView.swift */; };
 		0BBCBFB22B86563E00E9B7A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFB12B86563E00E9B7A9 /* Item.swift */; };
@@ -50,6 +53,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B2E96852B87C852001D8D7B /* BuildButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildButton.swift; sourceTree = "<group>"; };
+		0B2E96872B87C85A001D8D7B /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
+		0B2E96892B87CA0C001D8D7B /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
+		0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
 		0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQuizPlayerView.swift; sourceTree = "<group>"; };
 		0BB9DE012B865830004F848A /* LaunchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchPage.swift; sourceTree = "<group>"; };
 		0BB9DE022B865830004F848A /* SignInPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInPage.swift; sourceTree = "<group>"; };
@@ -65,7 +72,6 @@
 		0BB9DE162B865885004F848A /* AudioQuizCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQuizCollectionView.swift; sourceTree = "<group>"; };
 		0BB9DE272B8659DC004F848A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BB9DE2B2B865E0F004F848A /* DefaultAudioQuizCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAudioQuizCollection.swift; sourceTree = "<group>"; };
-		0BB9DE2F2B867B81004F848A /* UIExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		0BBCBFAA2B86563D00E9B7A9 /* Exam Genius.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Exam Genius.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BBCBFAD2B86563E00E9B7A9 /* Exam_GeniusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exam_GeniusApp.swift; sourceTree = "<group>"; };
 		0BBCBFAF2B86563E00E9B7A9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -139,6 +145,7 @@
 			children = (
 				0BB9DE122B865885004F848A /* AppState.swift */,
 				0BB9DE2B2B865E0F004F848A /* DefaultAudioQuizCollection.swift */,
+				0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */,
 			);
 			path = AppConfig;
 			sourceTree = "<group>";
@@ -156,7 +163,9 @@
 		0BB9DE172B865885004F848A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0BB9DE2F2B867B81004F848A /* UIExtensions.swift */,
+				0B2E96872B87C85A001D8D7B /* UIExtensions.swift */,
+				0B2E96852B87C852001D8D7B /* BuildButton.swift */,
+				0B2E96892B87CA0C001D8D7B /* CustomNavBar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -355,11 +364,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BB9DE302B867B81004F848A /* UIExtensions.swift in Sources */,
 				0BB9DE082B865831004F848A /* LandingPage.swift in Sources */,
 				0BBCBFB02B86563E00E9B7A9 /* ContentView.swift in Sources */,
+				0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */,
+				0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */,
 				0BB9DE2C2B865E10004F848A /* DefaultAudioQuizCollection.swift in Sources */,
 				0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */,
+				0B2E96862B87C852001D8D7B /* BuildButton.swift in Sources */,
 				0BB9DE202B865885004F848A /* TabIcons.swift in Sources */,
 				0BB9DE1D2B865885004F848A /* QuestionModel.swift in Sources */,
 				0BB9DE1C2B865885004F848A /* DownloadedAudioQuiz.swift in Sources */,
@@ -368,6 +379,7 @@
 				0BBCBFB22B86563E00E9B7A9 /* Item.swift in Sources */,
 				0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
+				0B2E968A2B87CA0C001D8D7B /* CustomNavBar.swift in Sources */,
 				0BB9DE1A2B865885004F848A /* AudioQuizPackage.swift in Sources */,
 				0BB9DE1E2B865885004F848A /* AppState.swift in Sources */,
 				0BB9DE1F2B865885004F848A /* AudioQuizPackageView.swift in Sources */,

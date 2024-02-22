@@ -94,5 +94,45 @@ class AudioQuizPackage: ObservableObject, Identifiable {
         self.performance = performance
     }
     
+    // Custom initializer from ExamDetails
+    convenience init(from examDetails: ExamDetails) {
+        self.init(
+            id: UUID(), name: examDetails.name,
+            acronym: examDetails.acronym,
+            about: examDetails.about,
+            imageUrl: examDetails.image,
+            category: examDetails.category.rawValue,
+            topics: [],
+            questions: [],
+            performance: []
+        )
+    }
 }
+
+enum ExamCategory: String, CaseIterable, Identifiable {
+    case science = "Science"
+    case technology = "Technology"
+    case healthcare = "Healthcare"
+    case legal = "Legal"
+    case business = "Business"
+    case itCertifications = "IT Certifications"
+    case professional = "Professional"
+    case language = "Language"
+    case engineering = "Engineering"
+    case finance = "Finance"
+    case miscellaneous = "Miscellaneous"
+    case education = "Educational"
+    
+    var id: String { self.rawValue }
+}
+
+struct ExamDetails: Identifiable {
+    let id = UUID()
+    let name: String
+    let acronym: String
+    let category: ExamCategory
+    let about: String
+    let image: String
+}
+
 

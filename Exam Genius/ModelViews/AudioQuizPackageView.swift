@@ -10,95 +10,69 @@ import SwiftUI
 struct AudioQuizPackageView: View {
     var quiz: AudioQuizPackage
     var downloadAction: () -> Void
-    var startAction: () -> Void
-    @State var isReadyToPlay: Bool = false
     
     var body: some View {
         ZStack {
-            
-            VStack(spacing: 5) {
-                if quiz.imageUrl.isEmpty {
-                    Image("IconImage") // Ensure this image is in your assets
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .cornerRadius(20)
-                        .overlay(
-                            VStack {
-                                Spacer()
-                                VStack {
-                                    HStack {
-                                        Text(quiz.name)
-                                            .font(.title3)
-                                            .fontWeight(.bold)
-                                        //.lineLimit(4, reservesSpace: false)
-                                            .foregroundStyle(.linearGradient(colors: [.primary, .primary.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                            .frame(alignment: .leading)
-                                        Spacer()
-                                    }
-                                    .padding()
-                                }
-                            }
-                        )
-                    
-                } else {
-                    Image(quiz.imageUrl)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .cornerRadius(30)
-                        .padding(.horizontal, 20)
-                        .overlay(
-                            VStack {
-                                Spacer()
-                                VStack {
-                                    HStack {
-                                        Text(quiz.name)
-                                            .font(.title3)
-                                            .fontWeight(.bold)
-                                        //.lineLimit(4, reservesSpace: false)
-                                            .foregroundStyle(.linearGradient(colors: [.primary, .primary.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                            .frame(alignment: .leading)
-                                        Spacer()
-                                    }
-                                    .padding(.horizontal, 5)
-                                
-                                    HStack {
-                                        Spacer()
-                                        Button(action: {
-                                            downloadAction()
-                                        }, label: {
-                                            Text( isReadyToPlay ? "Downloaded" : "Download")
-                                                .foregroundStyle(.white)
-                                            //.font(.caption)
-                                                .fontWeight(.semibold)
-                                                .frame(width: .widthPer(per: 0.3), height: .heightPer(per: 0.01))
-                                                .padding(.vertical)
-                                        })
-                                        .disabled(isReadyToPlay)
-                                        .background(!isReadyToPlay ? .teal.opacity(0.6) : .green)
-                                        .cornerRadius(10)
-                                        .shadow(radius: 6)
-                                        .padding(.horizontal)
-                                    }
-                                }
-                                .padding()
-                                .padding(.horizontal)
-                                .frame(maxWidth: .infinity)
-                                .cornerRadius(30)
-                                .background(Color.black.opacity(0.7))
-                                
-                                
-                            }
-                        )
+            VStack(alignment: .leading, spacing: 16) {
+                GeometryReader { geometry in
+                    if quiz.imageUrl.isEmpty {
+                        Image("IconImage")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    } else {
+                        Image(quiz.imageUrl)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    }
                 }
+                .frame(height: 300)
                 
+                VStack(alignment: .leading, spacing: 16) {
+                    audioLabel()
+                    
+                    HStack {
+                        Text(quiz.name)
+                            .font(.largeTitle)
+                            .bold()
+                    }
+                    Text(aboutQuiz)
+                        .font(.subheadline)
+                    
+                    BuildButton {
+                        downloadAction()
+                    }
+                }
+                .padding(.horizontal, 30)
             }
-            .padding(.all, 20.0)
-            .shadow(radius: 10, x: 0, y: 10)
-            .padding(.horizontal, 20)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [.themePurpleLight, .black]), startPoint: .top, endPoint: .bottom)
+            )
+            .mask(RoundedRectangle(cornerRadius: 30, style: .continuous))
+            .padding(20)
             
         }
         .preferredColorScheme(.dark)
-        
+    }
+    
+    var aboutQuiz: String {
+        quiz.about.isEmpty ?
+        "An audio quiz focusing on Kotlin programming language concepts. At least 500 questions from more than 100 topics before refinement." : quiz.about
+    }
+    
+    func audioLabel() -> some View {
+        return  HStack {
+            Text("Audio Quiz")
+                .font(.footnote)
+                .fontWeight(.semibold)
+            Image(systemName: "headphones")
+                .font(.footnote)
+                .fontWeight(.semibold)
+        }
     }
 }
 

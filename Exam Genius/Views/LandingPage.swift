@@ -19,47 +19,30 @@ struct LandingPage: View {
     @State var topFree: [AudioQuizPackage] = []
     @State var generalEducation: [AudioQuizPackage] = []
     
+    let categories = ["One", "Two", "Three", "Four", "Five"]
+    
     @State private var selectedTab = 0
-    let colors: [Color] = [.red, .green, .blue, .orange, .purple]
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 ZStack {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        VStack(spacing: 0) {
-                            HStack {
-                                Text("Featured")
-                                    .font(.title)
-                                    .padding(.leading)
-                                Spacer()
-                            }
-                            ForEach(audioQuizCollection, id: \.self) { quiz in
-                                AudioQuizPackageView(quiz: quiz, downloadAction: {}, startAction: {})
-                                    .frame(width: UIScreen.main.bounds.width * 0.9, height: 400)
-                                    .cornerRadius(30)
-                                    .shadow(radius: 5)
+                    VStack(spacing: 0) {
+                        CustomNavBar(categories: categories)
+                        
+                        // Content of your main view
+                        ScrollView(.vertical, showsIndicators: false) {
+                            VStack(spacing: 20) { // Added spacing between cards
+                                ForEach(audioQuizCollection, id: \.self) { quiz in
+                                    AudioQuizPackageView(quiz: quiz) {
+                                        
+                                    }
+                                }
                             }
                         }
-                        .padding()
-                    }
-                    .scrollTargetBehavior(.viewAligned)
-                    .scrollTargetLayout()
-                    .containerRelativeFrame(.vertical)
-                }
-
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundStyle(.teal)
-                            .padding(.bottom, 10)
-                    }
-                    
-                    ToolbarItem(placement: .topBarLeading) {
-                            Text("Home")
-                                .fontWeight(.bold)
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollTargetLayout()
+                        .containerRelativeFrame(.vertical)
                     }
                 }
                 .task {
@@ -77,16 +60,16 @@ struct LandingPage: View {
             .tag(0)
             
             View2()
-            .tabItem {
-                TabIcons(title: "Explore", icon: "magnifyingglass")
-            }
-            .tag(1)
+                .tabItem {
+                    TabIcons(title: "Explore", icon: "magnifyingglass")
+                }
+                .tag(1)
             
             View2()
-            .tabItem {
-                TabIcons(title: "Settings", icon: "slider.horizontal.3")
-            }
-            .tag(1)
+                .tabItem {
+                    TabIcons(title: "Settings", icon: "slider.horizontal.3")
+                }
+                .tag(1)
             
         }
         .tint(.teal)

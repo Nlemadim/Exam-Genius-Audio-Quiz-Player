@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UIKit
 
 extension CGFloat {
     static var screenWidth: Double {
@@ -26,13 +27,7 @@ extension CGFloat {
         return screenWidth * per;
         //screenWidth: 375 * 0.5
     }
-    
-//    static var topInsets: Double {
-//        if let keyWindow = UIApplication.shared.keyWindow {
-//            return keyWindow.safeAreaInsets.top
-//        }
-//        return 0.0
-//    }
+
 }
 
 extension UIImage {
@@ -54,3 +49,18 @@ extension UIImage {
         //.background(Color(image.dominantColor() ?? .gray)) // Fallback to gray if nil
     }
 }
+
+extension View {
+    func dynamicExactGradientBackground(startColor: Color, endColor: Color) -> some View {
+        let startPoint = UnitPoint(x: 0.49999998837676157, y: 2.9479518284275417e-15)
+        let endPoint = UnitPoint(x: 0.4999999443689973, y: 0.9363635917143408)
+        
+        return self.background(LinearGradient(gradient: Gradient(colors: [startColor, endColor]),
+                                              startPoint: startPoint,
+                                              endPoint: endPoint))
+            
+    }
+}
+
+
+
