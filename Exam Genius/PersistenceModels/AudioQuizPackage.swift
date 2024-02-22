@@ -101,7 +101,7 @@ class AudioQuizPackage: ObservableObject, Identifiable {
             acronym: examDetails.acronym,
             about: examDetails.about,
             imageUrl: examDetails.image,
-            category: examDetails.category.rawValue,
+            category: "",
             topics: [],
             questions: [],
             performance: []

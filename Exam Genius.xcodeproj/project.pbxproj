@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		0B2E96862B87C852001D8D7B /* BuildButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96852B87C852001D8D7B /* BuildButton.swift */; };
 		0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96872B87C85A001D8D7B /* UIExtensions.swift */; };
-		0B2E968A2B87CA0C001D8D7B /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96892B87CA0C001D8D7B /* CustomNavBar.swift */; };
 		0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */; };
+		0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96902B87F1CC001D8D7B /* ColorGenerator.swift */; };
 		0BB9DE052B865831004F848A /* AudioQuizPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */; };
 		0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE012B865830004F848A /* LaunchPage.swift */; };
 		0BB9DE072B865831004F848A /* SignInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE022B865830004F848A /* SignInPage.swift */; };
@@ -55,8 +55,8 @@
 /* Begin PBXFileReference section */
 		0B2E96852B87C852001D8D7B /* BuildButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildButton.swift; sourceTree = "<group>"; };
 		0B2E96872B87C85A001D8D7B /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
-		0B2E96892B87CA0C001D8D7B /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
 		0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
+		0B2E96902B87F1CC001D8D7B /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
 		0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQuizPlayerView.swift; sourceTree = "<group>"; };
 		0BB9DE012B865830004F848A /* LaunchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchPage.swift; sourceTree = "<group>"; };
 		0BB9DE022B865830004F848A /* SignInPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInPage.swift; sourceTree = "<group>"; };
@@ -110,6 +110,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B2E968D2B87F183001D8D7B /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				0B2E968F2B87F1AF001D8D7B /* Helpers */,
+				0B2E968E2B87F198001D8D7B /* Components */,
+				0BB9DE172B865885004F848A /* Extensions */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		0B2E968E2B87F198001D8D7B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0B2E96852B87C852001D8D7B /* BuildButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		0B2E968F2B87F1AF001D8D7B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0B2E96902B87F1CC001D8D7B /* ColorGenerator.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		0BB9DDFF2B865830004F848A /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,8 +190,6 @@
 			isa = PBXGroup;
 			children = (
 				0B2E96872B87C85A001D8D7B /* UIExtensions.swift */,
-				0B2E96852B87C852001D8D7B /* BuildButton.swift */,
-				0B2E96892B87CA0C001D8D7B /* CustomNavBar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -193,10 +217,10 @@
 		0BBCBFAC2B86563E00E9B7A9 /* Exam Genius */ = {
 			isa = PBXGroup;
 			children = (
+				0B2E968D2B87F183001D8D7B /* Utilities */,
 				0BBCBFAD2B86563E00E9B7A9 /* Exam_GeniusApp.swift */,
 				0BBCBFAF2B86563E00E9B7A9 /* ContentView.swift */,
 				0BB9DE112B865885004F848A /* AppConfig */,
-				0BB9DE172B865885004F848A /* Extensions */,
 				0BB9DE132B865885004F848A /* ModelViews */,
 				0BB9DE0C2B865885004F848A /* PersistenceModels */,
 				0BB9DE0A2B865885004F848A /* User */,
@@ -376,10 +400,10 @@
 				0BB9DE1C2B865885004F848A /* DownloadedAudioQuiz.swift in Sources */,
 				0BB9DE072B865831004F848A /* SignInPage.swift in Sources */,
 				0BB9DE192B865885004F848A /* User.swift in Sources */,
+				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
 				0BBCBFB22B86563E00E9B7A9 /* Item.swift in Sources */,
 				0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
-				0B2E968A2B87CA0C001D8D7B /* CustomNavBar.swift in Sources */,
 				0BB9DE1A2B865885004F848A /* AudioQuizPackage.swift in Sources */,
 				0BB9DE1E2B865885004F848A /* AppState.swift in Sources */,
 				0BB9DE1F2B865885004F848A /* AudioQuizPackageView.swift in Sources */,

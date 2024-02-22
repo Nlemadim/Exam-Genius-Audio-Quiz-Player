@@ -19,29 +19,28 @@ struct LandingPage: View {
     @State var topFree: [AudioQuizPackage] = []
     @State var generalEducation: [AudioQuizPackage] = []
     
-    let categories = ["One", "Two", "Three", "Four", "Five"]
+    let categories = ExamCategory.allCases
     
     @State private var selectedTab = 0
+    @State var selectedCategory: ExamCategory?
     
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 ZStack {
                     VStack(spacing: 0) {
-                        CustomNavBar(categories: categories)
+                        CustomNavBarView(categories: categories, selectedCategory: $selectedCategory)
                         
                         // Content of your main view
                         ScrollView(.vertical, showsIndicators: false) {
-                            VStack(spacing: 20) { // Added spacing between cards
-                                ForEach(audioQuizCollection, id: \.self) { quiz in
+                            VStack(spacing: 8) {
+                                ForEach(audioQuizCollection.filter { selectedCategory == nil || $0.category == selectedCategory?.rawValue }, id: \.self) { quiz in
                                     AudioQuizPackageView(quiz: quiz) {
-                                        
+                                        // Handle selection or action
                                     }
                                 }
                             }
                         }
-                        .scrollTargetBehavior(.viewAligned)
-                        .scrollTargetLayout()
                         .containerRelativeFrame(.vertical)
                     }
                 }
@@ -50,7 +49,7 @@ struct LandingPage: View {
                 }
                 .background(
                     Image("Logo")
-                        .offset(x: 230, y: -100)
+                        //.offset(x: 230, y: -100)
                         .blur(radius: 50)
                 )
             }
@@ -78,19 +77,59 @@ struct LandingPage: View {
         }
     }
     
+    @ViewBuilder
+    private func CustomNavBarView(categories: [ExamCategory], selectedCategory: Binding<ExamCategory?>) -> some View {
+        HStack {
+            Spacer()
+            // Profile picture
+            Image(systemName: "person.crop.circle.fill")
+                .resizable()
+                .frame(width: 36, height: 36)
+                .foregroundColor(.teal)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(categories, id: \.self) { category in
+                        Button(action: {
+                            selectedCategory.wrappedValue = category
+                        }) {
+                            Text(category.rawValue)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal)
+                                .padding(.vertical, 8)
+                                .background(selectedCategory.wrappedValue == category ? Color.teal : Color.gray.opacity(0.2))
+                                .foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
+                                .cornerRadius(18)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.all, 20.0)
+                
+            }
+            .scrollTargetBehavior(.viewAligned)
+            .scrollTargetLayout()
+            
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+        .padding(.top)
+        .background(Color.black)
+    }
+    
     func loadDefaultCollection() async {
         guard audioQuizCollection.isEmpty else { return }
-        let collection = DefaultAudioQuizCollection.allCases
-        collection.forEach { package in
-            let newPackage = AudioQuizPackage(id: UUID(), name: package.rawValue, imageUrl: package.image, category: package.category)
+        
+        let collection = DefaultDatabase().getAllExamDetails()
+        collection.forEach { examDetail in
+            
+            let newPackage = AudioQuizPackage(from: examDetail)
+            
             modelContext.insert(newPackage)
             try! modelContext.save()
         }
-        
-        loadTopPicks()
-        loadFreeCollection()
-        loadGeneralEduction()
     }
+    
     
     private func loadTopPicks() {
         let topPickCollection = DefaultAudioQuizCollection.topPicks.map { $0.rawValue }

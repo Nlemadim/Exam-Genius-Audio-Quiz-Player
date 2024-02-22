@@ -10,6 +10,7 @@ import SwiftUI
 struct AudioQuizPackageView: View {
     var quiz: AudioQuizPackage
     var downloadAction: () -> Void
+    @StateObject private var generator = ColorGenerator()
     
     var body: some View {
         ZStack {
@@ -36,24 +37,33 @@ struct AudioQuizPackageView: View {
                     
                     HStack {
                         Text(quiz.name)
-                            .font(.largeTitle)
+                            .font(.title)
+                            .lineLimit(3)
                             .bold()
                     }
                     Text(aboutQuiz)
                         .font(.subheadline)
                     
-                    BuildButton {
-                        downloadAction()
+                    HStack {
+                        Spacer()
+                        BuildButton {
+                            downloadAction()
+                        }
                     }
+                    .padding()
+                    .padding(.horizontal, 8)
                 }
                 .padding(.horizontal, 30)
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .background(
-                LinearGradient(gradient: Gradient(colors: [.themePurpleLight, .black]), startPoint: .top, endPoint: .bottom)
+                LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black]), startPoint: .top, endPoint: .bottom)
             )
             .mask(RoundedRectangle(cornerRadius: 30, style: .continuous))
             .padding(20)
+            .onAppear {
+                generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
+            }
             
         }
         .preferredColorScheme(.dark)
@@ -61,7 +71,7 @@ struct AudioQuizPackageView: View {
     
     var aboutQuiz: String {
         quiz.about.isEmpty ?
-        "An audio quiz focusing on Kotlin programming language concepts. At least 500 questions from more than 100 topics before refinement." : quiz.about
+        "An audio quiz of at least 500 questions from more than 100 topics." : quiz.about
     }
     
     func audioLabel() -> some View {
@@ -77,67 +87,8 @@ struct AudioQuizPackageView: View {
 }
 
 #Preview {
-    LandingPage()
+    let selectedCat: ExamCategory = .business
+    return LandingPage(selectedCategory: selectedCat)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
 }
-
-
-//#Preview {
-//    AudioQuizView(quiz: <#AudioQuizPackage#>, downloadAction: {}, startAction: {}, image: "CCNA-Exam", name: "CCNA (Cisco Certified Network Associate)Exam", isReadyToPlay: false, questions: [])
-//}
-
-struct AudioQuizView: View {
-    var quiz: AudioQuizPackage
-    var downloadAction: () -> Void
-    var startAction: () -> Void
-    @State var isReadyToPlay: Bool = false
-    
-    var body: some View {
-        ZStack {
-            // Determine the image to display based on availability of imageUrl
-            if quiz.imageUrl.isEmpty {
-                Image("IconImage") // Ensure this image is in your assets
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 180, height: 260)
-                    .cornerRadius(20)
-            } else {
-                Image(quiz.imageUrl)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 180, height: 260)
-                    .cornerRadius(20)
-            }
-            
-            // Overlay for name or loading indicator
-            VStack {
-                Spacer()
-                if quiz.name.isEmpty {
-                    // Display a ProgressView if the name is empty
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                } else {
-                    // Display the name if it's available
-                    Text(quiz.name)
-                        .font(.callout)
-                        .lineLimit(3, reservesSpace: true)
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding(.horizontal)
-                        .padding(5)
-                        .frame(maxWidth: .infinity)
-                        .background(Color.black.opacity(0.7))
-                }
-            }
-        }
-        .frame(width: 180, height: 260)
-        .cornerRadius(20)
-        .shadow(radius: 5)
-        .padding(.horizontal)
-    }
-}
-
-
-

@@ -9,7 +9,7 @@ import Foundation
 
 struct DefaultDatabase {
     
-    static func getAllExamDetails() -> [ExamDetails] {
+    func getAllExamDetails() -> [ExamDetails] {
         [
             ExamDetails(name: "California Bar Exam", acronym: "CBX", category: .legal, about: "A licensure exam for practicing law in California.", image: "BarExam-Exam"),
             ExamDetails(name: "Medical College Admission Test", acronym: "MCAT", category: .science, about: "A standardized exam for prospective medical students in the USA.", image: "MCAT-Exam"),
