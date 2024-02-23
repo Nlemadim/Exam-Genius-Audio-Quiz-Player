@@ -15,15 +15,17 @@ struct LandingPage: View {
     @EnvironmentObject var appState: AppState
     @State private var path = [AudioQuizPackage]()
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
-    @State var topPicks: [AudioQuizPackage] = []
-    @State var topFree: [AudioQuizPackage] = []
-    @State var generalEducation: [AudioQuizPackage] = []
     @State var conditions: [String] = ["Redeem code","Privacy", "Terms and Conditons"]
     
     let categories = ExamCategory.allCases
     
     @State private var selectedTab = 0
-    @State var selectedCategory: ExamCategory?
+    @State var selectedCategory: ExamCategory? {
+        didSet {
+            print("Category selected: \(selectedCategory?.rawValue ?? "None")")
+            // Trigger the loading or filtering of your views here
+        }
+    }
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -32,12 +34,14 @@ struct LandingPage: View {
                     VStack(spacing: 0) {
                         CustomNavBarView(categories: categories, selectedCategory: $selectedCategory)
                         
-                        // Content of your main view
+                        /// Content main view
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack(spacing: 8) {
-                                ForEach(audioQuizCollection.filter { selectedCategory == nil || $0.category == selectedCategory?.rawValue }, id: \.self) { quiz in
+                                ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
+                                    
+                                    
                                     AudioQuizPackageView(quiz: quiz) {
-                                        // Handle selection or action
+                                        //MARK: TODO - Handle selection or action
                                     }
                                 }
                                 
@@ -60,7 +64,7 @@ struct LandingPage: View {
                                                 }
                                             }
                                         }
-
+                                        
                                     )
                                     .padding(.bottom, 30)
                             }
@@ -115,6 +119,7 @@ struct LandingPage: View {
                     HStack {
                         ForEach(categories, id: \.self) { category in
                             Button(action: {
+                                print("Category selected: \(category.rawValue)")
                                 selectedCategory.wrappedValue = category
                             }) {
                                 Text(category.rawValue)
@@ -122,10 +127,11 @@ struct LandingPage: View {
                                     .fontWeight(.medium)
                                     .padding(.horizontal)
                                     .padding(.vertical, 8)
-                                    .background(selectedCategory.wrappedValue == category ? Color.teal : Color.gray.opacity(0.2))
+                                    .background(selectedCategory.wrappedValue == category ? Color.teal : .themePurpleLight.opacity(0.3))
                                     .foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
                                     .cornerRadius(18)
                             }
+                            .shadow(color: .teal, radius: 1)
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -141,8 +147,34 @@ struct LandingPage: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
         .padding(.top, 30.0)
-        .background(.ultraThinMaterial)
+        .background(.black)
     }
+    
+    
+    
+    var filteredAudioQuizCollection: [AudioQuizPackage] {
+        audioQuizCollection.filter { quiz in
+            guard let selectedCat = selectedCategory else {
+                return true // No category selected, show all quizzes
+            }
+            return quiz.category.contains { $0.rawValue == selectedCat.rawValue }
+        }
+    }
+    
+    func groupQuizzesByCombinedCategories(quizzes: [AudioQuizPackage], combinedCategories: [CombinedCategory]) -> [CombinedCategory: [AudioQuizPackage]] {
+        var groupedQuizzes = [CombinedCategory: [AudioQuizPackage]]()
+        
+        combinedCategories.forEach { combinedCategory in
+            let filteredQuizzes = quizzes.filter { quiz in
+                // Check if the quiz's categories intersect with the combined category's included categories
+                !quiz.category.filter { combinedCategory.includedCategories.contains($0) }.isEmpty
+            }
+            groupedQuizzes[combinedCategory] = filteredQuizzes
+        }
+        
+        return groupedQuizzes
+    }
+
     
     func loadDefaultCollection() async {
         guard audioQuizCollection.isEmpty else { return }
@@ -151,30 +183,11 @@ struct LandingPage: View {
         collection.forEach { examDetail in
             
             let newPackage = AudioQuizPackage(from: examDetail)
+            //print(newPackage.category)
             
             modelContext.insert(newPackage)
             try! modelContext.save()
         }
-    }
-    
-    
-    private func loadTopPicks() {
-        let topPickCollection = DefaultAudioQuizCollection.topPicks.map { $0.rawValue }
-        let filteredTopics = audioQuizCollection.filter { topPickCollection.contains($0.name)}
-        self.topPicks = filteredTopics
-    }
-    
-    private func loadFreeCollection() {
-        let topPickCollection = DefaultAudioQuizCollection.freeCollection.map { $0.rawValue }
-        let filteredTopics = audioQuizCollection.filter { topPickCollection.contains($0.name)}
-        self.topFree = filteredTopics
-    }
-    
-    private func loadGeneralEduction() {
-        let educationCollection = DefaultAudioQuizCollection.generalEducation.map { $0.rawValue }
-        let filteredTopics = audioQuizCollection.filter { educationCollection.contains($0.name)}
-        
-        self.generalEducation = filteredTopics
     }
 }
 
