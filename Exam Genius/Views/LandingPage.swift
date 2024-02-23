@@ -104,16 +104,16 @@ struct LandingPage: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.all, 20.0)
+                .padding(.all, 10.0)
                 
             }
             .scrollTargetBehavior(.viewAligned)
             .scrollTargetLayout()
-            
+        
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
-        .padding(.top)
+        .padding(.top, 30.0)
         .background(Color.black)
     }
     
