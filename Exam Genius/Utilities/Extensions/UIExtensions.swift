@@ -52,7 +52,12 @@ extension View {
         return self.background(LinearGradient(gradient: Gradient(colors: [startColor, endColor]),
                                               startPoint: startPoint,
                                               endPoint: endPoint))
-        
+    }
+    
+    func primaryTextStyleForeground() -> some View {
+        self.foregroundStyle(
+            LinearGradient(colors: [.primary, .primary.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
+        )
     }
 }
 

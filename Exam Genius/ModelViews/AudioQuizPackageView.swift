@@ -30,16 +30,18 @@ struct AudioQuizPackageView: View {
                             .clipped()
                     }
                 }
-                .frame(height: 300)
+                .frame(height: 200)
                 
                 VStack(alignment: .leading, spacing: 16) {
                     audioLabel()
                     
                     HStack {
                         Text(quiz.name)
-                            .font(.title)
+                            .font(.title2)
+                            .fontWeight(.heavy)
                             .lineLimit(3)
                             .bold()
+                            .primaryTextStyleForeground()
                     }
                     Text(aboutQuiz)
                         .font(.subheadline)
@@ -64,7 +66,6 @@ struct AudioQuizPackageView: View {
             .onAppear {
                 generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
             }
-            
         }
         .preferredColorScheme(.dark)
     }
@@ -76,7 +77,7 @@ struct AudioQuizPackageView: View {
     
     func audioLabel() -> some View {
         return  HStack {
-            Text("Audio Quiz")
+            Text(quiz.acronym.isEmpty ? "Audio quiz" : quiz.acronym)
                 .font(.footnote)
                 .fontWeight(.semibold)
             Image(systemName: "headphones")
@@ -86,9 +87,9 @@ struct AudioQuizPackageView: View {
     }
 }
 
-#Preview {
-    let selectedCat: ExamCategory = .business
-    return LandingPage(selectedCategory: selectedCat)
-        .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
-}
+//#Preview {
+//    let selectedCat: ExamCategory = .business
+//    return LandingPage(selectedCategory: selectedCat)
+//        .preferredColorScheme(.dark)
+//        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+//}

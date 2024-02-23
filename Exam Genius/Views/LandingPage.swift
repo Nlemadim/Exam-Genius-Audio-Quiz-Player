@@ -18,6 +18,7 @@ struct LandingPage: View {
     @State var topPicks: [AudioQuizPackage] = []
     @State var topFree: [AudioQuizPackage] = []
     @State var generalEducation: [AudioQuizPackage] = []
+    @State var conditions: [String] = ["Redeem code","Privacy", "Terms and Conditons"]
     
     let categories = ExamCategory.allCases
     
@@ -39,6 +40,29 @@ struct LandingPage: View {
                                         // Handle selection or action
                                     }
                                 }
+                                
+                                Rectangle()
+                                    .fill(Material.ultraThin)
+                                    .frame(height: 270)
+                                    .overlay(
+                                        VStack(spacing: 10) { // Control the spacing between the two links as needed
+                                            ForEach(conditions, id: \.self) { condition in
+                                                HStack {
+                                                    Spacer()
+                                                    NavigationLink(destination: Text(condition)) {
+                                                        Text(condition)
+                                                            .foregroundColor(.primary)
+                                                            .padding()
+                                                    }
+                                                    Spacer()
+                                                    Image(systemName: "chevron.right")
+                                                        .padding(.horizontal)
+                                                }
+                                            }
+                                        }
+
+                                    )
+                                    .padding(.bottom, 30)
                             }
                         }
                         .containerRelativeFrame(.vertical)
@@ -49,7 +73,6 @@ struct LandingPage: View {
                 }
                 .background(
                     Image("Logo")
-                        //.offset(x: 230, y: -100)
                         .blur(radius: 50)
                 )
             }
@@ -82,39 +105,43 @@ struct LandingPage: View {
         HStack {
             Spacer()
             // Profile picture
-            Image(systemName: "person.crop.circle.fill")
-                .resizable()
-                .frame(width: 36, height: 36)
-                .foregroundColor(.teal)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(categories, id: \.self) { category in
-                        Button(action: {
-                            selectedCategory.wrappedValue = category
-                        }) {
-                            Text(category.rawValue)
-                                .fontWeight(.semibold)
-                                .padding(.horizontal)
-                                .padding(.vertical, 8)
-                                .background(selectedCategory.wrappedValue == category ? Color.teal : Color.gray.opacity(0.2))
-                                .foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
-                                .cornerRadius(18)
+            HStack(alignment: .bottom) {
+                Image(systemName: "person.crop.circle.fill")
+                    .resizable()
+                    .frame(width: 36, height: 36)
+                    .foregroundColor(.teal)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(categories, id: \.self) { category in
+                            Button(action: {
+                                selectedCategory.wrappedValue = category
+                            }) {
+                                Text(category.rawValue)
+                                    .font(.callout)
+                                    .fontWeight(.medium)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 8)
+                                    .background(selectedCategory.wrappedValue == category ? Color.teal : Color.gray.opacity(0.2))
+                                    .foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
+                                    .cornerRadius(18)
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 25.0)
+                    .padding(.horizontal)
+                    
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.all, 10.0)
-                
+                .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
+                .scrollTargetLayout()
             }
-            .scrollTargetBehavior(.viewAligned)
-            .scrollTargetLayout()
-        
         }
+        .frame(height: 100)
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
         .padding(.top, 30.0)
-        .background(Color.black)
+        .background(.ultraThinMaterial)
     }
     
     func loadDefaultCollection() async {
