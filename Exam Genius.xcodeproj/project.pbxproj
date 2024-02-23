@@ -28,7 +28,6 @@
 		0BB9DE2C2B865E10004F848A /* DefaultAudioQuizCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE2B2B865E0F004F848A /* DefaultAudioQuizCollection.swift */; };
 		0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFAD2B86563E00E9B7A9 /* Exam_GeniusApp.swift */; };
 		0BBCBFB02B86563E00E9B7A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFAF2B86563E00E9B7A9 /* ContentView.swift */; };
-		0BBCBFB22B86563E00E9B7A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFB12B86563E00E9B7A9 /* Item.swift */; };
 		0BBCBFB82B86563F00E9B7A9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BBCBFB72B86563F00E9B7A9 /* Preview Assets.xcassets */; };
 		0BBCBFC22B86564000E9B7A9 /* Exam_GeniusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFC12B86564000E9B7A9 /* Exam_GeniusTests.swift */; };
 		0BBCBFCC2B86564000E9B7A9 /* Exam_GeniusUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBCBFCB2B86564000E9B7A9 /* Exam_GeniusUITests.swift */; };
@@ -75,7 +74,6 @@
 		0BBCBFAA2B86563D00E9B7A9 /* Exam Genius.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Exam Genius.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BBCBFAD2B86563E00E9B7A9 /* Exam_GeniusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exam_GeniusApp.swift; sourceTree = "<group>"; };
 		0BBCBFAF2B86563E00E9B7A9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		0BBCBFB12B86563E00E9B7A9 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		0BBCBFB52B86563F00E9B7A9 /* Exam_Genius.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Exam_Genius.entitlements; sourceTree = "<group>"; };
 		0BBCBFB72B86563F00E9B7A9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0BBCBFBD2B86564000E9B7A9 /* Exam GeniusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Exam GeniusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,15 +215,14 @@
 		0BBCBFAC2B86563E00E9B7A9 /* Exam Genius */ = {
 			isa = PBXGroup;
 			children = (
-				0B2E968D2B87F183001D8D7B /* Utilities */,
 				0BBCBFAD2B86563E00E9B7A9 /* Exam_GeniusApp.swift */,
 				0BBCBFAF2B86563E00E9B7A9 /* ContentView.swift */,
+				0B2E968D2B87F183001D8D7B /* Utilities */,
 				0BB9DE112B865885004F848A /* AppConfig */,
 				0BB9DE132B865885004F848A /* ModelViews */,
 				0BB9DE0C2B865885004F848A /* PersistenceModels */,
 				0BB9DE0A2B865885004F848A /* User */,
 				0BB9DDFF2B865830004F848A /* Views */,
-				0BBCBFB12B86563E00E9B7A9 /* Item.swift */,
 				0BBCBFB52B86563F00E9B7A9 /* Exam_Genius.entitlements */,
 				0BB9DE272B8659DC004F848A /* Assets.xcassets */,
 				0BBCBFB62B86563F00E9B7A9 /* Preview Content */,
@@ -401,7 +398,6 @@
 				0BB9DE072B865831004F848A /* SignInPage.swift in Sources */,
 				0BB9DE192B865885004F848A /* User.swift in Sources */,
 				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
-				0BBCBFB22B86563E00E9B7A9 /* Item.swift in Sources */,
 				0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
 				0BB9DE1A2B865885004F848A /* AudioQuizPackage.swift in Sources */,
