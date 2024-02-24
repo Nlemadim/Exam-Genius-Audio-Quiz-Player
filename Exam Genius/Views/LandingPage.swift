@@ -15,7 +15,7 @@ struct LandingPage: View {
     @EnvironmentObject var appState: AppState
     @State private var path = [AudioQuizPackage]()
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
-    @State var conditions: [String] = ["Redeem code","Privacy", "Terms and Conditons"]
+    @State var conditions: [String] = ["Redeem Gift Card or Code","Privacy", "Terms and Conditons"]
     
     let categories = ExamCategory.allCases
     
@@ -31,15 +31,13 @@ struct LandingPage: View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 ZStack {
-                    VStack(spacing: 0) {
+                    VStack(spacing: 5) {
                         CustomNavBarView(categories: categories, selectedCategory: $selectedCategory)
-                        
                         /// Content main view
                         ScrollView(.vertical, showsIndicators: false) {
+                                    
                             VStack(spacing: 8) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
-                                    
-                                    
                                     AudioQuizPackageView(quiz: quiz) {
                                         //MARK: TODO - Handle selection or action
                                     }
@@ -49,7 +47,7 @@ struct LandingPage: View {
                                     .fill(Material.ultraThin)
                                     .frame(height: 270)
                                     .overlay(
-                                        VStack(spacing: 10) { // Control the spacing between the two links as needed
+                                        VStack(spacing: 10) {  
                                             ForEach(conditions, id: \.self) { condition in
                                                 HStack {
                                                     Spacer()
@@ -64,7 +62,6 @@ struct LandingPage: View {
                                                 }
                                             }
                                         }
-                                        
                                     )
                                     .padding(.bottom, 30)
                             }
