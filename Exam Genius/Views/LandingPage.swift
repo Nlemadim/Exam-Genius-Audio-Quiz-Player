@@ -13,8 +13,14 @@ struct LandingPage: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
-    @State private var path = [AudioQuizPackage]()
+    var quizPlayer = QuizPlayer()
+    
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    @State private var path = [AudioQuizPackage]()
+    
+    @StateObject private var generator = ColorGenerator()
+    
+    @State private var expandSheet: Bool = false
     @State var conditions: [String] = ["Redeem Gift Card or Code","Privacy", "Terms and Conditons"]
     
     let categories = ExamCategory.allCases
@@ -26,6 +32,8 @@ struct LandingPage: View {
             // Trigger the loading or filtering of your views here
         }
     }
+    
+    @Namespace private var animation
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -39,6 +47,8 @@ struct LandingPage: View {
                             VStack(spacing: 8) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
                                     AudioQuizPackageView(quiz: quiz) {
+                                        user.selectedQuizPackage = quiz
+                                        print(user.selectedQuizPackage?.name ?? "Not Selected")
                                         //MARK: TODO - Handle selection or action
                                     }
                                 }
@@ -47,7 +57,7 @@ struct LandingPage: View {
                                     .fill(Material.ultraThin)
                                     .frame(height: 270)
                                     .overlay(
-                                        VStack(spacing: 10) {  
+                                        VStack(spacing: 10) {
                                             ForEach(conditions, id: \.self) { condition in
                                                 HStack {
                                                     Spacer()
@@ -72,6 +82,8 @@ struct LandingPage: View {
                 .task {
                     await loadDefaultCollection()
                 }
+                /// Hiding tabBar when Sheet is expended
+                .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
                 .background(
                     Image("Logo")
                         .blur(radius: 50)
@@ -96,6 +108,16 @@ struct LandingPage: View {
             
         }
         .tint(.teal)
+        .safeAreaInset(edge: .bottom) {
+            BottomMiniPlayer()
+        }
+        .overlay {
+            if expandSheet {
+                FullScreenQuizPlayer(expandSheet: $expandSheet, quizPlayer: quizPlayer, animation: animation)
+                //Transition Animation
+                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+            }
+        }
         .onAppear {
             UITabBar.appearance().backgroundColor = UIColor.black
         }
@@ -147,6 +169,40 @@ struct LandingPage: View {
         .background(.black)
     }
     
+    @ViewBuilder
+    func BottomMiniPlayer() -> some View {
+        ///Animating Sheet bnackground
+        ZStack {
+            if expandSheet {
+                Rectangle()
+                    .fill(.clear)
+            } else {
+                Rectangle()
+                    .fill(.black.opacity(0.6))
+                    .background(
+                        LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black]), startPoint: .top, endPoint: .bottom)
+                    )
+                    .overlay {
+                        AudioQuizPlayer(expandSheet: $expandSheet, user: user, recordAction: {}, playPauseAction: {}, nextAction: {}, repeatAction: {}, animation: animation)
+
+                    }
+                    .matchedGeometryEffect(id: "MAINICON", in: animation)
+            }
+        }
+        .frame(height: 70)
+        ///Seperator LIne
+        .overlay(alignment: .bottom, content: {
+            Rectangle()
+                .fill(.teal.opacity(0.3))
+                .frame(height: 1)
+                .offset(y: -5)
+        })
+        ///Default Height set to 49
+        .offset(y: -49)
+        .onAppear {
+            generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "IconImage")
+        }
+    }
     
     
     var filteredAudioQuizCollection: [AudioQuizPackage] {
@@ -189,9 +245,14 @@ struct LandingPage: View {
 }
 
 #Preview {
-    LandingPage()
+    let user = User()
+    let appState = AppState()    
+    return  LandingPage()
+        .environmentObject(user)
+        .environmentObject(appState)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+   
 }
 
 
