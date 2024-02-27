@@ -90,7 +90,6 @@ struct LandingPage: View {
                         .containerRelativeFrame(.vertical)
                         .scrollTargetLayout()
                         .scrollTargetBehavior(.viewAligned)
-                        .contentMargins(20, for: .scrollContent)
                     }
                 }
                 .task {
