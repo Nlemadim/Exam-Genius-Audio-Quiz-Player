@@ -97,10 +97,9 @@ struct AudioQuizPlaylistView: View {
             HStack {
                 if audioQuiz.questions.isEmpty {
                     DownloadAudioQuizButton(buildProcesses: {
-                        dismiss()
-//                        Task {
-//                            await buildAudioQuizTopics(audioQuiz)
-//                        }
+                        Task {
+                            await buildAudioQuizTopics(audioQuiz)
+                        }
                     }, cancelDownload: {
                         
                     }, isDownloading: $isDownloading)
