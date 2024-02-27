@@ -12,16 +12,38 @@ import Foundation
 struct AudioQuizPlaylistView: View {
     @EnvironmentObject var user: User
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @State var topicLabel: String = ""
+    @State var isDownloading: Bool = false
+    @State var numberOfTopics: Int = 0
+    
     let audioQuiz: AudioQuizPackage
+    let quizBuilder = QuizBuilder()
     var body: some View {
         ScrollView(showsIndicators: false) {
+            
             ZStack(alignment: .bottomTrailing) {
                 Image(audioQuiz.imageUrl)
                     .resizable()
                     .scaledToFit()
+                    .cornerRadius(15.0)
             }
+            .overlay(
+                Button(action: {
+                    dismiss()
+                }, label: {
+                    Image(systemName: "chevron.down")
+                        .fontWeight(.black)
+                        .padding(10)
+                        .foregroundStyle(.white)
+                        .background(.black.opacity(0.75))
+                        .clipShape(.circle)
+                        .offset(x: -160, y: -160)
+                })
+            )
             
-            VStack(alignment: .leading, spacing: 10) {
+            
+            VStack(alignment: .leading, spacing: 8.0) {
                 HStack {
                     Text(audioQuiz.name)
                         .font(.title2)
@@ -29,24 +51,18 @@ struct AudioQuizPlaylistView: View {
                         .lineLimit(3)
                         .bold()
                         .primaryTextStyleForeground()
-                    Spacer()
-                    
+                    Text("\(audioQuiz.questions.count) Questions".uppercased())
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+
                 }
                 
                 Text(audioQuiz.about)
                     .font(.footnote)
                     .lineLimit(5, reservesSpace: false)
                     .foregroundStyle(.primary)
-                
-                HStack {
-                    if audioQuiz.questions.isEmpty {
-                        LoadingButtonView()
-                    } else {
-                        StartAudioQuizButton(startPressed: {
-                            
-                        })
-                    }
-                }
+        
             }
             .padding(.leading)
             .padding(.top)
@@ -54,59 +70,24 @@ struct AudioQuizPlaylistView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 10) {
                     
-                    HStack {
-                        Text("Questions:")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text(audioQuiz.questions.isEmpty ? "" : "\(audioQuiz.questions.count)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        ProgressView()
-                            .scaleEffect(0.7)
-                            .padding(.horizontal)
-                            .opacity(audioQuiz.questions.isEmpty ? 1 : 0)
-                    }
-                    
-                    Divider()
-                    
-                    HStack {
-                        Text("Audio Quizzes:")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text(audioQuiz.questions.isEmpty ? "" : "\(audioQuiz.questions.count)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        ProgressView()
-                            .scaleEffect(0.7)
-                            .padding(.horizontal)
-                            .opacity(audioQuiz.questions.isEmpty ? 1 : 0)
-                    }
-                    
                     Divider()
                     
                     HStack {
                         Text("Topics:")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        Text(audioQuiz.topics.isEmpty ? "" : "\(audioQuiz.topics.count)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        if audioQuiz.questions.isEmpty {
-                            ProgressView()
-                                .scaleEffect(0.7)
-                                .padding(.horizontal)
-                        } else {
-                            Image(systemName: "chevron.right")
+   
+                            Spacer()
+                        
+                        HStack(spacing: 5) {
+                            Text("\(numberOfTopics)")
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
-                                .padding(.horizontal)
-                        }
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.secondary)
+                            }
                     }
                 }
-                
-                Spacer()
             }
             .padding(.horizontal)
             .padding(.top)
@@ -114,24 +95,55 @@ struct AudioQuizPlaylistView: View {
             Spacer()
             
             HStack {
-                Button(action: {
-                    dismiss()
-                }, label: {
-                    VStack {
-                        Image(systemName: "xmark.circle")
-                        Text("Dismiss")
-                            .padding(5)
-                    }
-                })
+                if audioQuiz.questions.isEmpty {
+                    DownloadAudioQuizButton(buildProcesses: {
+                        dismiss()
+//                        Task {
+//                            await buildAudioQuizTopics(audioQuiz)
+//                        }
+                    }, cancelDownload: {
+                        
+                    }, isDownloading: $isDownloading)
+                    
+                } else {
+                    
+                    LaunchQuizButton(pressedPlay: $isDownloading, startAudioQuiz: {
+                        
+                    })
+                }
             }
-            .foregroundStyle(.white)
-            .padding(25)
+            .padding()
         }
         .navigationTitle(audioQuiz.acronym + " Audio Quiz")
         .navigationBarTitleDisplayMode(.inline)
         .scrollBounceBehavior(.basedOnSize)
         .scrollTargetBehavior(.viewAligned)
         .preferredColorScheme(.dark)
+    }
+    
+    func buildAudioQuizTopics(_ audioQuiz: AudioQuizPackage) async {
+        self.isDownloading = true
+        do {
+            let fetchedTopics = try await quizBuilder.fetchTopicNames(context: audioQuiz.name)
+            DispatchQueue.main.async {
+                // Update the UI on the main thread
+                self.numberOfTopics += fetchedTopics.count
+                self.isDownloading = false
+            }
+            for topic in fetchedTopics {
+                let newTopic = Topic(name: topic)
+                audioQuiz.topics.append(newTopic)
+            }
+            // Assuming modelContext is a part of your data layer
+            //modelContext.insert(audioQuiz)
+            try! modelContext.save()
+        } catch {
+            // Handle errors if needed
+            DispatchQueue.main.async {
+                self.isDownloading = false
+            }
+            print(error.localizedDescription)
+        }
     }
 }
 
@@ -147,38 +159,3 @@ struct AudioQuizPlaylistView: View {
     }
 }
 
-
-struct LoadingButtonView: View {
-    var body: some View {
-        HStack(spacing: 4) {
-            Text("Downloading")
-                .font(.subheadline)
-                .foregroundStyle(.primary)
-            ProgressView()
-                .scaleEffect(1)
-                .padding(.horizontal)
-        }
-    }
-}
-
-struct StartAudioQuizButton: View {
-    var startPressed: () -> Void
-    var body: some View {
-        Button(action: startPressed, label: {
-            HStack(spacing: 10) {
-                Image(systemName: "play.fill")
-                    .foregroundStyle(.black)
-                    .font(.title)
-                    .padding(10)
-                    .background(Circle()
-                    .fill(Color.teal))
-                    .mask(Circle())
-                Text("Start")
-                    .font(.subheadline)
-                    .foregroundStyle(.primary)
-                    
-            }
-        })
-        .foregroundStyle(.white)
-    }
-}

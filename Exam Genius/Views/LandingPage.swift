@@ -17,7 +17,7 @@ struct LandingPage: View {
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     @State private var path = [AudioQuizPackage]()
-    @State private var selectedQuizPackage: AudioQuizPackage?
+    
     
     @StateObject private var generator = ColorGenerator()
     
@@ -27,6 +27,14 @@ struct LandingPage: View {
     let categories = ExamCategory.allCases
     
     @State private var selectedTab = 0
+    @State private var selectedQuizPackage: AudioQuizPackage? {
+        didSet {
+            print("Audio quiz selected: \(selectedQuizPackage?.name ?? "None")")
+            print("Audio quiz topics: \(selectedQuizPackage?.topics.count ?? 0)")
+            // Trigger the loading or filtering of your views here
+        }
+    }
+    
     @State var selectedCategory: ExamCategory? {
         didSet {
             print("Category selected: \(selectedCategory?.rawValue ?? "None")")
@@ -41,7 +49,8 @@ struct LandingPage: View {
             NavigationStack(path: $path) {
                 ZStack {
                     VStack(spacing: 5) {
-                        CustomNavBarView(categories: categories, selectedCategory: $selectedCategory)
+                        CustomNavigationBar(categories: categories, selectedCategory: $selectedCategory)
+                        //CustomNavBarView(categories: categories, selectedCategory: $selectedCategory)
                         /// Content main view
                         ScrollView(.vertical, showsIndicators: false) {
                         
@@ -79,6 +88,9 @@ struct LandingPage: View {
                             }
                         }
                         .containerRelativeFrame(.vertical)
+                        .scrollTargetLayout()
+                        .scrollTargetBehavior(.viewAligned)
+                        .contentMargins(20, for: .scrollContent)
                     }
                 }
                 .task {
@@ -88,7 +100,9 @@ struct LandingPage: View {
                 .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
                 .background(
                     Image("Logo")
-                        .blur(radius: 50)
+                        .offset(x: 130)
+                        
+                        //.blur(radius: 50)
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
@@ -100,9 +114,9 @@ struct LandingPage: View {
             }
             .tag(0)
             
-            View2()
+            ExploreAudioQuizView()
                 .tabItem {
-                    TabIcons(title: "Explore", icon: "magnifyingglass")
+                    TabIcons(title: "Explore", icon: "globe")
                 }
                 .tag(1)
             
@@ -152,9 +166,12 @@ struct LandingPage: View {
                                     .fontWeight(.medium)
                                     .padding(.horizontal)
                                     .padding(.vertical, 8)
-                                    .background(selectedCategory.wrappedValue == category ? Color.teal : .themePurpleLight.opacity(0.3))
-                                    .foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
+                                    .background(LinearGradient(gradient: Gradient(colors: [.themePurpleLight, .themePurple]), startPoint: .top, endPoint: .bottom))
+                                    .foregroundStyle(.white)
+                                    //.background(selectedCategory.wrappedValue == category ? Color.teal : .themePurpleLight.opacity(0.3))
+                                    //.foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
                                     .cornerRadius(18)
+                                    .opacity(selectedCategory.wrappedValue == category ? 1 : 0)
                             }
                             .shadow(color: .teal, radius: 1)
                         }
