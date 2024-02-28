@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AudioQuizSearchCollectionView: View {
     var quiz: AudioQuizPackage
-    @StateObject private var generator = ColorGenerator()
 
     var body: some View {
         VStack {
@@ -21,22 +20,25 @@ struct AudioQuizSearchCollectionView: View {
                 .overlay(
                     VStack {
                         Spacer()
-                        // Encapsulate text within a background
                         VStack {
-                            Text(quiz.acronym)
-                                .font(.subheadline)
-                                .lineLimit(2, reservesSpace: true)
-                                .bold()
-                                .foregroundColor(.white)
-                                .padding(5) // Adjust padding for text
+                            HStack {
+                                Text(quiz.name.capitalized)
+                                    .font(.subheadline)
+                                    .fontWeight(.bold)
+                                    .lineLimit(3, reservesSpace: true)
+                                    .bold()
+                                    .foregroundColor(.white)
+
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                            
                         }
-                        .frame(width: 200, height: 60) // Fixed size background
+                        .frame(height: 60)
+                        .frame(maxWidth: .infinity)
                         .background(
-                            generator.dominantBackgroundColor
+                            Material.ultraThin
                         )
-                        .onAppear {
-                            generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
-                        }
                     }
                 )
         }

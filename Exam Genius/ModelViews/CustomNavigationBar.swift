@@ -31,7 +31,10 @@ struct CustomNavigationBar: View {
                         }
                     }
                     .padding(.vertical, 8)
+                    
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
             } else {
                 HStack {
                     // Show only the selected category with an option to deselect
@@ -44,10 +47,9 @@ struct CustomNavigationBar: View {
         }
         .padding()
         .frame(height: 70)
-        .padding(.horizontal)
         .padding(.top, 70.0)
         .background(Color.black)
-        .frame(maxWidth: .infinity, maxHeight: .infinity) // Align to the top leading to keep profile and selected category to the left
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top) // Align to the top leading to keep profile and selected category to the left
     }
     
     private func categoryButton(category: ExamCategory) -> some View {

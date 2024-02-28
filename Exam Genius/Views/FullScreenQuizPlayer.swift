@@ -51,13 +51,24 @@ struct FullScreenQuizPlayer: View {
                     .matchedGeometryEffect(id: user.audioQuizPackage?.imageUrl.uppercased() ?? "ICONIMAGE", in: animation)
                 
                 VStack(spacing: 5) {
-                    /// Grab Indicator
-                    Capsule()
-                        .fill(.gray)
-                        .frame(width: 40, height: 5)
-                        .opacity(animateContent ? 1 : 0)
-                    /// Matching with Sliding Animation
-                        .offset(y: animateContent ? 0 : size.height)
+                    HStack {
+                        Button("", systemImage: "chevron.down.circle") {
+                            expandSheet.toggle()
+                        }
+                        Spacer()
+                    }
+                    .foregroundStyle(.white)
+                    .activeGlow(.white, radius: 3)
+                    .opacity(animateContent ? 1 : 0)
+                    .offset(y: animateContent ? 0 : size.height)
+                    
+//                    /// Grab Indicator
+//                    Capsule()
+//                        .fill(.gray)
+//                        .frame(width: 40, height: 5)
+//                        .opacity(animateContent ? 1 : 0)
+//                    /// Matching with Sliding Animation
+//                        .offset(y: animateContent ? 0 : size.height)
                     
                     ScrollView(showsIndicators: false) {
                        

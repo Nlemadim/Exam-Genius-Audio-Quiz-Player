@@ -13,27 +13,22 @@ struct LandingPage: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
-    let quizPlayer = QuizPlayer.shared
-    
-    @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
-    @State private var path = [AudioQuizPackage]()
-    
     
     @StateObject private var generator = ColorGenerator()
     
+    @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    
+    @State private var path = [AudioQuizPackage]()
     @State private var expandSheet: Bool = false
-    @State var conditions: [String] = ["Redeem Gift Card or Code","Privacy", "Terms and Conditons"]
-    
-    let categories = ExamCategory.allCases
-    
     @State private var selectedTab = 0
-    @State private var selectedQuizPackage: AudioQuizPackage? {
-        didSet {
-            print("Audio quiz selected: \(selectedQuizPackage?.name ?? "None")")
-            print("Audio quiz topics: \(selectedQuizPackage?.topics.count ?? 0)")
-            // Trigger the loading or filtering of your views here
-        }
-    }
+    @State private var selectedQuizPackage: AudioQuizPackage?
+//    @State private var selectedQuizPackage: AudioQuizPackage? {
+//        didSet {
+//            print("Audio quiz selected: \(selectedQuizPackage?.name ?? "None")")
+//            print("Audio quiz topics: \(selectedQuizPackage?.topics.count ?? 0)")
+//            // Trigger the loading or filtering of your views here
+//        }
+//    }
     
     @State var selectedCategory: ExamCategory? {
         didSet {
@@ -43,6 +38,17 @@ struct LandingPage: View {
     }
     
     @Namespace private var animation
+    let quizPlayer = QuizPlayer.shared
+    let categories = ExamCategory.allCases
+    
+    var filteredAudioQuizCollection: [AudioQuizPackage] {
+        audioQuizCollection.filter { quiz in
+            guard let selectedCat = selectedCategory else {
+                return true // No category selected, show all quizzes
+            }
+            return quiz.category.contains { $0.rawValue == selectedCat.rawValue }
+        }
+    }
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -50,46 +56,27 @@ struct LandingPage: View {
                 ZStack {
                     VStack(spacing: 5) {
                         CustomNavigationBar(categories: categories, selectedCategory: $selectedCategory)
-                        //CustomNavBarView(categories: categories, selectedCategory: $selectedCategory)
                         /// Content main view
                         ScrollView(.vertical, showsIndicators: false) {
                         
-                            VStack(spacing: 8) {
+                            VStack(spacing: 10) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
                                     AudioQuizPackageView(quiz: quiz) {
                                         user.audioQuizPackage = quiz
-                                        selectedQuizPackage = quiz
+                                        selectedQuizPackage = user.audioQuizPackage
                                         print(user.audioQuizPackage?.name ?? "Not Selected")
                                         //MARK: TODO - Handle selection or action
                                     }
                                 }
                                 
                                 Rectangle()
-                                    .fill(Material.ultraThin)
-                                    .frame(height: 270)
-                                    .overlay(
-                                        VStack(spacing: 10) {
-                                            ForEach(conditions, id: \.self) { condition in
-                                                HStack {
-                                                    Spacer()
-                                                    NavigationLink(destination: Text(condition)) {
-                                                        Text(condition)
-                                                            .foregroundColor(.primary)
-                                                            .padding()
-                                                    }
-                                                    Spacer()
-                                                    Image(systemName: "chevron.right")
-                                                        .padding(.horizontal)
-                                                }
-                                            }
-                                        }
-                                    )
-                                    .padding(.bottom, 30)
+                                    .fill(.clear)
+                                    .frame(height: 200)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                         }
                         .containerRelativeFrame(.vertical)
                         .scrollTargetLayout()
-                        .scrollTargetBehavior(.viewAligned)
                     }
                 }
                 .task {
@@ -100,14 +87,12 @@ struct LandingPage: View {
                 .background(
                     Image("Logo")
                         .offset(x: 130)
-                        
-                        //.blur(radius: 50)
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                // Pass the selectedQuiz to the AudioQuizPlaylistView
                 AudioQuizPlaylistView(audioQuiz: selectedQuiz)
             }
+            
             .tabItem {
                 TabIcons(title: "Home", icon: "house.fill")
             }
@@ -224,14 +209,7 @@ struct LandingPage: View {
     }
     
     
-    var filteredAudioQuizCollection: [AudioQuizPackage] {
-        audioQuizCollection.filter { quiz in
-            guard let selectedCat = selectedCategory else {
-                return true // No category selected, show all quizzes
-            }
-            return quiz.category.contains { $0.rawValue == selectedCat.rawValue }
-        }
-    }
+    
     
     func groupQuizzesByCombinedCategories(quizzes: [AudioQuizPackage], combinedCategories: [CombinedCategory]) -> [CombinedCategory: [AudioQuizPackage]] {
         var groupedQuizzes = [CombinedCategory: [AudioQuizPackage]]()
@@ -298,3 +276,30 @@ struct View2: View {
         )
     }
 }
+
+
+/**
+ 
+ Rectangle()
+     .fill(Material.ultraThin)
+     .frame(height: 270)
+     .overlay(
+         VStack(spacing: 10) {
+             ForEach(conditions, id: \.self) { condition in
+                 HStack {
+                     Spacer()
+                     NavigationLink(destination: Text(condition)) {
+                         Text(condition)
+                             .foregroundColor(.primary)
+                             .padding()
+                     }
+                     Spacer()
+                     Image(systemName: "chevron.right")
+                         .padding(.horizontal)
+                 }
+             }
+         }
+     )
+     .padding(.bottom, 30)
+ 
+ */

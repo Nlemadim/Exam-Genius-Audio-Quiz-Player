@@ -39,36 +39,19 @@ struct BuildButton: View {
 
 struct DownloadAudioQuizButton: View {
     var buildProcesses: () -> Void
-    var cancelDownload: () -> Void
+    @State var shouldDisplay: Bool = false
+    @State var buttonText: String = "Download Audio Quiz"
     @Binding var isDownloading: Bool
     
     var body: some View {
-        VStack {
-            if isDownloading {
-                Text("Downloading...")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                Text("This could take more than a minute")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-            }
+        ZStack {
             
-            Button("Download Audio Quiz") {
+            Button(buttonText) {
                 buildProcesses()
             }
-            .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isDownloading))
+            .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isDownloading, activeBackgroundColor: .teal.opacity(0.6)))
             .disabled(isDownloading)
             
-            if isDownloading {
-                Button(action: {
-                    cancelDownload()
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.red)
-                        .font(.title2)
-                }
-                .padding(.top, 5)
-            }
         }
     }
 }
@@ -99,7 +82,7 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
         configuration.label
             .font(textFont) // Use the specified font
             .foregroundColor(textColor) // Use the specified text color
-            .padding() // Add some padding inside the capsule
+            .padding(8) // Add some padding inside the capsule
             .background(
                 Capsule() // Capsule shape
                     .strokeBorder(isDisabled ? disabledBorderColor : activeBorderColor, lineWidth: 1) // Stroke color based on disabled state
@@ -115,18 +98,14 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
     BuildButton(action: {})
 }
 
+
 #Preview {
-    LaunchQuizButton(pressedPlay: .constant(false), startAudioQuiz: {})
+    DownloadAudioQuizButton(buildProcesses: {}, isDownloading: .constant(true))
         .preferredColorScheme(.dark)
 }
 
 #Preview {
-    DownloadAudioQuizButton(buildProcesses: {}, cancelDownload: {}, isDownloading: .constant(true))
-        .preferredColorScheme(.dark)
-}
-
-#Preview {
-    DownloadAudioQuizButton(buildProcesses: {}, cancelDownload: {}, isDownloading: .constant(false))
+    DownloadAudioQuizButton(buildProcesses: {}, isDownloading: .constant(false))
         .preferredColorScheme(.dark)
 }
 

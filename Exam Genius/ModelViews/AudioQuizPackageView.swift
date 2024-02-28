@@ -31,9 +31,10 @@ struct AudioQuizPackageView: View {
                     }
                 }
                 .frame(height: 200)
+                .frame(maxHeight: 200)
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    audioLabel()
+                    
                     
                     HStack {
                         Text(quiz.name)
@@ -41,11 +42,14 @@ struct AudioQuizPackageView: View {
                             .fontWeight(.heavy)
                             .lineLimit(3)
                             .bold()
+                            .padding(.trailing)
                             .primaryTextStyleForeground()
                     }
-                    Text(aboutQuiz)
-                        .font(.subheadline)
-                        .lineLimit(3)
+                   
+                    audioLabel()
+//                    Text(aboutQuiz)
+//                        .font(.subheadline)
+//                        .lineLimit(3)
                     
                     HStack {
                         Spacer()
@@ -53,8 +57,7 @@ struct AudioQuizPackageView: View {
                             downloadAction()
                         }
                     }
-                    .padding()
-                    .padding(.horizontal, 8)
+                    .padding(.all, 20.0)
                 }
                 .padding(.leading)
                 .padding(.horizontal, 5)
@@ -79,7 +82,7 @@ struct AudioQuizPackageView: View {
     
     func audioLabel() -> some View {
         return  HStack {
-            Text(quiz.acronym.isEmpty ? "Audio quiz" : quiz.acronym)
+            Text(quiz.acronym.isEmpty ? "Audio quiz" : quiz.acronym + " Audio Quiz")
                 .font(.footnote)
                 .fontWeight(.semibold)
             Image(systemName: "headphones")
