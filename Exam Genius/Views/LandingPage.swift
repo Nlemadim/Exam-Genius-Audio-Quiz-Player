@@ -20,13 +20,18 @@ struct LandingPage: View {
     
     @State private var path = [AudioQuizPackage]()
     @State private var expandSheet: Bool = false
+    @State private var playerReady: Bool = false
+    @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     @State private var selectedTab = 0
     @State private var selectedQuizPackage: AudioQuizPackage?
 //    @State private var selectedQuizPackage: AudioQuizPackage? {
 //        didSet {
-//            print("Audio quiz selected: \(selectedQuizPackage?.name ?? "None")")
-//            print("Audio quiz topics: \(selectedQuizPackage?.topics.count ?? 0)")
-//            // Trigger the loading or filtering of your views here
+//            // Automatically present and expand the bottom sheet when a quiz package is selected
+//            if selectedQuizPackage != nil {
+//                withAnimation {
+//                    playerReady = true
+//                }
+//            }
 //        }
 //    }
     
@@ -62,10 +67,14 @@ struct LandingPage: View {
                             VStack(spacing: 10) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
                                     AudioQuizPackageView(quiz: quiz) {
-                                        user.audioQuizPackage = quiz
+                                        //user.audioQuizPackage = quiz
                                         selectedQuizPackage = user.audioQuizPackage
                                         print(user.audioQuizPackage?.name ?? "Not Selected")
                                         //MARK: TODO - Handle selection or action
+                                    }
+                                    .onTapGesture {
+                                        user.audioQuizPackage = quiz
+                                        selectedQuizPackage = user.audioQuizPackage
                                     }
                                 }
                                 
@@ -77,6 +86,7 @@ struct LandingPage: View {
                         }
                         .containerRelativeFrame(.vertical)
                         .scrollTargetLayout()
+                        .scrollTargetBehavior(.viewAligned)
                     }
                 }
                 .task {
@@ -86,7 +96,7 @@ struct LandingPage: View {
                 .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
                 .background(
                     Image("Logo")
-                        .offset(x: 130)
+                        .offset(y: 40)
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
@@ -109,11 +119,11 @@ struct LandingPage: View {
                     TabIcons(title: "Settings", icon: "slider.horizontal.3")
                 }
                 .tag(1)
-            
         }
         .tint(.teal)
         .safeAreaInset(edge: .bottom) {
             BottomMiniPlayer()
+
         }
         .overlay {
             if expandSheet {
@@ -280,26 +290,18 @@ struct View2: View {
 
 /**
  
- Rectangle()
-     .fill(Material.ultraThin)
-     .frame(height: 270)
-     .overlay(
-         VStack(spacing: 10) {
-             ForEach(conditions, id: \.self) { condition in
-                 HStack {
-                     Spacer()
-                     NavigationLink(destination: Text(condition)) {
-                         Text(condition)
-                             .foregroundColor(.primary)
-                             .padding()
-                     }
-                     Spacer()
-                     Image(systemName: "chevron.right")
-                         .padding(.horizontal)
-                 }
-             }
-         }
-     )
-     .padding(.bottom, 30)
+ Mark: BottomSheet Optional Display Logic
+ //            if playerReady {
+ //                BottomMiniPlayer()
+ //                    .offset(x: bottomSheetOffset, y: 0)
+ //                    .onAppear {
+ //                        withAnimation(.easeOut(duration: 0.5)) {
+ //                            bottomSheetOffset = 0 // Move to center
+ //                        }
+ //                    }
+ //                    .onDisappear {
+ //                        bottomSheetOffset = -UIScreen.main.bounds.width // Reset when disappearing
+ //                    }
+ //            }
  
  */

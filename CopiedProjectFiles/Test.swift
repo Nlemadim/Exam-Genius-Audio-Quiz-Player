@@ -6,177 +6,188 @@
 //
 
 import SwiftUI
+import SwiftData
 
-
-class TestClass: ObservableObject {
-    @Published var color: Color = .green
-    @Published var number: Int = 0
+struct UserHomePage: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var user: User
+    @EnvironmentObject var appState: AppState
     
-    func changeColor() {
-        if self.number > 10 {
-            self.color = .red
+    @StateObject private var generator = ColorGenerator()
+    
+    @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    
+    @State private var path = [AudioQuizPackage]()
+    @State private var expandSheet: Bool = false
+    @State private var bottomSheetOffset = -UIScreen.main.bounds.width
+    @State private var selectedTab = 0
+    @State private var selectedQuizPackage: AudioQuizPackage? {
+        didSet {
+            // Automatically present and expand the bottom sheet when a quiz package is selected
+            if selectedQuizPackage != nil {
+                withAnimation {
+                    expandSheet = true
+                }
+            }
+        }
+    }
+    @State var selectedCategory: ExamCategory? {
+        didSet {
+            print("Category selected: \(selectedCategory?.rawValue ?? "None")")
+        }
+    }
+    
+    @Namespace private var animation
+    let quizPlayer = QuizPlayer.shared
+    let categories = ExamCategory.allCases
+    
+    var filteredAudioQuizCollection: [AudioQuizPackage] {
+        audioQuizCollection.filter { quiz in
+            guard let selectedCat = selectedCategory else {
+                return true // Show all quizzes if no category is selected
+            }
+            return quiz.category.contains { $0.rawValue == selectedCat.rawValue }
+        }
+    }
+    
+    var body: some View {
+        ZStack {
+            TabView(selection: $selectedTab) {
+                pageContent()
+                    .tabItem {
+                        Label("Home", systemImage: "house.fill")
+                    }
+                    .tag(0)
+                
+                ExploreAudioQuizView()
+                    .tabItem {
+                        Label("Explore", systemImage: "globe")
+                    }
+                    .tag(1)
+                
+                // Add more tabs as needed
+            }
+            .zIndex(0) // Ensures tab content is layered below the custom nav bar
+            
+            
+            
+            if expandSheet {
+                bottomSheetView()
+                    .offset(x: bottomSheetOffset, y: 0) // Apply the horizontal offset
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            bottomSheetOffset = 0 // Move to center
+                        }
+                    }
+                    .onDisappear {
+                        bottomSheetOffset = -UIScreen.main.bounds.width // Reset when disappearing
+                    }
+            }
+        }
+        .onAppear {
+            UITabBar.appearance().backgroundColor = UIColor.black
+        }
+    }
+    
+    @ViewBuilder
+    private func pageContent() -> some View {
+        NavigationStack(path: $path) {
+            VStack(spacing: 5) {
+                customNavigationBar()
+                
+                
+                TabView {
+                    ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
+                        AudioQuizPackageView(quiz: quiz) {
+                            user.audioQuizPackage = quiz
+                            selectedQuizPackage = user.audioQuizPackage
+                            print(user.audioQuizPackage?.name ?? "Not Selected")
+                        }
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never)) // Page style without index display
+                //.frame(maxWidth: .infinity, maxHeight: .infinity)
+                //.frame(width: 350, height: 400)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .task {
+                await loadDefaultCollection()
+            }
+            .background(
+                Image("Logo")
+                    .blur(radius: 2.0, opaque: false)
+                    .offset(x: 130)
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private func customNavigationBar() -> some View {
+        CustomNavigationBar2(categories: categories, selectedCategory: $selectedCategory)
+        //.offset(y: -70)
+    }
+    
+    @ViewBuilder
+    private func bottomSheetView() -> some View {
+        // Full implementation of your bottom sheet, including logic for minimizing and expanding
+        ZStack {
+            if expandSheet {
+                FullScreenQuizPlayer(expandSheet: $expandSheet, animation: animation)
+                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: 1000)))
+            } else {
+                BottomMiniPlayer()
+                    .onTapGesture {
+                        withAnimation {
+                            expandSheet = true
+                        }
+                    }
+            }
+        }
+        .animation(.default, value: expandSheet)
+        .transition(.slide)
+    }
+    
+    @ViewBuilder
+    private func BottomMiniPlayer() -> some View {
+        // Implement the minimized version of the bottom sheet here
+        ZStack {
+            Rectangle()
+                .fill(.black.opacity(0.6))
+                .frame(height: 70)
+                .overlay {
+                    // Content of the BottomMiniPlayer
+                }
+            // Add any additional overlays or components as needed
+        }
+    }
+    
+    func loadDefaultCollection() async {
+        guard audioQuizCollection.isEmpty else { return }
+        
+        let collection = DefaultDatabase().getAllExamDetails()
+        collection.forEach { examDetail in
+            
+            let newPackage = AudioQuizPackage(from: examDetail)
+            //print(newPackage.category)
+            
+            modelContext.insert(newPackage)
+            try! modelContext.save()
         }
     }
 }
 
-//struct Test: View {
+#Preview {
+    let user = User()
+    let appState = AppState()
+    return  UserHomePage()
+        .environmentObject(user)
+        .environmentObject(appState)
+        .preferredColorScheme(.dark)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+    
+}
 
-//    @State private var isRecording = false
-//    @State private var transcriptCopy: String = ""
-//    
-//    @State var index = 0
-//    @State var interactionState: InteractionState = .idle
-//     
-//    
-//    var body: some View {
-//        VStack {
-//            if let question = quizPlayer.currentQuestion {
-//                Text(quizPlayer.speechRecognizer.transcript)
-//                    .padding()
-//
-//                Spacer()
-//                Text(question.questionContent)
-//                    .padding()
-//                Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-//                
-//                HStack {
-//                    VStack {
-//                        Text(question.options[0])
-//                            .foregroundStyle(question.options[0] == question.correctOption && !question.selectedOption.isEmpty ? .green : .gray)
-//                            .padding()
-//                        
-//                        Text(question.options[1])
-//                            .foregroundStyle(question.options[1] == question.correctOption && !question.selectedOption.isEmpty ? .green : .gray)
-//                            .padding()
-//                    }
-//                    Spacer()
-//                    
-//                    VStack {
-//                        Text(question.options[2])
-//                            .foregroundStyle(question.options[2] == question.correctOption && !question.selectedOption.isEmpty ? .green : .gray)
-//                            .padding()
-//                        Text(question.options[3])
-//                            .foregroundStyle(question.options[3] == question.correctOption && !question.selectedOption.isEmpty ? .green : .gray)
-//                            .padding()
-//                    }
-//                }
-//                .padding()
-//                
-//                Spacer()
-//                
-//                HStack {
-//                    interactionVisualizer(comment: question.selectedOption)
-//                    
-//                }
-//                
-//                HStack(spacing: 40) {
-//                    
-//                    Button("Test") {
-//                        
-//                    }
-//                    .buttonStyle(.borderedProminent)
-//                    
-//                    Button {
-//                        //quizPlayer.recordAnswer()
-//                       // isRecording = quizPlayer.isRecordingAnswer
-//  
-//                    } label: {
-//                        Image(systemName: "mic.fill")
-//                            .font(.largeTitle)
-//                            .foregroundStyle(quizPlayer.isRecordingAnswer ? .red : .white)
-//                            .symbolEffect(.scale, isActive: interactionState == .isListening)
-//                    }
-//                    .padding(20)
-//                    .padding(.horizontal, 10)
-//                    
-//                    Button("Next") {
-//                        quizPlayer.playNextQuestion()
-////                        guard self.index <= currentQuestion.options.count - 1 else { return }
-//                        
-//                    }
-//                    .buttonStyle(.borderedProminent)
-//                    .cornerRadius(10)
-//                    
-//                }
-//                .padding()
-//                .padding(.top)
-//                .padding(.horizontal)
-//
-//            }
-//            
-//     
-//        }
-//    }
-//    
-//    private func interactionVisualizer(comment: String) -> some View {
-//        let didRecieveSpeech = !comment.isEmpty
-//        let isPlaying = interactionState == .isNowPlaying || interactionState == .isListening
-//        
-//        
-//        return HStack {
-//            
-//            HStack(spacing: 0) {
-//                Button(action: {
-//                    
-//                }, label: {
-//                    Image(systemName: "play.desktopcomputer")
-//                        .resizable()
-//                        .frame(width: 30, height: 30)
-//                        .foregroundStyle(!isPlaying ? .gray : .teal)
-//                })
-//                
-//                Image(systemName: "waveform")
-//                    .resizable()
-//                    .foregroundStyle(isPlaying ? .themeTeal : .gray)
-//                    .symbolEffect(.variableColor.iterative.dimInactiveLayers.reversing, options: .repeating, isActive: interactionState == .isNowPlaying || interactionState == .isListening)
-//                    .frame(width: 33, height: 33)
-//                    .offset(y: -5)
-//                    .padding(.leading, 3)
-//                    .activeGlow(isPlaying ? .themeTeal : .clear, radius: 2)
-//                
-//            }
-//            
-//            
-//            Spacer()
-//            
-//            HStack(spacing: 0) {
-//                ZStack {
-//                    Image(systemName: "bubble.right")
-//                        .resizable()
-//                        .foregroundStyle(!didRecieveSpeech ? .gray : .green)
-//                        .symbolEffect(.scale.wholeSymbol, options: .nonRepeating, isActive: interactionState == .hasResponded)
-//                        .frame(width: 33, height: 33)
-//                        .offset(y: -5)
-//                        .padding(.leading, 3)
-//                    
-//                    Text(comment.isSingleCharacterABCD ? comment : "")
-//                        .fontWeight(.bold)
-//                        .offset(y: -8)
-//                        .foregroundStyle(comment == quizPlayer.currentQuestion?.correctOption ? .green : .red)
-//                }
-//                
-//                Button(action: {
-//                    
-//                }, label: {
-//                    Image(systemName: "person.fill")
-//                        .resizable()
-//                        .frame(width: 25, height: 25)
-//                        .foregroundStyle(!didRecieveSpeech ? .gray : .green)
-//                })
-//                
-//                
-//            }
-//        }
-//        .padding(.horizontal)
-//        .padding(.top)
-//        .frame(maxWidth: .infinity)
-//    }
-//}
-//
-//#Preview {
-//    Test()
-//        .preferredColorScheme(.dark)
-//}
 
 /** message.badge.waveform
  message.badge.waveform.fill

@@ -23,8 +23,9 @@ struct AudioQuizSearchCollectionView: View {
                         VStack {
                             HStack {
                                 Text(quiz.name.capitalized)
-                                    .font(.subheadline)
+                                    .font(.footnote)
                                     .fontWeight(.bold)
+                                    .multilineTextAlignment(.leading)
                                     .lineLimit(3, reservesSpace: true)
                                     .bold()
                                     .foregroundColor(.white)
@@ -32,9 +33,8 @@ struct AudioQuizSearchCollectionView: View {
                                 Spacer()
                             }
                             .padding(.horizontal)
-                            
                         }
-                        .frame(height: 60)
+                        .frame(height: 80)
                         .frame(maxWidth: .infinity)
                         .background(
                             Material.ultraThin

@@ -11,6 +11,7 @@ import Combine
 import SwiftData
 import AVFoundation
 import Speech
+import AVKit
 
 class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRecognizerDelegate {
     @EnvironmentObject var user: User

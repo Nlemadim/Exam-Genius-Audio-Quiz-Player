@@ -36,8 +36,22 @@ struct ExploreAudioQuizView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .navigationTitle("Audio Quiz Collection")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Library")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        
+                    }, label: {
+                        HStack(spacing: 5) {
+                            Text("New Quiz")
+                            Image(systemName: "plus")
+                        }
+                        .font(.headline)
+                        .foregroundStyle(.teal)
+                    })
+                }
+            }
             .searchable(text: $searchText)
             .background(
                 Image("Logo")

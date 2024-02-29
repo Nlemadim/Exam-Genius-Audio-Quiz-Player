@@ -77,6 +77,8 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
     var disabledBackgroundColor: Color = Color.gray.opacity(0.5)
     var disabledBorderColor: Color = .gray
     var textFont: Font = .subheadline
+    var activeGlow: Bool?
+    var activeGlowColor: Color?
 
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
@@ -85,14 +87,67 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
             .padding(8) // Add some padding inside the capsule
             .background(
                 Capsule() // Capsule shape
-                    .strokeBorder(isDisabled ? disabledBorderColor : activeBorderColor, lineWidth: 1) // Stroke color based on disabled state
+                    .strokeBorder(isDisabled ? disabledBorderColor : activeBorderColor, lineWidth: 1)
+                    .activeGlow(activeGlow ?? false ? activeBorderColor : .clear, radius: 1)// Stroke color based on disabled state
+                    
                     .background(
                         Capsule().fill(isDisabled ? disabledBackgroundColor : activeBackgroundColor) // Background color based on disabled state
+                        
                     )
             )
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            
     }
 }
+
+
+import SwiftUI
+
+struct CapsuleButton: View {
+    let defaultLabel: String
+    let actionLabel: String?
+    let defaultColor: Color
+    let actionColor: Color
+    let borderColor: Color?
+    let imageName: String?
+    let action: () -> Void
+    
+    @State private var isPressed: Bool = false
+
+    var body: some View {
+        Button(action: {
+            self.action()
+            self.isPressed.toggle()
+        }) {
+            HStack {
+                Text(isPressed && actionLabel != nil ? actionLabel! : defaultLabel)
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                
+                
+                if let imageName = imageName {
+                    Image(systemName: imageName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 20, height: 20)
+                }
+            }
+            .padding(3)
+            .foregroundColor(.white)
+            .background(isPressed ? actionColor : defaultColor)
+            .cornerRadius(3)
+        }
+        .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isPressed, activeBackgroundColor: .clear, activeBorderColor: borderColor ?? .teal, disabledBackgroundColor: .gray, disabledBorderColor: .gray, activeGlow: true, activeGlowColor: .teal))
+    }
+}
+
+
+#Preview {
+    CapsuleButton(defaultLabel: "Build Audio Quiz", actionLabel: nil, defaultColor: .clear, actionColor: .clear, borderColor: nil, imageName: nil, action: {})
+        .preferredColorScheme(.dark)
+}
+
+
 
 #Preview {
     BuildButton(action: {})

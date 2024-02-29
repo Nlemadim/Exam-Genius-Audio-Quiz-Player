@@ -34,40 +34,48 @@ struct AudioQuizPackageView: View {
                 .frame(maxHeight: 200)
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    
-                    
                     HStack {
-                        Text(quiz.name)
-                            .font(.title2)
-                            .fontWeight(.heavy)
-                            .lineLimit(3)
-                            .bold()
-                            .padding(.trailing)
-                            .primaryTextStyleForeground()
-                    }
-                   
-                    audioLabel()
-//                    Text(aboutQuiz)
-//                        .font(.subheadline)
-//                        .lineLimit(3)
-                    
-                    HStack {
-                        Spacer()
-                        BuildButton {
-                            downloadAction()
+                        VStack{
+                            Text(quiz.name)
+                                .font(.title2)
+                                .fontWeight(.heavy)
+                                .lineLimit(2, reservesSpace: true)
+                                .multilineTextAlignment(.leading)
+                                .bold()
+                                .padding(.trailing)
+                                .primaryTextStyleForeground()
                         }
                     }
-                    .padding(.all, 20.0)
+
+                    audioLabel()
+
+                    HStack {
+                        Spacer()
+                        CapsuleButton(
+                            defaultLabel: "Play Sample",
+                            actionLabel: nil,
+                            defaultColor: .clear,
+                            actionColor: .clear,
+                            borderColor: .clear,
+                            imageName: "play.circle.fill",
+                            action: {
+                                downloadAction()
+                            })
+                    }
+                    .padding(.bottom, 30.0)
+                    
                 }
-                .padding(.leading)
+                .padding(.all, 10.0)
+                .padding(.top)
                 .padding(.horizontal, 5)
+                .frame(height: 150)
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .background(
                 LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black]), startPoint: .top, endPoint: .bottom)
             )
             .mask(RoundedRectangle(cornerRadius: 30, style: .continuous))
-            .padding(20)
+            .padding(10)
             .onAppear {
                 generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
             }
@@ -92,13 +100,13 @@ struct AudioQuizPackageView: View {
     }
 }
 
-#Preview {
-    let user = User()
-    let appState = AppState()
-    return  LandingPage()
-        .environmentObject(user)
-        .environmentObject(appState)
-        .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
-   
-}
+//#Preview {
+//    let user = User()
+//    let appState = AppState()
+//    return  LandingPage()
+//        .environmentObject(user)
+//        .environmentObject(appState)
+//        .preferredColorScheme(.dark)
+//        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+//   
+//}

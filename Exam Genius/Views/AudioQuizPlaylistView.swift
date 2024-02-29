@@ -59,23 +59,23 @@ struct AudioQuizPlaylistView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 10) {
                                 
-                                Divider()
-                                
-                                HStack {
-                                    Text("Topics:")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-                                    
-                                    Spacer()
-                                    
-                                    HStack(spacing: 5) {
-                                        Text("\(numberOfTopics)")
-                                            .font(.subheadline)
-                                            .foregroundStyle(.secondary)
-                                        Image(systemName: "chevron.right")
-                                            .foregroundStyle(.secondary)
-                                    }
-                                }
+//                                Divider()
+//                                
+//                                HStack {
+//                                    Text("Topics:")
+//                                        .font(.subheadline)
+//                                        .foregroundStyle(.secondary)
+//                                    
+//                                    Spacer()
+//                                    
+//                                    HStack(spacing: 5) {
+//                                        Text("\(numberOfTopics)")
+//                                            .font(.subheadline)
+//                                            .foregroundStyle(.secondary)
+//                                        Image(systemName: "chevron.right")
+//                                            .foregroundStyle(.secondary)
+//                                    }
+//                                }
                             }
                         }
                         .padding(.top)
