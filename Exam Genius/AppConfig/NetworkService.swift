@@ -12,6 +12,7 @@ import AVFoundation
 class NetworkService {
     
     static let shared = NetworkService()
+    var openAIManager: OpenAIManager = .shared
     
     private init() {}
     
@@ -56,7 +57,7 @@ class NetworkService {
             // Indicate that fetching topics has started
             updateNetworkStatus?(.fetchingTopics)
 
-            // Your base URL
+            //base URL
             let baseUrl = Config.topicRequestURL 
             guard var urlComponents = URLComponents(string: baseUrl) else {
                 updateNetworkStatus?(.errorDownloadingContent("Invalid URL"))
@@ -96,9 +97,65 @@ class NetworkService {
                 throw error
             }
         }
+
+    func fetchQuestions(examName: String, topics: [String], number: Int) async throws -> [QuestionResponse] {
+        var questionResponses: [QuestionResponse] = []
+
+        let baseUrl = Config.questionsRequestURL
+        let session = URLSession.shared
+
+        for topic in topics {
+            var urlComponents = URLComponents(string: baseUrl)!
+            // Adjusting the query parameter keys according to the backend expectations
+            urlComponents.queryItems = [
+                URLQueryItem(name: "nameValue", value: examName),
+                URLQueryItem(name: "topicValue", value: topic),
+                URLQueryItem(name: "numberValue", value: String(number))
+            ]
+
+            guard let url = urlComponents.url else {
+                throw URLError(.badURL)
+            }
+
+            print("Requesting URL: \(url.absoluteString)") // Print the URL being requested
+
+            do {
+                let (data, response) = try await session.data(from: url)
+                
+                // Debugging: Print the raw response string
+                if let rawResponseString = String(data: data, encoding: .utf8) {
+                    print("Raw Response: \(rawResponseString)")
+                }
+
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                
+                let jsonResponse = try JSONDecoder().decode(QuestionResponse.self, from: data)
+                questionResponses.append(jsonResponse)
+            } catch {
+                print("Request to \(url.absoluteString) failed with error: \(error)")
+                throw error
+            }
+        }
+
+        return questionResponses
+    }
     
-//    func fetchTopics(context: String) async throws -> [String] {
-//       
+    func fetchQuestionsLocally(prompt: String) async -> String {
+        print("Calling on NetworkService")
+        var response: String = ""
+        do {
+            response = try await openAIManager.fetchChat(userPrompt: prompt)
+        } catch {
+            print("ERROR DETAILS - \(error)")
+        }
+        
+        return response
+    }
+
+
+//
 //         //Base URL
 //        let baseUrl = Config.topicRequestURL
 //        // Append query parameter

@@ -192,6 +192,14 @@ extension View {
             .padding()
             .background(Color.gray.opacity(0.06))
     }
+    
+    func lightBackgroundStyle() -> some View {
+            self.background(
+                Circle()
+                    .fill(Material.ultraThin)
+                    .environment(\.colorScheme, .light)
+            )
+        }
 }
 
 extension String {

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B24F8532B96B36400CC9E9A /* OpenAIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B24F8522B96B36400CC9E9A /* OpenAIKit */; };
+		0B24F8552B96B41B00CC9E9A /* OpenAIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8542B96B41B00CC9E9A /* OpenAIManager.swift */; };
+		0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */; };
+		0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */; };
 		0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96852B87C852001D8D7B /* Buttons.swift */; };
 		0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96872B87C85A001D8D7B /* UIExtensions.swift */; };
 		0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */; };
@@ -77,6 +81,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B24F8542B96B41B00CC9E9A /* OpenAIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAIManager.swift; sourceTree = "<group>"; };
+		0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
+		0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItemView.swift; sourceTree = "<group>"; };
 		0B2E96852B87C852001D8D7B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		0B2E96872B87C85A001D8D7B /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
@@ -138,6 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B24F8532B96B36400CC9E9A /* OpenAIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,16 +209,13 @@
 				0B4ACCD32B89A61500377BE7 /* FullScreenControlView.swift */,
 				0B4ACCD72B89A61500377BE7 /* SpeechManager.swift */,
 				0B4ACCE32B89A61500377BE7 /* MiniQuizControlView.swift */,
-				0B4ACCC52B89A61500377BE7 /* UserDefaultManager.swift */,
 				0B4ACCBA2B899B3200377BE7 /* AiAssistantContentView.swift */,
 				0B4ACD0E2B89A82800377BE7 /* CustomQuestionDisplayView.swift */,
 				0B3A90462B8AE1A700C0848C /* MiniPlayerControls.swift */,
-				0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */,
 				0B42E3D82B8D4F8E00DC3565 /* KnowledgeTestViewModel.swift */,
 				0BBD5AED2B8E7844005BD87B /* SampleExam.swift */,
 				0B42E3DA2B8D4FA000DC3565 /* KnowledgeTestContentView.swift */,
 				0BBD5AF12B8E7A31005BD87B /* AudioQuizPlaceHolder.swift */,
-				0B42E3D52B8CFFB300DC3565 /* Config.swift */,
 				0B4ACD102B89CB8E00377BE7 /* Test.swift */,
 			);
 			path = CopiedProjectFiles;
@@ -227,6 +232,7 @@
 				0B42E3D12B8C842D00DC3565 /* AudioQuizPlayer.swift */,
 				0B42E3DC2B8D500E00DC3565 /* AudioQuizPlaylistView.swift */,
 				0BBD5AEF2B8E7A09005BD87B /* ExploreAudioQuizView.swift */,
+				0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -256,6 +262,10 @@
 				0BB9DE122B865885004F848A /* AppState.swift */,
 				0BB9DE2B2B865E0F004F848A /* DefaultAudioQuizCollection.swift */,
 				0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */,
+				0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */,
+				0B24F8542B96B41B00CC9E9A /* OpenAIManager.swift */,
+				0B4ACCC52B89A61500377BE7 /* UserDefaultManager.swift */,
+				0B42E3D52B8CFFB300DC3565 /* Config.swift */,
 			);
 			path = AppConfig;
 			sourceTree = "<group>";
@@ -268,6 +278,7 @@
 				0BB9DE162B865885004F848A /* AudioQuizCollectionView.swift */,
 				0BBD5AF32B8E8371005BD87B /* AudioQuizSearchCollectionView.swift */,
 				0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */,
+				0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -370,6 +381,9 @@
 			dependencies = (
 			);
 			name = "Exam Genius";
+			packageProductDependencies = (
+				0B24F8522B96B36400CC9E9A /* OpenAIKit */,
+			);
 			productName = "Exam Genius";
 			productReference = 0BBCBFAA2B86563D00E9B7A9 /* Exam Genius.app */;
 			productType = "com.apple.product-type.application";
@@ -442,6 +456,9 @@
 				Base,
 			);
 			mainGroup = 0BBCBFA12B86563D00E9B7A9;
+			packageReferences = (
+				0B24F8512B96B36400CC9E9A /* XCRemoteSwiftPackageReference "OpenAIKit" */,
+			);
 			productRefGroup = 0BBCBFAB2B86563D00E9B7A9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -496,11 +513,13 @@
 				0B4ACCF92B89A61500377BE7 /* FullScreenControlView.swift in Sources */,
 				0BBD5AF02B8E7A09005BD87B /* ExploreAudioQuizView.swift in Sources */,
 				0B4ACCEC2B89A61500377BE7 /* UserDefaultManager.swift in Sources */,
+				0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */,
 				0B4ACD092B89A61500377BE7 /* MiniQuizControlView.swift in Sources */,
 				0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */,
 				0BBD5AF42B8E8371005BD87B /* AudioQuizSearchCollectionView.swift in Sources */,
 				0B4ACD0D2B89A72300377BE7 /* Misc.swift in Sources */,
 				0B4ACD072B89A61500377BE7 /* QuizPlayerExtensions.swift in Sources */,
+				0B24F8552B96B41B00CC9E9A /* OpenAIManager.swift in Sources */,
 				0BBD5AF22B8E7A31005BD87B /* AudioQuizPlaceHolder.swift in Sources */,
 				0BB9DE202B865885004F848A /* TabIcons.swift in Sources */,
 				0BB9DE1D2B865885004F848A /* QuestionModel.swift in Sources */,
@@ -528,6 +547,7 @@
 				0BB9DE1F2B865885004F848A /* AudioQuizPackageView.swift in Sources */,
 				0BB9DE052B865831004F848A /* AudioQuizPlayerView.swift in Sources */,
 				0B4ACD0F2B89A82800377BE7 /* CustomQuestionDisplayView.swift in Sources */,
+				0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */,
 				0BB9DE1B2B865885004F848A /* SwiftData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -889,6 +909,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0B24F8512B96B36400CC9E9A /* XCRemoteSwiftPackageReference "OpenAIKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/OpenDive/OpenAIKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0B24F8522B96B36400CC9E9A /* OpenAIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B24F8512B96B36400CC9E9A /* XCRemoteSwiftPackageReference "OpenAIKit" */;
+			productName = OpenAIKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0BBCBFA22B86563D00E9B7A9 /* Project object */;
 }

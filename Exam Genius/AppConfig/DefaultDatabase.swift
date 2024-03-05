@@ -75,7 +75,7 @@ struct DefaultDatabase {
             
             ExamDetails(name: "UI and UX Design", acronym: "Ui/Ux", category: .technology, about: "", image: "UIandUXDesign"),
             
-            ExamDetails(name: "Kotlin", acronym: "", category: .technology, about: "", image: "Kotlin"),
+            ExamDetails(name: "Kotlin Programming Language", acronym: "Kotlin", category: .technology, about: "", image: "Kotlin"),
             
             ExamDetails(name: "AWS Certified Solutions Architect Exam", acronym: "AWS CSA", category: .technology, about: "Certification for individuals designing distributed systems on AWS.", image: "AWS-Exam-Basic"),
             
@@ -103,7 +103,6 @@ struct DefaultDatabase {
             
             ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: .healthcare, about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam")
 
-
             //MARK FOR IMAGE GEN
 //            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: .healthcare, about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
 //            ExamDetails(name: "United States Medical Licensing Examination Step 3", acronym: "USMLE Step 3", category: .healthcare, about: "Assesses whether participants can apply medical knowledge and understanding of biomedical and clinical science essential for the unsupervised practice of medicine, with an emphasis on patient management in ambulatory settings.", image: "USMLE-Step-3-Basic")
@@ -116,9 +115,7 @@ struct DefaultDatabase {
 //            ExamDetails(name: "ITIL Certification Exam", acronym: "ITIL", category: .technology, about: "Certification for IT service management based on ITIL practices.", image: "ITIL-Exam"),
 //            ExamDetails(name: "PRINCE2 Certification Exam", acronym: "PRINCE2", category: .business, about: "A process-based method for effective project management.", image: "PRINCE2-Exam"),
 //            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: .technology, about: "Certification for professionals working with SAP software solutions.", image: "SAP-Exam"),
-
 //            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: .technology, about: "Certification for individuals using Google Cloud technologies.", image: "GoogleCloud-Exam"),
-
 //            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: .technology, about: "Certification for Linux system administrators.", image: "LPIC-Exam"),
 //            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: .technology, about: "Certification for IT and information security leaders in cloud security.", image: "CCSP-Exam"),
     

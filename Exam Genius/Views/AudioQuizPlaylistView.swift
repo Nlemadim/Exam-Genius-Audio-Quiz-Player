@@ -86,7 +86,12 @@ struct AudioQuizPlaylistView: View {
                                 Spacer(minLength: 0)
                                 VStack{
                                     DownloadAudioQuizButton(
-                                        buildProcesses: { Task { await buildAudioQuizTopics(audioQuiz) } },
+                                        buildProcesses: {
+                                            Task {
+                                                await quizBuilder.fetchSampleQuestionsLocally(prompt: "What is the capital of France")
+                                                //await buildAudioQuizQuestions(audioQuiz)
+                                            }
+                                        },
                                         buttonText: downloadButtonLabel,
                                         isDownloading: $isDownloading)
                                     Spacer()
@@ -135,6 +140,30 @@ struct AudioQuizPlaylistView: View {
         }
     }
     
+    func buildAudioQuizQuestions(_ audioQuiz: AudioQuizPackage) async {
+        self.isDownloading = true
+        self.downloadButtonLabel = "Downloading"
+        let topic = ["AWS Security Best Practices"]
+        do {
+            let fetchedQuestions = try await quizBuilder.fetchSampleQuestions(examName: "AWS Certified Solutions Architect Exam", topics: topic, number: 3)
+           
+            for question in fetchedQuestions {
+                let newQuestion = Question(from: question, topic: topic[0])
+                audioQuiz.questions.append(newQuestion)
+                numberOfTopics += 1
+            }
+            
+            print(self.audioQuiz.questions.count)
+            self.downloadButtonLabel = "Start Audio Quiz"
+        } catch {
+            // Handle errors if needed
+            DispatchQueue.main.async {
+                self.isDownloading = false
+            }
+            print(error.localizedDescription)
+        }
+    }
+    
 }
 
 #Preview {
@@ -151,6 +180,7 @@ struct AudioQuizPlaylistView: View {
         return Text("Failed to create Preview: \(error.localizedDescription)")
     }
 }
+
 
 
 

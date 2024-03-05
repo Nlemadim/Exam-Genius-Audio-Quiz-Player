@@ -20,6 +20,26 @@ extension AudioQuizPlaylistView {
             return try await networkService.fetchTopics(context: context)
         }
         
+        func fetchSampleQuestions(examName: String, topics: [String], number: Int) async throws -> [QuestionResponse] {
+            return try await networkService.fetchQuestions(examName: examName, topics: topics, number: number)
+        }
+        
+        func fetchSampleQuestionsLocally(prompt: String) async -> String {
+            print("Calling on QuizBuilder")
+            return await networkService.fetchQuestionsLocally(prompt: prompt)
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -36,12 +56,6 @@ extension AudioQuizPlaylistView {
             
             return voicedQuestions
         }
-        
-        
-        
-        
-        
-        
         
         private func generateAudioQuestion(question: Question) async {
             let readOut = formatQuestionForReadOut(questionContent: question.questionContent, options: question.options)

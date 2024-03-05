@@ -68,6 +68,26 @@ class Question: ObservableObject, Identifiable {
     }
 }
 
+extension Question {
+    convenience init(from response: QuestionResponse, topic: String) {
+        let options = response.options.map { $0.option }
+        self.init(
+            id: UUID(),
+            questionContent: response.question,
+            questionNote: response.overview ?? "",
+            topic: topic,
+            options: options,
+            correctOption: response.correctOption,
+            selectedOption: "",
+            isAnswered: false,
+            isAnsweredCorrectly: false,
+            numberOfPresentations: 0,
+            questionAudio: "",
+            questionNoteAudio: ""
+        )
+    }
+}
+
 
 
 
