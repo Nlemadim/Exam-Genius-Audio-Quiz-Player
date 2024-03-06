@@ -18,7 +18,32 @@ class NetworkService {
     
     var updateNetworkStatus: ((NetworkStatus) -> Void)?
     
+    func fetchQuestionsLocally(prompt: String, currentRole: String? = nil) async -> String {
+        print("Calling on NetworkService")
+        var response: String = ""
+        do {
+            response = try await openAIManager.fetchChat(userPrompt: prompt, currentRole: currentRole)
+        } catch {
+            print("ERROR DETAILS - \(error)")
+        }
+        
+        return response
+    }
+    
+    func fetchTopicsLocally(prompt: String, currentRole: String? = nil) async -> String {
+        print("Calling on NetworkService")
+        var response: String = ""
+        do {
+            response = try await openAIManager.fetchChat(userPrompt: prompt, currentRole: currentRole)
+        } catch {
+            print("ERROR DETAILS - \(error)")
+        }
+        
+        return response
+    }
+    
     func fetchAudioData(content: String) async throws -> Data {
+        print("Network Service is Fetching Audio data")
         // Construct the URL with query parameters for the API call
         var components = URLComponents(string: Config.audioRequestURL)
         components?.queryItems = [
@@ -142,56 +167,6 @@ class NetworkService {
         return questionResponses
     }
     
-    func fetchQuestionsLocally(prompt: String) async -> String {
-        print("Calling on NetworkService")
-        var response: String = ""
-        do {
-            response = try await openAIManager.fetchChat(userPrompt: prompt)
-        } catch {
-            print("ERROR DETAILS - \(error)")
-        }
-        
-        return response
-    }
-
-
-//
-//         //Base URL
-//        let baseUrl = Config.topicRequestURL
-//        // Append query parameter
-//        guard var urlComponents = URLComponents(string: baseUrl) else {
-//            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-//        }
-//
-//        urlComponents.queryItems = [URLQueryItem(name: "context", value: context)]
-//
-//        // Check if URL is valid
-//        guard let url = urlComponents.url else {
-//            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to construct URL"])
-//        }
-//
-//        // Create a URLRequest
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//
-//        // URLSession data task
-//        let (data, response) = try await URLSession.shared.data(for: request)
-//
-//        // Log the raw server response
-//        if let httpResponse = response as? HTTPURLResponse, let rawResponse = String(data: data, encoding: .utf8) {
-//            print("Response HTTP Status code: \(httpResponse.statusCode)")
-//            print("Raw server response: \(rawResponse)")
-//        }
-//
-//        // Decode JSON
-//        let jsonResponse = try JSONDecoder().decode([String: [String]].self, from: data)
-//        guard let topics = jsonResponse["topics"] else {
-//            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Key 'topics' not found in response"])
-//        }
-//
-//        return topics
-//    }
-    
     func fetchImage(for quizName: String, retryCount: Int = 0) async throws -> String {
         print("Calling Network")
         var components = URLComponents(string: Config.imageRequestURL)
@@ -228,9 +203,6 @@ class NetworkService {
         }
     }
     
-    
-    //MARK: ENTRY POINT
-    func fetchSampleAudioQuiz()  async throws {}
 }
 
 
@@ -275,17 +247,5 @@ enum NetworkStatus {
     }
 }
 
-//struct IdentifiableNetworkStatus: Identifiable {
-//    let status: NetworkStatus
-//    var id: String {
-//        switch status {
-//        case .fetchingQuestions, .fetchingTopics, .buildingQuizPackage, .fecthingAudioFiles:
-//            return "\(status)"
-//        case .errorDownloadingContent(let errorMessage):
-//            return "error:\(errorMessage)"
-//        
-//        }
-//    }
-//}
 
 

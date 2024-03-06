@@ -88,8 +88,7 @@ struct AudioQuizPlaylistView: View {
                                     DownloadAudioQuizButton(
                                         buildProcesses: {
                                             Task {
-                                                await quizBuilder.fetchSampleQuestionsLocally(prompt: "What is the capital of France")
-                                                //await buildAudioQuizQuestions(audioQuiz)
+                                                await buildAudioQuizContent(audioQuiz)
                                             }
                                         },
                                         buttonText: downloadButtonLabel,
@@ -112,9 +111,33 @@ struct AudioQuizPlaylistView: View {
         .scrollTargetBehavior(.viewAligned)
         .preferredColorScheme(.dark)
         .onAppear {
-            print("Number of topics for \(audioQuiz.name): \(self.audioQuiz.topics.count)")
+            print("Number of Topics for \(audioQuiz.name): \(self.audioQuiz.topics.count)")
+            print("Number of Questions for \(audioQuiz.name): \(self.audioQuiz.questions.count)")
         }
         
+    }
+    
+    func buildAudioQuizContent(_ audioQuiz: AudioQuizPackage) async {
+        self.isDownloading = true
+        self.downloadButtonLabel = "Downloading"
+
+        // Asynchronously call buildSampleContent without do-catch, since it doesn't throw errors
+        let content = await quizBuilder.buildSampleContent(examName: audioQuiz)
+
+        // Proceed to use the content directly. Here, it's assumed that buildSampleContent
+        // will always return a valid AudioQuizContent object, perhaps with an empty questions array
+        // if something goes wrong internally.
+        audioQuiz.questions = content.questions.map { Question(from: $0) }
+        audioQuiz.topics = content.topics.map { Topic(name: $0) }
+
+        self.downloadButtonLabel = content.questions.isEmpty ? "Download Failed - Try Again" : "Start Audio Quiz"
+
+        DispatchQueue.main.async {
+            self.isDownloading = false
+        }
+        
+        try! modelContext.save()
+        print(audioQuiz.questions.count)
     }
     
     func buildAudioQuizTopics(_ audioQuiz: AudioQuizPackage) async {
@@ -122,13 +145,8 @@ struct AudioQuizPlaylistView: View {
         self.downloadButtonLabel = "Downloading"
         do {
             let fetchedTopics = try await quizBuilder.fetchTopicNames(context: audioQuiz.name)
+            audioQuiz.topics = fetchedTopics.map { Topic(name: $0) }
            
-            for topic in fetchedTopics {
-                let newTopic = Topic(name: topic)
-                audioQuiz.topics.append(newTopic)
-                numberOfTopics += 1
-            }
-            
             print(self.audioQuiz.topics.count)
             self.downloadButtonLabel = "Start Audio Quiz"
         } catch {
@@ -139,31 +157,6 @@ struct AudioQuizPlaylistView: View {
             print(error.localizedDescription)
         }
     }
-    
-    func buildAudioQuizQuestions(_ audioQuiz: AudioQuizPackage) async {
-        self.isDownloading = true
-        self.downloadButtonLabel = "Downloading"
-        let topic = ["AWS Security Best Practices"]
-        do {
-            let fetchedQuestions = try await quizBuilder.fetchSampleQuestions(examName: "AWS Certified Solutions Architect Exam", topics: topic, number: 3)
-           
-            for question in fetchedQuestions {
-                let newQuestion = Question(from: question, topic: topic[0])
-                audioQuiz.questions.append(newQuestion)
-                numberOfTopics += 1
-            }
-            
-            print(self.audioQuiz.questions.count)
-            self.downloadButtonLabel = "Start Audio Quiz"
-        } catch {
-            // Handle errors if needed
-            DispatchQueue.main.async {
-                self.isDownloading = false
-            }
-            print(error.localizedDescription)
-        }
-    }
-    
 }
 
 #Preview {
@@ -171,7 +164,7 @@ struct AudioQuizPlaylistView: View {
         let user = User()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. Candidates must demonstrate their ability to analyze facts, discern relevant legal points, and apply principles logically. The exam evaluates their proficiency in using and applying legal theories.", imageUrl: "BarExam-Exam", category: [.legal])
+        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. Candidates must demonstrate their ability to analyze facts, discern relevant legal points, and apply principles logically. The exam evaluates their proficiency in using and applying legal theories.", imageUrl: "BarExam-Exam", category: [.legal])
         
         return AudioQuizPlaylistView(audioQuiz: package)
             .modelContainer(container)

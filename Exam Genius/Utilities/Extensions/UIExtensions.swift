@@ -194,15 +194,23 @@ extension View {
     }
     
     func lightBackgroundStyle() -> some View {
-            self.background(
-                Circle()
-                    .fill(Material.ultraThin)
-                    .environment(\.colorScheme, .light)
-            )
-        }
+        self.background(
+            Circle()
+                .fill(Material.ultraThin)
+                .environment(\.colorScheme, .light)
+        )
+    }
 }
 
 extension String {
+    func removingLeadingNumber() -> String {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let index = trimmedText.firstIndex(where: { !$0.isNumber && $0 != "." }) else {
+            return self // Return original if no non-numeric character found
+        }
+        return String(trimmedText[index...]).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
     var isEmptyOrWhiteSpace: Bool {
         self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }

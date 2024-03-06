@@ -69,8 +69,9 @@ class Question: ObservableObject, Identifiable {
 }
 
 extension Question {
-    convenience init(from response: QuestionResponse, topic: String) {
+    convenience init(from response: QuestionResponse) {
         let options = response.options.map { $0.option }
+        let topic = response.topic
         self.init(
             id: UUID(),
             questionContent: response.question,
@@ -82,7 +83,7 @@ extension Question {
             isAnswered: false,
             isAnsweredCorrectly: false,
             numberOfPresentations: 0,
-            questionAudio: "",
+            questionAudio: response.questionAudio ?? "",
             questionNoteAudio: ""
         )
     }

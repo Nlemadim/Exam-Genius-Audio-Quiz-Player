@@ -246,3 +246,16 @@ extension AudioQuizPackage {
     }
 }
 
+extension AudioQuizPackage {
+    convenience init(from content: AudioQuizContent) {
+        self.init(id: UUID())
+        // Convert each topic name from the `content.topics` array to a `Topic` object
+        self.topics = content.topics.map { Topic(name: $0) }
+        // Convert each `QuestionResponse` from `content.questions` array to a `Question` object
+        self.questions = content.questions.map { Question(from: $0) }
+        // `performance` is not covered by `AudioQuizContent`, so set to default or as per your logic
+        self.performance = [] // Assuming this needs to be populated or updated elsewhere
+    }
+}
+
+

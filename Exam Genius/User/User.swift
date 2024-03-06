@@ -11,6 +11,7 @@ import SwiftUI
 final class User: ObservableObject {
     @Published var userName: String = ""
     @Published var email: String = ""
+    @Published var accessKey: String = ""
     @Published var isUsingMic: Bool = false
     @Published var isSignedIn: Bool = false
     @Published var isFirstLaunch: Bool = true

@@ -34,18 +34,18 @@ struct SettingsPage: View {
                             .background(.clear)
                         
                         Spacer()
-                        
-                        Text("Privacy")
-                            .foregroundStyle(.secondary)
-                            .font(.footnote)
-                            .hAlign(.center)
-                        Text("Terms and Conditions")
-                            .foregroundStyle(.secondary)
-                            .font(.footnote)
-                            .hAlign(.center)
                     }
                 }
-                .scrollBounceBehavior(.basedOnSize)
+                .scrollBounceBehavior(.automatic)
+                
+                Text("Privacy")
+                    .foregroundStyle(.secondary)
+                    .font(.footnote)
+                    .hAlign(.center)
+                Text("Terms and Conditions")
+                    .foregroundStyle(.secondary)
+                    .font(.footnote)
+                    .hAlign(.center)
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)

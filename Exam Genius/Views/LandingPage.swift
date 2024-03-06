@@ -114,7 +114,7 @@ struct LandingPage: View {
                 }
                 .tag(1)
             
-            View2()
+            SettingsPage()
                 .tabItem {
                     TabIcons(title: "Settings", icon: "slider.horizontal.3")
                 }
