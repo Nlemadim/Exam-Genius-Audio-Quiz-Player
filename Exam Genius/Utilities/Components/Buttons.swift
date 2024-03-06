@@ -101,8 +101,6 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
 }
 
 
-import SwiftUI
-
 struct CapsuleButton: View {
     let defaultLabel: String
     let actionLabel: String?
@@ -111,6 +109,7 @@ struct CapsuleButton: View {
     let borderColor: Color?
     let imageName: String?
     let action: () -> Void
+    
     
     @State private var isPressed: Bool = false
 
@@ -129,7 +128,7 @@ struct CapsuleButton: View {
                     Image(systemName: imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 25, height: 25)
                 }
             }
             .padding(3)
@@ -137,8 +136,89 @@ struct CapsuleButton: View {
             .background(isPressed ? actionColor : defaultColor)
             .cornerRadius(3)
         }
-        .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isPressed, activeBackgroundColor: .clear, activeBorderColor: borderColor ?? .teal, disabledBackgroundColor: .gray, disabledBorderColor: .gray, activeGlow: true, activeGlowColor: .teal))
+        .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isPressed, activeBackgroundColor: .clear, activeBorderColor: borderColor ?? .teal, disabledBackgroundColor: .clear, disabledBorderColor: .clear, activeGlow: true, activeGlowColor: .teal))
+        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
     }
+}
+
+struct SpinnerView: View {
+    @State private var isAnimating = false
+
+    var body: some View {
+        Circle()
+            .trim(from: 0.2, to: 1)
+            .stroke(lineWidth: 2)
+            .frame(width: 25, height: 25)
+            .rotationEffect(Angle(degrees: isAnimating ? 360 : 0))
+            .onAppear() {
+                withAnimation(Animation.linear(duration: 1).repeatForever(autoreverses: false)) {
+                    self.isAnimating = true
+                }
+            }
+    }
+}
+
+struct PlaySampleButton: View {
+    @State private var buttonState: ButtonState = .default
+    
+    var body: some View {
+        Button(action: {
+            // Action to toggle button state for demonstration
+            toggleButtonState()
+        }) {
+            HStack {
+                Text("Play Sample")
+                    .font(.caption2)
+                    .fontWeight(.medium)
+                
+                // Conditionally display icon based on buttonState
+                if buttonState == .default {
+                    Image(systemName: "play.circle.fill")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                } else if buttonState == .loading {
+                    SpinnerView() // Your custom spinner view
+                        .frame(width: 25, height: 25)
+                } else if buttonState == .playing {
+                    Image(systemName: "pause.circle.fill")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                }
+            }
+            .foregroundStyle(.white)
+        }
+    }
+    
+    private func toggleButtonState() {
+        // Simple state toggle for demonstration
+        switch buttonState {
+            case .default:
+                buttonState = .loading
+                // Simulate loading process
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.buttonState = .playing
+                }
+            case .playing:
+                buttonState = .default
+            default:
+                break
+        }
+    }
+}
+
+enum ButtonState {
+    case `default`, loading, playing
+}
+
+#Preview {
+    PlaySampleButton()
+        .preferredColorScheme(.dark)
+}
+
+
+#Preview {
+    SpinnerView()
+        .preferredColorScheme(.dark)
 }
 
 

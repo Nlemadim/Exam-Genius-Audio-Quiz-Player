@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AudioQuizPackageView: View {
     var quiz: AudioQuizPackage
+    var playSampleAction: () -> Void
     var downloadAction: () -> Void
     @StateObject private var generator = ColorGenerator()
     
@@ -37,7 +38,7 @@ struct AudioQuizPackageView: View {
                     HStack {
                         VStack{
                             Text(quiz.name)
-                                .font(.title2)
+                                .font(.title3)
                                 .fontWeight(.heavy)
                                 .lineLimit(2, reservesSpace: true)
                                 .multilineTextAlignment(.leading)
@@ -49,26 +50,32 @@ struct AudioQuizPackageView: View {
 
                     audioLabel()
 
-                    HStack {
-                        Spacer()
-                        CapsuleButton(
-                            defaultLabel: "Play Sample",
-                            actionLabel: nil,
-                            defaultColor: .clear,
-                            actionColor: .clear,
-                            borderColor: .clear,
-                            imageName: "play.circle.fill",
-                            action: {
-                                downloadAction()
-                            })
-                    }
-                    .padding(.bottom, 30.0)
-                    
                 }
                 .padding(.all, 10.0)
                 .padding(.top)
                 .padding(.horizontal, 5)
-                .frame(height: 150)
+                .frame(height: 80)
+                
+                VStack {
+                    HStack {
+                        CapsuleButton(
+                            defaultLabel: "Download Quiz",
+                            actionLabel: nil,
+                            defaultColor: .clear,
+                            actionColor: .clear,
+                            borderColor: .clear,
+                            imageName: "arrow.down.to.line.circle",
+                            action: {
+                                downloadAction()
+                            })
+                        Spacer()
+                        PlaySampleButton()
+                            .padding(.horizontal, 20)
+                    }
+                    .padding(.bottom, 30.0)
+                    //.padding(.horizontal, 5)
+                }
+                
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .background(
@@ -81,6 +88,7 @@ struct AudioQuizPackageView: View {
             }
         }
         .preferredColorScheme(.dark)
+
     }
     
     var aboutQuiz: String {

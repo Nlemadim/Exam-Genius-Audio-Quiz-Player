@@ -67,12 +67,10 @@ struct LandingPage: View {
                             VStack(spacing: 10) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
                                     AudioQuizPackageView(quiz: quiz) {
-                                        //user.audioQuizPackage = quiz
-                                        selectedQuizPackage = user.audioQuizPackage
+                                        
                                         print(user.audioQuizPackage?.name ?? "Not Selected")
                                         //MARK: TODO - Handle selection or action
-                                    }
-                                    .onTapGesture {
+                                    } downloadAction: {
                                         user.audioQuizPackage = quiz
                                         selectedQuizPackage = user.audioQuizPackage
                                     }
@@ -217,9 +215,7 @@ struct LandingPage: View {
         ///Default Height set to 49
         .offset(y: -49)
     }
-    
-    
-    
+
     
     func groupQuizzesByCombinedCategories(quizzes: [AudioQuizPackage], combinedCategories: [CombinedCategory]) -> [CombinedCategory: [AudioQuizPackage]] {
         var groupedQuizzes = [CombinedCategory: [AudioQuizPackage]]()
