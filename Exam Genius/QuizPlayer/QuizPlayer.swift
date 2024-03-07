@@ -28,22 +28,24 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     @State var interactionState: InteractionState = .idle
     @State var playerState: PlayerState = .idle
     @State var isUingMic: Bool = false
-       
+    
     private var speechRecognizer = SpeechManager()
     
     private var speechSynthesizer = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
-
+    
     var currentPlaybackQueue: [String] = []
     var cancellable: AnyCancellable?
     var showScoreCard: Bool = false
     var announceScoreCard: Bool = false
     var completionHandler: (() -> Void)?
+    var audioFiles: [String] = []
     
     static let shared = QuizPlayer()
     
     private override init() {
         super.init()
+        configureAudioSession()
     }
     
     var examQuestions: [Question] {
@@ -54,6 +56,45 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         guard currentIndex < examQuestions.count else { return nil }
         
         return examQuestions[currentIndex]
+    }
+    
+    func configureAudioSession() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playback, mode: .default)
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to set audio session category: \(error)")
+        }
+    }
+    
+    
+    func playSampleQuiz(audioFileNames: [String]) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
+            self.audioFiles = audioFileNames
+            self.currentIndex = 0
+            self.playAudioFileAtIndex(self.currentIndex)
+        }
+    }
+    
+    private func playAudioFileAtIndex(_ index: Int) {
+        guard index < audioFiles.count else {
+            self.isFinishedPlaying = true // Ensure this triggers UI updates correctly
+            return
+        }
+        
+        let path = audioFiles[index]
+        guard let fileURL = URL(string: path) else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(true) // Ensure the session is active
+            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay() // Prepare the player
+            audioPlayer?.play()
+        } catch {
+            print("Could not load file: \(error)")
+        }
     }
     
     func quizPlayerDidFinishPlaying(completion: @escaping (Bool) -> Void) {
@@ -74,7 +115,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         playerState = .isPlayingQuestion
         // Start playing the audio file
         playAudio(audioFileName: audioFileName)
-
+        
         if let currentQuestion {
             print("Player Started playing Question\(currentIndex + 1): \(isNowPlaying)")
             print("Player Finished playing: \(isFinishedPlaying)")
@@ -111,24 +152,27 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         print("Player has Finished playing")
         isFinishedPlaying = true
         playerState = .isAwaitingAnswer
-        //startRecordingAndTranscribing()
-     }
+        if flag {
+            currentIndex += 1 // Move to the next file
+            playAudioFileAtIndex(currentIndex) // Play next audio
+        }
+    }
     
     fileprivate func checkSelectedOptionAndUpdateState() {
-            if UserDefaultsManager.isOnContinuousFlow() /* && !selectedOption.isEmpty */{
-                // Proceed to the next audio file
-                print("Playing next Question")
-                playNextQuestion()
-            } else {
-                // Wait for user interaction to proceed
-                //interactionState = .awaitingResponse
-                audioPlayer?.stop()
-                playerState = .isPaused
-                print("Player paused while awaiting response")
-            }
+        if UserDefaultsManager.isOnContinuousFlow() /* && !selectedOption.isEmpty */{
+            // Proceed to the next audio file
+            print("Playing next Question")
+            playNextQuestion()
+        } else {
+            // Wait for user interaction to proceed
+            //interactionState = .awaitingResponse
+            audioPlayer?.stop()
+            playerState = .isPaused
+            print("Player paused while awaiting response")
+        }
         
     }
-
+    
     //UI TESTING
     func readQuestionContent(questionContent: String) {
         let utterance = AVSpeechUtterance(string: questionContent)
@@ -147,15 +191,15 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     fileprivate func startRecordingAndTranscribing() {
         guard playerState == .isAwaitingAnswer else { return }
-
+        
         print("Starting transcription...")
         interactionState = .isListening
         self.isRecordingAnswer = true
-
+        
         // Immediately start transcribing
         self.speechRecognizer.transcribe()
         print("Transcribing started")
-
+        
         // Schedule to stop transcribing after 5 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.speechRecognizer.stopTranscribing()
@@ -167,14 +211,14 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
                 self.interactionState = .isProcessing
                 self.currentQuestion?.selectedOption = self.processTranscript(transcript: newTranscript)
                 print("Processing completed")
-
+                
                 // Further processing or state update can be done here
                 self.checkSelectedOptionAndUpdateState()
             }
         }
     }
     
-
+    
     fileprivate func getTranscript(completion: @escaping (String) -> Void) {
         cancellable = speechRecognizer.$transcript
             .sink { newTranscript in
@@ -196,7 +240,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         }
         return processedTranscript
     }
-
+    
     deinit {
         cancellable?.cancel()
     }
@@ -206,23 +250,23 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
  self.isRecordingAnswer = true
  // Wait for 5-7 seconds for transcribed answer
  DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-     self.speechRecognizer.transcribe()
+ self.speechRecognizer.transcribe()
  }
  
  // After transcribing, stop transcription and turn off recording
  DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
-     self.speechRecognizer.stopTranscribing()
-     self.isRecordingAnswer.toggle()
+ self.speechRecognizer.stopTranscribing()
+ self.isRecordingAnswer.toggle()
  }
-}
-
-func getTranscript(completion: @escaping (String) -> Void) {
+ }
+ 
+ func getTranscript(completion: @escaping (String) -> Void) {
  cancellable = speechRecognizer.$transcript
-     .sink { newTranscript in
-         completion(newTranscript)
-         self.currentQuestion?.selectedOption = newTranscript
-     }
-}*/
+ .sink { newTranscript in
+ completion(newTranscript)
+ self.currentQuestion?.selectedOption = newTranscript
+ }
+ }*/
 
 
 

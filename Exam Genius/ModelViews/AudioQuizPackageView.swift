@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct AudioQuizPackageView: View {
+    @Binding var isDownloading: Bool
+    @Binding var isPlaying: Bool
+    @StateObject private var generator = ColorGenerator()
+    
     var quiz: AudioQuizPackage
     var playSampleAction: () -> Void
     var downloadAction: () -> Void
-    @StateObject private var generator = ColorGenerator()
     
     var body: some View {
         ZStack {
@@ -69,11 +72,14 @@ struct AudioQuizPackageView: View {
                                 downloadAction()
                             })
                         Spacer()
-                        PlaySampleButton()
-                            .padding(.horizontal, 20)
+                        PlaySampleButton(isDownloading: $isDownloading, isPlaying: $isPlaying, playAction: {
+                            playSampleAction()
+                        })
+                        .padding(.horizontal, 20)
+  
                     }
                     .padding(.bottom, 30.0)
-                    //.padding(.horizontal, 5)
+            
                 }
                 
             }

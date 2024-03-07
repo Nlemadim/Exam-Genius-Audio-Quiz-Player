@@ -28,7 +28,7 @@ struct BuildButton: View {
                     .background(
                         RoundedRectangle(cornerRadius: 15, style: .continuous)
                             .fill(.teal.opacity(0.6))
-                    
+                        
                     )
             }
             .padding(5)
@@ -79,7 +79,7 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
     var textFont: Font = .subheadline
     var activeGlow: Bool?
     var activeGlowColor: Color?
-
+    
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .font(textFont) // Use the specified font
@@ -89,14 +89,14 @@ struct CapsuleStrokeButtonStyle: ButtonStyle {
                 Capsule() // Capsule shape
                     .strokeBorder(isDisabled ? disabledBorderColor : activeBorderColor, lineWidth: 1)
                     .activeGlow(activeGlow ?? false ? activeBorderColor : .clear, radius: 1)// Stroke color based on disabled state
-                    
+                
                     .background(
                         Capsule().fill(isDisabled ? disabledBackgroundColor : activeBackgroundColor) // Background color based on disabled state
                         
                     )
             )
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
-            
+        
     }
 }
 
@@ -112,7 +112,7 @@ struct CapsuleButton: View {
     
     
     @State private var isPressed: Bool = false
-
+    
     var body: some View {
         Button(action: {
             self.action()
@@ -143,12 +143,13 @@ struct CapsuleButton: View {
 
 struct SpinnerView: View {
     @State private var isAnimating = false
-
+    
     var body: some View {
         Circle()
             .trim(from: 0.2, to: 1)
             .stroke(lineWidth: 2)
-            .frame(width: 25, height: 25)
+            .foregroundStyle(.teal)
+            .frame(width: 20, height: 20)
             .rotationEffect(Angle(degrees: isAnimating ? 360 : 0))
             .onAppear() {
                 withAnimation(Animation.linear(duration: 1).repeatForever(autoreverses: false)) {
@@ -159,51 +160,41 @@ struct SpinnerView: View {
 }
 
 struct PlaySampleButton: View {
-    @State private var buttonState: ButtonState = .default
+    @Binding var isDownloading: Bool
+    @Binding var isPlaying: Bool
+    var playAction: () -> Void
     
     var body: some View {
         Button(action: {
-            // Action to toggle button state for demonstration
-            toggleButtonState()
+            if !isDownloading && !isPlaying {
+                playAction() 
+            }
         }) {
             HStack {
-                Text("Play Sample")
+                Text(isPlaying ? "Playing" : "Play Sample")
                     .font(.caption2)
                     .fontWeight(.medium)
+                    .foregroundStyle(.white)
                 
                 // Conditionally display icon based on buttonState
-                if buttonState == .default {
+                if isDownloading {
+                    SpinnerView() // Your custom spinner view
+                        .frame(width: 20, height: 20)
+                    
+                } else if !isPlaying {
                     Image(systemName: "play.circle.fill")
                         .resizable()
-                        .frame(width: 25, height: 25)
-                } else if buttonState == .loading {
-                    SpinnerView() // Your custom spinner view
-                        .frame(width: 25, height: 25)
-                } else if buttonState == .playing {
+                        .frame(width: 20, height: 20)
+                } else {
                     Image(systemName: "pause.circle.fill")
                         .resizable()
-                        .frame(width: 25, height: 25)
+                        .frame(width: 20, height: 20)
                 }
             }
             .foregroundStyle(.white)
         }
     }
     
-    private func toggleButtonState() {
-        // Simple state toggle for demonstration
-        switch buttonState {
-            case .default:
-                buttonState = .loading
-                // Simulate loading process
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.buttonState = .playing
-                }
-            case .playing:
-                buttonState = .default
-            default:
-                break
-        }
-    }
 }
 
 enum ButtonState {
@@ -211,15 +202,11 @@ enum ButtonState {
 }
 
 #Preview {
-    PlaySampleButton()
+    PlaySampleButton(isDownloading: .constant(false), isPlaying: .constant(false), playAction: {})
         .preferredColorScheme(.dark)
 }
 
 
-#Preview {
-    SpinnerView()
-        .preferredColorScheme(.dark)
-}
 
 
 #Preview {

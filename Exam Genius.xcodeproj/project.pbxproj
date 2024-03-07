@@ -62,6 +62,7 @@
 		0BBD5AF22B8E7A31005BD87B /* AudioQuizPlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBD5AF12B8E7A31005BD87B /* AudioQuizPlaceHolder.swift */; };
 		0BBD5AF42B8E8371005BD87B /* AudioQuizSearchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBD5AF32B8E8371005BD87B /* AudioQuizSearchCollectionView.swift */; };
 		0BBD5AF62B8E8AD8005BD87B /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */; };
+		0BFD50A42B9967AE00BE89D4 /* LandingPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFD50A32B9967AE00BE89D4 /* LandingPageViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +141,7 @@
 		0BBD5AF12B8E7A31005BD87B /* AudioQuizPlaceHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQuizPlaceHolder.swift; sourceTree = "<group>"; };
 		0BBD5AF32B8E8371005BD87B /* AudioQuizSearchCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizSearchCollectionView.swift; sourceTree = "<group>"; };
 		0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
+		0BFD50A32B9967AE00BE89D4 /* LandingPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +245,7 @@
 				0B42E3DC2B8D500E00DC3565 /* AudioQuizPlaylistView.swift */,
 				0BBD5AEF2B8E7A09005BD87B /* ExploreAudioQuizView.swift */,
 				0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */,
+				0BFD50A32B9967AE00BE89D4 /* LandingPageViewModel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -549,6 +552,7 @@
 				0B4ACCEE2B89A61500377BE7 /* PlayerContentInfo.swift in Sources */,
 				0BBD5AEA2B8E4B28005BD87B /* QuizBuilder.swift in Sources */,
 				0B42E3D92B8D4F8E00DC3565 /* KnowledgeTestViewModel.swift in Sources */,
+				0BFD50A42B9967AE00BE89D4 /* LandingPageViewModel.swift in Sources */,
 				0B4ACCEB2B89A61500377BE7 /* QuizPlayer.swift in Sources */,
 				0BB9DE1A2B865885004F848A /* AudioQuizPackage.swift in Sources */,
 				0BB9DE1E2B865885004F848A /* AppState.swift in Sources */,

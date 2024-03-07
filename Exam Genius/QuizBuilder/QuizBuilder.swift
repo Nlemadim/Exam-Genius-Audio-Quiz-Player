@@ -11,7 +11,7 @@ import SwiftData
 
 extension AudioQuizPlaylistView {
     @Observable
-    class QuizBuilder {
+    class QuizBuilder: ObservableObject {
         private let networkService: NetworkService = NetworkService.shared
         var modelContext: ModelContext? = nil
         var questionNumber: Int = 0
@@ -66,9 +66,11 @@ extension AudioQuizPlaylistView {
             
             // Fetch and assign audio URLs for each question
             for i in 0..<formattedQuestion.count {
+                questionNumber += 1
                 var question = formattedQuestion[i]
                 let options = question.options.map { $0.option }
                 let audioReadout = formatQuestionForReadOut(questionContent: question.question, options: options)
+                //let audioReadout = formatQuestionForReadOut3(questionContent: question.question, options: options)
                 
                 // Await the downloadReadOut function to complete and then mutate
                 let audioFileUrl = await downloadReadOut(readOut: audioReadout)
@@ -165,21 +167,21 @@ extension AudioQuizPlaylistView {
         }
 
         
-//        private func formatQuestionForReadOut(questionContent: String, options: [String]) -> String {
-//            return """
-//                   Question:\(questionNumber)
-//                   
-//                   \(questionContent)
-//                   
-//                   Options:
-//                   
-//                   Option A: \(options[0])
-//                   Option B: \(options[1])
-//                   Option C: \(options[2])
-//                   Option D: \(options[3])
-//                   
-//                   """
-//        }
+        private func formatQuestionForReadOut3(questionContent: String, options: [String]) -> String {
+            return """
+                   Question:\(questionNumber)
+                   
+                   \(questionContent)
+                   
+                   Options:
+                   
+                   A: \(options[0])
+                   B: \(options[1])
+                   C: \(options[2])
+                   D: \(options[3])
+                   
+                   """
+        }
         
         
         func updateQuestionGroup(package: [Question]) async -> [Question]  {
@@ -397,8 +399,10 @@ extension AudioQuizPlaylistView {
                    RETURN ONLY NUMBER OF QUESTIONS REQUESTED 
                    
                    DO NOT NUMBER THE QUESTIONS
-
-                   FOR EASY PARSING PLEASE RETURN with SEPERATE headers;
+                   
+                   FOR EASY PARSING PLEASE RETURN WITH SEPERATE HEADERS
+                   
+                   DO NOT USE ANY SPECIAL CHARACTERS BEFORE OR AFTER HEADERS
                    
                     Topic
                     Question

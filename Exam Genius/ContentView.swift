@@ -12,7 +12,6 @@ struct ContentView: View {
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
    
-   
     var body: some View {
         // Example usage of appState.currentState
         switch appState.currentState {
