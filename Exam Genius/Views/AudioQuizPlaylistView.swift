@@ -18,93 +18,95 @@ struct AudioQuizPlaylistView: View {
     @State var numberOfTopics: Int = 0
     @State var downloadButtonLabel: String = "Download Audio Quiz"
     @StateObject var viewModel: AudioQuizPageViewModel
+    @StateObject private var generator = ColorGenerator()
+    @State var packetSizeDetails: String = "Packet contains over 72 hours of listening time with over 670 questions and answers spanning across 127 topics"
     
     @Bindable var audioQuiz: AudioQuizPackage
     let quizBuilder = QuizBuilder()
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                
-                VStack(alignment: .leading, spacing: 8.0) {
-                    ZStack(alignment: .bottomTrailing) {
-                        Image(audioQuiz.imageUrl)
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(15.0)
-                        Text("\(audioQuiz.questions.count) Questions".uppercased())
-                            .fontWeight(.black)
-                            .padding(8)
-                            .foregroundStyle(.white)
-                            .background(Material.ultraThin)
-                            .clipShape(.rect(cornerRadius: 10))
-                            .offset(x: -5, y: -5)
-                    }
+            ZStack {
+                ScrollView(showsIndicators: false) {
                     
                     VStack(alignment: .leading, spacing: 8.0) {
-                        HStack {
-                            Text(audioQuiz.name)
-                                .font(.title2)
-                                .fontWeight(.heavy)
-                                .lineLimit(3)
-                                .bold()
-                                .primaryTextStyleForeground()
-                            Spacer(minLength: 0)
-                        }
-                        
-                        Text(audioQuiz.about)
-                            .font(.subheadline)
-                            .foregroundStyle(.primary)
-                        
-                        Spacer()
-                        
-                        HStack {
-                            VStack(alignment: .leading, spacing: 10) {
+                        ZStack(alignment: .bottomTrailing) {
+                            Image(audioQuiz.imageUrl)
+                                .resizable()
+                                .scaledToFit()
+                                .offset(y: 10)
                                 
-//                                Divider()
-//                                
-//                                HStack {
-//                                    Text("Topics:")
-//                                        .font(.subheadline)
-//                                        .foregroundStyle(.secondary)
-//                                    
-//                                    Spacer()
-//                                    
-//                                    HStack(spacing: 5) {
-//                                        Text("\(numberOfTopics)")
-//                                            .font(.subheadline)
-//                                            .foregroundStyle(.secondary)
-//                                        Image(systemName: "chevron.right")
-//                                            .foregroundStyle(.secondary)
-//                                    }
-//                                }
-                            }
-                        }
-                        .padding(.top)
-                        
-                        Spacer()
- 
-                            HStack {
-                                Spacer(minLength: 0)
-                                VStack{
-                                    DownloadAudioQuizButton(
-                                        buildProcesses: {
-                                            Task {
-                                                //await buildAudioQuizContent(audioQuiz)
-                                            }
-                                        },
-                                        buttonText: downloadButtonLabel,
-                                        isDownloading: $isDownloading)
-                                    Spacer()
-                                    Button("Cancel", systemImage: "xmark.circle", action: { dismiss() }).foregroundStyle(.red)
-                                        .padding()
+                            Image(systemName: "chevron.down")
+                                .foregroundStyle(.white).activeGlow(.white, radius: 1.5)
+                                .padding(8)
+                                .background(Material.ultraThin)
+                                .clipShape(.circle)
+                                .offset(x: -350, y: -350)
+                                .zIndex(1.0)
+                                .onTapGesture {
+                                    dismiss()
                                 }
-                                Spacer(minLength: 0)
+                                
+                        }
+                       
+                        VStack {
+                            VStack(alignment: .leading, spacing: 8.0) {
+                                HStack {
+                                    Text(audioQuiz.name)
+                                        .font(.headline)
+                                        .fontWeight(.heavy)
+                                        .lineLimit(3, reservesSpace: false)
+                                        .bold()
+                                        .primaryTextStyleForeground()
+                                    Spacer(minLength: 0)
+                                }
+                                
+                                Text(audioQuiz.about)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.primary)
+
                             }
-                            .padding()
-                            .padding(.horizontal)
-                        }.padding()
+                            
+                            
+                            VStack(alignment: .leading, spacing: 8.0) {
+                                Text(packetSizeDetails)
+                                    .font(.footnote)
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.primary)
+                                    .multilineTextAlignment(.center)
+                                    .padding()
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(lineWidth: 1)
+                                    )
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8.0) {
+                                Button("Play Sample Questions") {
+                                    
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 44)
+                                .background(generator.dominantLightToneColor)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+
+                                Button("Download For $26") {
+                                   
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 44)
+                                .background(generator.dominantDarkToneColor)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                            }
+                            .padding(.all, 10.0)
+                        }
+                        .padding()
+                    }
                 }
             }
+            .background(generator.dominantBackgroundColor)
+                
         }
         .navigationTitle(audioQuiz.acronym + " Audio Quiz")
         .navigationBarTitleDisplayMode(.inline)
@@ -112,15 +114,13 @@ struct AudioQuizPlaylistView: View {
         .scrollTargetBehavior(.viewAligned)
         .preferredColorScheme(.dark)
         .onAppear {
-            print("Number of Topics for \(audioQuiz.name): \(self.audioQuiz.topics.count)")
-            print("Number of Questions for \(audioQuiz.name): \(self.audioQuiz.questions.count)")
+            generator.updateAllColors(fromImageNamed: audioQuiz.imageUrl)
         }
-        
     }
     
     func buildAudioQuizContent() {
         viewModel.buildAudioQuizContent(name: viewModel.audioQuiz.name)
-     }
+    }
     
     func buildAudioQuizTopics(_ audioQuiz: AudioQuizPackage) async {
         self.isDownloading = true
@@ -128,7 +128,7 @@ struct AudioQuizPlaylistView: View {
         do {
             let fetchedTopics = try await quizBuilder.fetchTopicNames(context: audioQuiz.name)
             audioQuiz.topics = fetchedTopics.map { Topic(name: $0) }
-           
+            
             print(self.audioQuiz.topics.count)
             self.downloadButtonLabel = "Start Audio Quiz"
         } catch {
@@ -146,7 +146,7 @@ struct AudioQuizPlaylistView: View {
         let user = User()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. Candidates must demonstrate their ability to analyze facts, discern relevant legal points, and apply principles logically. The exam evaluates their proficiency in using and applying legal theories.", imageUrl: "BarExam-Exam", category: [.legal])
+        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
         let viewModel = AudioQuizPageViewModel(audioQuiz: package)
         
         return AudioQuizPlaylistView(viewModel: viewModel, audioQuiz: package)
