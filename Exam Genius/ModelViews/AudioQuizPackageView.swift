@@ -8,13 +8,8 @@
 import SwiftUI
 
 struct AudioQuizPackageView: View {
-    @Binding var isDownloading: Bool
-    @Binding var isPlaying: Bool
     @StateObject private var generator = ColorGenerator()
-    
     var quiz: AudioQuizPackage
-    var playSampleAction: () -> Void
-    var downloadAction: () -> Void
     
     var body: some View {
         ZStack {
@@ -59,28 +54,6 @@ struct AudioQuizPackageView: View {
                 .padding(.horizontal, 5)
                 .frame(height: 80)
                 
-                VStack {
-                    HStack {
-                        CapsuleButton(
-                            defaultLabel: "Download Quiz",
-                            actionLabel: nil,
-                            defaultColor: .clear,
-                            actionColor: .clear,
-                            borderColor: .clear,
-                            imageName: "arrow.down.to.line.circle",
-                            action: {
-                                downloadAction()
-                            })
-                        Spacer()
-                        PlaySampleButton(isDownloading: $isDownloading, isPlaying: $isPlaying, playAction: {
-                            playSampleAction()
-                        })
-                        .padding(.horizontal, 20)
-  
-                    }
-                    .padding(.bottom, 30.0)
-            
-                }
                 
             }
             .frame(maxHeight: .infinity, alignment: .top)

@@ -167,7 +167,7 @@ struct PlaySampleButton: View {
     var body: some View {
         Button(action: {
             if !isDownloading && !isPlaying {
-                playAction() 
+                playAction()
             }
         }) {
             HStack {

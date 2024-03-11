@@ -12,35 +12,10 @@ import AVFoundation
 class NetworkService {
     
     static let shared = NetworkService()
-    var openAIManager: OpenAIManager = .shared
     
     private init() {}
     
     var updateNetworkStatus: ((NetworkStatus) -> Void)?
-    
-    func fetchQuestionsLocally(prompt: String, currentRole: String? = nil) async -> String {
-        print("Calling on NetworkService")
-        var response: String = ""
-        do {
-            response = try await openAIManager.fetchChat(userPrompt: prompt, currentRole: currentRole)
-        } catch {
-            print("ERROR DETAILS - \(error)")
-        }
-        
-        return response
-    }
-    
-    func fetchTopicsLocally(prompt: String, currentRole: String? = nil) async -> String {
-        print("Calling on NetworkService")
-        var response: String = ""
-        do {
-            response = try await openAIManager.fetchChat(userPrompt: prompt, currentRole: currentRole)
-        } catch {
-            print("ERROR DETAILS - \(error)")
-        }
-        
-        return response
-    }
     
     func fetchAudioData(content: String) async throws -> Data {
         print("Network Service is Fetching Audio data")
@@ -203,6 +178,66 @@ class NetworkService {
         }
     }
     
+    func fetchQuestionData(examName: String, topics: [String], number: Int) async throws -> [QuestionDataObject] {
+        var questionDataObjects: [QuestionDataObject] = []
+        let baseUrl = Config.questionsRequestURL
+        let session = URLSession.shared
+        
+        print("Starting fetchQuestionData for examName: \(examName) with topics: \(topics) and number: \(number)")
+        
+        for topic in topics {
+            var urlComponents = URLComponents(string: baseUrl)!
+            // Adjusting the query parameter keys according to the backend expectations
+            urlComponents.queryItems = [
+                URLQueryItem(name: "nameValue", value: examName),
+                URLQueryItem(name: "topicValue", value: topic),
+                URLQueryItem(name: "numberValue", value: String(number))
+            ]
+            
+            guard let url = urlComponents.url else {
+                print("Failed to create URL from components.")
+                throw URLError(.badURL)
+            }
+            
+            print("Requesting URL: \(url.absoluteString)") // Print the URL being requested
+            
+            do {
+                let (data, response) = try await session.data(from: url)
+                
+                // Debugging: Print the raw response string
+                if let rawResponseString = String(data: data, encoding: .utf8) {
+                    print("Raw Response: \(rawResponseString)")
+                } else {
+                    print("Failed to decode response data to string.")
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                    print("Received non-200 response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                    throw URLError(.badServerResponse)
+                }
+                
+                print("Attempting to decode response to QuestionDataObject.")
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .useDefaultKeys
+                do {
+                    let decodedResponse = try JSONDecoder().decode(QuestionDataObject.self, from: data)
+                    print("Successfully decoded response to QuestionDataObject.")
+                    questionDataObjects.append(decodedResponse)
+                } catch {
+                    // It's helpful to print the error here to know what went wrong if decoding fails
+                        print("Failed to decode response to QuestionDataObject with error: \(error)")
+                        throw error
+                }
+                
+            } catch {
+                print("Request to \(url.absoluteString) failed with error: \(error)")
+                throw error
+            }
+        }
+        
+        print("Completed fetching question data. Number of objects fetched: \(questionDataObjects.count)")
+        return questionDataObjects
+    }
 }
 
 

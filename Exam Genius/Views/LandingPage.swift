@@ -27,16 +27,6 @@ struct LandingPage: View {
     @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     @State private var selectedTab = 0
     @State private var selectedQuizPackage: AudioQuizPackage?
-//    @State private var selectedQuizPackage: AudioQuizPackage? {
-//        didSet {
-//            // Automatically present and expand the bottom sheet when a quiz package is selected
-//            if selectedQuizPackage != nil {
-//                withAnimation {
-//                    playerReady = true
-//                }
-//            }
-//        }
-//    }
     
     @State var selectedCategory: ExamCategory?
     private var cancellables = Set<AnyCancellable>()
@@ -66,13 +56,7 @@ struct LandingPage: View {
                             VStack(spacing: 10) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
                                     
-                                    AudioQuizPackageView(
-                                        isDownloading: $isDownloading,
-                                        isPlaying: $isPlaying,
-                                        quiz: quiz,
-                                        playSampleAction: { Task { await playSampleQuiz(quiz) } },
-                                        downloadAction: { selectedQuizPackage = quiz })
-                                    
+                                    AudioQuizPackageView(quiz: quiz)
                                 }
                                 
                                 Rectangle()
@@ -97,7 +81,7 @@ struct LandingPage: View {
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizPlaylistView(audioQuiz: selectedQuiz)
+                AudioQuizPlaylistView(viewModel: AudioQuizPageViewModel(audioQuiz: selectedQuiz), audioQuiz: selectedQuiz)
             }
             
             .tabItem {
@@ -134,51 +118,6 @@ struct LandingPage: View {
         }
     }
     
-    private func playSampleQuiz(_ audioQuiz: AudioQuizPackage) async {
-        DispatchQueue.main.async {
-            self.isDownloading = true
-        }
-        
-        var sampleCollection = audioQuiz.questions.compactMap { $0.questionAudio }
-        if sampleCollection.isEmpty {
-            // Begin content building process
-            let content = await viewModel.quizBuilderInstance.buildSampleContent(examName: audioQuiz)
-            
-            // Once content is built, update the main thread with new data
-            DispatchQueue.main.async {
-                audioQuiz.questions = content.questions.map { Question(from: $0) }
-                audioQuiz.topics = content.topics.map { Topic(name: $0) }
-                sampleCollection = audioQuiz.questions.compactMap { $0.questionAudio }
-                
-                // After updating sampleCollection, check again if it's not empty
-                if !sampleCollection.isEmpty {
-                    // Set downloading to false before beginning playback
-                    self.isDownloading = false
-                    self.isPlaying = true
-                    // Play the audio without additional delay as it's now handled within the player
-                    quizPlayer.playSampleQuiz(audioFileNames: sampleCollection)
-                    //self.isPlaying = quizPlayer.isFinishedPlaying
-                    //viewModel.monitorPlaybackCompletion()
-                } else {
-                    // Handle case with no downloadable content
-                    self.isDownloading = false
-                    // Implement UI feedback for no content available
-                }
-            }
-        } else {
-            // If there are already audio files available, play them without fetching content
-            DispatchQueue.main.async {
-                self.isDownloading = false
-                self.isPlaying = true
-                // Play the audio without additional delay
-                quizPlayer.playSampleQuiz(audioFileNames: sampleCollection)
-                //viewModel.monitorPlaybackCompletion()
-            }
-        }
-    }
-
-  
-
     //MARK TODO:
     // Handle the case where there are still no audio files to play
     // Update the UI to indicate that downloading has failed or no content is available
@@ -230,8 +169,6 @@ struct LandingPage: View {
                                     .padding(.vertical, 8)
                                     .background(LinearGradient(gradient: Gradient(colors: [.themePurpleLight, .themePurple]), startPoint: .top, endPoint: .bottom))
                                     .foregroundStyle(.white)
-                                    //.background(selectedCategory.wrappedValue == category ? Color.teal : .themePurpleLight.opacity(0.3))
-                                    //.foregroundColor(selectedCategory.wrappedValue == category ? .black : .white)
                                     .cornerRadius(18)
                                     .opacity(selectedCategory.wrappedValue == category ? 1 : 0)
                             }

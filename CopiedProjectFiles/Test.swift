@@ -99,11 +99,7 @@ struct UserHomePage: View {
                 
                 TabView {
                     ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
-                        AudioQuizPackageView(quiz: quiz) {
-                            user.audioQuizPackage = quiz
-                            selectedQuizPackage = user.audioQuizPackage
-                            print(user.audioQuizPackage?.name ?? "Not Selected")
-                        }
+                        AudioQuizPackageView(quiz: quiz) 
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never)) // Page style without index display

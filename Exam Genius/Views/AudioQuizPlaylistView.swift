@@ -17,6 +17,7 @@ struct AudioQuizPlaylistView: View {
     @State var isDownloading: Bool = false
     @State var numberOfTopics: Int = 0
     @State var downloadButtonLabel: String = "Download Audio Quiz"
+    @StateObject var viewModel: AudioQuizPageViewModel
     
     @Bindable var audioQuiz: AudioQuizPackage
     let quizBuilder = QuizBuilder()
@@ -88,7 +89,7 @@ struct AudioQuizPlaylistView: View {
                                     DownloadAudioQuizButton(
                                         buildProcesses: {
                                             Task {
-                                                await buildAudioQuizContent(audioQuiz)
+                                                //await buildAudioQuizContent(audioQuiz)
                                             }
                                         },
                                         buttonText: downloadButtonLabel,
@@ -117,28 +118,9 @@ struct AudioQuizPlaylistView: View {
         
     }
     
-    func buildAudioQuizContent(_ audioQuiz: AudioQuizPackage) async {
-        self.isDownloading = true
-        self.downloadButtonLabel = "Downloading"
-
-        // Asynchronously call buildSampleContent without do-catch, since it doesn't throw errors
-        let content = await quizBuilder.buildSampleContent(examName: audioQuiz)
-
-        // Proceed to use the content directly. Here, it's assumed that buildSampleContent
-        // will always return a valid AudioQuizContent object, perhaps with an empty questions array
-        // if something goes wrong internally.
-        audioQuiz.questions = content.questions.map { Question(from: $0) }
-        audioQuiz.topics = content.topics.map { Topic(name: $0) }
-
-        self.downloadButtonLabel = content.questions.isEmpty ? "Download Failed - Try Again" : "Start Audio Quiz"
-
-        DispatchQueue.main.async {
-            self.isDownloading = false
-        }
-        
-        try! modelContext.save()
-        print(audioQuiz.questions.count)
-    }
+    func buildAudioQuizContent() {
+        viewModel.buildAudioQuizContent(name: viewModel.audioQuiz.name)
+     }
     
     func buildAudioQuizTopics(_ audioQuiz: AudioQuizPackage) async {
         self.isDownloading = true
@@ -165,8 +147,9 @@ struct AudioQuizPlaylistView: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
         @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. Candidates must demonstrate their ability to analyze facts, discern relevant legal points, and apply principles logically. The exam evaluates their proficiency in using and applying legal theories.", imageUrl: "BarExam-Exam", category: [.legal])
+        let viewModel = AudioQuizPageViewModel(audioQuiz: package)
         
-        return AudioQuizPlaylistView(audioQuiz: package)
+        return AudioQuizPlaylistView(viewModel: viewModel, audioQuiz: package)
             .modelContainer(container)
             .environmentObject(user)
     } catch {

@@ -220,7 +220,6 @@ enum UnifiedCategory: Identifiable {
 }
 
 
-
 struct ExamDetails: Identifiable {
     let id = UUID()
     let name: String
@@ -247,14 +246,37 @@ extension AudioQuizPackage {
 }
 
 extension AudioQuizPackage {
+    static func from(content: AudioQuizPackageContent) -> AudioQuizPackage {
+        let package = AudioQuizPackage(id: UUID())
+        package.name = content.name
+        package.acronym = content.acronym
+        package.about = content.about
+        package.imageUrl = content.imageUrl
+             
+        package.topics = content.topics.map { topicContent in
+            Topic(name: topicContent.name, isPresented: topicContent.isPresented, numberOfPresentations: topicContent.numberOfPresentations)
+        }
+
+        package.questions = content.questions.map { questionContent in
+            Question(id: questionContent.id, questionContent: questionContent.questionContent, questionNote: "", topic: questionContent.topic, options: questionContent.options, correctOption: questionContent.correctOption, selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: questionContent.questionAudio, questionNoteAudio: "")
+        }
+        
+        package.category = []
+        package.performance = []
+
+        return package
+    }
+}
+
+extension AudioQuizPackage {
     convenience init(from content: AudioQuizContent) {
         self.init(id: UUID())
-        // Convert each topic name from the `content.topics` array to a `Topic` object
+        
         self.topics = content.topics.map { Topic(name: $0) }
-        // Convert each `QuestionResponse` from `content.questions` array to a `Question` object
-        self.questions = content.questions.map { Question(from: $0) }
-        // `performance` is not covered by `AudioQuizContent`, so set to default or as per your logic
-        self.performance = [] // Assuming this needs to be populated or updated elsewhere
+        
+        self.questions = content.questions.map { Question(fromResponse: $0) }
+        
+        self.performance = []
     }
 }
 
