@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */; };
-		0B24F8532B96B36400CC9E9A /* OpenAIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B24F8522B96B36400CC9E9A /* OpenAIKit */; };
 		0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */; };
 		0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */; };
 		0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96852B87C852001D8D7B /* Buttons.swift */; };
@@ -155,7 +154,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B24F8532B96B36400CC9E9A /* OpenAIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,7 +411,6 @@
 			);
 			name = "Exam Genius";
 			packageProductDependencies = (
-				0B24F8522B96B36400CC9E9A /* OpenAIKit */,
 			);
 			productName = "Exam Genius";
 			productReference = 0BBCBFAA2B86563D00E9B7A9 /* Exam Genius.app */;
@@ -488,7 +485,6 @@
 			);
 			mainGroup = 0BBCBFA12B86563D00E9B7A9;
 			packageReferences = (
-				0B24F8512B96B36400CC9E9A /* XCRemoteSwiftPackageReference "OpenAIKit" */,
 			);
 			productRefGroup = 0BBCBFAB2B86563D00E9B7A9 /* Products */;
 			projectDirPath = "";
@@ -945,25 +941,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		0B24F8512B96B36400CC9E9A /* XCRemoteSwiftPackageReference "OpenAIKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/OpenDive/OpenAIKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		0B24F8522B96B36400CC9E9A /* OpenAIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0B24F8512B96B36400CC9E9A /* XCRemoteSwiftPackageReference "OpenAIKit" */;
-			productName = OpenAIKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0BBCBFA22B86563D00E9B7A9 /* Project object */;
 }
