@@ -37,6 +37,8 @@
 		0B8C9EEB2B9EBEA90032AA80 /* QuestionDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEA2B9EBEA90032AA80 /* QuestionDataObject.swift */; };
 		0B8C9EED2B9EC1870032AA80 /* AudioQuizPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEC2B9EC1870032AA80 /* AudioQuizPageViewModel.swift */; };
 		0B8C9EEF2B9EC3820032AA80 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */; };
+		0B9979322B9F891B003BB457 /* AudioQuizDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9979312B9F891B003BB457 /* AudioQuizDetailView.swift */; };
+		0B9979342B9F8B76003BB457 /* AudioQuizDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9979332B9F8B76003BB457 /* AudioQuizDetailVM.swift */; };
 		0BB9DE052B865831004F848A /* AudioQuizPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */; };
 		0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE012B865830004F848A /* LaunchPage.swift */; };
 		0BB9DE072B865831004F848A /* SignInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE022B865830004F848A /* SignInPage.swift */; };
@@ -115,6 +117,8 @@
 		0B8C9EEA2B9EBEA90032AA80 /* QuestionDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionDataObject.swift; sourceTree = "<group>"; };
 		0B8C9EEC2B9EC1870032AA80 /* AudioQuizPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizPageViewModel.swift; sourceTree = "<group>"; };
 		0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		0B9979312B9F891B003BB457 /* AudioQuizDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizDetailView.swift; sourceTree = "<group>"; };
+		0B9979332B9F8B76003BB457 /* AudioQuizDetailVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizDetailVM.swift; sourceTree = "<group>"; };
 		0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQuizPlayerView.swift; sourceTree = "<group>"; };
 		0BB9DE012B865830004F848A /* LaunchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchPage.swift; sourceTree = "<group>"; };
 		0BB9DE022B865830004F848A /* SignInPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInPage.swift; sourceTree = "<group>"; };
@@ -390,6 +394,8 @@
 				0BBD5AE92B8E4B28005BD87B /* QuizBuilder.swift */,
 				0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */,
 				0B8C9EEC2B9EC1870032AA80 /* AudioQuizPageViewModel.swift */,
+				0B9979312B9F891B003BB457 /* AudioQuizDetailView.swift */,
+				0B9979332B9F8B76003BB457 /* AudioQuizDetailVM.swift */,
 			);
 			path = QuizBuilder;
 			sourceTree = "<group>";
@@ -553,6 +559,7 @@
 				0BB9DE202B865885004F848A /* TabIcons.swift in Sources */,
 				0BB9DE1D2B865885004F848A /* QuestionModel.swift in Sources */,
 				0B3A90472B8AE1A700C0848C /* MiniPlayerControls.swift in Sources */,
+				0B9979322B9F891B003BB457 /* AudioQuizDetailView.swift in Sources */,
 				0BB9DE1C2B865885004F848A /* DownloadedAudioQuiz.swift in Sources */,
 				0BB9DE072B865831004F848A /* SignInPage.swift in Sources */,
 				0BBD5AEE2B8E7844005BD87B /* SampleExam.swift in Sources */,
@@ -560,6 +567,7 @@
 				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
 				0B7618BB2B97CB03006C2985 /* AudioQuizResponseModel.swift in Sources */,
 				0B42E3D42B8CFF7900DC3565 /* NetworkService.swift in Sources */,
+				0B9979342B9F8B76003BB457 /* AudioQuizDetailVM.swift in Sources */,
 				0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */,
 				0B4ACCFD2B89A61500377BE7 /* SpeechManager.swift in Sources */,
 				0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */,
