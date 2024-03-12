@@ -31,9 +31,6 @@ extension AudioQuizPlaylistView {
         func fetchPackageQuestions(examName: String, topics: [String], number: Int) async throws -> [QuestionResponse] {
             return try await networkService.fetchQuestions(examName: examName, topics: topics, number: number)
         }
-        
-        
-       
     }
 }
 

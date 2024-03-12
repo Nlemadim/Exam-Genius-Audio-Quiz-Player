@@ -33,28 +33,24 @@ struct AudioQuizPackageView: View {
                 .frame(maxHeight: 200)
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        VStack{
-                            Text(quiz.name)
-                                .font(.title3)
-                                .fontWeight(.heavy)
-                                .lineLimit(2, reservesSpace: true)
-                                .multilineTextAlignment(.leading)
-                                .bold()
-                                .padding(.trailing)
-                                .primaryTextStyleForeground()
-                        }
-                    }
+                    Text(quiz.name)
+                        .font(.title3)
+                        .fontWeight(.heavy)
+                        .lineLimit(2, reservesSpace: false)
+                        .multilineTextAlignment(.leading)
+                        .bold()
+                        .primaryTextStyleForeground()
+
 
                     audioLabel()
+                    
+                    Spacer()
 
                 }
                 .padding(.all, 10.0)
-                .padding(.top)
                 .padding(.horizontal, 5)
-                .frame(height: 80)
-                
-                
+                .frame(height: 120)
+
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .background(
@@ -62,9 +58,10 @@ struct AudioQuizPackageView: View {
             )
             .mask(RoundedRectangle(cornerRadius: 30, style: .continuous))
             .padding(10)
-            .onAppear {
-                generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
-            }
+            
+        }
+        .onAppear {
+            generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
         }
         .preferredColorScheme(.dark)
 
@@ -87,13 +84,3 @@ struct AudioQuizPackageView: View {
     }
 }
 
-//#Preview {
-//    let user = User()
-//    let appState = AppState()
-//    return  LandingPage()
-//        .environmentObject(user)
-//        .environmentObject(appState)
-//        .preferredColorScheme(.dark)
-//        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
-//   
-//}

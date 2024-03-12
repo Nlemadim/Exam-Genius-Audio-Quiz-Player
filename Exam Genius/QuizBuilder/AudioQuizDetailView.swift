@@ -44,11 +44,11 @@ struct AudioQuizDetailView: View {
                                 .offset(y: 10)
                                 
                             Image(systemName: "chevron.down")
-                                .foregroundStyle(.white).activeGlow(.white, radius: 1.5)
+                                .foregroundStyle(.white).activeGlow(.white, radius: 2.0)
                                 .padding(8)
-                                .background(Material.ultraThin)
+                                .background(Material.ultraThick)
                                 .clipShape(.circle)
-                                .offset(x: -350, y: -350)
+                                .offset(x: -337, y: -330)
                                 .zIndex(1.0)
                                 .onTapGesture {
                                     dismiss()
@@ -64,7 +64,7 @@ struct AudioQuizDetailView: View {
                                         .fontWeight(.heavy)
                                         .lineLimit(3, reservesSpace: false)
                                         .bold()
-                                        .primaryTextStyleForeground()
+                                        
                                     Spacer(minLength: 0)
                                 }
                                 
@@ -88,24 +88,36 @@ struct AudioQuizDetailView: View {
                                     )
                             }
                             
-                            VStack(alignment: .leading, spacing: 8.0) {
+                            VStack(alignment: .leading, spacing: 12.0) {
                                 Button(sampleButtonLabel) {
-                                   
+                                    Task {
+                                        //try await playSampleQuiz(audioQuiz)
+                                    }
                                 }
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
                                 .background(generator.dominantLightToneColor)
                                 .foregroundColor(.white)
+                                .activeGlow(.white, radius: 1)
                                 .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.white, lineWidth: 1)
+                                )
 
                                 Button("Download For $26") {
                                    
                                 }
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
-                                .background(generator.dominantDarkToneColor)
+                                .background(generator.dominantLightToneColor)
                                 .foregroundColor(.white)
+                                .activeGlow(.white, radius: 1)
                                 .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.white, lineWidth: 1) 
+                                )
                             }
                             .padding(.all, 10.0)
                         }
@@ -113,7 +125,7 @@ struct AudioQuizDetailView: View {
                     }
                 }
             }
-            .background(generator.dominantBackgroundColor)
+            .background(generator.dominantBackgroundColor.opacity(0.5))
                 
         }
         .navigationTitle(audioQuiz.acronym + " Audio Quiz")
@@ -127,49 +139,52 @@ struct AudioQuizDetailView: View {
         }
     }
     
-    mutating func buildAudioQuizContent(name audioQuiz: AudioQuizPackage) {
-        let contentBuilder = ContentBuilder(networkService: networkService)
-        Task {
-            do {
-                let content = try await contentBuilder.buildContent(for: audioQuiz.name)
-                DispatchQueue.main.async { self
-                    self.audioQuiz = AudioQuizPackage.from(content: content)
+    
+    
+    private func playSampleQuiz(_ audioQuiz: AudioQuizPackage) async throws {
+        //self.selectedQuizPackage = AudioQuizPackage(id: UUID(), name: audioQuiz.name)
+        
+        var sampleCollection = audioQuiz.questions.compactMap { $0.questionAudio }
+        if sampleCollection.isEmpty {
+            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+            // Begin content building process
+            let content = try await contentBuilder.buildContent(for: audioQuiz.name)
+            
+            // Once content is built, update the main thread with new data
+            DispatchQueue.main.async {
+                audioQuiz.questions = content.questions.map { question in
+                    Question(id: UUID(), questionContent: question.questionContent, questionNote: "", topic: question.topic, options: question.options, correctOption: question.correctOption, selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: question.questionAudio, questionNoteAudio: "")}
+                audioQuiz.topics = content.topics.map { Topic(name: $0.name) }
+                
+                sampleCollection = audioQuiz.questions.compactMap { $0.questionAudio }
+                
+                // After updating sampleCollection, check again if it's not empty
+                if !sampleCollection.isEmpty {
+                    // Set downloading to false before beginning playback
+                    self.isDownloading = false
+                    //self.isPlaying = true
+                    // Play the audio without additional delay as it's now handled within the player
+                   quizPlayer.playSampleQuiz(audioFileNames: sampleCollection)
+                    //self.isPlaying = quizPlayer.isFinishedPlaying
+                    //viewModel.monitorPlaybackCompletion()
+                } else {
+                    // Handle case with no downloadable content
+                    self.isDownloading = false
+                    // Implement UI feedback for no content available
                 }
-            } catch {
-                DispatchQueue.main.async {
-                    self.error = error
-                }
+            }
+        } else {
+            // If there are already audio files available, play them without fetching content
+            DispatchQueue.main.async {
+                self.isDownloading = false
+                //self.isPlaying = true
+                // Play the audio without additional delay
+                quizPlayer.playSampleQuiz(audioFileNames: sampleCollection)
+                //viewModel.monitorPlaybackCompletion()
             }
         }
     }
-    
-    func playAudioQuizSample(playlist: [String]) {
-        guard !audioQuiz.questions.isEmpty else {
-            print("Empty Playlist")
-            return
-        }
-        
-        let sampleCollection = audioQuiz.questions.filter{ $0.questionAudio != "" }
-        let playlist = sampleCollection.map{ $0.questionAudio }
-        quizPlayer.playSampleQuiz(audioFileNames: playlist)
-        
-    }
-    
-//    func buildAudioQuizContent() {
-//        //viewModel.buildAudioQuizContent(name: viewModel.audioQuiz.name)
-//    }
-    
-    
-    
-    mutating func playSample(audioQuiz: AudioQuizPackage) {
-        if audioQuiz.questions.isEmpty {
-            buildAudioQuizContent(name: audioQuiz)
-        } else {
-            let playlist = audioQuiz.questions.map{ $0.questionAudio }
-            playAudioQuizSample(playlist: playlist)
-        }
-    }
-    
+   
     func updatePacketStatus() {
         let questionCount = audioQuiz.questions.filter {$0.questionContent != ""}
         let audioFiles = questionCount.map{$0.questionAudio}

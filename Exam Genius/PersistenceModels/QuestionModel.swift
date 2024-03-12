@@ -89,6 +89,27 @@ extension Question {
     }
 }
 
+extension Question {
+    convenience init(from data: QuestionData) {
+        let optionsArray = [data.options.a, data.options.b, data.options.c, data.options.d]
+        self.init(
+            id: UUID(),
+            questionContent: data.question,
+            questionNote: data.overview,
+            topic: "",
+            options: optionsArray,
+            correctOption: data.correctOption,
+            selectedOption: "",
+            isAnswered: false,
+            isAnsweredCorrectly: false,
+            numberOfPresentations: 0,
+            questionAudio: "",
+            questionNoteAudio: ""
+        )
+    }
+}
+
+
 
 
 

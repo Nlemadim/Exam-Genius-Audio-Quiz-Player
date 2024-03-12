@@ -37,6 +37,9 @@ struct LandingPage: View {
     
     var filteredAudioQuizCollection: [AudioQuizPackage] {
         audioQuizCollection.filter { quiz in
+//            Task {
+//                try await playSampleQuiz(quiz)
+//            }
             guard let selectedCat = selectedCategory else {
                 return true // No category selected, show all quizzes
             }
@@ -57,6 +60,12 @@ struct LandingPage: View {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
                                     
                                     AudioQuizPackageView(quiz: quiz)
+                                        .onTapGesture {
+                                            selectedQuizPackage = quiz
+//                                            Task {
+//                                                try await playSampleQuiz(quiz)
+//                                            }
+                                        }
                                 }
                                 
                                 Rectangle()
@@ -81,7 +90,7 @@ struct LandingPage: View {
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizPlaylistView(viewModel: AudioQuizPageViewModel(audioQuiz: selectedQuiz), audioQuiz: selectedQuiz)
+                AudioQuizDetailView(audioQuiz: selectedQuiz)
             }
             
             .tabItem {
@@ -117,6 +126,58 @@ struct LandingPage: View {
             UITabBar.appearance().backgroundColor = UIColor.black
         }
     }
+    
+    private func playSampleQuiz(_ audioQuiz: AudioQuizPackage) async throws {
+        guard audioQuiz.topics.isEmpty && audioQuiz.questions.isEmpty else {
+            let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
+            quizPlayer.playSampleQuiz(audioFileNames: playlist)
+            return
+        }
+        DispatchQueue.main.async {
+            self.isDownloading = true
+        }
+        
+        var sampleCollection = audioQuiz.questions.compactMap { $0.questionAudio }
+        if sampleCollection.isEmpty {
+            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+            // Begin content building process
+            let content = try await contentBuilder.buildContent(for: audioQuiz.name)
+            
+            // Once content is built, update the main thread with new data
+            DispatchQueue.main.async {
+                audioQuiz.questions = content.questions.map { question in
+                    Question(id: UUID(), questionContent: question.questionContent, questionNote: "", topic: question.topic, options: question.options, correctOption: question.correctOption, selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: question.questionAudio, questionNoteAudio: "")}
+                audioQuiz.topics = content.topics.map { Topic(name: $0.name) }
+                
+                sampleCollection = audioQuiz.questions.compactMap { $0.questionAudio }
+                
+                // After updating sampleCollection, check again if it's not empty
+                if !sampleCollection.isEmpty {
+                    // Set downloading to false before beginning playback
+                    self.isDownloading = false
+                    self.isPlaying = true
+                    // Play the audio without additional delay as it's now handled within the player
+                   //quizPlayer.playSampleQuiz(audioFileNames: sampleCollection)
+                    //self.isPlaying = quizPlayer.isFinishedPlaying
+                    //viewModel.monitorPlaybackCompletion()
+                } else {
+                    // Handle case with no downloadable content
+                    self.isDownloading = false
+                    // Implement UI feedback for no content available
+                }
+            }
+        } else {
+            // If there are already audio files available, play them without fetching content
+            DispatchQueue.main.async {
+                self.isDownloading = false
+                self.isPlaying = true
+                // Play the audio without additional delay
+                //quizPlayer.playSampleQuiz(audioFileNames: sampleCollection)
+                //viewModel.monitorPlaybackCompletion()
+            }
+        }
+    }
+
     
     //MARK TODO:
     // Handle the case where there are still no audio files to play
