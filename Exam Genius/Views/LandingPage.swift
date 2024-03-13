@@ -22,7 +22,7 @@ struct LandingPage: View {
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @State private var expandSheet: Bool = false
-    @State private var isDownloading: Bool = false
+    @State var isDownloading: Bool = false
     @State private var isPlaying: Bool = false
     @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     @State private var selectedTab = 0
@@ -62,9 +62,9 @@ struct LandingPage: View {
                                     AudioQuizPackageView(quiz: quiz)
                                         .onTapGesture {
                                             selectedQuizPackage = quiz
-//                                            Task {
-//                                                try await playSampleQuiz(quiz)
-//                                            }
+                                            Task {
+                                                try await buildContentOnly(quiz)
+                                            }
                                         }
                                 }
                                 
@@ -90,7 +90,7 @@ struct LandingPage: View {
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizDetailView(audioQuiz: selectedQuiz)
+                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading)
             }
             
             .tabItem {
@@ -112,7 +112,7 @@ struct LandingPage: View {
         }
         .tint(.teal)
         .safeAreaInset(edge: .bottom) {
-            BottomMiniPlayer()
+           // BottomMiniPlayer()
 
         }
         .overlay {
@@ -127,10 +127,43 @@ struct LandingPage: View {
         }
     }
     
+    
+    private func buildContentFromVm(audioQuiz: AudioQuizPackage) {
+        let viewModel = AudioQuizDetailView.AudioQuizDetailVM(audioQuiz: audioQuiz)
+        viewModel.buildAudioQuizContent(name: audioQuiz)
+    }
+    
+    private func buildContentOnly(_ audioQuiz: AudioQuizPackage) async throws {
+        guard audioQuiz.questions.isEmpty else { return }
+        DispatchQueue.main.async {
+            self.isDownloading = true
+        }
+        
+        let sampleCollection = audioQuiz.questions
+        if sampleCollection.isEmpty {
+            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+            // Begin content building process
+            let content = try await contentBuilder.buildContent(for: audioQuiz.name)
+            
+            // Once content is built, update the main thread with new data
+            DispatchQueue.main.async {
+                audioQuiz.questions = content.questions.map { question in
+                    Question(id: UUID(), questionContent: question.questionContent, questionNote: "", topic: question.topic, options: question.options, correctOption: question.correctOption, selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: question.questionAudio, questionNoteAudio: "")}
+                audioQuiz.topics = content.topics.map { Topic(name: $0.name) }
+                self.isDownloading = false
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.isDownloading = false
+                
+            }
+        }
+    }
+    
     private func playSampleQuiz(_ audioQuiz: AudioQuizPackage) async throws {
         guard audioQuiz.topics.isEmpty && audioQuiz.questions.isEmpty else {
-            let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
-            quizPlayer.playSampleQuiz(audioFileNames: playlist)
+//            let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
+//            quizPlayer.playSampleQuiz(audioFileNames: playlist)
             return
         }
         DispatchQueue.main.async {

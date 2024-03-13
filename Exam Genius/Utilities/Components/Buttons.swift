@@ -8,6 +8,51 @@
 import Foundation
 import SwiftUI
 
+struct PlayPauseButton: View {
+    @Binding var isDownloading: Bool
+    @Binding var isPlaying: Bool
+    var color: Color
+    var playAction: () -> Void
+
+    var body: some View {
+        Button(action: {
+            // Toggle play/pause state if not downloading
+            if !isDownloading {
+                isPlaying.toggle()
+                playAction()
+            }
+        }) {
+            HStack {
+                // Icon logic based on isDownloading and isPlaying
+                if isDownloading {
+                    SpinnerView()
+                        .frame(width: 25, height: 25)
+                } else {
+                    Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 25, height: 25)
+                }
+                
+                Text(isDownloading ? "Downloading Sample Questions" : (isPlaying ? "Pause Sample Question" : "Play Sample Question"))
+            }
+        }
+        .frame(height: 44)
+        .frame(maxWidth: .infinity)
+        .background(color)
+        .foregroundColor(isDownloading ? .gray : .white)
+        .activeGlow(.white, radius: 1)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.white, lineWidth: 1)
+        )
+        .disabled(isDownloading)
+    }
+}
+
+
+
 struct BuildButton: View {
     @State private var didTapButton = false
     let action: () -> Void
@@ -170,7 +215,7 @@ struct PlaySampleButton: View {
                 playAction()
             }
         }) {
-            HStack {
+            HStack(spacing: 0) {
                 Text(isPlaying ? "Playing" : "Play Sample")
                     .font(.caption2)
                     .fontWeight(.medium)
@@ -190,6 +235,7 @@ struct PlaySampleButton: View {
                         .resizable()
                         .frame(width: 20, height: 20)
                 }
+                Spacer()
             }
             .foregroundStyle(.white)
         }
@@ -199,6 +245,11 @@ struct PlaySampleButton: View {
 
 enum ButtonState {
     case `default`, loading, playing
+}
+
+#Preview {
+    PlayPauseButton(isDownloading: .constant(false), isPlaying: .constant(false), color: .themePurpleLight, playAction: {})
+        .preferredColorScheme(.dark)
 }
 
 #Preview {

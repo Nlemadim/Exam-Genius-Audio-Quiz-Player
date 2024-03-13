@@ -5,6 +5,7 @@
 //  Created by Tony Nlemadim on 3/11/24.
 //
 
+
 import SwiftUI
 import SwiftData
 
@@ -12,8 +13,14 @@ struct AudioQuizDetailView: View {
     @EnvironmentObject var user: User
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @ObservedObject private var viewModel: AudioQuizDetailVM
     @State var topicLabel: String = ""
-    @State var isDownloading: Bool = false
+    @Binding var isDownloading: Bool
+    @State var isNowPlaying: Bool = false {
+        didSet {
+            isNowPlaying = quizPlayer.isNowPlaying
+        }
+    }
     @State var numberOfTopics: Int = 0
     @State var downloadButtonLabel: String = "Download Audio Quiz"
     @StateObject private var generator = ColorGenerator()
@@ -30,6 +37,12 @@ struct AudioQuizDetailView: View {
     private let networkService = NetworkService.shared
     private let quizPlayer = QuizPlayer.shared
     var error: Error?
+    
+    init(audioQuiz: AudioQuizPackage, isDownloading: Binding<Bool>) {
+        viewModel = AudioQuizDetailVM(audioQuiz: audioQuiz)
+        _audioQuiz = Bindable(wrappedValue: audioQuiz)
+        _isDownloading = isDownloading
+    }
     
     var body: some View {
         NavigationStack {
@@ -89,24 +102,31 @@ struct AudioQuizDetailView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 12.0) {
-                                Button(sampleButtonLabel) {
-                                    Task {
-                                        //try await playSampleQuiz(audioQuiz)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 44)
-                                .background(generator.dominantLightToneColor)
-                                .foregroundColor(.white)
-                                .activeGlow(.white, radius: 1)
-                                .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.white, lineWidth: 1)
-                                )
+                                
+                                PlayPauseButton(
+                                    isDownloading: $isDownloading,
+                                    isPlaying:$isNowPlaying ,
+                                    color: generator.dominantLightToneColor,
+                                    playAction: {
+                                        sampleContent(audioQuiz: audioQuiz)
+                                    })
+//                                Button(isDownloading ? "Downloading Sample Questions" : "Play Sample Question") {
+//                                    sampleContent(audioQuiz: audioQuiz)
+//                                }
+//                                .frame(maxWidth: .infinity)
+//                                .frame(height: 44)
+//                                .background(generator.dominantLightToneColor)
+//                                .foregroundColor(isDownloading ? .gray : .white)
+//                                .activeGlow(.white, radius: 1)
+//                                .cornerRadius(10)
+//                                .overlay(
+//                                    RoundedRectangle(cornerRadius: 10)
+//                                        .stroke(Color.white, lineWidth: 1)
+//                                )
+//                                .disabled(isDownloading)
 
                                 Button("Download For $26") {
-                                   
+                                   // buildContentFromVm(audioQuiz: self.audioQuiz)
                                 }
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
@@ -126,7 +146,6 @@ struct AudioQuizDetailView: View {
                 }
             }
             .background(generator.dominantBackgroundColor.opacity(0.5))
-                
         }
         .navigationTitle(audioQuiz.acronym + " Audio Quiz")
         .navigationBarTitleDisplayMode(.inline)
@@ -137,6 +156,23 @@ struct AudioQuizDetailView: View {
             generator.updateAllColors(fromImageNamed: audioQuiz.imageUrl)
             //updatePacketStatus()
         }
+    }
+    
+    private func buildContentFromVm(audioQuiz: AudioQuizPackage) {
+        let viewModel = AudioQuizDetailVM(audioQuiz: audioQuiz)
+        viewModel.buildAudioQuizContent(name: audioQuiz)
+        updateView()
+    }
+    
+    func sampleContent(audioQuiz: AudioQuizPackage) {
+        guard !audioQuiz.questions.isEmpty else { return }
+        let samplePlaylist = audioQuiz.questions.compactMap{ $0.questionAudio }
+        quizPlayer.playSampleQuiz(audioFileNames: samplePlaylist)
+        
+    }
+    
+    private func updateView() {
+        self.isDownloading = viewModel.isDownloading
     }
     
     
@@ -201,7 +237,7 @@ struct AudioQuizDetailView: View {
         @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
         let viewModel = AudioQuizPageViewModel(audioQuiz: package)
         
-        return AudioQuizDetailView(audioQuiz: package)
+        return AudioQuizDetailView(audioQuiz: package, isDownloading: .constant(false))
             .modelContainer(container)
             .environmentObject(user)
     } catch {

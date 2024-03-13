@@ -45,7 +45,6 @@ struct AudioQuizPlaylistView: View {
                                 .onTapGesture {
                                     dismiss()
                                 }
-                                
                         }
                        
                         VStack {

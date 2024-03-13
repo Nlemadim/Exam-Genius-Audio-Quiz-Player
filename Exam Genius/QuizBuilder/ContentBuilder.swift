@@ -55,11 +55,11 @@ class ContentBuilder {
             throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
         }
         //MARK: Using RandonmTopics for example Quiz demo
-        let randomTopics = topicContent.shuffled().prefix(2)
+        let randomTopics = topicContent.shuffled().prefix(1)
         let questionTopics = randomTopics.map{ $0.name }
         
         //MARK: Create Questions of Content
-        let questionDataObjects = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 2) // Adjust topics as needed
+        let questionDataObjects = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 1) // Adjust topics as needed
         
         questionDataObjects.forEach { questionDataObject in
             questionDataObject.questions.forEach { questionData in

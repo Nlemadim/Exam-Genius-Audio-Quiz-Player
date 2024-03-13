@@ -70,6 +70,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     
     func playSampleQuiz(audioFileNames: [String]) {
+        self.isNowPlaying = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles = audioFileNames
             self.currentIndex = 0
@@ -153,6 +154,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         isFinishedPlaying = true
         playerState = .isAwaitingAnswer
         if flag {
+            self.isNowPlaying = false
             currentIndex += 1 // Move to the next file
             playAudioFileAtIndex(currentIndex) // Play next audio
         }

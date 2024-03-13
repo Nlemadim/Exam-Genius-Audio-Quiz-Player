@@ -77,6 +77,43 @@ enum InteractionState {
 /** Response HTTP Status code: 200
  Raw server response: {"topics":["Constitutional Law","Constitutional Law - Bill of Rights","Constitutional Law - Separation of Powers","Constitutional Law - Federalism","Constitutional Law - Individual Rights","Criminal Law","Criminal Law - Crimes Against the Person","Criminal Law - Crimes Against Property","Criminal Law - Inchoate Crimes","Criminal Law - Defenses","Criminal Procedure","Criminal Procedure - Fourth Amendment","Criminal Procedure - Fifth Amendment","Criminal Procedure - Sixth Amendment","Real Property Law","Real Property Law - Land Ownership","Real Property Law - Landlord-Tenant Law","Real Property Law - Real Estate Transactions","Torts","Torts - Intentional Torts","Torts - Negligence","Torts - Strict Liability","Torts - Defamation","Torts - Privacy Torts","Evidence","Evidence - Relevancy","Evidence - Hearsay","Evidence - Privileges","Evidence - Presentation of Evidence","Civil Procedure","Civil Procedure - Jurisdiction","Civil Procedure - Pleadings","Civil Procedure - Pretrial Procedures,"]}
  
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Six Sigma Fundamentals","History of Six Sigma","Principles of Six Sigma","The DMAIC Methodology","Define Phase of DMAIC","Measure Phase of DMAIC","Analyze Phase of DMAIC","Improve Phase of DMAIC","Control Phase of DMAIC","Lean Six Sigma","Six Sigma Project Selection","Six Sigma Project Management","Six Sigma Team Dynamics","Six Sigma Roles and Responsibilities","Six Sigma Communication","Six Sigma Problem Solving","Six Sigma Tools and Techniques","Six Sigma Statistical Analysis","Six Sigma Measurement System Analysis","Six Sigma Process Capability Analysis","Six Sigma Hypothesis Testing","Six Sigma Regression Analysis","Six Sigma Design of Experiments","Six Sigma Control Charts","Six Sigma Process Improvement Techniques","Six Sigma Risk Management","Six Sigma Quality Management Tools","Six Sigma Customer Relations","Six Sigma Business Results for Projects","Six Sigma Project Closure","Six Sigma Ethics","Six Sigma Certification and Training","Six Sigma Software Applications","Six Sigma Case Studies","Six Sigma in Manufacturing","Six Sigma in Service Industries","Six"]}
+ Starting fetchQuestionData for examName: Certified Six Sigma Green Belt Exam with topics: ["Improve Phase of DMAIC"] and number: 1
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Six%20Sigma%20Green%20Belt%20Exam&topicValue=Improve%20Phase%20of%20DMAIC&numberValue=1
+ Raw Response: {
+   "examName": "Certified Six Sigma Green Belt Exam",
+   "topics": [
+     "Improve Phase of DMAIC"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is a primary tool used in the Improve phase of DMAIC?",
+       "options": {
+         "A": "Fishbone Diagram",
+         "B": "Design of Experiments",
+         "C": "Control Chart",
+         "D": "SIPOC Diagram"
+       },
+       "correctOption": "B",
+       "overview": "In the Improve phase of DMAIC, the focus is on identifying solutions to eliminate the root causes of defects. Design of Experiments (DoE) is a primary tool used in this phase to systematically plan and conduct experiments that help in identifying optimal conditions that lead to the desired improvement."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the purpose of using pilot runs in the Improve phase of DMAIC?",
+       "options": {
+         "A": "To identify new defects",
+         "B": "To validate measurement systems",
+         "C": "To test the effectiveness of proposed solutions",
+         "D": "To define the project scope"
+       },
+       "correctOption": "C",
+       "overview": "Pilot runs are conducted in the Improve phase to test the effectiveness of proposed solutions on a smaller scale before full-scale implementation. This approach helps in identifying potential issues and assessing the impact of changes, ensuring that the solutions are effective and feasible."
+     }
+   ]
+ }
+ 
  ACT Exam
  Response HTTP Status code: 200
  Raw server response: {"topics":["English Grammar Rules","Reading Comprehension Techniques","Essay Writing Skills","Basic Algebra","Intermediate Algebra","Advanced Algebra","Coordinate Geometry","Plane Geometry","Trigonometry","Data Analysis","Probability","Statistics","Scientific Notation","Fundamentals of Chemistry","Fundamentals of Physics","Fundamentals of Biology","Fundamentals of Earth Science","Vocabulary Expansion","Sentence Completion Strategies","Reading Speed Improvement","Reading for Main Idea","Identifying Supporting Details","Making Logical Inferences","Recognizing Sequence of Events","Identifying Cause and Effect Relationships","Understanding Comparative Relationships","Interpreting Figures of Speech","Understanding Author's Tone and Purpose","Recognizing Organization and Structure of Text","Interpreting Expository Texts","Interpreting Narrative Texts","Interpreting Persuasive Texts","Understanding Complex Characters","Plot and Setting Analysis","Theme Identification","Understanding Literary Devices","Understanding Experimental Design in Science","Interpreting Scientific Graphs and Tables","Evaluating Scientific Hypotheses","Predictions","and Conclusions","Understanding"]}
