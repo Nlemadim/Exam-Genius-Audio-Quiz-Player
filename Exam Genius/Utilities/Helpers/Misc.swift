@@ -78,6 +78,31 @@ enum InteractionState {
  Raw server response: {"topics":["Constitutional Law","Constitutional Law - Bill of Rights","Constitutional Law - Separation of Powers","Constitutional Law - Federalism","Constitutional Law - Individual Rights","Criminal Law","Criminal Law - Crimes Against the Person","Criminal Law - Crimes Against Property","Criminal Law - Inchoate Crimes","Criminal Law - Defenses","Criminal Procedure","Criminal Procedure - Fourth Amendment","Criminal Procedure - Fifth Amendment","Criminal Procedure - Sixth Amendment","Real Property Law","Real Property Law - Land Ownership","Real Property Law - Landlord-Tenant Law","Real Property Law - Real Estate Transactions","Torts","Torts - Intentional Torts","Torts - Negligence","Torts - Strict Liability","Torts - Defamation","Torts - Privacy Torts","Evidence","Evidence - Relevancy","Evidence - Hearsay","Evidence - Privileges","Evidence - Presentation of Evidence","Civil Procedure","Civil Procedure - Jurisdiction","Civil Procedure - Pleadings","Civil Procedure - Pretrial Procedures,"]}
  
  Response HTTP Status code: 200
+ Raw server response: {"topics":["Ethical and Professional Standards","Code of Ethics","Standards of Professional Conduct","Professionalism","Integrity of Capital Markets","Duties to Clients","Duties to Employers","Investment Analysis","Recommendations and Actions","Conflicts of Interest","Reference to CFA Institute","Quantitative Methods","Time Value of Money","Probability","Probability Distributions and Descriptive Statistics","Sampling and Estimation","Hypothesis Testing","Correlation and Regression","Multiple Regression and Issues in Regression Analysis","Time-Series Analysis","Quantitative Applications","Economics","Microeconomic Analysis","Demand and Supply Analysis","The Firm and Market Structures","Aggregate Output","Prices","and Economic Growth","Understanding Business Cycles","Monetary and Fiscal Policy","International Trade and Capital Flows","Currency Exchange Rates","Financial Reporting and Analysis","Financial Reporting Mechanics","Financial Reporting Standards","Understanding Income Statements","Understanding Balance Sheets","Understanding Cash Flow Statements","Financial Analysis Techniques","Financial Statement Analysis: Applications","Corporate Finance","Capital Budgeting","Cost of Capital","Measures of Leverage"]}
+ Starting fetchQuestionData for examName: Chartered Financial Analyst Exam with topics: ["Quantitative Applications"] and number: 1
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Chartered%20Financial%20Analyst%20Exam&topicValue=Quantitative%20Applications&numberValue=1
+ Raw Response: {
+   "examName": "Chartered Financial Analyst Exam",
+   "topics": [
+     "Quantitative Applications"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the future value of $100 invested for 2 years at an annual interest rate of 5%?",
+       "options": {
+         "A": "$110.25",
+         "B": "$105",
+         "C": "$210",
+         "D": "$115"
+       },
+       "correctOption": "A",
+       "overview": "The future value (FV) of an investment is calculated using the formula FV = PV * (1 + r)^n, where PV is the present value (or initial investment), r is the annual interest rate, and n is the number of years. Plugging in the values, we get FV = $100 * (1 + 0.05)^2 = $110.25."
+     }
+   ]
+ }
+ 
+ Response HTTP Status code: 200
  Raw server response: {"topics":["Six Sigma Fundamentals","History of Six Sigma","Principles of Six Sigma","The DMAIC Methodology","Define Phase of DMAIC","Measure Phase of DMAIC","Analyze Phase of DMAIC","Improve Phase of DMAIC","Control Phase of DMAIC","Lean Six Sigma","Six Sigma Project Selection","Six Sigma Project Management","Six Sigma Team Dynamics","Six Sigma Roles and Responsibilities","Six Sigma Communication","Six Sigma Problem Solving","Six Sigma Tools and Techniques","Six Sigma Statistical Analysis","Six Sigma Measurement System Analysis","Six Sigma Process Capability Analysis","Six Sigma Hypothesis Testing","Six Sigma Regression Analysis","Six Sigma Design of Experiments","Six Sigma Control Charts","Six Sigma Process Improvement Techniques","Six Sigma Risk Management","Six Sigma Quality Management Tools","Six Sigma Customer Relations","Six Sigma Business Results for Projects","Six Sigma Project Closure","Six Sigma Ethics","Six Sigma Certification and Training","Six Sigma Software Applications","Six Sigma Case Studies","Six Sigma in Manufacturing","Six Sigma in Service Industries","Six"]}
  Starting fetchQuestionData for examName: Certified Six Sigma Green Belt Exam with topics: ["Improve Phase of DMAIC"] and number: 1
  Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Six%20Sigma%20Green%20Belt%20Exam&topicValue=Improve%20Phase%20of%20DMAIC&numberValue=1

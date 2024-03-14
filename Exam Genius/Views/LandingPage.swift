@@ -27,6 +27,7 @@ struct LandingPage: View {
     @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     @State private var selectedTab = 0
     @State private var selectedQuizPackage: AudioQuizPackage?
+    @State private var path = [AudioQuizPackage]()
     
     @State var selectedCategory: ExamCategory?
     private var cancellables = Set<AnyCancellable>()
@@ -49,7 +50,7 @@ struct LandingPage: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
+            NavigationStack(path: $path) {
                 ZStack {
                     VStack(spacing: 5) {
                         CustomNavigationBar(categories: categories, selectedCategory: $selectedCategory)
@@ -58,14 +59,14 @@ struct LandingPage: View {
                         
                             VStack(spacing: 10) {
                                 ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
-                                    
                                     AudioQuizPackageView(quiz: quiz)
                                         .onTapGesture {
                                             selectedQuizPackage = quiz
                                             Task {
-                                                try await buildContentOnly(quiz)
+                                               // try await buildContentOnly(quiz)
                                             }
                                         }
+                                        
                                 }
                                 
                                 Rectangle()
@@ -89,9 +90,9 @@ struct LandingPage: View {
                         .offset(y: 40)
                 )
             }
-            .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading)
-            }
+//            .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
+//                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading)
+//            }
             
             .tabItem {
                 TabIcons(title: "Home", icon: "house.fill")
@@ -134,7 +135,8 @@ struct LandingPage: View {
     }
     
     private func buildContentOnly(_ audioQuiz: AudioQuizPackage) async throws {
-        guard audioQuiz.questions.isEmpty else { return }
+        guard audioQuiz.topics.isEmpty && audioQuiz.questions.isEmpty else {
+            return }
         DispatchQueue.main.async {
             self.isDownloading = true
         }
