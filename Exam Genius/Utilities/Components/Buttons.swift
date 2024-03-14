@@ -18,7 +18,7 @@ struct PlayPauseButton: View {
         Button(action: {
             // Toggle play/pause state if not downloading
             if !isDownloading {
-                isPlaying.toggle()
+                //isPlaying.toggle()
                 playAction()
             }
         }) {
@@ -34,7 +34,8 @@ struct PlayPauseButton: View {
                         .frame(width: 25, height: 25)
                 }
                 
-                Text(isDownloading ? "Downloading Sample Questions" : (isPlaying ? "Pause Sample Question" : "Play Sample Question"))
+                Text(isDownloading ? "Downloading" : (isPlaying ? "Pause Sample Question" : "Play Sample Question"))
+                    .font(.subheadline)
             }
         }
         .frame(height: 44)

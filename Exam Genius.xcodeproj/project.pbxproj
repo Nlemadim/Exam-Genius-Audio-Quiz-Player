@@ -66,6 +66,8 @@
 		0BBD5AF22B8E7A31005BD87B /* AudioQuizPlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBD5AF12B8E7A31005BD87B /* AudioQuizPlaceHolder.swift */; };
 		0BBD5AF42B8E8371005BD87B /* AudioQuizSearchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBD5AF32B8E8371005BD87B /* AudioQuizSearchCollectionView.swift */; };
 		0BBD5AF62B8E8AD8005BD87B /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */; };
+		0BCE72A12BA3642400A9E7D6 /* CurrentQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCE72A02BA3642400A9E7D6 /* CurrentQuizView.swift */; };
+		0BCE72A32BA3649800A9E7D6 /* QuizPlayerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCE72A22BA3649800A9E7D6 /* QuizPlayerPage.swift */; };
 		0BFD50A42B9967AE00BE89D4 /* LandingPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFD50A32B9967AE00BE89D4 /* LandingPageViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -150,6 +152,8 @@
 		0BBD5AF12B8E7A31005BD87B /* AudioQuizPlaceHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioQuizPlaceHolder.swift; sourceTree = "<group>"; };
 		0BBD5AF32B8E8371005BD87B /* AudioQuizSearchCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizSearchCollectionView.swift; sourceTree = "<group>"; };
 		0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
+		0BCE72A02BA3642400A9E7D6 /* CurrentQuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentQuizView.swift; sourceTree = "<group>"; };
+		0BCE72A22BA3649800A9E7D6 /* QuizPlayerPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizPlayerPage.swift; sourceTree = "<group>"; };
 		0BFD50A32B9967AE00BE89D4 /* LandingPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -265,6 +269,7 @@
 				0BBD5AEF2B8E7A09005BD87B /* ExploreAudioQuizView.swift */,
 				0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */,
 				0BFD50A32B9967AE00BE89D4 /* LandingPageViewModel.swift */,
+				0BCE72A22BA3649800A9E7D6 /* QuizPlayerPage.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -310,6 +315,7 @@
 				0BBD5AF32B8E8371005BD87B /* AudioQuizSearchCollectionView.swift */,
 				0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */,
 				0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */,
+				0BCE72A02BA3642400A9E7D6 /* CurrentQuizView.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -562,6 +568,7 @@
 				0B9979322B9F891B003BB457 /* AudioQuizDetailView.swift in Sources */,
 				0BB9DE1C2B865885004F848A /* DownloadedAudioQuiz.swift in Sources */,
 				0BB9DE072B865831004F848A /* SignInPage.swift in Sources */,
+				0BCE72A32BA3649800A9E7D6 /* QuizPlayerPage.swift in Sources */,
 				0BBD5AEE2B8E7844005BD87B /* SampleExam.swift in Sources */,
 				0BB9DE192B865885004F848A /* User.swift in Sources */,
 				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
@@ -573,6 +580,7 @@
 				0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
 				0B4ACCBB2B899B3200377BE7 /* AiAssistantContentView.swift in Sources */,
+				0BCE72A12BA3642400A9E7D6 /* CurrentQuizView.swift in Sources */,
 				0B4ACCEE2B89A61500377BE7 /* PlayerContentInfo.swift in Sources */,
 				0BBD5AEA2B8E4B28005BD87B /* QuizBuilder.swift in Sources */,
 				0B42E3D92B8D4F8E00DC3565 /* KnowledgeTestViewModel.swift in Sources */,

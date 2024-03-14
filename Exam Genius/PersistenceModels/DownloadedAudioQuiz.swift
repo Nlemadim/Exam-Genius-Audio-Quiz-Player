@@ -70,3 +70,26 @@ enum UserStatus: Int, Codable, Identifiable, CaseIterable {
     }
 }
 
+struct DownloadedAudioQuizContainer {
+    var name: String
+    var quizImage: String
+    var dateCreated: Date
+    var currentIndex: Int
+    var quizStatus: AudioQuizStatus
+    var userStatus: UserStatus
+    var contents: [Question]
+    var topics: [Topic]
+    var rating: Int
+    
+    init(name: String, quizImage: String) {
+        self.name = name
+        self.quizImage = quizImage
+        self.dateCreated = .now
+        self.currentIndex = 0
+        self.quizStatus = .downloaded
+        self.userStatus = .inPlaylist
+        self.contents = []
+        self.topics = []
+        self.rating = 0
+    }
+}

@@ -28,8 +28,8 @@
             filePath = "Exam Genius/QuizBuilder/AudioQuizDetailView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "playSampleQuiz(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -44,8 +44,8 @@
             filePath = "Exam Genius/QuizBuilder/AudioQuizDetailView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "playSampleQuiz(_:)"
             landmarkType = "7">
             <Locations>
@@ -112,6 +112,68 @@
             endingLineNumber = "28"
             landmarkName = "buildAudioQuizContent(name:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "46AA2433-C0DA-4D7E-9845-94777256D4D8 - 307d8e675d60e4b4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "46AA2433-C0DA-4D7E-9845-94777256D4D8 - 2121414b4a7ee237"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #1 @Sendable () async -&gt; () in Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  uuid = "46AA2433-C0DA-4D7E-9845-94777256D4D8 - 6fef77dc91167cb0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  uuid = "46AA2433-C0DA-4D7E-9845-94777256D4D8 - b7907bf12aed30be"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for closure #1 @Sendable () async -&gt; () in Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "144">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -160,6 +222,53 @@
             endingLineNumber = "26"
             landmarkName = "buildAudioQuizContent(name:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "438AFCEF-179A-4590-8F78-BDE300D2A741 - 6a28279bff6bf4ec"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "232">
+               </Location>
+               <Location
+                  uuid = "438AFCEF-179A-4590-8F78-BDE300D2A741 - cc082c4dcc40d589"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () async -&gt; () in Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "236">
+               </Location>
+               <Location
+                  uuid = "438AFCEF-179A-4590-8F78-BDE300D2A741 - 307d8e675d60e4f6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in Exam_Genius.AudioQuizDetailView.AudioQuizDetailVM.buildAudioQuizContent(name: Exam_Genius.AudioQuizPackage) -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailVM.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -191,7 +191,7 @@ enum GroupedCategory {
     var includedCategories: [ExamCategory] {
         switch self {
         case .topPicks: return [.legal, .healthcare, .science]
-        case .free: return [.healthcare, .language]
+        case .free: return [.healthcare]
         }
     }
 }
@@ -280,4 +280,26 @@ extension AudioQuizPackage {
     }
 }
 
-
+struct TestAudioQuizPackage {
+    var id: UUID
+    var name: String
+    var acronym: String
+    var about: String
+    var imageUrl: String
+    var category: [ExamCategory]
+    var topics: [Topic]
+    var questions: [Question]
+    var performance: [Performance]
+    
+    init(id: UUID) {
+        self.id = id
+        self.name = ""
+        self.acronym = ""
+        self.about = ""
+        self.imageUrl = ""
+        self.category = []
+        self.questions = []
+        self.topics = []
+        self.performance = []
+    }
+}
