@@ -114,12 +114,9 @@ struct AudioQuizDetailView: View {
                                 
                                 PlainClearButton(color: generator.dominantLightToneColor,
                                                  label: isDownloading ? "Downloading" : "Download",
-                                                 playAction: {
-                                    self.didTapDownload = true
-                                })
-                                .onChange(of: autoDismiss) { _, _ in
-                                    goToQuizPlayer()
-                                }
+                                                 playAction: { downloadAudioQuiz() }
+                                    
+                                )
                             }
                             .padding(.all, 10.0)
                         }
@@ -167,10 +164,10 @@ struct AudioQuizDetailView: View {
         }
     }
     
-    private func goToQuizPlayer() {
+    private func downloadAudioQuiz() {
+        self.didTapDownload = true
         user.selectedQuizPackage = audioQuiz
         UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
-        dismiss()
     }
     
     func listAllJSONFilesInBundle() {

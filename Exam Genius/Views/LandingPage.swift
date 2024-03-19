@@ -96,7 +96,6 @@ struct LandingPage: View {
                             try await downloadAudioQuiz(selectedQuizPackage)
                         }
                         
-                        self.selectedQuizPackage = user.selectedQuizPackage
                     }
                 }
             })
@@ -116,13 +115,10 @@ struct LandingPage: View {
                 .tabItem {
                     TabIcons(title: "Settings", icon: "slider.horizontal.3")
                 }
-                .tag(1)
+                .tag(2)
         }
         .tint(.teal)
 
-        .onAppear {
-            UITabBar.appearance().backgroundColor = UIColor.black
-        }
     }
     
     
@@ -181,8 +177,9 @@ struct LandingPage: View {
             do {
                 try! modelContext.save()
             }
-            
+            selectedTab = 1
             isDownloading = false
+            selectedQuizPackage = nil
         }
     }
     

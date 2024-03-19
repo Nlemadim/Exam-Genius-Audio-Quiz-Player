@@ -33,8 +33,6 @@ struct ContentView: View {
     }
 }
 
-
-
 #Preview {
     let user = User()
     let appState = AppState()

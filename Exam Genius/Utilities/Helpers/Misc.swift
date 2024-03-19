@@ -241,6 +241,54 @@ enum InteractionState {
    ]
  }
  
+ Certified Public Accountant Exam
+ {"topics":["Auditing and Attestation","Understanding Auditing Procedures","Understanding Auditing Standards","Understanding Internal Controls","Understanding Sampling Methods","Business Environment and Concepts","Corporate Governance","Economics","Financial Management","Information Systems and Communications","Strategic Planning","Operations Management","Financial Accounting and Reporting","Conceptual Frameworks in Accounting","Financial Statement Accounts","Specific Transactions and Events","State and Local Governments","Regulation","Ethics and Professional Responsibilities","Business Law","Federal Taxation","Federal Tax for Entities","Business Structure","Financial Statement Analysis","Cost Accounting","Managerial Accounting","Forensic Accounting","International Financial Reporting Standards","Internal Auditing","Risk Assessment and Assurance","Tax Planning and Compliance","Business Combinations","Non-profit Accounting","Governmental Accounting","Accounting for Income Taxes","Pensions and Other Employee Benefits","Share-based Compensation and Earnings per Share","Accounting Changes and Error Corrections","The Fair Value Measurement","Non-monetary Transactions","Investments","Cash and Receivables","Inventory","Property","Plant","and Equipment","Leases,"]}
+ Raw Response: {
+   "examName": "Certified Public Accountant Exam",
+   "topics": [
+     "Auditing and Attestation"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best describes the primary objective of financial statement auditing?",
+       "options": {
+         "A": "Detection and prevention of fraud",
+         "B": "Assurance on the accuracy of financial statements",
+         "C": "Compliance with tax laws",
+         "D": "Evaluation of financial statement presentation"
+       },
+       "correctOption": "B",
+       "overview": "The primary objective of financial statement auditing is to provide assurance that the financial statements are free from material misstatement, whether caused by error or fraud. This helps users of the financial statements, such as investors and creditors, make informed decisions."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following represents a type of audit evidence?",
+       "options": {
+         "A": "Physical examination",
+         "B": "Management's opinion",
+         "C": "Future financial projections",
+         "D": "Advertising brochures"
+       },
+       "correctOption": "A",
+       "overview": "Audit evidence is all the information used by the auditor in arriving at the conclusions on which the audit opinion is based. Physical examination, also known as inspection, is a type of audit evidence where the auditor physically examines assets, documents, or records."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the purpose of an auditor's report?",
+       "options": {
+         "A": "To provide an opinion on the effectiveness of internal control",
+         "B": "To describe the scope of the audit",
+         "C": "To express an opinion on the financial statements",
+         "D": "To highlight areas for financial improvement"
+       },
+       "correctOption": "C",
+       "overview": "The purpose of an auditor's report is to express an opinion on whether the financial statements are prepared, in all material respects, in accordance with an applicable financial reporting framework. This opinion helps users of the financial statements understand whether they can rely on the financial statements for making decisions."
+     }
+   ]
+ }
+
+ 
  {
   "examName": "Kotlin Programming Language",
   "topics": [
