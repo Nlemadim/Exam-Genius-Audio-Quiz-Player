@@ -18,6 +18,7 @@ final class User: ObservableObject {
     @Published var hasSelectedAudioQuiz: Bool = false
     @Published var audioQuizPackage: AudioQuizPackage?
     @Published var audioQuizPlaylist: [DownloadedAudioQuiz]
+    @Published var hasStartedQuiz: Bool = false
     
     var currentPlayPosition: Int = 0
     
@@ -30,6 +31,10 @@ final class User: ObservableObject {
         !audioQuizPlaylist.isEmpty ? audioQuizPlaylist[currentPlayPosition] : nil
     }
     
-    var selectedQuizPackage: AudioQuizPackage?
-  
+    var selectedQuizPackage: AudioQuizPackage? {
+        didSet {
+            hasSelectedAudioQuiz = selectedQuizPackage != nil
+            audioQuizPackage = selectedQuizPackage
+        }
+    }
 }

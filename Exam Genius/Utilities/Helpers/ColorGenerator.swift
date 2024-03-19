@@ -12,7 +12,7 @@ class ColorGenerator: ObservableObject {
     @Published var dominantBackgroundColor: Color = .black // Default color
     @Published var sharpContrastColor: Color = .white // Default color for sharp contrast
     @Published var dominantDarkToneColor: Color = .black.opacity(0.6) // Default for dominant dark tone
-    @Published var dominantLightToneColor: Color = .gray
+    @Published var dominantLightToneColor: Color = Color.themePurple
     @Published var secondaryColor: Color = .red
     
     func updateDominantColor(fromImageNamed imageName: String) {

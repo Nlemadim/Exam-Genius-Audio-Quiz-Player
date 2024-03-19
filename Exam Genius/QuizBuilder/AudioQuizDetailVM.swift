@@ -8,6 +8,9 @@
 import SwiftUI
 import Foundation
 
+import SwiftUI
+import Foundation
+
 extension AudioQuizDetailView {
     class AudioQuizDetailVM: ObservableObject {
         var error: Error?
@@ -25,9 +28,30 @@ extension AudioQuizDetailView {
             let contentBuilder = ContentBuilder(networkService: networkService)
             Task {
                 do {
-                    let content = try await contentBuilder.buildContent(for: audioQuiz.name)
+                    let content = try await contentBuilder.buildForProd(for: audioQuiz.name)
                     DispatchQueue.main.async {
-                        self.audioQuiz = AudioQuizPackage.from(content: content)
+                        audioQuiz.topics.append(contentsOf: content.topics)
+                        audioQuiz.questions.append(contentsOf: content.questions)
+                        self.isDownloading = false
+                    }
+                } catch {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.isDownloading = false
+                        self?.error = error
+                    }
+                }
+            }
+        }
+        
+        func buildAudioQuizTestContent(name audioQuiz: AudioQuizPackage)  {
+            isDownloading = true
+            let contentBuilder = ContentBuilder(networkService: networkService)
+            Task {
+                do {
+                    let content = try await contentBuilder.alternateBuildTestContent(for: audioQuiz.name)
+                    DispatchQueue.main.async {
+                        audioQuiz.topics.append(contentsOf: content.topics)
+                        audioQuiz.questions.append(contentsOf: content.questions)
                         self.isDownloading = false
                     }
                 } catch {
@@ -40,14 +64,27 @@ extension AudioQuizDetailView {
         }
         
         func playAudioQuizSample(playlist: [String]) {
-            guard !audioQuiz.questions.isEmpty else {
-                print("Empty Playlist")
-                return
-            }
-            let sampleCollection = audioQuiz.questions.filter{ $0.questionAudio != "" }
-            let playlist = sampleCollection.map{ $0.questionAudio }
-            quizPlayer.playSampleQuiz(audioFileNames: playlist)
-            
+            sampleContent(audioQuiz: audioQuiz)
         }
+        
+        func sampleContent(audioQuiz: AudioQuizPackage) {
+            let samples  = getPlaylist(audioQuiz: audioQuiz)
+            let playlist = samples.map{ $0.questionAudio }
+            let sortedPlaylist = playlist.sorted()
+            quizPlayer.playSampleQuiz(audioFileNames: sortedPlaylist)
+           // isNowPlaying = true
+        }
+        
+        func getPlaylist(audioQuiz: AudioQuizPackage) -> [Question] {
+            var playlist: [Question] = []
+            for question in audioQuiz.questions {
+                if !question.questionAudio.isEmpty {
+                    playlist.append(question)
+                }
+            }
+            print(playlist.count)
+            return playlist
+        }
+        
     }
 }

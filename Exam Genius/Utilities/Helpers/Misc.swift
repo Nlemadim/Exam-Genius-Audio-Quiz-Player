@@ -77,68 +77,6 @@ enum InteractionState {
 /** Response HTTP Status code: 200
  Raw server response: {"topics":["Constitutional Law","Constitutional Law - Bill of Rights","Constitutional Law - Separation of Powers","Constitutional Law - Federalism","Constitutional Law - Individual Rights","Criminal Law","Criminal Law - Crimes Against the Person","Criminal Law - Crimes Against Property","Criminal Law - Inchoate Crimes","Criminal Law - Defenses","Criminal Procedure","Criminal Procedure - Fourth Amendment","Criminal Procedure - Fifth Amendment","Criminal Procedure - Sixth Amendment","Real Property Law","Real Property Law - Land Ownership","Real Property Law - Landlord-Tenant Law","Real Property Law - Real Estate Transactions","Torts","Torts - Intentional Torts","Torts - Negligence","Torts - Strict Liability","Torts - Defamation","Torts - Privacy Torts","Evidence","Evidence - Relevancy","Evidence - Hearsay","Evidence - Privileges","Evidence - Presentation of Evidence","Civil Procedure","Civil Procedure - Jurisdiction","Civil Procedure - Pleadings","Civil Procedure - Pretrial Procedures,"]}
  
- Response HTTP Status code: 200
- Raw server response: {"topics":["Ethical and Professional Standards","Code of Ethics","Standards of Professional Conduct","Professionalism","Integrity of Capital Markets","Duties to Clients","Duties to Employers","Investment Analysis","Recommendations and Actions","Conflicts of Interest","Reference to CFA Institute","Quantitative Methods","Time Value of Money","Probability","Probability Distributions and Descriptive Statistics","Sampling and Estimation","Hypothesis Testing","Correlation and Regression","Multiple Regression and Issues in Regression Analysis","Time-Series Analysis","Quantitative Applications","Economics","Microeconomic Analysis","Demand and Supply Analysis","The Firm and Market Structures","Aggregate Output","Prices","and Economic Growth","Understanding Business Cycles","Monetary and Fiscal Policy","International Trade and Capital Flows","Currency Exchange Rates","Financial Reporting and Analysis","Financial Reporting Mechanics","Financial Reporting Standards","Understanding Income Statements","Understanding Balance Sheets","Understanding Cash Flow Statements","Financial Analysis Techniques","Financial Statement Analysis: Applications","Corporate Finance","Capital Budgeting","Cost of Capital","Measures of Leverage"]}
- Starting fetchQuestionData for examName: Chartered Financial Analyst Exam with topics: ["Quantitative Applications"] and number: 1
- Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Chartered%20Financial%20Analyst%20Exam&topicValue=Quantitative%20Applications&numberValue=1
- Raw Response: {
-   "examName": "Chartered Financial Analyst Exam",
-   "topics": [
-     "Quantitative Applications"
-   ],
-   "questions": [
-     {
-       "questionNumber": 1,
-       "question": "What is the future value of $100 invested for 2 years at an annual interest rate of 5%?",
-       "options": {
-         "A": "$110.25",
-         "B": "$105",
-         "C": "$210",
-         "D": "$115"
-       },
-       "correctOption": "A",
-       "overview": "The future value (FV) of an investment is calculated using the formula FV = PV * (1 + r)^n, where PV is the present value (or initial investment), r is the annual interest rate, and n is the number of years. Plugging in the values, we get FV = $100 * (1 + 0.05)^2 = $110.25."
-     }
-   ]
- }
- 
- Response HTTP Status code: 200
- Raw server response: {"topics":["Six Sigma Fundamentals","History of Six Sigma","Principles of Six Sigma","The DMAIC Methodology","Define Phase of DMAIC","Measure Phase of DMAIC","Analyze Phase of DMAIC","Improve Phase of DMAIC","Control Phase of DMAIC","Lean Six Sigma","Six Sigma Project Selection","Six Sigma Project Management","Six Sigma Team Dynamics","Six Sigma Roles and Responsibilities","Six Sigma Communication","Six Sigma Problem Solving","Six Sigma Tools and Techniques","Six Sigma Statistical Analysis","Six Sigma Measurement System Analysis","Six Sigma Process Capability Analysis","Six Sigma Hypothesis Testing","Six Sigma Regression Analysis","Six Sigma Design of Experiments","Six Sigma Control Charts","Six Sigma Process Improvement Techniques","Six Sigma Risk Management","Six Sigma Quality Management Tools","Six Sigma Customer Relations","Six Sigma Business Results for Projects","Six Sigma Project Closure","Six Sigma Ethics","Six Sigma Certification and Training","Six Sigma Software Applications","Six Sigma Case Studies","Six Sigma in Manufacturing","Six Sigma in Service Industries","Six"]}
- Starting fetchQuestionData for examName: Certified Six Sigma Green Belt Exam with topics: ["Improve Phase of DMAIC"] and number: 1
- Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Six%20Sigma%20Green%20Belt%20Exam&topicValue=Improve%20Phase%20of%20DMAIC&numberValue=1
- Raw Response: {
-   "examName": "Certified Six Sigma Green Belt Exam",
-   "topics": [
-     "Improve Phase of DMAIC"
-   ],
-   "questions": [
-     {
-       "questionNumber": 1,
-       "question": "Which of the following is a primary tool used in the Improve phase of DMAIC?",
-       "options": {
-         "A": "Fishbone Diagram",
-         "B": "Design of Experiments",
-         "C": "Control Chart",
-         "D": "SIPOC Diagram"
-       },
-       "correctOption": "B",
-       "overview": "In the Improve phase of DMAIC, the focus is on identifying solutions to eliminate the root causes of defects. Design of Experiments (DoE) is a primary tool used in this phase to systematically plan and conduct experiments that help in identifying optimal conditions that lead to the desired improvement."
-     },
-     {
-       "questionNumber": 2,
-       "question": "What is the purpose of using pilot runs in the Improve phase of DMAIC?",
-       "options": {
-         "A": "To identify new defects",
-         "B": "To validate measurement systems",
-         "C": "To test the effectiveness of proposed solutions",
-         "D": "To define the project scope"
-       },
-       "correctOption": "C",
-       "overview": "Pilot runs are conducted in the Improve phase to test the effectiveness of proposed solutions on a smaller scale before full-scale implementation. This approach helps in identifying potential issues and assessing the impact of changes, ensuring that the solutions are effective and feasible."
-     }
-   ]
- }
- 
  ACT Exam
  Response HTTP Status code: 200
  Raw server response: {"topics":["English Grammar Rules","Reading Comprehension Techniques","Essay Writing Skills","Basic Algebra","Intermediate Algebra","Advanced Algebra","Coordinate Geometry","Plane Geometry","Trigonometry","Data Analysis","Probability","Statistics","Scientific Notation","Fundamentals of Chemistry","Fundamentals of Physics","Fundamentals of Biology","Fundamentals of Earth Science","Vocabulary Expansion","Sentence Completion Strategies","Reading Speed Improvement","Reading for Main Idea","Identifying Supporting Details","Making Logical Inferences","Recognizing Sequence of Events","Identifying Cause and Effect Relationships","Understanding Comparative Relationships","Interpreting Figures of Speech","Understanding Author's Tone and Purpose","Recognizing Organization and Structure of Text","Interpreting Expository Texts","Interpreting Narrative Texts","Interpreting Persuasive Texts","Understanding Complex Characters","Plot and Setting Analysis","Theme Identification","Understanding Literary Devices","Understanding Experimental Design in Science","Interpreting Scientific Graphs and Tables","Evaluating Scientific Hypotheses","Predictions","and Conclusions","Understanding"]}
@@ -161,6 +99,327 @@ enum InteractionState {
  Response HTTP Status code: 200
  Raw server response: {"topics":["Fraud Prevention and Deterrence","Fraudulent Financial Transactions","Fraud Schemes","Types of Fraud","Fraud Risk Factors","Legal Elements of Fraud","Fraud Prevention Measures","Corporate Governance for Fraud Prevention","Fraud Risk Assessment","Data Analysis Techniques for Fraud Detection","Fraud Investigation Methods","Fraud Investigation Techniques","Interviewing Techniques for Fraud Investigation","Fraud Case Management","Law Related to Fraud","Fraud Trial","Fraud Resolution","Ethical Issues in Fraud Examination","Fraud and Technology","Digital Forensics in Fraud Examination","Cyber Fraud Tactics","Fraud Detection in E-commerce","Fraud in Financial Statements","Occupational Fraud","Bankruptcy Fraud","Credit Card Fraud","Insurance Fraud","Securities Fraud","Identity Theft","Money Laundering","Bribery and Corruption","Asset Misappropriation","Check Tampering","Payroll Fraud","Expense Reimbursement Fraud","Financial Statement Fraud","Internal Controls to Prevent Fraud","Auditing and Fraud Detection","Role of Auditors in Detecting Fraud","Ethics and Fraud","Whistleblowing in Fraud Detection"]}
  ContentBuilder has created: 41 Topics
+ 
+ Building test Content
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Fraud Prevention and Deterrence","Fraudulent Financial Transactions","Fraud Investigation Methods","Legal Elements of Fraud","Criminology and Ethics","Understanding the Law Related to Fraud","Types of Fraud","Fraud Risk Assessment","Data Analysis Techniques for Fraud Detection","Fraud Prevention Techniques","Corporate Governance for Fraud Prevention","Internal Controls to Deter Fraud","Ethics and Fraud","Fraud Case Management","Interviewing Techniques for Fraud Investigations","Document Examination in Fraud Investigations","Digital Forensics in Fraud Investigations","Testifying as an Expert Witness in Fraud Cases","Fraud and the Internet","Identity Theft and Fraud","Credit Card Fraud","Bankruptcy Fraud","Insurance Fraud","Health Care Fraud","Securities Fraud","Tax Fraud","Money Laundering","Bribery and Corruption","Fraud in Non-Profit Organizations","Occupational Fraud","Cyber Fraud","Real Estate and Mortgage Fraud","Intellectual Property Fraud","Fraud Detection in E-commerce","Fraud in the Public Sector","Fraud in Small Businesses","Forensic Accounting","Use of Technology in Fraud Examination","Fraud Response"]}
+ Starting fetchQuestionData for examName: Certified Fraud Examiner with topics: ["Testifying as an Expert Witness in Fraud Cases"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Fraud%20Examiner&topicValue=Testifying%20as%20an%20Expert%20Witness%20in%20Fraud%20Cases&numberValue=3
+ 
+ Raw Response: {
+   "examName": "ACT Exam",
+   "topics": [
+     "Narrative Writing"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is NOT a characteristic of narrative writing?",
+       "options": {
+         "A": "Incorporates characters",
+         "B": "Follows a chronological sequence",
+         "C": "Includes thesis statement",
+         "D": "Contains a plot with conflict"
+       },
+       "correctOption": "C",
+       "overview": "Narrative writing tells a story or part of a story. It incorporates characters, follows a chronological sequence, and contains a plot with conflict. Unlike expository or persuasive writing, it does not typically include a thesis statement."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of dialogue in narrative writing?",
+       "options": {
+         "A": "To provide non-essential information",
+         "B": "To describe the setting in detail",
+         "C": "To reveal character traits and advance the plot",
+         "D": "To list the events in chronological order"
+       },
+       "correctOption": "C",
+       "overview": "In narrative writing, dialogue is used to reveal character traits and advance the plot. It helps in showing the interactions between characters, thereby adding depth to the narrative and moving the story forward."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which point of view is most commonly used in narrative writing?",
+       "options": {
+         "A": "First person",
+         "B": "Second person",
+         "C": "Third person omniscient",
+         "D": "Third person limited"
+       },
+       "correctOption": "A",
+       "overview": "The first person point of view is most commonly used in narrative writing. It allows the writer to directly engage with the reader by sharing personal experiences, thoughts, and emotions, making the story more intimate and relatable."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Cybersecurity Analyst Exam",
+   "topics": [
+     "Wireless Network Security"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following encryption protocols is considered the most secure for wireless networks?",
+       "options": {
+         "A": "WEP",
+         "B": "WPA",
+         "C": "WPA2",
+         "D": "TKIP"
+       },
+       "correctOption": "C",
+       "overview": "WPA2 (Wi-Fi Protected Access 2) is currently considered the most secure encryption protocol for wireless networks. It provides stronger data protection and network access control than its predecessors, WEP (Wired Equivalent Privacy) and WPA (Wi-Fi Protected Access), and uses AES (Advanced Encryption Standard) which is a more secure encryption algorithm. TKIP (Temporal Key Integrity Protocol) was used with WPA for encryption but is also not as secure as AES used with WPA2."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of using a VPN on a wireless network?",
+       "options": {
+         "A": "To increase the network's speed",
+         "B": "To create a secure tunnel for data transmission",
+         "C": "To replace the need for encryption",
+         "D": "To broadcast multiple SSIDs"
+       },
+       "correctOption": "B",
+       "overview": "The primary purpose of using a VPN (Virtual Private Network) on a wireless network is to create a secure tunnel for data transmission. This secure tunnel encrypts data as it travels between the client and the network, enhancing privacy and security, especially on public Wi-Fi networks. It does not inherently increase network speed, replace the need for encryption on the wireless network itself, or broadcast multiple SSIDs."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is a common security threat to wireless networks?",
+       "options": {
+         "A": "Phishing",
+         "B": "SQL Injection",
+         "C": "Evil Twin",
+         "D": "Cross-site scripting"
+       },
+       "correctOption": "C",
+       "overview": "An 'Evil Twin' attack is a common security threat specific to wireless networks. In this attack, a malicious actor sets up a fake wireless access point (AP) mimicking a legitimate one, with the intention of deceiving users into connecting to it. Once connected, the attacker can intercept the data transferred by the user, potentially gaining access to sensitive information. Phishing, SQL Injection, and Cross-site scripting are security threats too but are not specific to wireless networks."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Certified Fraud Examiner",
+   "topics": [
+     "Testifying as an Expert Witness in Fraud Cases"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is NOT a key quality of an effective expert witness in fraud cases?",
+       "options": {
+         "A": "Ability to simplify complex information",
+         "B": "Having a bias towards the hiring party",
+         "C": "Strong communication skills",
+         "D": "Credibility and professionalism"
+       },
+       "correctOption": "B",
+       "overview": "An effective expert witness in fraud cases must be able to simplify complex information, have strong communication skills, and maintain credibility and professionalism. Having a bias towards the hiring party undermines the expert's credibility and is not a key quality."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of an expert witness's testimony in a fraud case?",
+       "options": {
+         "A": "To prove the guilt of the defendant",
+         "B": "To provide specialized knowledge to help the trier of fact understand the evidence or determine a fact in issue",
+         "C": "To replace the jury in decision making",
+         "D": "To advocate for the hiring party"
+       },
+       "correctOption": "B",
+       "overview": "The primary purpose of an expert witness's testimony in a fraud case is to provide specialized knowledge to help the trier of fact (judge or jury) understand the evidence or determine a fact in issue, not to advocate for any party or replace the jury in decision making."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following best describes the 'Daubert Standard'?",
+       "options": {
+         "A": "A rule that allows expert witnesses to testify without being cross-examined",
+         "B": "A guideline for determining the admissibility of expert witness testimony",
+         "C": "A legal principle that prohibits the use of expert witnesses in fraud cases",
+         "D": "A standard for evaluating the financial damages in a fraud case"
+       },
+       "correctOption": "B",
+       "overview": "The 'Daubert Standard' is a guideline set by the Supreme Court for determining the admissibility of expert witness testimony. It requires that the testimony is based on sufficient facts or data, is the product of reliable principles and methods, and the expert has applied the principles and methods reliably to the facts of the case."
+     }
+   ]
+ }
+ 
+ {
+  "examName": "Kotlin Programming Language",
+  "topics": [
+    "Kotlin Reflection"
+  ],
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "What is the purpose of reflection in Kotlin?",
+      "options": {
+        "A": "To observe changes in program state",
+        "B": "To manipulate classes, functions, and properties at runtime",
+        "C": "To improve compilation time",
+        "D": "To facilitate asynchronous programming"
+      },
+      "correctOption": "B",
+      "overview": "Reflection in Kotlin is used to manipulate classes, functions, and properties at runtime. It allows the program to inspect or modify itself, providing a way to dynamically access objects and their members."
+    },
+    {
+      "questionNumber": 2,
+      "question": "Which of the following is a reflection API in Kotlin?",
+      "options": {
+        "A": "KClass",
+        "B": "Kotlinx",
+        "C": "KFunction",
+        "D": "All of the above"
+      },
+      "correctOption": "D",
+      "overview": "Kotlin's reflection API includes KClass, KFunction, and other interfaces such as KProperty. These are used to access metadata of classes, functions, and properties."
+    },
+    {
+      "questionNumber": 3,
+      "question": "How can you obtain a reference to a class in Kotlin using reflection?",
+      "options": {
+        "A": "::class syntax",
+        "B": "Class.forName() method",
+        "C": "Using the new keyword",
+        "D": "Kotlin does not support class references"
+      },
+      "correctOption": "A",
+      "overview": "In Kotlin, a reference to a class can be obtained using the ::class syntax. This is part of Kotlin's reflection capabilities, allowing you to access the class's metadata at runtime."
+    }
+  ]
+}
+ 
+ Raw Response: {
+   "examName": "AWS Certified Solutions Architect Exam",
+   "topics": [
+     "AWS Compute Services"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which AWS service allows you to run code without provisioning or managing servers?",
+       "options": {
+         "A": "Amazon EC2",
+         "B": "AWS Lambda",
+         "C": "Amazon ECS",
+         "D": "Amazon Lightsail"
+       },
+       "correctOption": "B",
+       "overview": "AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers. It executes your code only when needed and scales automatically, from a few requests per day to thousands per second."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is a fully managed container orchestration service?",
+       "options": {
+         "A": "Amazon EC2",
+         "B": "AWS Elastic Beanstalk",
+         "C": "Amazon ECS",
+         "D": "Amazon RDS"
+       },
+       "correctOption": "C",
+       "overview": "Amazon ECS (Elastic Container Service) is a fully managed container orchestration service. Customers such as Duolingo, Samsung, GE, and Cookpad use ECS to run their most sensitive and mission-critical applications because of its security, reliability, and scalability."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which AWS service provides scalable and secure global compute edge locations?",
+       "options": {
+         "A": "AWS Global Accelerator",
+         "B": "Amazon CloudFront",
+         "C": "AWS Outposts",
+         "D": "Amazon EC2 Auto Scaling"
+       },
+       "correctOption": "B",
+       "overview": "Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Bar Professional Training Course",
+   "topics": [
+     "Constitutional Law"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which principle asserts that the law should govern a nation, as opposed to being governed by decisions of individual government officials?",
+       "options": {
+         "A": "Rule of Law",
+         "B": "Separation of Powers",
+         "C": "Judicial Review",
+         "D": "Parliamentary Sovereignty"
+       },
+       "correctOption": "A",
+       "overview": "The Rule of Law is a fundamental principle in constitutional law that asserts the importance of law governing a nation rather than arbitrary decisions by individual government officials. It ensures that all individuals and authorities within the state, public and private, are bound by and entitled to the benefit of laws."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following best describes the concept of Parliamentary Sovereignty?",
+       "options": {
+         "A": "The judiciary's ability to interpret the law",
+         "B": "The division of powers among branches of government",
+         "C": "The legislature's authority to make or unmake any law",
+         "D": "The executive's power to enforce laws"
+       },
+       "correctOption": "C",
+       "overview": "Parliamentary Sovereignty is a key principle in the UK's constitutional law, which means that Parliament has the supreme legal authority and can create or end any law. Generally, the courts cannot overrule its legislation and no Parliament can pass laws that future Parliaments cannot change."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What does the Separation of Powers principle entail?",
+       "options": {
+         "A": "The independence of the judiciary from the other branches of government",
+         "B": "The division of government responsibilities into distinct branches to limit any one branch from exercising the core functions of another",
+         "C": "The ability of the judiciary to declare legislative acts unconstitutional",
+         "D": "The concentration of power within the legislative branch"
+       },
+       "correctOption": "B",
+       "overview": "The Separation of Powers is a doctrine of constitutional law under which the three branches of government (executive, legislative, and judicial) are kept separate. This is to prevent abuse of power and to provide for checks and balances within the government. Each branch has its own responsibilities, and its powers are distinct from those of the other branches."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "US Citizenship Test",
+   "topics": [
+     "The Articles of Confederation"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What was the main weakness of the Articles of Confederation?",
+       "options": {
+         "A": "It gave too much power to the national government.",
+         "B": "It did not provide a national currency.",
+         "C": "It did not allow for a president.",
+         "D": "It gave too little power to the national government."
+       },
+       "correctOption": "D",
+       "overview": "The Articles of Confederation established the first governmental structure unifying the 13 colonies that had fought in the American Revolution. However, this document put too little power in the central government. Congress, under the Articles, was not strong enough to enforce laws or raise taxes, making it difficult to support a national defense or fund the government."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Under the Articles of Confederation, how many states needed to agree in order to pass a new law?",
+       "options": {
+         "A": "7 out of 13",
+         "B": "9 out of 13",
+         "C": "11 out of 13",
+         "D": "13 out of 13"
+       },
+       "correctOption": "B",
+       "overview": "The Articles of Confederation required a supermajority for the passage of most types of legislation. Specifically, to pass a new law, 9 out of the 13 states had to agree. This high threshold made it difficult for Congress to take action on many issues."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following was a power that Congress had under the Articles of Confederation?",
+       "options": {
+         "A": "To regulate interstate commerce",
+         "B": "To levy taxes",
+         "C": "To declare war",
+         "D": "To enforce laws"
+       },
+       "correctOption": "C",
+       "overview": "Under the Articles of Confederation, Congress had the power to declare war. However, it lacked many other powers that would be considered essential for a strong central government, such as the power to levy taxes, regulate trade, or enforce laws. This limitation was a significant factor in the decision to draft the Constitution."
+     }
+   ]
+ }
 
  SWIFT:
  Response HTTP Status code: 200
@@ -182,6 +441,13 @@ enum InteractionState {
  
  Raw server response: {"topics":["Introduction to Ethical Hacking","Ethics and Legal Issues","Footprinting","Network Scanning","Enumeration","System Hacking","Trojans and Backdoors","Viruses and Worms","Sniffing","Social Engineering","Denial of Service","Session Hijacking","Hacking Web Servers","Web Application Vulnerabilities","Web-Based Password Cracking Techniques","SQL Injection","Hacking Wireless Networks","Physical Security","Linux Hacking","Evading IDS","Firewalls and Honeypots","Buffer Overflows","Cryptography","Penetration Testing","Cloud Computing and Ethical Hacking","IoT Hacking","Mobile Platform Attack Vectors","Mobile Device Management and Mobile Security","Wireless Network Threats","Wireless Network Security","Firewalls and IDS","Intrusion Detection Systems","Packet Sniffing and Spoofing","Network Traffic Analysis and Sniffing","VPN and Encryption","Password Cracking","Malware Threats","Email Hacking","File and Disk Encryption","Security Policies","Disaster Recovery","Incident Management"]}
  ContentBuilder has created: 42 Topics
+ 
+ Raw server response: {"topics":["Understanding the English Legal System","Criminal Litigation","Civil Litigation","Law of Evidence","Professional Ethics","Advocacy","Alternative Dispute Resolution","Drafting Legal Documents","Legal Research","Opinion Writing","Conference Skills","Negotiation Skills","Legal Analysis","Contract Law","Tort Law","Property Law","Trusts Law","Public Law","EU Law","Human Rights Law","Company Law","Family Law","Employment Law","Intellectual Property Law","Immigration Law","Tax Law","Landlord and Tenant Law","Wills and Probate Law","Understanding Court Etiquette","Understanding Legal Proceedings","Legal History","Legal Theory","Legal Philosophy","Comparative Law","International Law","Maritime Law","Medical Law","Environmental Law","Financial Law","Insolvency Law","Criminal Justice","Criminal Procedure","Civil Procedure","Commercial Law","Consumer Law","Administrative Law","Constitutional Law","Equity and Trusts","Land Law","Jurisprudence","Legal Writing","Legal Drafting","Legal Negotiation","Legal Mediation","Legal Arbitration","Criminal"]}
+ Starting fetchQuestionData for examName: Bar Professional Training Course with topics: ["Criminal Litigation", "Employment Law", "Alternative Dispute Resolution"]
+ 
+ Number of Questions for Certified Six Sigma Green Belt Exam: 0
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Six Sigma Basics","Six Sigma Fundamentals","Six Sigma Methodologies","Lean Six Sigma Principles","Six Sigma Tools and Techniques","DMAIC (Define","Measure","Analyze","Improve","Control) Methodology","Roles and Responsibilities in Six Sigma","Six Sigma Project Management","Six Sigma Quality Management","Statistical Process Control","Process Mapping in Six Sigma","Value Stream Mapping","Cause and Effect Diagrams","Pareto Analysis","FMEA (Failure Modes and Effects Analysis)","Control Charts","Hypothesis Testing","Design of Experiments","Correlation and Regression Analysis","Data Collection Techniques","Measurement System Analysis","Process Capability Analysis","Risk Management in Six Sigma","Six Sigma Change Management","Six Sigma Team Dynamics","Six Sigma Communication Techniques","Six Sigma Customer Relations","Six Sigma and Business Strategy Alignment","Six Sigma Benchmarking","Six Sigma Cost Analysis","Six Sigma Performance Metrics","Six Sigma Process Improvement Techniques","Six Sigma Supply Chain Management","Six Sigma Training and Coaching Techniques","Six Sigma Certification and Accreditation Standards","Six Sigma"]}
  
  
  You are an expert multiple-choice question examiner.  Given an exam name, topic and number of questions, generate professional practice exam multi choice style questions. 

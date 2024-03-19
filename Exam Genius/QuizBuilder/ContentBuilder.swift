@@ -8,12 +8,11 @@
 import Foundation
 
 class ContentBuilder {
-    var topicContent: [TopicContent] = []
-    var contentQuestions: [QuestionContent] = []
-    var builtQuestions: [QuestionContent] = []
     var readOut: String = ""
     var audioUrl: String = ""
     var context: String = ""
+    var container = Container(id: UUID())
+    var temporaryQuestionContent = [Question]()
     
     private let networkService: NetworkService // Assuming this is your networking layer
     
@@ -21,21 +20,25 @@ class ContentBuilder {
         self.networkService = networkService
     }
     
-    func buildContent(for examName: String) async throws -> AudioQuizPackageContent {
-        var content = AudioQuizPackageContent()
+    func buildForProd(for examName: String) async throws -> Container {
+        print("Building test Content")
         try await buildTopics(examName: examName)
-        try await buildQuestions(examName: examName)
+        try await buildQuestionsProdEnv(examName: examName)
         await buildAudioQuestions()
-        
-        content.name = examName
-        content.topics = topicContent
-        content.questions = builtQuestions
-        
-        // Return the fully populated `AudioQuizPackageContent` object
-        return content
+
+        return container
     }
     
-    func buildTopics(examName: String) async throws {
+    func alternateBuildTestContent(for examName: String) async throws -> Container {
+        print("Building test Content")
+        try await buildTestTopics(examName: examName)
+        try await buildTestQuestions(examName: examName)
+        await buildAudioQuestions()
+        
+        return container
+    }
+    
+    private func buildTopics(examName: String) async throws {
         //MARK: Create Topics for Content
         let topics = try await networkService.fetchTopics(context: examName)
         
@@ -44,46 +47,86 @@ class ContentBuilder {
         }
         
         topics.forEach { topic in
-            let newTopic = TopicContent(name: topic, isPresented: false, numberOfPresentations: 0)
-            topicContent.append(newTopic)
+            let containerTopic = Topic(name: topic)
+            container.topics.append(containerTopic)
             
         }
     }
     
-    func buildQuestions(examName: String) async throws {
-        guard self.topicContent.count >= 3 else {
-            throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
-        }
-        //MARK: Using RandonmTopics for example Quiz demo
-        let randomTopics = topicContent.shuffled().prefix(1)
-        let questionTopics = randomTopics.map{ $0.name }
+    private func buildTestTopics(examName: String) async throws {
         
-        //MARK: Create Questions of Content
-        let questionDataObjects = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 1) // Adjust topics as needed
+        let topics = try await networkService.testTopics()
         
-        questionDataObjects.forEach { questionDataObject in
-            questionDataObject.questions.forEach { questionData in
-                let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
-                
-                let newContentQuestions = QuestionContent(id: UUID(), questionContent: questionData.question, topic: "", options: optionsArray, correctOption: questionData.correctOption, questionAudio: "", questionNoteAudio: "")
-                contentQuestions.append(newContentQuestions)
-            }
+        topics.forEach { topic in
+            let containerTopic = Topic(name: topic)
+            container.topics.append(containerTopic)
         }
     }
     
-    func buildAudioQuestions() async {
+    private func buildTestQuestions(examName: String) async throws {
+        // Fetch the single QuestionDataObject
+        let questionDataObject = try await networkService.testQuestionData()
+        print("Content Builder Data recieved from network Service: \(questionDataObject)")
+        
+        // Iterate over the questions array within the QuestionDataObject
+        questionDataObject.questions.forEach { questionData in
+            // Map the options from the QuestionData.options struct to an array of strings
+            let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
+            
+            let newContainerQuestion = Question(id: UUID())
+            newContainerQuestion.questionContent = questionData.question
+            newContainerQuestion.options = optionsArray
+            newContainerQuestion.correctOption = questionData.correctOption
+            
+            // Assuming `contentQuestions` is an array you're appending to
+            temporaryQuestionContent.append(newContainerQuestion)
+           
+        }
+    }
+    
+    private func buildQuestionsProdEnv(examName: String) async throws {
+        guard self.container.topics.count >= 3 else {
+            throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
+        }
+        //MARK: Using RandonmTopics for example Quiz demo
+        let randomTopics = container.topics.shuffled().prefix(1)
+        let questionTopics = randomTopics.map{ $0.name }
+        
+        let questionDataObject = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 3)
+        print("Content Builder Data recieved from network Service: \(questionDataObject)")
+        
+        questionDataObject.forEach { questionDataObject in
+            questionDataObject.questions.forEach { questionData in
+                let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
+                
+                let newContainerQuestion = Question(id: UUID())
+                newContainerQuestion.questionContent = questionData.question
+                newContainerQuestion.options = optionsArray
+                newContainerQuestion.correctOption = questionData.correctOption
+                
+                temporaryQuestionContent.append(newContainerQuestion)
+            }
+        }
+    }
+
+    private func buildAudioQuestions() async {
         await withTaskGroup(of: Void.self) { group in
-            for (index, question) in contentQuestions.enumerated() {
+            for (index, question) in temporaryQuestionContent.enumerated() {
                 group.addTask {
-                    let context = self.determineContext(for: index, totalCount: self.contentQuestions.count)
+                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
                     let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
                     let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
                     let builtNewQuestion = QuestionContent(id: UUID(), questionContent: question.questionContent, topic: question.topic, options: question.options, correctOption: question.correctOption, questionAudio: audioUrl, questionNoteAudio: "")
+                    let finishedQuestion = Question(id: UUID())
+                    finishedQuestion.questionContent = question.questionContent
+                    finishedQuestion.topic = question.topic
+                    finishedQuestion.options = question.options
+                    finishedQuestion.correctOption = question.correctOption
+                    finishedQuestion.questionAudio = audioUrl
                     
                     // Safely append to builtQuestions
-                    // Assuming builtQuestions access is already thread-safe
-                    // If not, consider using an actor or other synchronization method here
-                    self.builtQuestions.append(builtNewQuestion)
+                    self.container.questions.append(finishedQuestion)
+                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
                 }
             }
         }
@@ -91,9 +134,9 @@ class ContentBuilder {
     
     private func determineContext(for index: Int, totalCount: Int) -> String {
         if index == 0 {
-            return "First Question"
+            return "New Question"
         } else if index == totalCount - 1 {
-            return "Last Question"
+            return "New Question"
         } else {
             return "Next Question"
         }
@@ -265,17 +308,16 @@ class ContentBuilder {
                """
     }
     
-//    func buildAudioQuestions() async {
-//        for (index, question) in contentQuestions.enumerated() {
-//            let count = contentQuestions.count
-//            Task {
-//                let context = determineContext(for: index, totalCount: count)
-//                let readOut = formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
-//                let audioUrl = await downloadReadOut(readOut: readOut) ?? ""
-//                let builtNewQuestion = QuestionContent(id: UUID(), questionContent: question.questionContent, topic: "", options: question.options, correctOption: question.correctOption, questionAudio: audioUrl, questionNoteAudio: "")
-//                builtQuestions.append(builtNewQuestion)
-//            }
-//        }
-//    }
+}
+
+struct Container {
+    var id: UUID
+    var topics: [Topic]
+    var questions: [Question]
     
+    init(id: UUID) {
+        self.id = id
+        self.topics = []
+        self.questions = []
+    }
 }

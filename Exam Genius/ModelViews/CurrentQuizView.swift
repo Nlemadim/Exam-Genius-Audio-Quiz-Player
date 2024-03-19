@@ -101,3 +101,57 @@ struct RecentScoreCard: View {
     }
 }
 
+struct CurrentQuizViewV2: View {
+    var image: String
+    var buttonLabel: String?
+    var color: Color
+    var backgroundImage: String?
+    var numberOfQuestions: Int
+    var numberOfQuizzes: Int
+    var questionsAnswered: Int
+    var highScore: Int
+    var numberOfTopics: Int
+    var isDisabled: Bool?
+    var playButtonAction: () -> Void
+    
+    let generator = ColorGenerator()
+
+    var body: some View {
+        ZStack {
+            
+            VStack(alignment: .leading, spacing: 12.0) {
+                VStack(alignment: .center) {
+                    Image(image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .cornerRadius(30)
+                        .frame(height: 150)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                      
+                }
+               
+                VStack(alignment: .leading, spacing: 12.0) {
+                    LabeledContent("Number of Topics", value: "\(numberOfTopics)")
+                    LabeledContent("Number of Questions", value: "\(numberOfQuestions)")
+                    LabeledContent("Questions Answered", value: "\(questionsAnswered)")
+                    LabeledContent("Quizzes Completed", value: "\(numberOfQuestions)")
+                    LabeledContent("Current High Score", value: "\(highScore)%")
+                }
+                
+                VStack {
+                    
+                    PlainClearButton(color: color, label: buttonLabel ?? "Start", image: nil, isDisabled: nil, playAction: { playButtonAction() })
+                }
+                .padding()
+            }
+            .padding(.all, 20.0)
+            .padding(.vertical, 20)
+            .background(generator.dominantDarkToneColor, in: RoundedRectangle(cornerRadius: 35, style: .continuous))
+            .padding(.horizontal, 20)
+        }
+        .onAppear {
+            generator.updateAllColors(fromImageNamed: image)
+        }
+        .preferredColorScheme(.dark)
+    }
+}

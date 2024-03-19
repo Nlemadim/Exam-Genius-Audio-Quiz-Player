@@ -17,48 +17,12 @@ class NetworkService {
     
     var updateNetworkStatus: ((NetworkStatus) -> Void)?
     
-    func fetchAudioData(content: String) async throws -> Data {
-        print("Network Service is Fetching Audio data")
-        // Construct the URL with query parameters for the API call
-        var components = URLComponents(string: Config.audioRequestURL)
-        components?.queryItems = [
-            URLQueryItem(name: "content", value: content)
-        ]
-        
-        guard let apiURL = components?.url else {
-            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-        }
-        
-        var request = URLRequest(url: apiURL)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // Fetch the response from your API
-        let (data, response) = try await URLSession.shared.data(for: request)
-                
-        // Check the HTTP response
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw URLError(.badServerResponse, userInfo: ["Description": "Invalid HTTP response"])
-        }
-        
-        guard httpResponse.statusCode == 200 else {
-            throw URLError(.badServerResponse, userInfo: ["Description": "Server returned status code \(httpResponse.statusCode)"])
-        }
-        
-        // Decode the base64 string to Data
-        guard let decodedData = Data(base64Encoded: data) else {
-            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response data"])
-        }
-        
-        return decodedData
-    }
-    
     func fetchTopics(context: String) async throws -> [String] {
             // Indicate that fetching topics has started
             updateNetworkStatus?(.fetchingTopics)
 
             //base URL
-            let baseUrl = Config.topicRequestURL 
+            let baseUrl = Config.topicRequestURL
             guard var urlComponents = URLComponents(string: baseUrl) else {
                 updateNetworkStatus?(.errorDownloadingContent("Invalid URL"))
                 throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
@@ -140,6 +104,42 @@ class NetworkService {
         }
 
         return questionResponses
+    }
+    
+    func fetchAudioData(content: String) async throws -> Data {
+        print("Network Service is Fetching Audio data")
+        // Construct the URL with query parameters for the API call
+        var components = URLComponents(string: Config.audioRequestURL)
+        components?.queryItems = [
+            URLQueryItem(name: "content", value: content)
+        ]
+        
+        guard let apiURL = components?.url else {
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+        
+        var request = URLRequest(url: apiURL)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Fetch the response from your API
+        let (data, response) = try await URLSession.shared.data(for: request)
+                
+        // Check the HTTP response
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse, userInfo: ["Description": "Invalid HTTP response"])
+        }
+        
+        guard httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse, userInfo: ["Description": "Server returned status code \(httpResponse.statusCode)"])
+        }
+        
+        // Decode the base64 string to Data
+        guard let decodedData = Data(base64Encoded: data) else {
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response data"])
+        }
+        
+        return decodedData
     }
     
     func fetchImage(for quizName: String, retryCount: Int = 0) async throws -> String {
@@ -281,6 +281,3 @@ enum NetworkStatus {
         }
     }
 }
-
-
-

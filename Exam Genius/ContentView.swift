@@ -25,7 +25,7 @@ struct ContentView: View {
             LandingPage()
             
         case .audioQuizSelected:
-            LandingPage()
+            QuizPlayerView()
             
         case .none:
             LaunchPage()
