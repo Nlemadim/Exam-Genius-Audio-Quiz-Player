@@ -133,14 +133,16 @@ struct StartButton: View {
     @State var configuration: PlayerState
     @State var isUsingMic: Bool
     var action: () -> Void
-    var isAwaitingAnswer: Bool {
-        configuration == .isAwaitingAnswer
-    }
+    @State var isAwaitingAnswer: Bool = false
+//    var isAwaitingAnswer: Bool {
+//        configuration == .isAwaitingAnswer
+//    }
     @State private var progress: CGFloat = 0.0
     let fillUpDuration = 5.0
 
     var body: some View {
         Button(action: {
+            isAwaitingAnswer.toggle()
             action()
             if isAwaitingAnswer {
                 // Start the animation to fill the progress ring

@@ -174,9 +174,6 @@ struct LandingPage: View {
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
-            do {
-                try! modelContext.save()
-            }
             selectedTab = 1
             isDownloading = false
             selectedQuizPackage = nil
@@ -231,20 +228,3 @@ struct View2: View {
 }
 
 
-/**
- 
- Mark: BottomSheet Optional Display Logic
- //            if playerReady {
- //                BottomMiniPlayer()
- //                    .offset(x: bottomSheetOffset, y: 0)
- //                    .onAppear {
- //                        withAnimation(.easeOut(duration: 0.5)) {
- //                            bottomSheetOffset = 0 // Move to center
- //                        }
- //                    }
- //                    .onDisappear {
- //                        bottomSheetOffset = -UIScreen.main.bounds.width // Reset when disappearing
- //                    }
- //            }
- 
- */

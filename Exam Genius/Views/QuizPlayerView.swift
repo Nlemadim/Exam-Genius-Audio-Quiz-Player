@@ -84,7 +84,9 @@ struct QuizPlayerView: View {
             
         }
         .fullScreenCover(isPresented: $expandSheet) {
-            QuizView()
+            if let package = user.selectedQuizPackage {
+                TestQuizView(selectedAudioQuiz: package)
+            }
         }
         .onAppear {
             generator.updateDominantColor(fromImageNamed: backgroundImage)
