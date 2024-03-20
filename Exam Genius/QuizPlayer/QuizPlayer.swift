@@ -70,6 +70,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     
     func playSampleQuiz(audioFileNames: [String]) {
+        guard !audioFileNames.isEmpty else { return }
         self.isNowPlaying = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles = audioFileNames

@@ -19,11 +19,7 @@ struct AudioQuizDetailView: View {
     @State var topicLabel: String = ""
     @State var stillDownloading: Bool = false
     @Binding var isDownloading: Bool
-    @State var isNowPlaying: Bool = false {
-        didSet {
-            isNowPlaying = quizPlayer.isNowPlaying
-        }
-    }
+    @Binding var isNowPlaying: Bool
     @State var numberOfTopics: Int = 0
     @State var downloadButtonLabel: String = "Download Audio Quiz"
     @StateObject private var generator = ColorGenerator()
@@ -42,11 +38,12 @@ struct AudioQuizDetailView: View {
     let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
     var error: Error?
     
-    init(audioQuiz: AudioQuizPackage, isDownloading: Binding<Bool>, didTapDownload: Binding<Bool> ) {
+    init(audioQuiz: AudioQuizPackage, isDownloading: Binding<Bool>, didTapDownload: Binding<Bool>, isNowPlaying: Binding<Bool>) {
         viewModel = AudioQuizDetailVM(audioQuiz: audioQuiz)
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
         _didTapDownload = didTapDownload
         _isDownloading = isDownloading
+        _isNowPlaying = isNowPlaying
     }
     
     var body: some View {
@@ -105,10 +102,12 @@ struct AudioQuizDetailView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 12.0) {
-                                PlayPauseButton(isDownloading: $stillDownloading,
+                                //MARK: TODO - Refactor Button Label isDownloading logic
+                                PlayPauseButton(isDownloading: $isDownloading,
                                                 isPlaying: $isNowPlaying,
                                                 color: generator.dominantLightToneColor,
                                                 playAction: {
+                                    self.isNowPlaying = true
                                     user.selectedQuizPackage = audioQuiz
                                 })
                                 
@@ -156,14 +155,6 @@ struct AudioQuizDetailView: View {
         }
     }
     
-    private var autoDismiss: Bool {
-        if isDownloading {
-            return false
-        } else {
-            return true
-        }
-    }
-    
     private func downloadAudioQuiz() {
         self.didTapDownload = true
         user.selectedQuizPackage = audioQuiz
@@ -197,7 +188,7 @@ struct AudioQuizDetailView: View {
         @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
    
         
-        return AudioQuizDetailView(audioQuiz: package, isDownloading: .constant(false), didTapDownload: .constant(false))
+        return AudioQuizDetailView(audioQuiz: package, isDownloading: .constant(false), didTapDownload: .constant(false), isNowPlaying: .constant(false))
             .modelContainer(container)
             .environmentObject(user)
     } catch {

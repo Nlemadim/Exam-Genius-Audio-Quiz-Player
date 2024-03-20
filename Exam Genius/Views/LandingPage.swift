@@ -17,7 +17,6 @@ struct LandingPage: View {
     let quizPlayer = QuizPlayer.shared
     
     @StateObject private var generator = ColorGenerator()
-    
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @State private var didTapDownload = false
@@ -28,7 +27,6 @@ struct LandingPage: View {
     @State private var selectedTab = 0
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
-    
     @State var selectedCategory: ExamCategory?
     private var cancellables = Set<AnyCancellable>()
     
@@ -40,7 +38,7 @@ struct LandingPage: View {
         audioQuizCollection.filter { quiz in
 
             guard let selectedCat = selectedCategory else {
-                return true // No category selected, show all quizzes
+                return true
             }
             return quiz.category.contains { $0.rawValue == selectedCat.rawValue }
         }
@@ -85,7 +83,7 @@ struct LandingPage: View {
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload)
+                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying)
             }
             .onChange(of: didTapDownload, { _, newValue in
                 if newValue {
@@ -95,7 +93,17 @@ struct LandingPage: View {
                         Task {
                             try await downloadAudioQuiz(selectedQuizPackage)
                         }
+                    }
+                }
+            })
+            .onChange(of: isPlaying, { _, newValue in
+                if newValue {
+                    
+                    if let selectedQuizPackage = self.selectedQuizPackage {
                         
+                        Task {
+                            try await downloadSample(selectedQuizPackage)
+                        }
                     }
                 }
             })
@@ -132,7 +140,6 @@ struct LandingPage: View {
         return container
     }
     
-    
     func groupQuizzesByCombinedCategories(quizzes: [AudioQuizPackage], combinedCategories: [CombinedCategory]) -> [CombinedCategory: [AudioQuizPackage]] {
         var groupedQuizzes = [CombinedCategory: [AudioQuizPackage]]()
         
@@ -147,7 +154,6 @@ struct LandingPage: View {
         return groupedQuizzes
     }
     
-    
     func loadDefaultCollection() async {
         guard audioQuizCollection.isEmpty else { return }
         
@@ -159,6 +165,44 @@ struct LandingPage: View {
             modelContext.insert(newPackage)
             try! modelContext.save()
         }
+    }
+    
+    func playSampleContent() {
+        if let package = selectedQuizPackage, selectedQuizPackage?.questions == nil {
+            Task {
+                try await downloadSample(package)
+            }
+        } else {
+            let list = selectedQuizPackage?.questions
+            let playList = list?.compactMap{$0.questionAudio}
+            playSample(playlist: playList ?? [])
+        }
+    }
+    
+    func downloadSample(_ audioQuiz: AudioQuizPackage) async throws {
+        DispatchQueue.main.async {
+            isDownloading.toggle()
+        }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        // Begin content building process
+        let content = try await contentBuilder.alternateBuildTestContent(for: audioQuiz.name)
+        print("Downloaded Detail Page Content: \(content)")
+        
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+            isDownloading = false
+            let list = audioQuiz.questions
+            let playList = list.compactMap{$0.questionAudio}
+            playSample(playlist: playList)
+            
+        }
+    }
+    
+    func playSample(playlist: [String]) {
+        isPlaying.toggle()
+        quizPlayer.playSampleQuiz(audioFileNames: playlist)
     }
     
     func downloadAudioQuiz(_ audioQuiz: AudioQuizPackage) async throws {
