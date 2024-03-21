@@ -13,16 +13,20 @@ struct AudioQuizDetailView: View {
     @EnvironmentObject var user: User
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Binding var didTapDownload: Bool
-    @Bindable var audioQuiz: AudioQuizPackage
     @ObservedObject private var viewModel: AudioQuizDetailVM
-    @State var topicLabel: String = ""
-    @State var stillDownloading: Bool = false
+    @StateObject private var generator = ColorGenerator()
+    @Bindable var audioQuiz: AudioQuizPackage
     @Binding var isDownloading: Bool
     @Binding var isNowPlaying: Bool
+    @Binding var isDownloadingSample: Bool
+    @Binding var didTapDownload: Bool
+    @Binding var didTapPlaySample: Bool
+    @State var topicLabel: String = ""
+    @State var stillDownloading: Bool = false
+    
     @State var numberOfTopics: Int = 0
     @State var downloadButtonLabel: String = "Download Audio Quiz"
-    @StateObject private var generator = ColorGenerator()
+    
     @State var packetSizeDetails: String = "Packet contains over 72 hours of listening time with over 670 questions and answers spanning across 127 topics"
     //@State var sampleButtonLabel: String = "Download Sample Question"
     @State var sampleButtonLabel: String = "Download Sample Question" {
@@ -38,12 +42,14 @@ struct AudioQuizDetailView: View {
     let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
     var error: Error?
     
-    init(audioQuiz: AudioQuizPackage, isDownloading: Binding<Bool>, didTapDownload: Binding<Bool>, isNowPlaying: Binding<Bool>) {
+    init(audioQuiz: AudioQuizPackage, isDownloading: Binding<Bool>, didTapDownload: Binding<Bool>, isNowPlaying: Binding<Bool>, isDownloadingSample: Binding<Bool>, didTapPlaySample:  Binding<Bool>) {
         viewModel = AudioQuizDetailVM(audioQuiz: audioQuiz)
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
         _didTapDownload = didTapDownload
         _isDownloading = isDownloading
         _isNowPlaying = isNowPlaying
+        _isDownloadingSample = isDownloadingSample
+        _didTapPlaySample = didTapPlaySample
     }
     
     var body: some View {
@@ -69,10 +75,20 @@ struct AudioQuizDetailView: View {
                                 .onTapGesture {
                                     dismiss()
                                 }
+                            
+                            CircularPlayButton(isPlaying: $isNowPlaying,
+                                               isDownloading: $isDownloadingSample,
+                                               color: generator.dominantLightToneColor,
+                                               playAction: { self.didTapPlaySample = true }
+                            )
+                            .zIndex(1.0)
+                            .padding()
+                            .offset(y: 15)
+                            
                         }
                        
                         VStack {
-                            VStack(alignment: .leading, spacing: 8.0) {
+                            VStack(alignment: .leading, spacing: 16.0) {
                                 HStack {
                                     Text(audioQuiz.name)
                                         .font(.headline)
@@ -81,6 +97,13 @@ struct AudioQuizDetailView: View {
                                         .bold()
                                         
                                     Spacer(minLength: 0)
+                                    
+//                                    CircularPlayButton(isPlaying: $isNowPlaying,
+//                                                       isDownloading: $isDownloadingSample,
+//                                                       color: generator.dominantLightToneColor,
+//                                                       playAction: { self.didTapPlaySample = true }
+//                                    )
+//                                    .padding(.horizontal, 10)
                                 }
                                 
                                 Text(audioQuiz.about)
@@ -103,13 +126,13 @@ struct AudioQuizDetailView: View {
                             
                             VStack(alignment: .leading, spacing: 12.0) {
                                 //MARK: TODO - Refactor Button Label isDownloading logic
-                                PlayPauseButton(isDownloading: $isDownloading,
-                                                isPlaying: $isNowPlaying,
-                                                color: generator.dominantLightToneColor,
-                                                playAction: {
-                                    self.isNowPlaying = true
-                                    user.selectedQuizPackage = audioQuiz
-                                })
+//                                PlayPauseButton(isDownloading: $stillDownloading,
+//                                                isPlaying: $isNowPlaying,
+//                                                color: generator.dominantLightToneColor,
+//                                                playAction: {
+//                                    self.isNowPlaying = true
+//                                    user.selectedQuizPackage = audioQuiz
+//                                })
                                 
                                 PlainClearButton(color: generator.dominantLightToneColor,
                                                  label: isDownloading ? "Downloading" : "Download",
@@ -185,10 +208,10 @@ struct AudioQuizDetailView: View {
         let user = User()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
+        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)California Bar (MBE)California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
    
         
-        return AudioQuizDetailView(audioQuiz: package, isDownloading: .constant(false), didTapDownload: .constant(false), isNowPlaying: .constant(false))
+        return AudioQuizDetailView(audioQuiz: package, isDownloading: .constant(false), didTapDownload: .constant(false), isNowPlaying: .constant(false), isDownloadingSample: .constant(false), didTapPlaySample: .constant(false))
             .modelContainer(container)
             .environmentObject(user)
     } catch {

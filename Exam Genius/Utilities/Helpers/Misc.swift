@@ -380,6 +380,51 @@ enum InteractionState {
  }
  
  Raw Response: {
+   "examName": "Dental Admission Test",
+   "topics": [
+     "Dental Radiography"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following radiographic techniques is used to visualize the entire tooth (crown and root) and the surrounding bone?",
+       "options": {
+         "A": "Bitewing",
+         "B": "Periapical",
+         "C": "Occlusal",
+         "D": "Panoramic"
+       },
+       "correctOption": "B",
+       "overview": "Periapical radiography is the technique of choice when the goal is to visualize the entire tooth (crown and root) along with the surrounding bone. This is crucial for diagnosing conditions like periapical abscesses or cysts, and for assessing the extent of periodontal disease."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of using a bitewing radiograph in dental diagnostics?",
+       "options": {
+         "A": "To detect periodontal disease",
+         "B": "To examine the nasal cavity",
+         "C": "To detect interproximal caries",
+         "D": "To evaluate jaw fractures"
+       },
+       "correctOption": "C",
+       "overview": "Bitewing radiographs are primarily used to detect interproximal caries, which are not easily visible during a clinical examination. They can also be useful in assessing the bone level in the case of periodontal disease, but their main purpose is the early detection of caries between teeth."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which type of radiation is most commonly used in dental radiography?",
+       "options": {
+         "A": "Gamma rays",
+         "B": "Ultraviolet radiation",
+         "C": "X-rays",
+         "D": "Microwaves"
+       },
+       "correctOption": "C",
+       "overview": "X-rays are the type of radiation most commonly used in dental radiography. They have the ability to penetrate tissues and structures, creating images that help in diagnosing a wide range of dental conditions, from cavities and gum disease to impacted teeth and jaw abnormalities."
+     }
+   ]
+ }
+ 
+ Raw Response: {
    "examName": "Bar Professional Training Course",
    "topics": [
      "Constitutional Law"

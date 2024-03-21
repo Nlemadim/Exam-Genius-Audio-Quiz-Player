@@ -71,7 +71,6 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     func playSampleQuiz(audioFileNames: [String]) {
         guard !audioFileNames.isEmpty else { return }
-        self.isNowPlaying = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles = audioFileNames
             self.currentIndex = 0
@@ -81,7 +80,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     private func playAudioFileAtIndex(_ index: Int) {
         guard index < audioFiles.count else {
-            self.isFinishedPlaying = true // Ensure this triggers UI updates correctly
+            self.isFinishedPlaying = false
+            self.isNowPlaying = true // Ensure this triggers UI updates correctly
             return
         }
         
@@ -152,12 +152,13 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         print("Player has Finished playing")
-        isFinishedPlaying = true
+        
         playerState = .isAwaitingAnswer
         if flag {
-            self.isNowPlaying = false
             currentIndex += 1 // Move to the next file
             playAudioFileAtIndex(currentIndex) // Play next audio
+            self.isNowPlaying = false
+            self.isFinishedPlaying = true
         }
     }
     

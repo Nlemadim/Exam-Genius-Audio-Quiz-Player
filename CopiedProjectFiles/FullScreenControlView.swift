@@ -101,6 +101,7 @@ struct FullScreenControlView: View {
 }
 struct PlayerControlButtons: View {
     @State var isNowPlaying: Bool
+
     var quizPlayer = QuizPlayer.shared
     var themeColor: Color?
     var repeatAction: () -> Void
@@ -118,23 +119,36 @@ struct PlayerControlButtons: View {
                         .foregroundColor(themeColor ?? .white)
                 }
                 .padding()
+                
+                CircularPlayButton(isPlaying: $isNowPlaying,
+                                   isDownloading: .constant(false),
+                                   color: themeColor ?? .clear,
+                                   playAction: { playAction() }
+                )
+               
 
-                // Play/Pause Button
-                ZStack{
-                    Circle()
-                        .fill(themeColor ?? .teal)
-                        .frame(width: 67, height: 67)
-                    
-                    Button(action: {
-                        //quizPlayer.startQuiz()
-                    }) {
-                        Image(systemName: !isNowPlaying ?  "pause.fill" : "play.fill")
-                            .font(.largeTitle)
-                            .foregroundColor(.white)
-                    }
-                    .font(.largeTitle)
-                    .padding(10)
-                }
+//                // Play/Pause Button
+//                ZStack{
+//                    Circle()
+//                        .fill(themeColor ?? .teal)
+//                        .frame(width: 67, height: 67)
+//                        .tint(.black)
+//                        
+//                        
+//                    
+//                    Button(action: {
+//                       playAction()
+//                    }) {
+//                        Image(systemName: !isNowPlaying ?  "pause.fill" : "play.fill")
+//                            .font(.largeTitle)
+//                            .foregroundColor(.white)
+//                            
+//                            
+//                    }
+//                    .font(.largeTitle)
+//                    
+//                    .padding(10)
+//                }
                 
                 // Next/End Button
                 Button(action:  {
@@ -145,6 +159,7 @@ struct PlayerControlButtons: View {
                         .foregroundColor(themeColor ?? .white)
                 }
                 .padding()
+                
             }
             .frame(maxWidth: .infinity)
             .frame(height: 100)

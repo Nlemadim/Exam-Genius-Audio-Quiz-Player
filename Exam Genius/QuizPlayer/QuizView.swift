@@ -81,8 +81,8 @@ struct QuizView: View {
 
 
 struct PlayerContent {
-    var titleImage: Image
-    var title: String
+    var imageUrl: Image
+    var name: String
     var shortTitle: String
     var questions: [String] = []
 }
@@ -105,6 +105,7 @@ struct TestQuizView: View {
     @State var optionB: String = ""
     @State var optionC: String = ""
     @State var optionD: String = ""
+    @Binding var didTapPlay: Bool
     
     
     var body: some View {
@@ -128,15 +129,7 @@ struct TestQuizView: View {
                         
                         Spacer().frame(height: 40)
                         
-                        Image(systemName: "line.3.horizontal")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                            .activeGlow(generator.dominantLightToneColor, radius: 0.7)
-                            .hAlign(.trailing)
-                            .padding(.horizontal, 10)
-                            .onTapGesture {
-                                dismiss()
-                            }
+                        //MARK: TODO - Place Quiz Progress Bar Here
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -159,19 +152,26 @@ struct TestQuizView: View {
                     RoundedRectangle(cornerRadius: 25.0, style: .continuous)
                         .fill(generator.dominantLightToneColor)
                         .padding(.horizontal, 10)
-                    
                 )
                 
-//                Image(systemName: "text.quote")
-//                    .font(.title2)
-//                    .foregroundStyle(.white)
-//                    .activeGlow(generator.dominantLightToneColor, radius: 0.7)
-//                    .hAlign(.trailing)
-//                    .padding(.horizontal, 20)
+                Image(systemName: "line.3.horizontal")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                    .activeGlow(generator.dominantLightToneColor, radius: 0.7)
+                    .hAlign(.trailing)
+                    .padding(.horizontal, 20)
+                    .onTapGesture {
+                        dismiss()
+                    }
                 
                 Spacer()
                 
-                PlayerControlButtons(isNowPlaying: true, themeColor: generator.dominantLightToneColor, repeatAction: {}, playAction: { playAudioQuiz() }, nextAction: {})
+                PlayerControlButtons(isNowPlaying: true,
+                                     themeColor: generator.dominantLightToneColor,
+                                     repeatAction: {},
+                                     playAction: { self.didTapPlay = true },
+                                     nextAction: {}
+                )
                 
                 
             }
@@ -183,17 +183,6 @@ struct TestQuizView: View {
         }
         .preferredColorScheme(.dark)
         .background(generator.dominantBackgroundColor)
-    }
-    
-    
-    //MARK: Refactor for User AudioQuiz Package
-    func playAudioQuiz() {
-        let user = User()
-        if let package = user.selectedQuizPackage {
-            let list = package.questions
-            let playList = list.compactMap{$0.questionAudio}
-            quizPlayer.playSampleQuiz(audioFileNames: playList)
-        }
     }
     
     @ViewBuilder
@@ -387,13 +376,13 @@ struct TestQuizView: View {
         let user = User()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "DL-Exam-Basic", category: [.legal])
+        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "CHFP-Exam-Pro", category: [.legal])
         let options = ["None whatsoever", "You get to find out what love has got to do with it", "Much More Love", "Much less love"]
         let newQuestion = [Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""), Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""), Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: "")]
         //package.questions.append(contentsOf: newQuestion)
       
    
-        return TestQuizView(selectedAudioQuiz: package)
+        return TestQuizView(selectedAudioQuiz: package, didTapPlay: .constant(false))
             .modelContainer(container)
             .environmentObject(user)
     } catch {

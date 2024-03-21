@@ -134,7 +134,7 @@ struct CurrentQuizViewV2: View {
                     LabeledContent("Number of Topics", value: "\(numberOfTopics)")
                     LabeledContent("Number of Questions", value: "\(numberOfQuestions)")
                     LabeledContent("Questions Answered", value: "\(questionsAnswered)")
-                    LabeledContent("Quizzes Completed", value: "\(numberOfQuestions)")
+                    LabeledContent("Quizzes Completed", value: "\(numberOfQuizzes)")
                     LabeledContent("Current High Score", value: "\(highScore)%")
                 }
                 

@@ -14,7 +14,7 @@ struct LandingPage: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
-    let quizPlayer = QuizPlayer.shared
+    @ObservedObject var quizPlayer = QuizPlayer.shared
     
     @StateObject private var generator = ColorGenerator()
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
@@ -22,6 +22,8 @@ struct LandingPage: View {
     @State private var didTapDownload = false
     @State private var expandSheet: Bool = false
     @State var isDownloading: Bool = false
+    @State var didTapPlaySample: Bool = false
+    @State var isDownloadingSample: Bool = false
     @State private var isPlaying: Bool = false
     @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     @State private var selectedTab = 0
@@ -72,6 +74,10 @@ struct LandingPage: View {
                         .scrollTargetBehavior(.viewAligned)
                     }
                 }
+                .onReceive(quizPlayer.$isNowPlaying, perform: { isNowPlayng in
+                    self.isPlaying = isNowPlayng
+                    print("Landing screen has registered isPlaying as: \(isPlaying)")
+                })
                 .task {
                     await loadDefaultCollection()
                 }
@@ -82,8 +88,9 @@ struct LandingPage: View {
                         .offset(y: 40)
                 )
             }
+            
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying)
+                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying, isDownloadingSample: $isDownloadingSample, didTapPlaySample: $didTapPlaySample)
             }
             .onChange(of: didTapDownload, { _, newValue in
                 if newValue {
@@ -96,7 +103,7 @@ struct LandingPage: View {
                     }
                 }
             })
-            .onChange(of: isPlaying, { _, newValue in
+            .onChange(of: didTapPlaySample, { _, newValue in
                 if newValue {
                     
                     if let selectedQuizPackage = self.selectedQuizPackage {
@@ -180,8 +187,9 @@ struct LandingPage: View {
     }
     
     func downloadSample(_ audioQuiz: AudioQuizPackage) async throws {
+        guard audioQuiz.questions.isEmpty else { return }
         DispatchQueue.main.async {
-            isDownloading.toggle()
+            isDownloadingSample.toggle()
         }
         
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
@@ -192,7 +200,7 @@ struct LandingPage: View {
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
-            isDownloading = false
+            isDownloadingSample = false
             let list = audioQuiz.questions
             let playList = list.compactMap{$0.questionAudio}
             playSample(playlist: playList)

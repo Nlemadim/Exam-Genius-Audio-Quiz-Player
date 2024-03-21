@@ -19,6 +19,7 @@ struct QuizPlayerView: View {
     @State private var expandSheet: Bool = false
     @State var isDownloading: Bool = false
     @State private var isPlaying: Bool = false
+    @State private var playTapped: Bool = false
     @State private var selectedTab = 0
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
@@ -85,9 +86,13 @@ struct QuizPlayerView: View {
         }
         .fullScreenCover(isPresented: $expandSheet) {
             if let package = user.selectedQuizPackage {
-                TestQuizView(selectedAudioQuiz: package)
+                TestQuizView(selectedAudioQuiz: package, didTapPlay: $playTapped)
             }
         }
+        .onChange(of: playTapped, { _, _ in
+            print("Play Pressed")
+            playAudioQuiz()
+        })
         .onAppear {
             generator.updateDominantColor(fromImageNamed: backgroundImage)
         }
@@ -130,6 +135,14 @@ struct QuizPlayerView: View {
     var highestScore: Int {
         let total = UserDefaultsManager.userHighScore()
         return total
+    }
+    
+    func playAudioQuiz() {
+        if let package = user.selectedQuizPackage {
+            let list = package.questions
+            let playList = list.compactMap{$0.questionAudio}
+            quizPlayer.playSampleQuiz(audioFileNames: playList)
+        }
     }
 }
 
