@@ -60,6 +60,7 @@ struct LandingPage: View {
                                     AudioQuizPackageView(quiz: quiz)
                                         .onTapGesture {
                                             selectedQuizPackage = quiz
+                                            user.selectedQuizPackage = quiz
                                         }
                                 }
                                 
@@ -88,8 +89,8 @@ struct LandingPage: View {
                         .offset(y: 40)
                 )
             }
-            
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
+               
                 AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying, isDownloadingSample: $isDownloadingSample, didTapPlaySample: $didTapPlaySample)
             }
             .onChange(of: didTapDownload, { _, newValue in

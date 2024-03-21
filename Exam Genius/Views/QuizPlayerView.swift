@@ -9,6 +9,48 @@ import SwiftUI
 import SwiftData
 import Combine
 
+struct QuizViewConfiguration {
+    var imageUrl: String
+    var name: String
+    var shortTitle: String
+    var questions: [QuestionVisualizer] = []
+    var config: ControlConfiguration
+
+}
+
+struct ControlConfiguration {
+    var playPauseQuiz: () -> Void
+    var nextQuestion: () -> Void
+    var repeatQuestion: () -> Void
+    var endQuiz: () -> Void
+}
+
+struct QuestionVisualizer {
+    var questionContent: String
+    var optionA: String
+    var optionB: String
+    var optionC: String
+    var optionD: String
+}
+
+class QuestionVisualizerMaker {
+    static func createVisualizers(from questions: [Question]) -> [QuestionVisualizer] {
+        return questions.map { question in
+            // Ensure there are exactly 4 options, otherwise, fill missing options with empty strings
+            let options = question.options + Array(repeating: "", count: max(0, 4 - question.options.count))
+            
+            return QuestionVisualizer(
+                questionContent: question.questionContent,
+                optionA: options[0],
+                optionB: options[1],
+                optionC: options[2],
+                optionD: options[3]
+            )
+        }
+    }
+}
+
+
 struct QuizPlayerView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -20,9 +62,12 @@ struct QuizPlayerView: View {
     @State var isDownloading: Bool = false
     @State private var isPlaying: Bool = false
     @State private var playTapped: Bool = false
-    @State private var selectedTab = 0
+    @State private var currentQuestionIndex: Int = 0
+    
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
+    @State var configuration: QuizViewConfiguration?
+    
     
     var cancellables = Set<AnyCancellable>()
     
@@ -82,10 +127,13 @@ struct QuizPlayerView: View {
                         .frame(height: 530)
                     }
             }
+            .onChange(of: selectedQuizPackage) { _, newValue in
+                loadQuizConfiguration(quizPackage: newValue)
+            }
             
         }
         .fullScreenCover(isPresented: $expandSheet) {
-            if let package = user.selectedQuizPackage {
+            if let package = configuration {
                 TestQuizView(selectedAudioQuiz: package, didTapPlay: $playTapped)
             }
         }
@@ -145,6 +193,63 @@ struct QuizPlayerView: View {
         }
     }
 }
+
+extension QuizPlayerView {
+    private func loadQuizConfiguration(quizPackage: AudioQuizPackage?) {
+        guard let quizPackage = quizPackage else {
+            // Handle the case where the quiz package is nil, if necessary
+            return
+        }
+        
+        let questions = QuestionVisualizerMaker.createVisualizers(from: quizPackage.questions)
+        let newConfiguration = QuizViewConfiguration(
+            imageUrl: quizPackage.imageUrl,
+            name: quizPackage.name,
+            shortTitle: quizPackage.acronym,
+            questions: questions,
+            config: ControlConfiguration(
+                playPauseQuiz: {
+                    
+                },
+                nextQuestion: {
+                    
+                },
+                repeatQuestion: {
+                   
+                },
+                endQuiz: {
+                    
+                }
+            )
+        )
+        
+        self.configuration = newConfiguration
+    }
+}
+
+extension QuizPlayerView {
+    private func goToNextQuestion() {
+        if let questionCount = configuration?.questions.count, currentQuestionIndex < questionCount - 1 {
+            currentQuestionIndex += 1
+        }
+    }
+    
+    private func goToPreviousQuestion() {
+        if currentQuestionIndex > 0 {
+            currentQuestionIndex -= 1
+        }
+    }
+    
+    private func selectOption(_ option: String) {
+        // Handle option selection logic here
+        // For example, check if the selected option is correct, update state, etc.
+        
+        // Optionally, automatically go to the next question after a delay or immediately
+        // goToNextQuestion()
+    }
+}
+
+
 
 
 #Preview {

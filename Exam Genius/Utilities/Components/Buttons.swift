@@ -99,6 +99,7 @@ struct PlainClearButton: View {
 struct CircularPlayButton: View {
     @Binding var isPlaying: Bool
     @Binding var isDownloading: Bool
+    var imageLabel: String?
     var color: Color
     var playAction: () -> Void
     
@@ -133,6 +134,43 @@ struct CircularPlayButton: View {
     }
 }
 
+struct CircularButton: View {
+    @Binding var isPlaying: Bool
+    @Binding var isDownloading: Bool
+    var imageLabel: String?
+    var color: Color
+    var playAction: () -> Void
+    
+    var body: some View {
+        Button(action: {
+            
+            playAction()
+            
+        }) {
+            if isDownloading {
+                
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                
+            } else {
+                Image(systemName: imageLabel ?? "")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 22.5, height: 22.5)
+            }
+        }
+        .frame(width: 50, height: 50)
+        .background(color)
+        .foregroundColor(.white)
+        .activeGlow(.white, radius: 1)
+        .cornerRadius(25)
+        .overlay(
+           Circle()
+                .stroke(Color.white, lineWidth: 1)
+        )
+        .disabled(isDownloading)
+    }
+}
 
 
 struct BuildButton: View {

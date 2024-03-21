@@ -113,12 +113,13 @@ struct PlayerControlButtons: View {
             
             HStack(spacing: 30) {
                 // Repeat Button
-                Button(action: repeatAction) {
-                    Image(systemName: "memories")
-                        .font(.title)
-                        .foregroundColor(themeColor ?? .white)
-                }
-                .padding()
+                CircularButton(isPlaying: .constant(false), isDownloading: .constant(false), imageLabel: "memories", color: themeColor ?? .clear, playAction: { repeatAction() })
+//                Button(action: repeatAction) {
+//                    Image(systemName: "memories")
+//                        .font(.title)
+//                        .foregroundColor(themeColor ?? .white)
+//                }
+//                .padding()
                 
                 CircularPlayButton(isPlaying: $isNowPlaying,
                                    isDownloading: .constant(false),
@@ -151,14 +152,15 @@ struct PlayerControlButtons: View {
 //                }
                 
                 // Next/End Button
-                Button(action:  {
-                    
-                }) {
-                    Image(systemName: "forward.end.fill")
-                        .font(.title)
-                        .foregroundColor(themeColor ?? .white)
-                }
-                .padding()
+                CircularButton(isPlaying: .constant(false), isDownloading: .constant(false), imageLabel: "forward.end.fill", color: themeColor ?? .clear, playAction: { repeatAction() })
+//                Button(action:  {
+//                    
+//                }) {
+//                    Image(systemName: "forward.end.fill")
+//                        .font(.title)
+//                        .foregroundColor(themeColor ?? .white)
+//                }
+//                .padding()
                 
             }
             .frame(maxWidth: .infinity)

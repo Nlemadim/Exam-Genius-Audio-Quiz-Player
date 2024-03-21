@@ -80,26 +80,12 @@ struct QuizView: View {
 
 
 
-struct PlayerContent {
-    var imageUrl: Image
-    var name: String
-    var shortTitle: String
-    var questions: [String] = []
-}
+
 
 struct TestQuizView: View {
     @Environment(\.dismiss) private var dismiss
-    let quizPlayer = QuizPlayer.shared
     @StateObject private var generator = ColorGenerator()
-    @State private var currentContentIndex = 0 // Track the index of the content array (question + options)
-    @State private var charIndex = 0 // Track the current character index within the current string
-    @State var selectedAudioQuiz: AudioQuizPackage
-    @State var displayedText: String = ""
-    @State private var messageIndex: Int = 0
-    @State private var timer: Timer?
-    @State var currentTypingIndex = 0
-    @State var typingTexts: [String] = []
-
+    @State var selectedAudioQuiz: QuizViewConfiguration
     @State var question: String = ""
     @State var optionA: String = ""
     @State var optionB: String = ""
@@ -266,128 +252,29 @@ struct TestQuizView: View {
         .opacity(optionD.isEmptyOrWhiteSpace ? 0 : 1)
     }
     
-    func startTypingAnimation() {
-        guard !selectedAudioQuiz.questions.isEmpty else {
-            print("Empty Collection")
-            return }
-        
-        let questions = selectedAudioQuiz.questions
-        // Ensure currentTypingIndex is within bounds
-        guard currentTypingIndex < questions.count else {
-            print("Current typing index is out of bounds.")
-            return
-        }
-        
-        // Prepare the content array
-        let currentQuestion = questions[currentTypingIndex]
-        let contentArray = [currentQuestion.questionContent] + currentQuestion.options
-
-        // Reset indexes
-        currentContentIndex = 0
-        charIndex = 0
-
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) {  timer in
-            
-            // Check if we've finished typing all contents
-            if self.currentContentIndex >= contentArray.count {
-                timer.invalidate()
-                if self.currentTypingIndex + 1 < questions.count {
-                    self.currentTypingIndex += 1
-                    self.startTypingAnimation() // Move to the next question
-                }
-                return
-            }
-
-            // Current string to type
-            let currentString = contentArray[self.currentContentIndex]
-
-            // Check if we've finished typing the current string
-            if self.charIndex < currentString.count {
-                let index = currentString.index(currentString.startIndex, offsetBy: self.charIndex)
-                let char = String(currentString[index])
-
-                DispatchQueue.main.async {
-                    // Update the appropriate @State variable safely on the main thread
-                    switch self.currentContentIndex {
-                    case 0:
-                        self.question += char
-                    case 1:
-                        self.optionA += char
-                    case 2:
-                        self.optionB += char
-                    case 3:
-                        self.optionC += char
-                    case 4:
-                        self.optionD += char
-                    default:
-                        break
-                    }
-                }
-                self.charIndex += 1
-            } else {
-                // Move to the next string
-                DispatchQueue.main.async {
-                    self.currentContentIndex += 1
-                    self.charIndex = 0
-                }
-            }
-        }
-    }
-
-    func prepareForTyping(question: Question) {
-        // Reset the typing texts and index
-        typingTexts = []
-        currentTypingIndex = 0
-
-        // Add the question content and options to the typing texts
-        typingTexts.append(question.questionContent)
-        typingTexts.append(contentsOf: question.options)
-
-        // Start the typing animation
-        startTypingAnimation()
-    }
     
-    func simulateTyping() {
-        // Example questions array, could be populated from anywhere
-        let options = ["None whatsoever", "You get to find out what love has got to do with it", "Much More Love", "Much less love"]
-        let questions = [Question(id: UUID(), questionContent: "What is the punishment for showing love?", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""),
-                         Question(id: UUID(), questionContent: "How does society benefit from love?", questionNote: "", topic: "Societal Love", options: options, correctOption: "B", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""),
-                         Question(id: UUID(), questionContent: "What role does love play in personal development?", questionNote: "", topic: "Personal Development", options: options, correctOption: "C", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: "")]
-
-        // Iterate over each question and simulate typing its content and options
-        for question in questions {
-            self.question = question.questionContent
-            self.optionA = question.options[0]
-            self.optionB = question.options[1]
-            self.optionC = question.options[2]
-            self.optionD = question.options[3]
-            
-            prepareForTyping(question: question)
-            // Assuming `prepareForTyping` automatically starts the typing animation
-            // You might need to add a delay or completion handler here if you want to ensure each question is fully typed out before moving to the next one, depending on how your typing animation is implemented.
-        }
-    }
 
 }
 
 #Preview {
-    do {
-        let user = User()
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "CHFP-Exam-Pro", category: [.legal])
-        let options = ["None whatsoever", "You get to find out what love has got to do with it", "Much More Love", "Much less love"]
-        let newQuestion = [Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""), Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""), Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: "")]
-        //package.questions.append(contentsOf: newQuestion)
-      
-   
-        return TestQuizView(selectedAudioQuiz: package, didTapPlay: .constant(false))
-            .modelContainer(container)
-            .environmentObject(user)
-    } catch {
-        return Text("Failed to create Preview: \(error.localizedDescription)")
-    }
+    let config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
+    return TestQuizView(selectedAudioQuiz: config, didTapPlay: .constant(false))
+//    do {
+//        let user = User()
+//        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//        let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
+//        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "CHFP-Exam-Pro", category: [.legal])
+//        let options = ["None whatsoever", "You get to find out what love has got to do with it", "Much More Love", "Much less love"]
+//        let newQuestion = [Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""), Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: ""), Question(id: UUID(), questionContent: "What is the punishment for showing love", questionNote: "", topic: "Legal Love", options: options, correctOption: "A", selectedOption: "", isAnswered: false, isAnsweredCorrectly: false, numberOfPresentations: 0, questionAudio: "", questionNoteAudio: "")]
+//        //package.questions.append(contentsOf: newQuestion)
+//      
+//   
+//        return TestQuizView(selectedAudioQuiz: package, didTapPlay: .constant(false))
+//            .modelContainer(container)
+//            .environmentObject(user)
+//    } catch {
+//        return Text("Failed to create Preview: \(error.localizedDescription)")
+//    }
 }
 
 
