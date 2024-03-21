@@ -130,11 +130,10 @@ struct QuizPlayerView: View {
             .onChange(of: selectedQuizPackage) { _, newValue in
                 loadQuizConfiguration(quizPackage: newValue)
             }
-            
         }
         .fullScreenCover(isPresented: $expandSheet) {
             if let package = configuration {
-                TestQuizView(selectedAudioQuiz: package, didTapPlay: $playTapped)
+                TestQuizView(configuration: package, currentIndex: $currentQuestionIndex)
             }
         }
         .onChange(of: playTapped, { _, _ in
@@ -209,13 +208,13 @@ extension QuizPlayerView {
             questions: questions,
             config: ControlConfiguration(
                 playPauseQuiz: {
-                    
+                    self.playTapped = true
                 },
                 nextQuestion: {
-                    
+                    goToNextQuestion()
                 },
                 repeatQuestion: {
-                   
+                   goToPreviousQuestion()
                 },
                 endQuiz: {
                     

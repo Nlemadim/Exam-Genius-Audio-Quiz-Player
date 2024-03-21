@@ -140,7 +140,7 @@ struct CurrentQuizViewV2: View {
                 
                 VStack {
                     
-                    PlainClearButton(color: color, label: buttonLabel ?? "Start", image: nil, isDisabled: nil, playAction: { playButtonAction() })
+                    PlainClearButton(color: color, label: buttonLabel ?? "Start", image: nil, isDisabled: isDisabled, playAction: { playButtonAction() })
                 }
                 .padding()
             }

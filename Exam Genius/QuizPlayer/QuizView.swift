@@ -78,20 +78,16 @@ struct QuizView: View {
     }
 }
 
-
-
-
-
 struct TestQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
-    @State var selectedAudioQuiz: QuizViewConfiguration
+    @State var configuration: QuizViewConfiguration
     @State var question: String = ""
     @State var optionA: String = ""
     @State var optionB: String = ""
     @State var optionC: String = ""
     @State var optionD: String = ""
-    @Binding var didTapPlay: Bool
+    @Binding var currentIndex: Int
     
     
     var body: some View {
@@ -99,7 +95,7 @@ struct TestQuizView: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .center, spacing: 15) {
                     /// Exam Icon Image
-                    Image(selectedAudioQuiz.imageUrl)
+                    Image(configuration.imageUrl)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100, height: 100)
@@ -107,7 +103,7 @@ struct TestQuizView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         /// Long Name
-                        Text(selectedAudioQuiz.name)
+                        Text(configuration.name)
                             .font(.body)
                             .foregroundStyle(.white)
                             .fontWeight(.semibold)
@@ -155,21 +151,39 @@ struct TestQuizView: View {
                 PlayerControlButtons(isNowPlaying: true,
                                      themeColor: generator.dominantLightToneColor,
                                      repeatAction: {},
-                                     playAction: { self.didTapPlay = true },
-                                     nextAction: {}
+                                     playAction: { configuration.config.playPauseQuiz() },
+                                     nextAction: { configuration.config.nextQuestion()}
                 )
-                
-                
             }
             .padding(.top, 16)
             .onAppear {
-                generator.updateAllColors(fromImageNamed: selectedAudioQuiz.imageUrl)
-                
+                generator.updateAllColors(fromImageNamed: configuration.imageUrl)
+                showContent()
+                print("Test QuizView has Registered \(configuration.questions.count) Questions ready for viewing")
+            }
+            .onChange(of: currentIndex) { _, _ in
+                showContent()
             }
         }
         .preferredColorScheme(.dark)
         .background(generator.dominantBackgroundColor)
     }
+    
+    
+    func showContent() {
+        // Ensure currentIndex is within the range of questions.
+        guard configuration.questions.indices.contains(currentIndex) else { return }
+        
+        let currentQuestion = configuration.questions[currentIndex]
+        
+        question = currentQuestion.questionContent
+        optionA = currentQuestion.optionA
+        optionB = currentQuestion.optionB
+        optionC = currentQuestion.optionC
+        optionD = currentQuestion.optionD
+    }
+    
+
     
     @ViewBuilder
     func questionContent(_ content: String) -> some View {
@@ -251,14 +265,13 @@ struct TestQuizView: View {
         .padding(.horizontal)
         .opacity(optionD.isEmptyOrWhiteSpace ? 0 : 1)
     }
-    
-    
 
 }
 
 #Preview {
+    @State var curIndex = 0
     let config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
-    return TestQuizView(selectedAudioQuiz: config, didTapPlay: .constant(false))
+    return TestQuizView(configuration: config, currentIndex: $curIndex)
 //    do {
 //        let user = User()
 //        let config = ModelConfiguration(isStoredInMemoryOnly: true)

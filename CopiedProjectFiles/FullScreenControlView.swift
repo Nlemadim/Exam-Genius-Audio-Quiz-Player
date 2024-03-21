@@ -99,76 +99,7 @@ struct FullScreenControlView: View {
         }
     }
 }
-struct PlayerControlButtons: View {
-    @State var isNowPlaying: Bool
 
-    var quizPlayer = QuizPlayer.shared
-    var themeColor: Color?
-    var repeatAction: () -> Void
-    var playAction: () -> Void
-    var nextAction: () -> Void
-  
-    var body: some View {
-        VStack(spacing: 5) {
-            
-            HStack(spacing: 30) {
-                // Repeat Button
-                CircularButton(isPlaying: .constant(false), isDownloading: .constant(false), imageLabel: "memories", color: themeColor ?? .clear, playAction: { repeatAction() })
-//                Button(action: repeatAction) {
-//                    Image(systemName: "memories")
-//                        .font(.title)
-//                        .foregroundColor(themeColor ?? .white)
-//                }
-//                .padding()
-                
-                CircularPlayButton(isPlaying: $isNowPlaying,
-                                   isDownloading: .constant(false),
-                                   color: themeColor ?? .clear,
-                                   playAction: { playAction() }
-                )
-               
-
-//                // Play/Pause Button
-//                ZStack{
-//                    Circle()
-//                        .fill(themeColor ?? .teal)
-//                        .frame(width: 67, height: 67)
-//                        .tint(.black)
-//                        
-//                        
-//                    
-//                    Button(action: {
-//                       playAction()
-//                    }) {
-//                        Image(systemName: !isNowPlaying ?  "pause.fill" : "play.fill")
-//                            .font(.largeTitle)
-//                            .foregroundColor(.white)
-//                            
-//                            
-//                    }
-//                    .font(.largeTitle)
-//                    
-//                    .padding(10)
-//                }
-                
-                // Next/End Button
-                CircularButton(isPlaying: .constant(false), isDownloading: .constant(false), imageLabel: "forward.end.fill", color: themeColor ?? .clear, playAction: { repeatAction() })
-//                Button(action:  {
-//                    
-//                }) {
-//                    Image(systemName: "forward.end.fill")
-//                        .font(.title)
-//                        .foregroundColor(themeColor ?? .white)
-//                }
-//                .padding()
-                
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 100)
-            
-        }
-    }
-}
 
 struct MicButtonWithProgressRing: View {
     @State private var fillAmount: CGFloat = 0.0
@@ -229,9 +160,5 @@ struct MicButtonWithProgressRing: View {
 
 }
 
-#Preview {
-    PlayerControlButtons(isNowPlaying: true, themeColor: .secondary, repeatAction: {}, playAction: {}, nextAction: {})
-        .preferredColorScheme(.dark)
 
-}
 

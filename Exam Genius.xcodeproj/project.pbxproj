@@ -17,6 +17,7 @@
 		0B3A90472B8AE1A700C0848C /* MiniPlayerControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3A90462B8AE1A700C0848C /* MiniPlayerControls.swift */; };
 		0B4094652BAC8E1400E5ECA7 /* QuestionAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4094642BAC8E1400E5ECA7 /* QuestionAdaptor.swift */; };
 		0B4094672BAC947A00E5ECA7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4094662BAC947A00E5ECA7 /* Extensions.swift */; };
+		0B4094692BACB77C00E5ECA7 /* PlayerControlButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4094682BACB77C00E5ECA7 /* PlayerControlButtons.swift */; };
 		0B42E3D22B8C842D00DC3565 /* AudioQuizPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42E3D12B8C842D00DC3565 /* AudioQuizPlayer.swift */; };
 		0B42E3D42B8CFF7900DC3565 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */; };
 		0B42E3D62B8CFFB300DC3565 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42E3D52B8CFFB300DC3565 /* Config.swift */; };
@@ -104,6 +105,7 @@
 		0B3A90462B8AE1A700C0848C /* MiniPlayerControls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerControls.swift; sourceTree = "<group>"; };
 		0B4094642BAC8E1400E5ECA7 /* QuestionAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAdaptor.swift; sourceTree = "<group>"; };
 		0B4094662BAC947A00E5ECA7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0B4094682BACB77C00E5ECA7 /* PlayerControlButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlButtons.swift; sourceTree = "<group>"; };
 		0B42E3D12B8C842D00DC3565 /* AudioQuizPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizPlayer.swift; sourceTree = "<group>"; };
 		0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		0B42E3D52B8CFFB300DC3565 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				0B4ACCE12B89A61500377BE7 /* QuizPlayerExtensions.swift */,
 				0B4ACCC42B89A61500377BE7 /* QuizPlayer.swift */,
 				0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */,
+				0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */,
 			);
 			path = QuizPlayer;
 			sourceTree = "<group>";
@@ -291,7 +294,6 @@
 				0BBD5AEF2B8E7A09005BD87B /* ExploreAudioQuizView.swift */,
 				0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */,
 				0BCE72A22BA3649800A9E7D6 /* QuizPlayerPage.swift */,
-				0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -339,6 +341,7 @@
 				0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */,
 				0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */,
 				0BCE72A02BA3642400A9E7D6 /* CurrentQuizView.swift */,
+				0B4094682BACB77C00E5ECA7 /* PlayerControlButtons.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -624,6 +627,7 @@
 				0B4ACD0F2B89A82800377BE7 /* CustomQuestionDisplayView.swift in Sources */,
 				0B4094672BAC947A00E5ECA7 /* Extensions.swift in Sources */,
 				0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */,
+				0B4094692BACB77C00E5ECA7 /* PlayerControlButtons.swift in Sources */,
 				0BB9DE1B2B865885004F848A /* SwiftData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
