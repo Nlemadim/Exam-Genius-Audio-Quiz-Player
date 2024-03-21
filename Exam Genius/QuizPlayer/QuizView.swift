@@ -81,13 +81,15 @@ struct QuizView: View {
 struct TestQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
-    @State var configuration: QuizViewConfiguration
-    @State var question: String = ""
+    //@Binding var configuration: QuizViewConfiguration
     @State var optionA: String = ""
     @State var optionB: String = ""
     @State var optionC: String = ""
     @State var optionD: String = ""
-    @Binding var currentIndex: Int
+    @State var question: String = ""
+    @Binding var isNowPlaying: Bool
+    @ObservedObject var quizSetter: QuizPlayerView.QuizSetter
+    @Binding var currentQuestionIndex: Int
     
     
     var body: some View {
@@ -95,7 +97,7 @@ struct TestQuizView: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .center, spacing: 15) {
                     /// Exam Icon Image
-                    Image(configuration.imageUrl)
+                    Image(quizSetter.configuration?.imageUrl ?? "IconImage")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100, height: 100)
@@ -103,7 +105,7 @@ struct TestQuizView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         /// Long Name
-                        Text(configuration.name)
+                        Text(quizSetter.configuration?.name ?? "Error! No Quiz Content")
                             .font(.body)
                             .foregroundStyle(.white)
                             .fontWeight(.semibold)
@@ -148,20 +150,24 @@ struct TestQuizView: View {
                 
                 Spacer()
                 
-                PlayerControlButtons(isNowPlaying: true,
+                PlayerControlButtons(isNowPlaying: isNowPlaying,
                                      themeColor: generator.dominantLightToneColor,
                                      repeatAction: {},
-                                     playAction: { configuration.config.playPauseQuiz() },
-                                     nextAction: { configuration.config.nextQuestion()}
+                                     playAction: { isNowPlaying.toggle() },
+                                     nextAction: { quizSetter.configuration?.config.nextQuestion()}
                 )
             }
             .padding(.top, 16)
             .onAppear {
-                generator.updateAllColors(fromImageNamed: configuration.imageUrl)
+                generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "")
                 showContent()
-                print("Test QuizView has Registered \(configuration.questions.count) Questions ready for viewing")
+                print("Test QuizView has Registered \(String(describing: quizSetter.configuration?.questions.count)) Questions ready for viewing")
             }
-            .onChange(of: currentIndex) { _, _ in
+            .onChange(of: currentQuestionIndex) { _, _ in
+                showContent()
+                print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
+            }
+            .onChange(of: quizSetter.configuration) { _, _ in
                 showContent()
             }
         }
@@ -171,18 +177,19 @@ struct TestQuizView: View {
     
     
     func showContent() {
-        // Ensure currentIndex is within the range of questions.
-        guard configuration.questions.indices.contains(currentIndex) else { return }
+        // Safely unwrap configuration and ensure currentIndex is within the range of questions.
+        guard let questions = quizSetter.configuration?.questions, questions.indices.contains(currentQuestionIndex) else { return }
         
-        let currentQuestion = configuration.questions[currentIndex]
+        let currentQuestion = questions[currentQuestionIndex]
         
+        // Update state with the current question and options
         question = currentQuestion.questionContent
         optionA = currentQuestion.optionA
         optionB = currentQuestion.optionB
         optionC = currentQuestion.optionC
         optionD = currentQuestion.optionD
     }
-    
+
 
     
     @ViewBuilder
@@ -199,7 +206,7 @@ struct TestQuizView: View {
         }
         .padding(.all, 20)
         .padding(.horizontal)
-        .opacity(question.isEmptyOrWhiteSpace ? 0 : 1)
+        //.opacity(question.isEmptyOrWhiteSpace ? 0 : 1)
     }
     
     @ViewBuilder
@@ -215,7 +222,7 @@ struct TestQuizView: View {
         }
         .padding(.all, 10)
         .padding(.horizontal)
-        .opacity(optionA.isEmptyOrWhiteSpace ? 0 : 1)
+        //.opacity(optionA.isEmptyOrWhiteSpace ? 0 : 1)
     }
     
     @ViewBuilder
@@ -231,7 +238,7 @@ struct TestQuizView: View {
         }
         .padding(.all, 10)
         .padding(.horizontal)
-        .opacity(optionB.isEmptyOrWhiteSpace ? 0 : 1)
+        //.opacity($optionB.isEmptyOrWhiteSpace ? 0 : 1)
     }
     
     @ViewBuilder
@@ -247,7 +254,7 @@ struct TestQuizView: View {
         }
         .padding(.all, 10)
         .padding(.horizontal)
-        .opacity(optionC.isEmptyOrWhiteSpace ? 0 : 1)
+        //.opacity(optionC.isEmptyOrWhiteSpace ? 0 : 1)
     }
     
     @ViewBuilder
@@ -263,15 +270,17 @@ struct TestQuizView: View {
         }
         .padding(.all, 20)
         .padding(.horizontal)
-        .opacity(optionD.isEmptyOrWhiteSpace ? 0 : 1)
+        //.opacity(optionD.isEmptyOrWhiteSpace ? 0 : 1)
     }
 
 }
 
 #Preview {
     @State var curIndex = 0
-    let config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
-    return TestQuizView(configuration: config, currentIndex: $curIndex)
+    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
+    let quizSetter = QuizPlayerView.QuizSetter()
+    quizSetter.configuration = config
+    return TestQuizView(isNowPlaying: .constant(false), quizSetter: quizSetter, currentQuestionIndex: $curIndex)
 //    do {
 //        let user = User()
 //        let config = ModelConfiguration(isStoredInMemoryOnly: true)

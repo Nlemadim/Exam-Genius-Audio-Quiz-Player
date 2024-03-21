@@ -424,6 +424,253 @@ enum InteractionState {
    ]
  }
  
+ 
+ //////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Architectural Design Principles","Architectural History","Building Codes and Regulations","Site Planning","Building Systems Integration","Environmental Systems","Structural Systems","Construction Documentation","Building Materials and Assemblies","Sustainability in Architecture","Architectural Theories","Urban Design","Architectural Graphics and Visualization","Project Management in Architecture","Architectural Programming","Building Economics","Professional Practice Ethics","Accessibility and Universal Design","Adaptive Reuse","Building Information Modeling (BIM)","Construction Project Management","Building Envelope Systems","Space Planning","Interior Architecture","Acoustics in Architecture","Lighting Design","Fire Protection Systems","Plumbing Systems","HVAC Systems","Electrical Systems","Security and Safety Considerations","Architectural Research Methods","Design Thinking","Landscape Architecture","Architectural Technology","Contract Documents and Administration","Cost Estimation","Project Delivery Methods","Risk Management in Architecture","Historic Preservation","Furniture Design","Zoning Laws","Residential Design","Commercial Design","Institutional Design","Industrial Design","Building Resilience","Human Behavior in Built Environment","Building Codes and Ins"]}
+ Starting fetchQuestionData for examName: Architect Registration Exam with topics: ["Plumbing Systems"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Architect%20Registration%20Exam&topicValue=Plumbing%20Systems&numberValue=3
+ Raw Response: {
+   "examName": "Architect Registration Exam",
+   "topics": [
+     "Plumbing Systems"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which type of pipe is most suitable for carrying drinking water?",
+       "options": {
+         "A": "Galvanized Steel",
+         "B": "Copper",
+         "C": "PVC",
+         "D": "ABS"
+       },
+       "correctOption": "B",
+       "overview": "Copper pipes are most suitable for carrying drinking water because they do not release harmful substances or corrode easily, ensuring the water remains clean and safe to drink."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of a trap in plumbing systems?",
+       "options": {
+         "A": "To regulate water pressure",
+         "B": "To prevent backflow",
+         "C": "To prevent sewer gases from entering the building",
+         "D": "To reduce water consumption"
+       },
+       "correctOption": "C",
+       "overview": "The primary purpose of a trap in plumbing systems is to prevent sewer gases from entering the building. It does this by holding a small amount of water in a U-shaped section, blocking the gases."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which plumbing system component is responsible for removing waste water and materials from a building?",
+       "options": {
+         "A": "Water supply system",
+         "B": "Drain-Waste-Vent (DWV) system",
+         "C": "Stormwater system",
+         "D": "Potable water system"
+       },
+       "correctOption": "B",
+       "overview": "The Drain-Waste-Vent (DWV) system is responsible for removing waste water and materials from a building. It ensures that waste is efficiently carried away from fixtures, preventing clogs and maintaining sanitation."
+     }
+   ]
+ }
+ 
+ /////Advanced Placement Exams
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["AP Biology: Cellular Processes","AP Biology: Evolution","AP Biology: Organismal Biology","AP Biology: Ecology","AP Biology: Genetics","AP Biology: Biological Systems Interactions","AP Biology: Lab Skills,"]}
+ Starting fetchQuestionData for examName: Advanced Placement Exams with topics: ["AP Biology: Biological Systems Interactions"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Advanced%20Placement%20Exams&topicValue=AP%20Biology:%20Biological%20Systems%20Interactions&numberValue=3
+ Raw Response: {
+   "examName": "Advanced Placement Exams",
+   "topics": [
+     "AP Biology: Biological Systems Interactions"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best describes the role of enzymes in biological systems?",
+       "options": {
+         "A": "Provide structural support to cell membranes",
+         "B": "Act as catalysts to speed up chemical reactions",
+         "C": "Store and transmit genetic information",
+         "D": "Transport substances across cell membranes"
+       },
+       "correctOption": "B",
+       "overview": "Enzymes play a crucial role in biological systems by acting as catalysts. This means they speed up chemical reactions without being consumed in the process. This is essential for the myriad of biochemical reactions that take place within living organisms to occur at rates sufficient for life processes."
+     },
+     {
+       "questionNumber": 2,
+       "question": "In the context of ecosystems, how do plants primarily contribute to the carbon cycle?",
+       "options": {
+         "A": "By releasing carbon dioxide through respiration",
+         "B": "By consuming other organisms",
+         "C": "By absorbing carbon dioxide during photosynthesis",
+         "D": "By decomposing organic material"
+       },
+       "correctOption": "C",
+       "overview": "Plants play a vital role in the carbon cycle primarily through the process of photosynthesis, where they absorb carbon dioxide from the atmosphere and use it, along with sunlight and water, to produce glucose and oxygen. This process not only contributes to the carbon cycle but also provides oxygen, which is essential for the respiration of most living organisms."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following best explains the importance of water's high specific heat capacity to living organisms?",
+       "options": {
+         "A": "It allows water to conduct electricity, which is vital for the nervous system.",
+         "B": "It enables water to dissolve a wide range of substances, making it a versatile solvent.",
+         "C": "It helps regulate climate by absorbing large amounts of heat with only small changes in temperature.",
+         "D": "It contributes to the buoyancy of aquatic organisms."
+       },
+       "correctOption": "C",
+       "overview": "Water's high specific heat capacity is crucial for living organisms because it allows water to absorb or release large amounts of heat with only minimal changes in its own temperature. This property helps regulate the temperature of environments, such as bodies of water and the overall climate, providing a stable environment for living organisms to thrive."
+     }
+   ]
+ }
+ 
+ //////ACT Exam
+ Raw server response: {"topics":["English Grammar and Usage","Punctuation Rules","Sentence Structure","Organization of Ideas","Rhetorical Skills","Reading Comprehension","Literary Terms","Prose and Poetry Analysis","Data Representation in Science","Research Summaries in Science","Conflicting Viewpoints in Science","Algebra","Coordinate Geometry","Plane Geometry","Trigonometry","Word Problems","Probability","Statistics","Data Analysis","Reading Graphs and Tables","Problem Solving","Logical Reasoning","Test-Taking Strategies","Time Management","Essay Writing","Argument Analysis","Evidence Evaluation","Context Clues in Reading","Interpreting Experiments","Scientific Investigation","Understanding Scientific Studies","Mathematical Formulas","Arithmetic Operations","Properties of Integers","Rational Numbers","Percentages","Ratios and Proportions","Mean","Median","Mode","Range","Scientific Notation","Polynomials","Quadratic Equations","Linear Equations","Systems of Equations","Inequalities","Functions","Exponents and Radicals","Absolute Value","Sequences and Series","Mat"]}
+ Starting fetchQuestionData for examName: ACT Exam with topics: ["Trigonometry"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=ACT%20Exam&topicValue=Trigonometry&numberValue=3
+ Raw Response: {
+   "examName": "ACT Exam",
+   "topics": [
+     "Trigonometry"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the sine of 90 degrees?",
+       "options": {
+         "A": "0",
+         "B": "1",
+         "C": "0.5",
+         "D": "√2/2"
+       },
+       "correctOption": "B",
+       "overview": "The sine of 90 degrees is 1. This is a fundamental value in trigonometry, representing the maximum value the sine function can achieve."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which trigonometric function represents the ratio of the opposite side to the hypotenuse in a right-angled triangle?",
+       "options": {
+         "A": "Cosine",
+         "B": "Sine",
+         "C": "Tangent",
+         "D": "Cotangent"
+       },
+       "correctOption": "B",
+       "overview": "The sine function represents the ratio of the length of the side opposite the angle to the length of the hypotenuse in a right-angled triangle."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the value of cos(0)?",
+       "options": {
+         "A": "0",
+         "B": "1",
+         "C": "0.5",
+         "D": "√3/2"
+       },
+       "correctOption": "B",
+       "overview": "The value of cos(0) is 1. This is because cosine represents the x-coordinate on the unit circle, and at 0 degrees, the point is at (1, 0)."
+     }
+   ]
+ }
+ 
+ ///////US Citizenship Test
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["US Government Structure","The Constitution","The Bill of Rights","The Three Branches of Government","Executive Branch","Legislative Branch","Judicial Branch","The Federal System","The Declaration of Independence","The Founding Fathers","US Political History","US Historical Events","US Geography","US Symbols","US Holidays","US Presidents","US Vice Presidents","US Supreme Court Justices","US Congress","US Political Parties","The Electoral Process","US Military History","US Citizenship Rights and Responsibilities","US Immigration History","English Language Proficiency","Reading Comprehension","Writing Skills","US Economic System","US Cultural History","Native American History","African American History","Women's Rights Movement","Civil Rights Movement","World War I","World War II","The Cold War","The Vietnam War","The War on Terrorism","The Great Depression","The Civil War","The Revolutionary War","The Louisiana Purchase","The Gold Rush","The Space Race","The Industrial Revolution","The Internet Revolution","The Environmental Movement","The LGBT Rights Movement","The Labor Movement"]}
+ Starting fetchQuestionData for examName: US Citizenship Test with topics: ["US Immigration History"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=US%20Citizenship%20Test&topicValue=US%20Immigration%20History&numberValue=3
+ Raw Response: {
+   "examName": "US Citizenship Test",
+   "topics": [
+     "US Immigration History"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "When did the first Europeans settle in what is now the United States?",
+       "options": {
+         "A": "1492",
+         "B": "1607",
+         "C": "1620",
+         "D": "1776"
+       },
+       "correctOption": "B",
+       "overview": "The first successful English settlement in what is now the United States was Jamestown, founded in 1607. While Christopher Columbus arrived in the Americas in 1492, and the Pilgrims landed in 1620, Jamestown is recognized as the first permanent English settlement."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which law first established restrictions on immigration to the United States?",
+       "options": {
+         "A": "The Naturalization Act of 1790",
+         "B": "The Chinese Exclusion Act of 1882",
+         "C": "The Immigration Act of 1924",
+         "D": "The Immigration and Nationality Act of 1965"
+       },
+       "correctOption": "B",
+       "overview": "The Chinese Exclusion Act of 1882 was the first significant law restricting immigration into the United States. It specifically prohibited all immigration of Chinese laborers. Prior acts, like the Naturalization Act of 1790, focused on citizenship rather than immigration itself."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What significant immigration policy did the Immigration and Nationality Act of 1965 introduce?",
+       "options": {
+         "A": "It established quotas based on national origin.",
+         "B": "It made English the official language for naturalization.",
+         "C": "It abolished the national origins quota system.",
+         "D": "It introduced a lottery system for immigration."
+       },
+       "correctOption": "C",
+       "overview": "The Immigration and Nationality Act of 1965, also known as the Hart-Celler Act, abolished the national origins quota system that had structured America's immigration policy since the 1920s, replacing it with a preference system that focused on immigrants' skills and family relationships with citizens or U.S. residents."
+     }
+   ]
+ }
+ 
+ ///////Certified Public Accountant
+ Raw server response: {"topics":["Auditing and Attestation","Understanding Auditing Process","Internal Controls and Risk Assessment","Performing Further Procedures and Obtaining Evidence","Forming Conclusions and Reporting","Business Environment and Concepts","Corporate Governance","Economic Concepts and Analysis","Financial Management","Information Technology","Operations Management","Financial Accounting and Reporting","Conceptual Framework","Standard-Setting and Financial Reporting","Select Financial Statement Accounts","Select Transactions","State and Local Governments","Regulation","Ethics","Professional and Legal Responsibilities","Federal Tax Process","Procedures and Law","Business Law","Federal Taxation of Property Transactions","Federal Taxation of Individuals","Federal Taxation of Entities"]}
+ Raw Response: {
+   "examName": "Certified Public Accountant",
+   "topics": [
+     "Select Financial Statement Accounts"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is considered an asset?",
+       "options": {
+         "A": "Accounts Payable",
+         "B": "Cash",
+         "C": "Dividends",
+         "D": "Sales Revenue"
+       },
+       "correctOption": "B",
+       "overview": "Assets are resources owned by a business that have economic value. Cash is an asset because it represents a resource that can be used to facilitate business operations and transactions. Accounts Payable is a liability, Dividends are distributions to shareholders, and Sales Revenue is an income statement account, not an asset."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following accounts would appear on the income statement?",
+       "options": {
+         "A": "Inventory",
+         "B": "Accounts Receivable",
+         "C": "Sales Revenue",
+         "D": "Buildings"
+       },
+       "correctOption": "C",
+       "overview": "The income statement reports a company's financial performance over a specific accounting period. Sales Revenue is an income statement account that reflects the income earned from selling goods or services. Inventory and Buildings are considered assets, while Accounts Receivable is also an asset representing money owed to the company."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is a liability?",
+       "options": {
+         "A": "Cash",
+         "B": "Accounts Payable",
+         "C": "Prepaid Insurance",
+         "D": "Common Stock"
+       },
+       "correctOption": "B",
+       "overview": "Liabilities are obligations of a company that arise during the course of its operations. Accounts Payable is a liability account that represents amounts the company owes to suppliers or vendors. Cash and Prepaid Insurance are assets, and Common Stock represents equity, not a liability."
+     }
+   ]
+ }
+ 
  Raw Response: {
    "examName": "Bar Professional Training Course",
    "topics": [

@@ -79,7 +79,7 @@ struct AudioQuizDetailView: View {
                             CircularPlayButton(isPlaying: $isNowPlaying,
                                                isDownloading: $isDownloadingSample,
                                                color: generator.dominantLightToneColor,
-                                               playAction: { self.didTapPlaySample = true }
+                                               playAction: { user.selectedQuizPackage = audioQuiz/*self.didTapPlaySample = true*/ }
                             )
                             .zIndex(1.0)
                             .padding()
@@ -125,15 +125,6 @@ struct AudioQuizDetailView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 12.0) {
-                                //MARK: TODO - Refactor Button Label isDownloading logic
-//                                PlayPauseButton(isDownloading: $stillDownloading,
-//                                                isPlaying: $isNowPlaying,
-//                                                color: generator.dominantLightToneColor,
-//                                                playAction: {
-//                                    self.isNowPlaying = true
-//                                    user.selectedQuizPackage = audioQuiz
-//                                })
-                                
                                 PlainClearButton(color: generator.dominantLightToneColor,
                                                  label: isDownloading ? "Downloading" : "Download",
                                                  playAction: { downloadAudioQuiz() }

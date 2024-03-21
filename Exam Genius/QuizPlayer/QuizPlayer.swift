@@ -13,6 +13,10 @@ import AVFoundation
 import Speech
 import AVKit
 
+protocol QuizPlayerDelegate: AnyObject {
+    func quizPlayerDidFinishPlaying(_ player: QuizPlayer)
+}
+
 class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRecognizerDelegate {
     @EnvironmentObject var user: User
     @Published var progress: CGFloat = 0
@@ -28,6 +32,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     @State var interactionState: InteractionState = .idle
     @State var playerState: PlayerState = .idle
     @State var isUingMic: Bool = false
+    
+    weak var delegate: QuizPlayerDelegate?
     
     private var speechRecognizer = SpeechManager()
     
@@ -96,6 +102,11 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
             audioPlayer?.play()
         } catch {
             print("Could not load file: \(error)")
+        }
+        
+        if index >= audioFiles.count {
+            self.isFinishedPlaying = true
+            delegate?.quizPlayerDidFinishPlaying(self)
         }
     }
     
