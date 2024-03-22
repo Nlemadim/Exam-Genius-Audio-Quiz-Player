@@ -84,6 +84,14 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         }
     }
     
+    func playAudioQuestion(audioFile: String) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
+            self.audioFiles.append(audioFile)
+            self.currentIndex = 0
+            self.playAudioFileAtIndex(self.currentIndex)
+        }
+    }
+    
     private func playAudioFileAtIndex(_ index: Int) {
         guard index < audioFiles.count else {
             self.isFinishedPlaying = false

@@ -231,6 +231,7 @@
 			children = (
 				0B4ACCE12B89A61500377BE7 /* QuizPlayerExtensions.swift */,
 				0B4ACCC42B89A61500377BE7 /* QuizPlayer.swift */,
+				0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */,
 				0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */,
 			);
 			path = QuizPlayer;
@@ -296,7 +297,6 @@
 				0BBD5AEF2B8E7A09005BD87B /* ExploreAudioQuizView.swift */,
 				0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */,
 				0BCE72A22BA3649800A9E7D6 /* QuizPlayerPage.swift */,
-				0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

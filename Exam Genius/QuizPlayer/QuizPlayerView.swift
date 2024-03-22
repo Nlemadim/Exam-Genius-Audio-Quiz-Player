@@ -26,7 +26,11 @@ struct QuizPlayerView: View {
     @State private var playTapped: Bool = false
     @State private var nextTapped: Bool = false
     @State private var repeatTapped: Bool = false
+    @State private var presentMicModal: Bool = false
+    
     @State private var currentQuestionIndex: Int = 0
+    @State private var currentQuestion: Question?
+    @State private var selectedOption: String = ""
     
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
@@ -111,6 +115,13 @@ struct QuizPlayerView: View {
             .onChange(of: currentQuestionIndex) { _, newValue in
                 goToNextQuestion()
             }
+            .onReceive(quizPlayer.$isRecordingAnswer) { isRecording in
+                presentMicModal = isRecording
+            }
+            .onReceive(quizPlayer.$selectedOption) { selectedOption in
+                self.selectedOption = selectedOption
+                analyseResponse()
+            }
         }
         .fullScreenCover(isPresented: $expandSheet) {
             QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, nextTapped: $nextTapped, repeatTapped: $repeatTapped)
@@ -130,46 +141,7 @@ struct QuizPlayerView: View {
         }
     }
     
-    var numberOfTopics: Int {
-        if let selectedPackage = user.selectedQuizPackage {
-            let numberOfTopics = selectedPackage.topics.count
-            return numberOfTopics
-        }
-        
-        return 0
-    }
-    
-    var numberOfQuestions: Int {
-        if let selectedPackage = user.selectedQuizPackage {
-            let numberOfTopics = selectedPackage.questions.count
-            return numberOfTopics
-        }
-        
-        return 0
-    }
-    
-    var questionsAnswered: Int {
-        let total = UserDefaultsManager.totalQuestionsAnswered()
-        return total
-    }
-    
-    var quizzesCompleted: Int {
-        let total = UserDefaultsManager.numberOfQuizSessions()
-        return total
-    }
-    
-    var highestScore: Int {
-        let total = UserDefaultsManager.userHighScore()
-        return total
-    }
-    
-    func playAudioQuiz() {
-        if let package = user.selectedQuizPackage {
-            let list = package.questions
-            let playList = list.compactMap{$0.questionAudio}
-            quizPlayer.playSampleQuiz(audioFileNames: playList)
-        }
-    }
+   
 }
 
 extension QuizPlayerView {
@@ -233,44 +205,73 @@ extension QuizPlayerView {
             self.configuration = newConfiguration
             print("Quiz Setter has Set Configurations")
         }
-        
-//        func loadQuizConfiguration2(quizPackage: AudioQuizPackage?) -> QuizControlConfiguration? {
-//            guard let quizPackage = quizPackage else {
-//                return nil
-//            }
-//            var config: QuizControlConfiguration
-//            let questions = QuestionVisualizerMaker.createVisualizers(from: quizPackage.questions)
-//            let newConfiguration = QuizViewConfiguration(
-//                imageUrl: quizPackage.imageUrl,
-//                name: quizPackage.name,
-//                shortTitle: quizPackage.acronym,
-//                questions: questions,
-//                config: ControlConfiguration(
-//                    playPauseQuiz: { [weak self] in
-//                        self?.playPauseQuiz?()
-//                    },
-//                    nextQuestion: { [weak self] in
-//                        self?.nextQuestion?()
-//                    },
-//                    repeatQuestion: { [weak self] in
-//                        self?.repeatQuestion?()
-//                    },
-//                    endQuiz: { [weak self] in
-//                        self?.endQuiz?()
-//                    }
-//                )
-//            )
-//            config = newConfiguration
-//            return newConfiguration
-//            print("Quiz Setter has Set Configurations")
-//        }
-        
     }
 }
         
  
 
 extension QuizPlayerView {
+    var numberOfTopics: Int {
+        if let selectedPackage = user.selectedQuizPackage {
+            let numberOfTopics = selectedPackage.topics.count
+            return numberOfTopics
+        }
+        
+        return 0
+    }
+    
+    var numberOfQuestions: Int {
+        if let selectedPackage = user.selectedQuizPackage {
+            let numberOfTopics = selectedPackage.questions.count
+            return numberOfTopics
+        }
+        
+        return 0
+    }
+    
+    var questionsAnswered: Int {
+        let total = UserDefaultsManager.totalQuestionsAnswered()
+        return total
+    }
+    
+    var quizzesCompleted: Int {
+        let total = UserDefaultsManager.numberOfQuizSessions()
+        return total
+    }
+    
+    var highestScore: Int {
+        let total = UserDefaultsManager.userHighScore()
+        return total
+    }
+    
+    func playAudioQuiz() {
+        if let package = user.selectedQuizPackage {
+            let list = package.questions
+            let playList = list.compactMap{$0.questionAudio}
+            quizPlayer.playSampleQuiz(audioFileNames: playList)
+        }
+    }
+    
+    func playAudioQuestion() {
+        if let package = user.selectedQuizPackage {
+            let list = package.questions
+            let currentIndex = self.currentQuestionIndex
+            let currentQuestion = list[currentIndex]
+            self.currentQuestion = currentQuestion
+            quizPlayer.playAudioQuestion(audioFile: currentQuestion.questionAudio)
+        }
+    }
+    
+    func analyseResponse() {
+        if !isPlaying, !selectedOption.isEmptyOrWhiteSpace {
+            self.currentQuestion?.selectedOption = self.selectedOption
+            currentQuestion?.isAnswered = true
+            if currentQuestion?.selectedOption == currentQuestion?.correctOption {
+                currentQuestion?.isAnsweredCorrectly = true
+            }
+        }
+    }
+    
     private func goToNextQuestion() {
         if let questionCount = configuration?.questions.count, currentQuestionIndex < questionCount - 1 {
             currentQuestionIndex += 1
