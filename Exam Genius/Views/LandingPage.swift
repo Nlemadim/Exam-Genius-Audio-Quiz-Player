@@ -14,21 +14,21 @@ struct LandingPage: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
-    let quizPlayer = QuizPlayer.shared
+    @ObservedObject var quizPlayer = QuizPlayer.shared
     
     @StateObject private var generator = ColorGenerator()
-    
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @State private var didTapDownload = false
     @State private var expandSheet: Bool = false
     @State var isDownloading: Bool = false
+    @State var didTapPlaySample: Bool = false
+    @State var isDownloadingSample: Bool = false
     @State private var isPlaying: Bool = false
     @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     @State private var selectedTab = 0
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
-    
     @State var selectedCategory: ExamCategory?
     private var cancellables = Set<AnyCancellable>()
     
@@ -40,7 +40,7 @@ struct LandingPage: View {
         audioQuizCollection.filter { quiz in
 
             guard let selectedCat = selectedCategory else {
-                return true // No category selected, show all quizzes
+                return true
             }
             return quiz.category.contains { $0.rawValue == selectedCat.rawValue }
         }
@@ -60,6 +60,7 @@ struct LandingPage: View {
                                     AudioQuizPackageView(quiz: quiz)
                                         .onTapGesture {
                                             selectedQuizPackage = quiz
+                                            user.selectedQuizPackage = quiz
                                         }
                                 }
                                 
@@ -74,6 +75,10 @@ struct LandingPage: View {
                         .scrollTargetBehavior(.viewAligned)
                     }
                 }
+                .onReceive(quizPlayer.$isNowPlaying, perform: { isNowPlayng in
+                    self.isPlaying = isNowPlayng
+                    print("Landing screen has registered isPlaying as: \(isPlaying)")
+                })
                 .task {
                     await loadDefaultCollection()
                 }
@@ -85,7 +90,8 @@ struct LandingPage: View {
                 )
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload)
+               
+                AudioQuizDetailView(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying, isDownloadingSample: $isDownloadingSample, didTapPlaySample: $didTapPlaySample)
             }
             .onChange(of: didTapDownload, { _, newValue in
                 if newValue {
@@ -95,7 +101,17 @@ struct LandingPage: View {
                         Task {
                             try await downloadAudioQuiz(selectedQuizPackage)
                         }
+                    }
+                }
+            })
+            .onChange(of: didTapPlaySample, { _, newValue in
+                if newValue {
+                    
+                    if let selectedQuizPackage = self.selectedQuizPackage {
                         
+                        Task {
+                            try await downloadSample(selectedQuizPackage)
+                        }
                     }
                 }
             })
@@ -132,7 +148,6 @@ struct LandingPage: View {
         return container
     }
     
-    
     func groupQuizzesByCombinedCategories(quizzes: [AudioQuizPackage], combinedCategories: [CombinedCategory]) -> [CombinedCategory: [AudioQuizPackage]] {
         var groupedQuizzes = [CombinedCategory: [AudioQuizPackage]]()
         
@@ -147,7 +162,6 @@ struct LandingPage: View {
         return groupedQuizzes
     }
     
-    
     func loadDefaultCollection() async {
         guard audioQuizCollection.isEmpty else { return }
         
@@ -159,6 +173,45 @@ struct LandingPage: View {
             modelContext.insert(newPackage)
             try! modelContext.save()
         }
+    }
+    
+    func playSampleContent() {
+        if let package = selectedQuizPackage, selectedQuizPackage?.questions == nil {
+            Task {
+                try await downloadSample(package)
+            }
+        } else {
+            let list = selectedQuizPackage?.questions
+            let playList = list?.compactMap{$0.questionAudio}
+            playSample(playlist: playList ?? [])
+        }
+    }
+    
+    func downloadSample(_ audioQuiz: AudioQuizPackage) async throws {
+        guard audioQuiz.questions.isEmpty else { return }
+        DispatchQueue.main.async {
+            isDownloadingSample.toggle()
+        }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        // Begin content building process
+        let content = try await contentBuilder.alternateBuildTestContent(for: audioQuiz.name)
+        print("Downloaded Detail Page Content: \(content)")
+        
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+            isDownloadingSample = false
+            let list = audioQuiz.questions
+            let playList = list.compactMap{$0.questionAudio}
+            playSample(playlist: playList)
+            
+        }
+    }
+    
+    func playSample(playlist: [String]) {
+        isPlaying.toggle()
+        quizPlayer.playSampleQuiz(audioFileNames: playlist)
     }
     
     func downloadAudioQuiz(_ audioQuiz: AudioQuizPackage) async throws {
@@ -174,9 +227,6 @@ struct LandingPage: View {
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
-            do {
-                try! modelContext.save()
-            }
             selectedTab = 1
             isDownloading = false
             selectedQuizPackage = nil
@@ -231,20 +281,3 @@ struct View2: View {
 }
 
 
-/**
- 
- Mark: BottomSheet Optional Display Logic
- //            if playerReady {
- //                BottomMiniPlayer()
- //                    .offset(x: bottomSheetOffset, y: 0)
- //                    .onAppear {
- //                        withAnimation(.easeOut(duration: 0.5)) {
- //                            bottomSheetOffset = 0 // Move to center
- //                        }
- //                    }
- //                    .onDisappear {
- //                        bottomSheetOffset = -UIScreen.main.bounds.width // Reset when disappearing
- //                    }
- //            }
- 
- */

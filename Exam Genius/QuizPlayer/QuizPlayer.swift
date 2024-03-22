@@ -13,6 +13,10 @@ import AVFoundation
 import Speech
 import AVKit
 
+protocol QuizPlayerDelegate: AnyObject {
+    func quizPlayerDidFinishPlaying(_ player: QuizPlayer)
+}
+
 class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRecognizerDelegate {
     @EnvironmentObject var user: User
     @Published var progress: CGFloat = 0
@@ -28,6 +32,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     @State var interactionState: InteractionState = .idle
     @State var playerState: PlayerState = .idle
     @State var isUingMic: Bool = false
+    
+    weak var delegate: QuizPlayerDelegate?
     
     private var speechRecognizer = SpeechManager()
     
@@ -70,7 +76,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     
     func playSampleQuiz(audioFileNames: [String]) {
-        self.isNowPlaying = true
+        guard !audioFileNames.isEmpty else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles = audioFileNames
             self.currentIndex = 0
@@ -80,7 +86,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     private func playAudioFileAtIndex(_ index: Int) {
         guard index < audioFiles.count else {
-            self.isFinishedPlaying = true // Ensure this triggers UI updates correctly
+            self.isFinishedPlaying = false
+            self.isNowPlaying = true // Ensure this triggers UI updates correctly
             return
         }
         
@@ -95,6 +102,11 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
             audioPlayer?.play()
         } catch {
             print("Could not load file: \(error)")
+        }
+        
+        if index >= audioFiles.count {
+            self.isFinishedPlaying = true
+            delegate?.quizPlayerDidFinishPlaying(self)
         }
     }
     
@@ -151,12 +163,13 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         print("Player has Finished playing")
-        isFinishedPlaying = true
+        
         playerState = .isAwaitingAnswer
         if flag {
-            self.isNowPlaying = false
             currentIndex += 1 // Move to the next file
             playAudioFileAtIndex(currentIndex) // Play next audio
+            self.isNowPlaying = false
+            self.isFinishedPlaying = true
         }
     }
     

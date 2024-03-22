@@ -14,20 +14,30 @@ struct QuizPlayerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    
     @StateObject private var generator = ColorGenerator()
+    @StateObject var quizSetter = QuizPlayerView.QuizSetter()
+    
     @State private var expandSheet: Bool = false
     @State var isDownloading: Bool = false
     @State private var isPlaying: Bool = false
-    @State private var selectedTab = 0
+    @State private var playTapped: Bool = false
+    @State private var nextTapped: Bool = false
+    @State private var repeatTapped: Bool = false
+    @State private var currentQuestionIndex: Int = 0
+    
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
+    @State var configuration: QuizViewConfiguration?
     
+
     var cancellables = Set<AnyCancellable>()
     
     @Namespace private var animation
     
-    let quizPlayer = QuizPlayer.shared
+    @ObservedObject var quizPlayer = QuizPlayer.shared
     
     @State var backgroundImage: String = "Logo"
 
@@ -81,11 +91,35 @@ struct QuizPlayerView: View {
                         .frame(height: 530)
                     }
             }
-            
+            .onAppear {
+                if let audioQuiz = selectedQuizPackage {
+                    quizSetter.loadQuizConfiguration(quizPackage: audioQuiz)
+                    
+                    quizSetter.setActions(
+                        playPauseQuiz: { self.playAudioQuiz() },
+                        nextQuestion: { self.goToNextQuestion() },
+                        repeatQuestion: { self.goToPreviousQuestion() },
+                        endQuiz: { /* Handle end quiz */ }
+                    )
+                }
+            }
+            .onChange(of: selectedQuizPackage) { _, newValue in
+                if let newPackage = newValue {
+                    quizSetter.loadQuizConfiguration(quizPackage: newPackage)
+                }
+            }
+            .onChange(of: currentQuestionIndex) { _, newValue in
+                goToNextQuestion()
+            }
         }
         .fullScreenCover(isPresented: $expandSheet) {
-            QuizView()
+            QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, nextTapped: $nextTapped, repeatTapped: $repeatTapped)
         }
+        .onChange(of: playTapped, { _, _ in
+            print("Play Pressed")
+            print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
+            playAudioQuiz()
+        })
         .onAppear {
             generator.updateDominantColor(fromImageNamed: backgroundImage)
         }
@@ -94,7 +128,6 @@ struct QuizPlayerView: View {
         var backgroundImage: String {
             return user.selectedQuizPackage?.imageUrl ?? "Logo"
         }
-
     }
     
     var numberOfTopics: Int {
@@ -129,7 +162,135 @@ struct QuizPlayerView: View {
         let total = UserDefaultsManager.userHighScore()
         return total
     }
+    
+    func playAudioQuiz() {
+        if let package = user.selectedQuizPackage {
+            let list = package.questions
+            let playList = list.compactMap{$0.questionAudio}
+            quizPlayer.playSampleQuiz(audioFileNames: playList)
+        }
+    }
 }
+
+extension QuizPlayerView {
+    class QuizSetter: ObservableObject, QuizPlayerDelegate {
+        @Published var configuration: QuizViewConfiguration?
+        
+        private var quizPlayer = QuizPlayer.shared
+        private var isFinishedPlaying = false
+        private var isNowPlaying = false
+        
+       init() {
+            self.quizPlayer.delegate = self
+        }
+        
+        func quizPlayerDidFinishPlaying(_ player: QuizPlayer) {
+            self.isFinishedPlaying = true
+        }
+        
+        var playPauseQuiz: (() -> Void)?
+        var nextQuestion: (() -> Void)?
+        var repeatQuestion: (() -> Void)?
+        var endQuiz: (() -> Void)?
+        
+        func setActions(playPauseQuiz: (() -> Void)? = nil,
+                        nextQuestion: (() -> Void)? = nil,
+                        repeatQuestion: (() -> Void)? = nil,
+                        endQuiz: (() -> Void)? = nil) {
+            self.playPauseQuiz = playPauseQuiz
+            self.nextQuestion = nextQuestion
+            self.repeatQuestion = repeatQuestion
+            self.endQuiz = endQuiz
+        }
+        
+        func loadQuizConfiguration(quizPackage: AudioQuizPackage?) {
+            guard let quizPackage = quizPackage else {
+                return
+            }
+            
+            let questions = QuestionVisualizerMaker.createVisualizers(from: quizPackage.questions)
+            let newConfiguration = QuizViewConfiguration(
+                imageUrl: quizPackage.imageUrl,
+                name: quizPackage.name,
+                shortTitle: quizPackage.acronym,
+                questions: questions,
+                config: ControlConfiguration(
+                    playPauseQuiz: { [weak self] in
+                        self?.playPauseQuiz?()
+                    },
+                    nextQuestion: { [weak self] in
+                        self?.nextQuestion?()
+                    },
+                    repeatQuestion: { [weak self] in
+                        self?.repeatQuestion?()
+                    },
+                    endQuiz: { [weak self] in
+                        self?.endQuiz?()
+                    }
+                )
+            )
+            
+            self.configuration = newConfiguration
+            print("Quiz Setter has Set Configurations")
+        }
+        
+//        func loadQuizConfiguration2(quizPackage: AudioQuizPackage?) -> QuizControlConfiguration? {
+//            guard let quizPackage = quizPackage else {
+//                return nil
+//            }
+//            var config: QuizControlConfiguration
+//            let questions = QuestionVisualizerMaker.createVisualizers(from: quizPackage.questions)
+//            let newConfiguration = QuizViewConfiguration(
+//                imageUrl: quizPackage.imageUrl,
+//                name: quizPackage.name,
+//                shortTitle: quizPackage.acronym,
+//                questions: questions,
+//                config: ControlConfiguration(
+//                    playPauseQuiz: { [weak self] in
+//                        self?.playPauseQuiz?()
+//                    },
+//                    nextQuestion: { [weak self] in
+//                        self?.nextQuestion?()
+//                    },
+//                    repeatQuestion: { [weak self] in
+//                        self?.repeatQuestion?()
+//                    },
+//                    endQuiz: { [weak self] in
+//                        self?.endQuiz?()
+//                    }
+//                )
+//            )
+//            config = newConfiguration
+//            return newConfiguration
+//            print("Quiz Setter has Set Configurations")
+//        }
+        
+    }
+}
+        
+ 
+
+extension QuizPlayerView {
+    private func goToNextQuestion() {
+        if let questionCount = configuration?.questions.count, currentQuestionIndex < questionCount - 1 {
+            currentQuestionIndex += 1
+            print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
+        }
+        
+    }
+    
+    private func goToPreviousQuestion() {
+        if currentQuestionIndex > 0 {
+            currentQuestionIndex -= 1
+        }
+    }
+    
+    private func selectOption(_ option: String) {
+     
+    }
+}
+
+
 
 
 #Preview {

@@ -10,6 +10,10 @@
 		0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */; };
 		0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */; };
 		0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */; };
+		0B2A87E12BAE07B2001571DD /* QuizViewConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */; };
+		0B2A87E32BAE07C0001571DD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E22BAE07C0001571DD /* Extensions.swift */; };
+		0B2A87E52BAE07DC001571DD /* PlayerControlButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E42BAE07DC001571DD /* PlayerControlButtons.swift */; };
+		0B2A87E72BAE09BD001571DD /* QuestionVisualizerMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E62BAE09BD001571DD /* QuestionVisualizerMaker.swift */; };
 		0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96852B87C852001D8D7B /* Buttons.swift */; };
 		0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96872B87C85A001D8D7B /* UIExtensions.swift */; };
 		0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */; };
@@ -95,6 +99,10 @@
 		0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBuilder.swift; sourceTree = "<group>"; };
 		0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItemView.swift; sourceTree = "<group>"; };
+		0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizViewConfigurations.swift; sourceTree = "<group>"; };
+		0B2A87E22BAE07C0001571DD /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0B2A87E42BAE07DC001571DD /* PlayerControlButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerControlButtons.swift; sourceTree = "<group>"; };
+		0B2A87E62BAE09BD001571DD /* QuestionVisualizerMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionVisualizerMaker.swift; sourceTree = "<group>"; };
 		0B2E96852B87C852001D8D7B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		0B2E96872B87C85A001D8D7B /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
@@ -202,6 +210,7 @@
 		0B2E968E2B87F198001D8D7B /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */,
 				0B2E96852B87C852001D8D7B /* Buttons.swift */,
 			);
 			path = Components;
@@ -212,6 +221,7 @@
 			children = (
 				0B2E96902B87F1CC001D8D7B /* ColorGenerator.swift */,
 				0B4ACD0C2B89A72300377BE7 /* Misc.swift */,
+				0B2A87E62BAE09BD001571DD /* QuestionVisualizerMaker.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -334,6 +344,7 @@
 				0BBD5AF52B8E8AD8005BD87B /* CustomNavigationBar.swift */,
 				0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */,
 				0BCE72A02BA3642400A9E7D6 /* CurrentQuizView.swift */,
+				0B2A87E42BAE07DC001571DD /* PlayerControlButtons.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -342,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				0B2E96872B87C85A001D8D7B /* UIExtensions.swift */,
+				0B2A87E22BAE07C0001571DD /* Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -590,6 +602,7 @@
 				0BCE72A32BA3649800A9E7D6 /* QuizPlayerPage.swift in Sources */,
 				0BBD5AEE2B8E7844005BD87B /* SampleExam.swift in Sources */,
 				0BB9DE192B865885004F848A /* User.swift in Sources */,
+				0B2A87E12BAE07B2001571DD /* QuizViewConfigurations.swift in Sources */,
 				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
 				0B7618BB2B97CB03006C2985 /* AudioQuizResponseModel.swift in Sources */,
 				0B42E3D42B8CFF7900DC3565 /* NetworkService.swift in Sources */,
@@ -598,6 +611,7 @@
 				0B4ACCFD2B89A61500377BE7 /* SpeechManager.swift in Sources */,
 				0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */,
 				0B5E0EF62BA9B274003C5406 /* QuizPlayerView.swift in Sources */,
+				0B2A87E72BAE09BD001571DD /* QuestionVisualizerMaker.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
 				0B4ACCBB2B899B3200377BE7 /* AiAssistantContentView.swift in Sources */,
 				0BCE72A12BA3642400A9E7D6 /* CurrentQuizView.swift in Sources */,
@@ -615,7 +629,9 @@
 				0BB9DE1F2B865885004F848A /* AudioQuizPackageView.swift in Sources */,
 				0BB9DE052B865831004F848A /* AudioQuizPlayerView.swift in Sources */,
 				0B4ACD0F2B89A82800377BE7 /* CustomQuestionDisplayView.swift in Sources */,
+				0B2A87E32BAE07C0001571DD /* Extensions.swift in Sources */,
 				0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */,
+				0B2A87E52BAE07DC001571DD /* PlayerControlButtons.swift in Sources */,
 				0BB9DE1B2B865885004F848A /* SwiftData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
