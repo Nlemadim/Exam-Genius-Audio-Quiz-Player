@@ -51,7 +51,6 @@ struct LaunchPage: View {
             isLoadingDefaults.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
                 isLoadingDefaults.toggle()
-                appState.currentState = .signIn
             }
         }
     }

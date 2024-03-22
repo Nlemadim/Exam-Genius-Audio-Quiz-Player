@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "0372D3F3-E0CA-4434-BFAD-E23F97350CFC"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "18A98CEF-3AC2-417F-A8B7-9B603A45C90A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../var/folders/j6/4ymg_t2s4rnfcrpjn_8b811r0000gn/T/swift-generated-sources/@__swiftmacro_11Exam_Genius18AudioQuizDetailVM2V05audioD05QueryfMp_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D09AF2AD-86AB-46C7-A3CA-5569997B3B65"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Exam Genius/QuizBuilder/AudioQuizDetailView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "252"
+            endingLineNumber = "252">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F9BB5726-0140-40EA-BBBF-0AA57D5D5B5B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Exam Genius/QuizBuilder/AudioQuizDetailView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "253"
+            endingLineNumber = "253">
+            <Locations>
+               <Location
+                  uuid = "F9BB5726-0140-40EA-BBBF-0AA57D5D5B5B - 954ba068bf97fa84"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 @Swift.MainActor @Sendable () -&gt; () in Exam_Genius.AudioQuizDetailView.playSampleQuiz(Exam_Genius.AudioQuizPackage) async throws -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "157"
+                  endingLineNumber = "157"
+                  offsetFromSymbolStart = "448">
+               </Location>
+               <Location
+                  uuid = "F9BB5726-0140-40EA-BBBF-0AA57D5D5B5B - b529db1800b5fa15"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Exam_Genius.TopicContent) -&gt; Exam_Genius.Topic in closure #2 @Swift.MainActor @Sendable () -&gt; () in Exam_Genius.AudioQuizDetailView.playSampleQuiz(Exam_Genius.AudioQuizPackage) async throws -&gt; ()"
+                  moduleName = "Exam Genius"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "157"
+                  endingLineNumber = "157"
+                  offsetFromSymbolStart = "52">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

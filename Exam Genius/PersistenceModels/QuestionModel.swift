@@ -68,6 +68,48 @@ class Question: ObservableObject, Identifiable {
     }
 }
 
+extension Question {
+    convenience init(fromResponse: QuestionResponse) {
+        let options = fromResponse.options.map { $0.option }
+        let topic = fromResponse.topic
+        self.init(
+            id: UUID(),
+            questionContent: fromResponse.question,
+            questionNote: fromResponse.overview ?? "",
+            topic: topic,
+            options: options,
+            correctOption: fromResponse.correctOption,
+            selectedOption: "",
+            isAnswered: false,
+            isAnsweredCorrectly: false,
+            numberOfPresentations: 0,
+            questionAudio: fromResponse.questionAudio ?? "",
+            questionNoteAudio: ""
+        )
+    }
+}
+
+extension Question {
+    convenience init(from data: QuestionData) {
+        let optionsArray = [data.options.a, data.options.b, data.options.c, data.options.d]
+        self.init(
+            id: UUID(),
+            questionContent: data.question,
+            questionNote: data.overview,
+            topic: "",
+            options: optionsArray,
+            correctOption: data.correctOption,
+            selectedOption: "",
+            isAnswered: false,
+            isAnsweredCorrectly: false,
+            numberOfPresentations: 0,
+            questionAudio: "",
+            questionNoteAudio: ""
+        )
+    }
+}
+
+
 
 
 

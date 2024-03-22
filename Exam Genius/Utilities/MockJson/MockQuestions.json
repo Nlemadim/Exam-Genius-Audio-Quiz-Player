@@ -1,0 +1,45 @@
+
+{
+  "examName": "Chartered Financial Analyst Exam",
+  "topics": [
+    "Quantitative Applications"
+  ],
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "What is the future value of $100 invested for 2 years at an annual interest rate of 5%?",
+      "options": {
+        "A": "$110.25",
+        "B": "$105",
+        "C": "$210",
+        "D": "$115"
+      },
+      "correctOption": "A",
+      "overview": "The future value (FV) of an investment is calculated using the formula FV = PV * (1 + r)^n, where PV is the present value (or initial investment), r is the annual interest rate, and n is the number of years. Plugging in the values, we get FV = $100 * (1 + 0.05)^2 = $110.25."
+    },
+    {
+        "questionNumber": 1,
+        "question": "Which of the following is a primary tool used in the Improve phase of DMAIC?",
+        "options": {
+          "A": "Fishbone Diagram",
+          "B": "Design of Experiments",
+          "C": "Control Chart",
+          "D": "SIPOC Diagram"
+        },
+        "correctOption": "B",
+        "overview": "In the Improve phase of DMAIC, the focus is on identifying solutions to eliminate the root causes of defects. Design of Experiments (DoE) is a primary tool used in this phase to systematically plan and conduct experiments that help in identifying optimal conditions that lead to the desired improvement."
+      },
+    {
+      "questionNumber": 2,
+      "question": "What is the purpose of using pilot runs in the Improve phase of DMAIC?",
+      "options": {
+        "A": "To identify new defects",
+        "B": "To validate measurement systems",
+        "C": "To test the effectiveness of proposed solutions",
+        "D": "To define the project scope"
+      },
+      "correctOption": "C",
+      "overview": "Pilot runs are conducted in the Improve phase to test the effectiveness of proposed solutions on a smaller scale before full-scale implementation. This approach helps in identifying potential issues and assessing the impact of changes, ensuring that the solutions are effective and feasible."
+    }
+  ]
+}

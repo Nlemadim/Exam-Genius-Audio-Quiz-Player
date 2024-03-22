@@ -10,23 +10,16 @@ import SwiftData
 
 @main
 struct Exam_GeniusApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @StateObject var appState = AppState()
+    @StateObject var user = User()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(user)
+                .environmentObject(appState)
+                .preferredColorScheme(.dark)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self, DownloadedAudioQuiz.self])
     }
 }

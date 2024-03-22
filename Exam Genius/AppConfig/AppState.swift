@@ -20,16 +20,13 @@ class AppState: ObservableObject {
         currentState = .none
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             // Check for existence of UserDefaults values, default them to false if not present
-            let isFirstLaunch = UserDefaults.standard.bool(forKey: "isFirstLaunch")
             let isSignedIn = UserDefaults.standard.bool(forKey: "isSignedIn")
             let hasSelectedAudioQuiz = UserDefaults.standard.bool(forKey: "hasSelectedAudioQuiz")
             
             // Determine AppState based on UserDefaults values
-            if !isFirstLaunch {
-                UserDefaults.standard.set(true, forKey: "isFirstLaunch")
-                UserDefaults.standard.set(false, forKey: "isSignedIn")
+            if !isSignedIn {
                 UserDefaults.standard.set(false, forKey: "hasSelectedAudioQuiz")
-                self.currentState = .firstLaunch
+                self.currentState = .signIn
             } else if isSignedIn {
                 self.currentState = .signedIn
             } else if hasSelectedAudioQuiz {

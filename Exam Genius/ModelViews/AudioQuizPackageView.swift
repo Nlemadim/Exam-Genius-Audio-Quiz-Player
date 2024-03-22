@@ -8,78 +8,79 @@
 import SwiftUI
 
 struct AudioQuizPackageView: View {
-    var playButtonAction: () -> Void
-    @State var image: String
-    @State var AudioQuizName: String
-    @State var isReadyToPlay: Bool = false
-    var questions: [String]
+    @StateObject private var generator = ColorGenerator()
+    var quiz: AudioQuizPackage
     
     var body: some View {
         ZStack {
-            Image(image)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 400.0)
-                .cornerRadius(30)
-                .padding(.horizontal, 20)
-        }
-        .preferredColorScheme(.dark)
-        .overlay(
-            VStack(alignment: .leading, spacing: 8.0) {
-                Spacer()
-
-                HStack {
-                    VStack(spacing: 0) {
-                        Text(AudioQuizName)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.linearGradient(colors: [.primary, .primary.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                        Text("\(questions.count) Questions".uppercased())
-                            .font(.footnote)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 16) {
+                GeometryReader { geometry in
+                    if quiz.imageUrl.isEmpty {
+                        Image("IconImage")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    } else {
+                        Image(quiz.imageUrl)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
                     }
-                    .padding(.leading)
-                    
+                }
+                .frame(height: 200)
+                .frame(maxHeight: 200)
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(quiz.name)
+                        .font(.title3)
+                        .fontWeight(.heavy)
+                        .lineLimit(2, reservesSpace: false)
+                        .multilineTextAlignment(.leading)
+                        .bold()
+                        .primaryTextStyleForeground()
+
+
+                    audioLabel()
                     
                     Spacer()
-                    Button {
-                        playButtonAction()
-                    } label: {
-                        Text("Download")
-                            .foregroundStyle(.white)
-                            .fontWeight(.bold)
-                            .padding(9)
-                            .background(.teal.opacity(0.5), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    }
-     
-                    Button {
-                        playButtonAction()
-                    } label: {
-                        Image(systemName: "play.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 26.0, height: 26.0)
-                            .cornerRadius(10)
-                            .padding(9)
-                            .foregroundStyle(isReadyToPlay ? .teal : .gray)
-                            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    }
-                    .disabled(isReadyToPlay)
-       
-                }
-                .padding()
 
-                .background(.ultraThinMaterial, in: Rectangle())
-                .cornerRadius(30)
+                }
+                .padding(.all, 10.0)
+                .padding(.horizontal, 5)
+                .frame(height: 120)
+
             }
-            .shadow(radius: 10, x: 0, y: 10)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, 20)
-        )
+            .frame(maxHeight: .infinity, alignment: .top)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black]), startPoint: .top, endPoint: .bottom)
+            )
+            .mask(RoundedRectangle(cornerRadius: 30, style: .continuous))
+            .padding(10)
+            
+        }
+        .onAppear {
+            generator.updateDominantColor(fromImageNamed: quiz.imageUrl)
+        }
+        .preferredColorScheme(.dark)
+
+    }
+    
+    var aboutQuiz: String {
+        quiz.about.isEmpty ?
+        "An audio quiz of at least 500 questions from more than 100 topics." : quiz.about
+    }
+    
+    func audioLabel() -> some View {
+        return  HStack {
+            Text(quiz.acronym.isEmpty ? "Audio quiz" : quiz.acronym + " Audio Quiz")
+                .font(.footnote)
+                .fontWeight(.semibold)
+            Image(systemName: "headphones")
+                .font(.footnote)
+                .fontWeight(.semibold)
+        }
     }
 }
 
-#Preview {
-    AudioQuizPackageView(playButtonAction: {}, image: "SwiftProgramming", AudioQuizName: "Swift", questions: [])
-}

@@ -1,0 +1,219 @@
+//
+//  QuizView.swift
+//  Exam Genius
+//
+//  Created by Tony Nlemadim on 3/9/24.
+//
+
+import SwiftUI
+
+struct QuizView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var generator = ColorGenerator()
+    //@Binding var configuration: QuizViewConfiguration
+    @State var optionA: String = ""
+    @State var optionB: String = ""
+    @State var optionC: String = ""
+    @State var optionD: String = ""
+    @State var question: String = ""
+    @ObservedObject var quizSetter: QuizPlayerView.QuizSetter
+    @Binding var currentQuestionIndex: Int
+    @Binding var isNowPlaying: Bool
+    @Binding var nextTapped: Bool
+    @Binding var repeatTapped: Bool
+    
+    
+    var body: some View {
+        ZStack {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .center, spacing: 15) {
+                    /// Exam Icon Image
+                    Image(quizSetter.configuration?.imageUrl ?? "IconImage")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 100, height: 100)
+                        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        /// Long Name
+                        Text(quizSetter.configuration?.name ?? "Error! No Quiz Content")
+                            .font(.body)
+                            .foregroundStyle(.white)
+                            .fontWeight(.semibold)
+                            .lineLimit(2, reservesSpace: false)
+                        
+                        Spacer().frame(height: 40)
+                        
+                        //MARK: TODO - Place Quiz Progress Bar Here
+                        
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                }
+                .padding(.horizontal)
+
+                
+                VStack(alignment: .center, spacing: 0) {
+                    questionContent(question)
+                    optionA(optionA)
+                    optionB(optionB)
+                    optionC(optionC)
+                    optionD(optionD)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: 500)
+                .background(
+                    RoundedRectangle(cornerRadius: 25.0, style: .continuous)
+                        .fill(generator.dominantLightToneColor)
+                        .padding(.horizontal, 10)
+                )
+                
+                Image(systemName: "line.3.horizontal")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                    .activeGlow(generator.dominantLightToneColor, radius: 0.7)
+                    .hAlign(.trailing)
+                    .padding(.horizontal, 20)
+                    .onTapGesture {
+                        dismiss()
+                    }
+                
+                Spacer()
+                
+                PlayerControlButtons(isNowPlaying: isNowPlaying,
+                                     themeColor: generator.dominantLightToneColor,
+                                     repeatAction: {},
+                                     playAction: { isNowPlaying.toggle() },
+                                     nextAction: { currentQuestionIndex += 1 }
+                )
+            }
+            .padding(.top, 16)
+            .onAppear {
+                generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "")
+                showContent()
+                print("Test QuizView has Registered \(String(describing: quizSetter.configuration?.questions.count)) Questions ready for viewing")
+            }
+            .onChange(of: currentQuestionIndex) { _, _ in
+                showContent()
+                print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
+            }
+            .onChange(of: quizSetter.configuration) { _, _ in
+                showContent()
+            }
+        }
+        .preferredColorScheme(.dark)
+        .background(generator.dominantBackgroundColor)
+    }
+    
+    
+    func showContent() {
+        // Safely unwrap configuration and ensure currentIndex is within the range of questions.
+        guard let questions = quizSetter.configuration?.questions, questions.indices.contains(currentQuestionIndex) else { return }
+        
+        let currentQuestion = questions[currentQuestionIndex]
+        
+        // Update state with the current question and options
+        question = currentQuestion.questionContent
+        optionA = currentQuestion.optionA
+        optionB = currentQuestion.optionB
+        optionC = currentQuestion.optionC
+        optionD = currentQuestion.optionD
+    }
+
+    @ViewBuilder
+    func questionContent(_ content: String) -> some View {
+        VStack(alignment: .center, spacing: 4) {
+            Text("New Question")
+                .font(.headline)
+                
+            Text(question)
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+                
+        }
+        .padding(.all, 20)
+        .padding(.horizontal)
+        //.opacity(question.isEmptyOrWhiteSpace ? 0 : 1)
+    }
+    
+    @ViewBuilder
+    func optionA(_ option: String) -> some View {
+        VStack(alignment: .center, spacing: 4) {
+            Text("Option A")
+                .font(.headline)
+                
+            Text(optionA)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+        }
+        .padding(.all, 10)
+        .padding(.horizontal)
+        //.opacity(optionA.isEmptyOrWhiteSpace ? 0 : 1)
+    }
+    
+    @ViewBuilder
+    func optionB(_ option: String) -> some View {
+        VStack(alignment: .center, spacing: 4) {
+            Text("Option B")
+                .font(.headline)
+                
+            Text(optionB)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+        }
+        .padding(.all, 10)
+        .padding(.horizontal)
+        //.opacity($optionB.isEmptyOrWhiteSpace ? 0 : 1)
+    }
+    
+    @ViewBuilder
+    func optionC(_ option: String) -> some View {
+        VStack(alignment: .center, spacing: 4) {
+            Text("Option C")
+                .font(.headline)
+                
+            Text(optionC)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+        }
+        .padding(.all, 10)
+        .padding(.horizontal)
+        //.opacity(optionC.isEmptyOrWhiteSpace ? 0 : 1)
+    }
+    
+    @ViewBuilder
+    func optionD(_ option: String) -> some View {
+        VStack(alignment: .center, spacing: 4) {
+            Text("Option D")
+                .font(.headline)
+            
+            Text(optionD)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+        }
+        .padding(.all, 20)
+        .padding(.horizontal)
+        //.opacity(optionD.isEmptyOrWhiteSpace ? 0 : 1)
+    }
+}
+
+#Preview {
+    @State var curIndex = 0
+    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
+    let quizSetter = QuizPlayerView.QuizSetter()
+    quizSetter.configuration = config
+    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), nextTapped: .constant(false), repeatTapped: .constant(false))
+}
+
+
+struct PlayerContent {
+    var titleImage: Image
+    var title: String
+    var shortTitle: String
+    var questions: [String] = []
+}

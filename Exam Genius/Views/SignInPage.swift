@@ -54,7 +54,7 @@ struct SignInPage: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundStyle(.yellow)
-                    Text("Every failed question presents a learning opportunity. Turn on Learning mode AI will create an audio note delivered in an engaging way designed to teach you all you need to know regarding context of the question relative to the topic.")
+                    Text("Every failed question presents a learning opportunity. Turn on learning mode and AI will create an engaging audio note delivered and designed to teach you all you need to know regarding context of the question relative to the topic.")
                         .multilineTextAlignment(.center)
                         .padding()
                     Spacer()
@@ -63,7 +63,7 @@ struct SignInPage: View {
 
                 // Sign-in Slide
                 VStack(spacing: 5) {
-                    Text("Sign-up and get access to unlimited questions carefully curated and continuously refined by AI to stay relevant to you and the knowledge you seek.")
+                    Text("Sign-up and get access to unlimited questions continuously refined and updated.")
                         .font(.body)
                         .multilineTextAlignment(.center)
                         .padding()
@@ -107,11 +107,10 @@ struct SignInPage: View {
     }
     
     private func signInProcess() {
-        UserDefaults.standard.set(true, forKey: "isSignedIn")
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isSigningIn.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                UserDefaults.standard.set(true, forKey: "isSignedIn")
                 user.isSignedIn = true
                 isSigningIn.toggle()
                 appState.currentState = .signedIn
