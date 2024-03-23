@@ -17,7 +17,7 @@ struct MicModalView: View {
     
                 HStack {
 
-                    MicButtonWithProgressRing(showProgressRing: interactionState == .isListening ? true : false)
+                    MicButtonWithProgressRing(showProgressRing: self.interactionState == .isListening ? true : false)
                     .padding()
                 }
                 .padding(20)

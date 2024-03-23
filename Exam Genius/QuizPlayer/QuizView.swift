@@ -19,7 +19,7 @@ struct QuizView: View {
     @ObservedObject var quizSetter: QuizPlayerView.QuizSetter
     @Binding var currentQuestionIndex: Int
     @Binding var isNowPlaying: Bool
-    @Binding var nextTapped: Bool
+    @Binding var presentMicModal: Bool
     @Binding var repeatTapped: Bool
     @Binding var interactionState: InteractionState
     @State var testInteractionState: InteractionState = .idle
@@ -102,7 +102,7 @@ struct QuizView: View {
                 showContent()
             }
         }
-        .sheet(isPresented: .constant(self.interactionState == .isListening), content: {
+        .sheet(isPresented: $presentMicModal, content: {
             MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                 .presentationDetents([.height(100)])
         })
@@ -212,7 +212,7 @@ struct QuizView: View {
     @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
     let quizSetter = QuizPlayerView.QuizSetter()
     quizSetter.configuration = config
-    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), nextTapped: .constant(false), repeatTapped: .constant(false), interactionState: .constant(.idle))
+    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), presentMicModal: .constant(false), repeatTapped: .constant(false), interactionState: .constant(.idle))
 }
 
 
