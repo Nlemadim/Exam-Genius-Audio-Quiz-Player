@@ -133,7 +133,7 @@ struct LandingPage: View {
                 }
                 .tag(2)
         }
-        .tint(.teal)
+        .tint(.white).activeGlow(.white, radius: 2)
 
     }
     

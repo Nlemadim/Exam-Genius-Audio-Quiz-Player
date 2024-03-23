@@ -131,8 +131,7 @@ struct CurrentQuizViewV2: View {
                 }
                
                 VStack(alignment: .leading, spacing: 12.0) {
-                    LabeledContent("Number of Topics", value: "\(numberOfTopics)")
-                    LabeledContent("Number of Questions", value: "\(numberOfQuestions)")
+                    LabeledContent("Total Questions", value: "\(numberOfQuestions)")
                     LabeledContent("Questions Answered", value: "\(questionsAnswered)")
                     LabeledContent("Quizzes Completed", value: "\(numberOfQuestions)")
                     LabeledContent("Current High Score", value: "\(highScore)%")

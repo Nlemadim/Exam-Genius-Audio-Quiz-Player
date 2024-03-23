@@ -60,51 +60,50 @@ struct QuizPlayerView: View {
     var body: some View {
         NavigationView {
             ZStack(alignment: .topLeading) {
-                Rectangle()
-                    .fill(.clear)
-                    .background(
-                        LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, user.selectedQuizPackage == nil ? .themePurple: generator.dominantBackgroundColor.opacity(0.6)]), startPoint: .top, endPoint: .bottom)
-                    )
-                
+
                 VStack(alignment: .leading, spacing: 4.0) {
+                    ScrollView(showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 4.0){
-                            Text(user.selectedQuizPackage == nil ? "Not Playing" :"Currently Playing")
-                                .fontWeight(.bold)
-                                .foregroundStyle(.primary)
-                                .padding(.horizontal)
-                            HStack {
-                                Text(user.selectedQuizPackage?.name.uppercased() ?? "No Quiz Selected!")
-                                    .font(.footnote)
-                                    .lineLimit(2, reservesSpace: true)
-                                    .fontWeight(.medium)
-                                    .foregroundStyle(.primary)
-                                    .multilineTextAlignment(.leading)
-                                Spacer()
-                            }
-                            .padding(.horizontal)
+                            Image(user.selectedQuizPackage?.imageUrl ?? "IconImage")
+                                .resizable()
+                                .frame(width: 280, height: 280)
+                                .cornerRadius(25)
+                            
                         }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 300)
                         .padding(.top, 20)
                         .padding()
+                        .background(
+                            Image(user.selectedQuizPackage?.imageUrl ?? "IconImage")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .blur(radius: 50)
+                        )
                         
-                        TabView {
-                            ForEach(0 ..< 5) { item in
-                                CurrentQuizViewV2(image: user.selectedQuizPackage?.imageUrl ?? "IconImage",
-                                                  buttonLabel: user.hasStartedQuiz ? "Resume" : nil,
-                                                  color: !user.hasSelectedAudioQuiz ? .gray : generator.dominantBackgroundColor,
-                                                  backgroundImage: "", numberOfQuestions: numberOfQuestions,
-                                                  numberOfQuizzes: quizzesCompleted,
-                                                  questionsAnswered: questionsAnswered,
-                                                  highScore: highestScore,
-                                                  numberOfTopics: numberOfTopics,
-                                                  isDisabled: nil,
-                                                  playButtonAction: { self.expandSheet.toggle(); selectedQuizPackage = user.selectedQuizPackage }
-                               )
-                            }
+                        Text(user.selectedQuizPackage?.name.uppercased() ?? "No Quiz Selected!")
+                            .font(.title3)
+                            .lineLimit(2, reservesSpace: true)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.primary)
+                            .multilineTextAlignment(.center)
+                        
+                        VStack(alignment: .leading, spacing: 12.0) {
+                            LabeledContent("Total Questions", value: "\(user.selectedQuizPackage?.questions.count ?? 0)")
+                            LabeledContent("Questions Answered", value: "\(user.selectedQuizPackage?.questions.count ?? 0)")
+                            LabeledContent("Quizzes Completed", value: "\(user.selectedQuizPackage?.questions.count ?? 0)")
+                            LabeledContent("Current High Score", value: "\(user.selectedQuizPackage?.questions.count ?? 0)%")
                         }
-                        .tabViewStyle(.page(indexDisplayMode: .never))
-                        .frame(height: 530)
+                        .padding(.horizontal)
+                        
+                        VStack {
+                            PlainClearButton(color: .clear, label: "Start", image: nil, isDisabled: nil, playAction: { self.expandSheet.toggle(); selectedQuizPackage = user.selectedQuizPackage })
+                        }
+                        .padding(.all, 20.0)
                     }
+                }
             }
+            .navigationTitle("Quiz Player").navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 if let audioQuiz = selectedQuizPackage {
                     quizSetter.loadQuizConfiguration(quizPackage: audioQuiz)
@@ -140,6 +139,9 @@ struct QuizPlayerView: View {
                 self.selectedOption = selectedOption
                 analyseResponse()
             }
+            .background(
+                generator.dominantBackgroundColor.opacity(0.5)
+            )
         }
         .fullScreenCover(isPresented: $expandSheet) {
             QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, nextTapped: $nextTapped, repeatTapped: $repeatTapped, interactionState: $interactionState)
@@ -272,15 +274,16 @@ extension QuizPlayerView {
         if let package = user.selectedQuizPackage {
             let currentQuestions = package.questions
             self.currentQuizQuestions = currentQuestions
-            playAudioFileAtIndex(self.currentQuestionIndex)
+            print(self.currentQuizQuestions.count)
+            //playAudioFileAtIndex(self.currentQuestionIndex)
 
         }
     }
     
     private func playAudioFileAtIndex(_ index: Int) {
-//        guard index < currentQuizQuestions.count else {
-//            return
-//        }
+        guard index < currentQuizQuestions.count else {
+            return
+        }
         let audiofile = currentQuizQuestions[index].questionAudio
         quizPlayer.playAudioQuestion(audioFile: audiofile)
     }
