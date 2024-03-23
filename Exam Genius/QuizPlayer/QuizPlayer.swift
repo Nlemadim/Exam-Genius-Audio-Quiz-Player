@@ -28,9 +28,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     @Published var isRecordingAnswer: Bool = false
     @Published var isNowPlaying: Bool = false
     @Published var selectedOption: String = ""
-    
-    @State var interactionState: InteractionState = .idle
-    @State var playerState: PlayerState = .idle
+    @Published var interactionState: InteractionState = .idle
+    @Published var playerState: PlayerState = .idle
     @State var isUingMic: Bool = false
     
     weak var delegate: QuizPlayerDelegate?
@@ -77,6 +76,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     func playSampleQuiz(audioFileNames: [String]) {
         guard !audioFileNames.isEmpty else { return }
+        interactionState = .isNowPlaying
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles = audioFileNames
             self.currentIndex = 0
@@ -85,6 +85,7 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     }
     
     func playAudioQuestion(audioFile: String) {
+        interactionState = .isNowPlaying
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles.append(audioFile)
             self.currentIndex = 0
@@ -115,6 +116,14 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         if index >= audioFiles.count {
             self.isFinishedPlaying = true
             delegate?.quizPlayerDidFinishPlaying(self)
+        }
+    }
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        print("Player has Finished playing")
+        if flag {
+            self.isNowPlaying = false
+            self.isFinishedPlaying = true
         }
     }
     
@@ -168,20 +177,9 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         }
         //readQuestionContent(questionContent: audioFileName)
     }
-    
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        print("Player has Finished playing")
-        
-        playerState = .isAwaitingAnswer
-        if flag {
-            currentIndex += 1 // Move to the next file
-            playAudioFileAtIndex(currentIndex) // Play next audio
-            self.isNowPlaying = false
-            self.isFinishedPlaying = true
-        }
-    }
-    
+      
     fileprivate func checkSelectedOptionAndUpdateState() {
+        interactionState  = .idle
         if UserDefaultsManager.isOnContinuousFlow() /* && !selectedOption.isEmpty */{
             // Proceed to the next audio file
             print("Playing next Question")
@@ -209,15 +207,16 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     //MARK: Recording Methods
     func recordAnswer() {
+        interactionState = .isListening
         startRecordingAndTranscribing()
     }
     
     fileprivate func startRecordingAndTranscribing() {
-        guard playerState == .isAwaitingAnswer else { return }
+        guard interactionState == .isListening else { return }
         
         print("Starting transcription...")
-        interactionState = .isListening
         self.isRecordingAnswer = true
+        playerState = .isAwaitingAnswer
         
         // Immediately start transcribing
         self.speechRecognizer.transcribe()
@@ -231,8 +230,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
             
             // Optionally, retrieve and process the transcript after stopping
             self.getTranscript { newTranscript in
-                self.interactionState = .isProcessing
-                self.currentQuestion?.selectedOption = self.processTranscript(transcript: newTranscript)
+                self.selectedOption = self.processTranscript(transcript: newTranscript)
+                self.interactionState = .hasResponded
                 print("Processing completed")
                 
                 // Further processing or state update can be done here
@@ -250,17 +249,22 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     }
     
     func processTranscript(transcript: String) -> String {
+        interactionState = .isProcessing
         let processedTranscript = WordProcessor.processWords(from: transcript)
         self.selectedOption = processedTranscript
+        
         if processedTranscript.isEmptyOrWhiteSpace {
             playerState = .failureTranscribingAnswer
+            interactionState = .errorResponse
             //MARK: TODO
             //playErrorTranscriptionSound()
         } else {
             playerState = .successTranscribingAnswer
+            interactionState = .successfulResponse
             //MARK: TODO
             //playSuccessFulTranscriptionSound()
         }
+        
         return processedTranscript
     }
     

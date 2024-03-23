@@ -20,6 +20,8 @@ struct QuizPlayerView: View {
     @StateObject private var generator = ColorGenerator()
     @StateObject var quizSetter = QuizPlayerView.QuizSetter()
     
+    
+    
     @State private var expandSheet: Bool = false
     @State var isDownloading: Bool = false
     @State private var isPlaying: Bool = false
@@ -29,12 +31,20 @@ struct QuizPlayerView: View {
     @State private var presentMicModal: Bool = false
     
     @State private var currentQuestionIndex: Int = 0
+    @State private var currentQuizQuestions: [Question] = []
     @State private var currentQuestion: Question?
     @State private var selectedOption: String = ""
     
+    @State private var interactionState: InteractionState = .idle
     @State private var selectedQuizPackage: AudioQuizPackage?
     @State private var path = [AudioQuizPackage]()
     @State var configuration: QuizViewConfiguration?
+    
+    init() {
+        if let package = selectedQuizPackage {
+            currentQuizQuestions.append(contentsOf: package.questions)
+        }
+    }
     
 
     var cancellables = Set<AnyCancellable>()
@@ -115,21 +125,29 @@ struct QuizPlayerView: View {
             .onChange(of: currentQuestionIndex) { _, newValue in
                 goToNextQuestion()
             }
-            .onReceive(quizPlayer.$isRecordingAnswer) { isRecording in
-                presentMicModal = isRecording
-            }
+            .onChange(of: quizPlayer.isFinishedPlaying, initial: false, { _, _ in
+                quizPlayer.recordAnswer()
+            })
+            .onReceive(quizPlayer.$interactionState, perform: { interactionState in
+                self.interactionState = interactionState
+                if interactionState == .awaitingResponse || interactionState == .isListening {
+                    
+                } else {
+                    self.interactionState = interactionState
+                }
+            })
             .onReceive(quizPlayer.$selectedOption) { selectedOption in
                 self.selectedOption = selectedOption
                 analyseResponse()
             }
         }
         .fullScreenCover(isPresented: $expandSheet) {
-            QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, nextTapped: $nextTapped, repeatTapped: $repeatTapped)
+            QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, nextTapped: $nextTapped, repeatTapped: $repeatTapped, interactionState: $interactionState)
         }
         .onChange(of: playTapped, { _, _ in
             print("Play Pressed")
             print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
-            playAudioQuiz()
+            playAudioQuestion()
         })
         .onAppear {
             generator.updateDominantColor(fromImageNamed: backgroundImage)
@@ -140,8 +158,6 @@ struct QuizPlayerView: View {
             return user.selectedQuizPackage?.imageUrl ?? "Logo"
         }
     }
-    
-   
 }
 
 extension QuizPlayerView {
@@ -254,16 +270,23 @@ extension QuizPlayerView {
     
     func playAudioQuestion() {
         if let package = user.selectedQuizPackage {
-            let list = package.questions
-            let currentIndex = self.currentQuestionIndex
-            let currentQuestion = list[currentIndex]
-            self.currentQuestion = currentQuestion
-            quizPlayer.playAudioQuestion(audioFile: currentQuestion.questionAudio)
+            let currentQuestions = package.questions
+            self.currentQuizQuestions = currentQuestions
+            playAudioFileAtIndex(self.currentQuestionIndex)
+
         }
     }
     
+    private func playAudioFileAtIndex(_ index: Int) {
+//        guard index < currentQuizQuestions.count else {
+//            return
+//        }
+        let audiofile = currentQuizQuestions[index].questionAudio
+        quizPlayer.playAudioQuestion(audioFile: audiofile)
+    }
+    
     func analyseResponse() {
-        if !isPlaying, !selectedOption.isEmptyOrWhiteSpace {
+        if !isPlaying, !self.selectedOption.isEmptyOrWhiteSpace {
             self.currentQuestion?.selectedOption = self.selectedOption
             currentQuestion?.isAnswered = true
             if currentQuestion?.selectedOption == currentQuestion?.correctOption {
@@ -275,6 +298,7 @@ extension QuizPlayerView {
     private func goToNextQuestion() {
         if let questionCount = configuration?.questions.count, currentQuestionIndex < questionCount - 1 {
             currentQuestionIndex += 1
+            playAudioFileAtIndex(self.currentQuestionIndex)
             print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
         }
         
