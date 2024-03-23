@@ -13,16 +13,22 @@ struct AudioQuizDetailView: View {
     @EnvironmentObject var user: User
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    
     @ObservedObject private var viewModel: AudioQuizDetailVM
+    @ObservedObject var quizPlayer = QuizPlayer.shared
+    
     @StateObject private var generator = ColorGenerator()
+    
     @Bindable var audioQuiz: AudioQuizPackage
     @Binding var isDownloading: Bool
     @Binding var isNowPlaying: Bool
     @Binding var isDownloadingSample: Bool
     @Binding var didTapDownload: Bool
     @Binding var didTapPlaySample: Bool
+    
     @State var topicLabel: String = ""
     @State var stillDownloading: Bool = false
+    
     
     @State var numberOfTopics: Int = 0
     @State var downloadButtonLabel: String = "Download Audio Quiz"
@@ -38,7 +44,7 @@ struct AudioQuizDetailView: View {
     
    
     private let networkService = NetworkService.shared
-    private let quizPlayer = QuizPlayer.shared
+    
     let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
     var error: Error?
     
@@ -84,7 +90,11 @@ struct AudioQuizDetailView: View {
                             .zIndex(1.0)
                             .padding()
                             .offset(y: 15)
-                            
+                            .onReceive(quizPlayer.$interactionState, perform: { newValue in
+                                if newValue == .isNowPlaying {
+                                    self.isNowPlaying = true
+                                }
+                            })  
                         }
                        
                         VStack {

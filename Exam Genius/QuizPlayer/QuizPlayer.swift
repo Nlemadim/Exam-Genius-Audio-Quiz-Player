@@ -95,8 +95,8 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     
     private func playAudioFileAtIndex(_ index: Int) {
         guard index < audioFiles.count else {
-            self.isFinishedPlaying = false
-            self.isNowPlaying = true // Ensure this triggers UI updates correctly
+//            self.isFinishedPlaying = false
+//            self.isNowPlaying = true // Ensure this triggers UI updates correctly
             return
         }
         
@@ -111,11 +111,6 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
             audioPlayer?.play()
         } catch {
             print("Could not load file: \(error)")
-        }
-        
-        if index >= audioFiles.count {
-            self.isFinishedPlaying = true
-            delegate?.quizPlayerDidFinishPlaying(self)
         }
     }
     
@@ -146,40 +141,32 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
         // Start playing the audio file
         playAudio(audioFileName: audioFileName)
         
-        if let currentQuestion {
-            print("Player Started playing Question\(currentIndex + 1): \(isNowPlaying)")
-            print("Player Finished playing: \(isFinishedPlaying)")
-            print("User chose Option \(currentQuestion.selectedOption)")
-            print("The correct Answer is \(currentQuestion.correctOption)")
-            print("Player Started playing: \(isNowPlaying)")
-        }
     }
     
     fileprivate func playAudio(audioFileName: String) {
-        //guard isFinishedPlaying else { return }
-        isNowPlaying = true
-        isFinishedPlaying = false
+        audioPlayer?.stop()
+        interactionState = .isNowPlaying
+        
+        let path = audioFileName
+        guard let fileURL = URL(string: path) else { return }
         
         let fileManager = FileManager.default
         let url = URL(fileURLWithPath: audioFileName)
         
-        // Check if the file exists before trying to play it
-        if fileManager.fileExists(atPath: url.path) {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.delegate = self
-                audioPlayer?.play()
-            } catch {
-                print("Error playing audio file: \(error)")
-            }
-        } else {
-            print("Audio file not found at path: \(audioFileName)")
+        do {
+            try AVAudioSession.sharedInstance().setActive(true) // Ensure the session is active
+            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay() // Prepare the player
+            audioPlayer?.play()
+        } catch {
+            print("Could not load file: \(error)")
+            ///Use Siri in case of error
+            //readQuestionContent(questionContent: audioFileName)
         }
-        //readQuestionContent(questionContent: audioFileName)
     }
       
     fileprivate func checkSelectedOptionAndUpdateState() {
-        interactionState  = .idle
         if UserDefaultsManager.isOnContinuousFlow() /* && !selectedOption.isEmpty */{
             // Proceed to the next audio file
             print("Playing next Question")

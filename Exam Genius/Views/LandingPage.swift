@@ -117,13 +117,13 @@ struct LandingPage: View {
             })
             
             .tabItem {
-                TabIcons(title: "Home", icon: "house.fill")
+                TabIcons(title: "Home", icon: "square.grid.2x2")
             }
             .tag(0)
 
             QuizPlayerView()
                 .tabItem {
-                    TabIcons(title: "Explore", icon: "globe")
+                    TabIcons(title: "Quiz Player", icon: "play.tv")
                 }
                 .tag(1)
             
@@ -133,7 +133,7 @@ struct LandingPage: View {
                 }
                 .tag(2)
         }
-        .tint(.teal)
+        .tint(.white).activeGlow(.white, radius: 2)
 
     }
     

@@ -731,6 +731,56 @@ enum InteractionState {
    ]
  }
  
+ ////////Graduate Management Admission Test
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Analytical Writing Assessment","Argument Analysis","Critical Reasoning","Logical Reasoning","Reading Comprehension","Sentence Correction","Integrated Reasoning","Multi-Source Reasoning","Table Analysis","Graphics Interpretation","Two-Part Analysis","Quantitative Reasoning","Problem Solving","Data Sufficiency","Algebra","Fractions","Decimals","Percentages","Number Properties","Exponents","Roots","Geometry","Coordinate Geometry","Permutation","Combination","Probability","Statistics","Ratio Proportions","Speed","Distance","Time","Work","Interest","Profit and Loss","Mensuration","Quadratic Equations","Linear Equations","Inequalities","Absolute Values","Functions","Graphs","Lines","Circles","Parabola","Ellipse","Hyperbola","Trigonometry","Set Theory","Sequences and Series","Complex Numbers","Arithmetic Mean","Geometric Mean","Median","Mode","Range","Standard Deviation","Variance","Counting Methods","Discrete Probability","Continuous Probability","Probability Distributions"]}
+ Starting fetchQuestionData for examName: Graduate Management Admission Test with topics: ["Critical Reasoning"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Management%20Admission%20Test&topicValue=Critical%20Reasoning&numberValue=3
+ Raw Response: {
+   "examName": "Graduate Management Admission Test",
+   "topics": [
+     "Critical Reasoning"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the main purpose of critical reasoning?",
+       "options": {
+         "A": "To evaluate arguments logically",
+         "B": "To memorize facts",
+         "C": "To understand numerical data",
+         "D": "To write essays"
+       },
+       "correctOption": "A",
+       "overview": "Critical reasoning is the process of evaluating arguments and reasoning in a logical manner. Its main purpose is not to memorize facts, understand numerical data, or write essays, but rather to assess the strength of arguments and the validity of the conclusions drawn from them."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is a common logical fallacy?",
+       "options": {
+         "A": "Ad hominem",
+         "B": "Empirical evidence",
+         "C": "Deductive reasoning",
+         "D": "Inductive reasoning"
+       },
+       "correctOption": "A",
+       "overview": "An ad hominem argument is a common logical fallacy that involves attacking the character or motive of a person making an argument rather than addressing the substance of the argument itself. Unlike empirical evidence, deductive reasoning, and inductive reasoning, which are components of logical analysis, ad hominem serves to undermine arguments through irrelevant personal attacks."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What does it mean to 'strengthen' an argument in critical reasoning?",
+       "options": {
+         "A": "To increase the volume of the argument",
+         "B": "To add more examples",
+         "C": "To make the conclusion more likely to be true",
+         "D": "To lengthen the argument"
+       },
+       "correctOption": "C",
+       "overview": "In critical reasoning, to 'strengthen' an argument means to provide additional evidence or reasoning that makes the conclusion more likely to be true. This is not about increasing the volume, adding more examples for the sake of quantity, or lengthening the argument, but rather about enhancing the logical support for the argument's conclusion."
+     }
+   ]
+ }
+ 
  ///////US Citizenship Test
  Response HTTP Status code: 200
  Raw server response: {"topics":["US Government Structure","The Constitution","The Bill of Rights","The Three Branches of Government","Executive Branch","Legislative Branch","Judicial Branch","The Federal System","The Declaration of Independence","The Founding Fathers","US Political History","US Historical Events","US Geography","US Symbols","US Holidays","US Presidents","US Vice Presidents","US Supreme Court Justices","US Congress","US Political Parties","The Electoral Process","US Military History","US Citizenship Rights and Responsibilities","US Immigration History","English Language Proficiency","Reading Comprehension","Writing Skills","US Economic System","US Cultural History","Native American History","African American History","Women's Rights Movement","Civil Rights Movement","World War I","World War II","The Cold War","The Vietnam War","The War on Terrorism","The Great Depression","The Civil War","The Revolutionary War","The Louisiana Purchase","The Gold Rush","The Space Race","The Industrial Revolution","The Internet Revolution","The Environmental Movement","The LGBT Rights Movement","The Labor Movement"]}
