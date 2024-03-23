@@ -50,6 +50,7 @@ enum InteractionState {
     case awaitingResponse
     case hasResponded
     case idle
+    case successfulResponse
     
     var status: String {
         switch self {
@@ -58,15 +59,17 @@ enum InteractionState {
         case .isListening:
             return "Listening"
         case .errorResponse:
-            return "Sorry, didn't catch that"
+            return "Error response"
         case .hasResponded:
-            return "Recieved answer"
+            return "Recieved a response"
         case .idle:
             return "Start"
         case .isProcessing:
             return "Processing"
         case .awaitingResponse:
-            return "Waiting for answer"
+            return "Waiting for response"
+        case .successfulResponse:
+            return "Response successfully processed"
         }
     }
 }
@@ -423,6 +426,109 @@ enum InteractionState {
      }
    ]
  }
+ 
+ /////////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Auditing and Attestation","Understanding Auditing Procedures","Understanding Attestation Procedures","Audit Reports","Internal Controls","Compliance with Laws and Regulations in an Audit","Ethics","Professional Responsibilities","and General Principles","Assessing Risk and Developing a Planned Response","Performing Further Procedures and Obtaining Evidence","Forming Conclusions and Reporting","Business Environment and Concepts","Corporate Governance","Economic Concepts and Analysis","Financial Management","Information Technology","Operations Management","Financial Reporting","Conceptual Framework and Financial Reporting","Select Financial Statement Accounts","Select Transactions","State and Local Governments","Regulation","Ethics","Professional Responsibilities","and Federal Tax Procedures","Business Law","Federal Taxation of Property Transactions","Federal Taxation of Individuals","Federal Taxation of Entities","Business Environment and Concepts","Corporate Governance","Economic Concepts and Analysis","Financial Management","Information Systems and Communications","Strategic Planning","Operations Management","Financial Accounting and Reporting","Conceptual Framework","Standard-Setting and Financial Reporting","Select Financial Statement Accounts","Select Transactions","State and Local Governments"]}
+ Starting fetchQuestionData for examName: Certified Public Accountant with topics: ["Financial Accounting and Reporting"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Public%20Accountant&topicValue=Financial%20Accounting%20and%20Reporting&numberValue=3
+ Raw Response: {
+   "examName": "Certified Public Accountant",
+   "topics": [
+     "Financial Accounting and Reporting"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following statements is true regarding IFRS and U.S. GAAP?",
+       "options": {
+         "A": "IFRS requires development costs to be expensed when incurred.",
+         "B": "U.S. GAAP allows for revaluation of plant, property, and equipment.",
+         "C": "IFRS does not allow for inventory to be written down.",
+         "D": "U.S. GAAP requires development costs to be capitalized if certain criteria are met."
+       },
+       "correctOption": "D",
+       "overview": "Under U.S. GAAP, development costs can be capitalized if certain criteria are met, allowing these costs to be amortized over their useful life. This contrasts with IFRS, which generally requires development costs to be expensed as incurred unless they meet specific criteria for capitalization."
+     },
+     {
+       "questionNumber": 2,
+       "question": "How is comprehensive income defined?",
+       "options": {
+         "A": "Net income plus other comprehensive income.",
+         "B": "Gross income minus operating expenses.",
+         "C": "Total revenue minus total expenses.",
+         "D": "Net income adjusted for changes in equity."
+       },
+       "correctOption": "A",
+       "overview": "Comprehensive income is defined as net income plus other comprehensive income. Other comprehensive income includes revenues, expenses, gains, and losses that are not included in net income and are instead listed in a separate section of a company's equity."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is not a characteristic of a liability?",
+       "options": {
+         "A": "It involves a transfer of assets or services at a future date.",
+         "B": "It is a present obligation.",
+         "C": "It results from past transactions or events.",
+         "D": "It must have a fixed and determinable amount."
+       },
+       "correctOption": "D",
+       "overview": "While many liabilities have a fixed and determinable amount, this is not a required characteristic for a financial obligation to be classified as a liability. Liabilities can also include estimated amounts, such as provisions for warranties or lawsuits."
+     }
+   ]
+ }
+ 
+ 
+ ////////Cisco Certified Network Associate Exam
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Network Fundamentals","Network Media Types","OSI and TCP/IP Models","IP Addressing (IPv4 / IPv6)","IP Routing Technologies","IP Services (DHCP","NAT","ACLs)","Network Device Security","Troubleshooting","LAN Switching Technologies","WAN Technologies","Infrastructure Services","Infrastructure Security","Infrastructure Management","Understanding Ethernet","Understanding Switches","VLANs and Trunking","Spanning Tree Protocol (STP)","EtherChannel","Layer 3 Switching","IP Addressing and Subnetting","Routing Protocol Concepts","Static Routing","Dynamic Routing","Inter-VLAN Routing","Access Control Lists (ACLs)","DHCP","Network Address Translation (NAT)","Network Device Management","Device Monitoring","Cisco Licensing","Understanding Binary","Hexadecimal","and Decimal","Understanding Data Networks","Building a Simple Network","Establishing Internet Connectivity","Managing Network Device Security","Building a Medium-Sized Network","Introducing IPv6","Building a Simple Network","Establishing Internet Connectivity","Building a Medium-Sized Network"]}
+ Starting fetchQuestionData for examName: Cisco Certified Network Associate Exam with topics: ["Layer 3 Switching"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Cisco%20Certified%20Network%20Associate%20Exam&topicValue=Layer%203%20Switching&numberValue=3
+ Raw Response: {
+   "examName": "Cisco Certified Network Associate Exam",
+   "topics": [
+     "Layer 3 Switching"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best describes Layer 3 switching?",
+       "options": {
+         "A": "The process of making switching decisions based on MAC addresses.",
+         "B": "The process of making switching decisions based on IP addresses.",
+         "C": "The process of forwarding packets based on their VLAN tags.",
+         "D": "The use of a routing protocol to determine the best path."
+       },
+       "correctOption": "B",
+       "overview": "Layer 3 switching refers to the process of making switching decisions based on IP addresses. Unlike Layer 2 switching, which uses MAC addresses to forward data to the correct destination within a LAN, Layer 3 switching involves routing packets to their destination across different networks, utilizing IP addresses for this purpose."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is a major benefit of using Layer 3 switches in a network?",
+       "options": {
+         "A": "They reduce the need for routers.",
+         "B": "They increase the network's broadcast domain.",
+         "C": "They solely rely on MAC addresses for data forwarding.",
+         "D": "They support higher data transmission rates than routers."
+       },
+       "correctOption": "A",
+       "overview": "A major benefit of using Layer 3 switches in a network is that they reduce the need for routers. Layer 3 switches can perform many of the same functions as routers, including routing packets between different subnets, which can simplify network design and reduce equipment costs."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which feature is most commonly associated with Layer 3 switches?",
+       "options": {
+         "A": "Quality of Service (QoS)",
+         "B": "Virtual LANs (VLANs)",
+         "C": "Routing Information Protocol (RIP)",
+         "D": "Static Routing"
+       },
+       "correctOption": "D",
+       "overview": "Static Routing is most commonly associated with Layer 3 switches. While Layer 3 switches support dynamic routing protocols, static routing is often used in simpler networks where routes do not change often. This allows for efficient routing of traffic without the overhead of dynamic routing protocols."
+     }
+   ]
+ }
+ 
+ 
  
  ////////Certified Public Accountant
  Response HTTP Status code: 200

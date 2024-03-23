@@ -100,58 +100,59 @@ import SwiftUI
 //    }
 //}
 //
-//struct MicButtonWithProgressRing: View {
-//    @State private var fillAmount: CGFloat = 0.0
-//    @State private var showProgressRing: Bool = false
-//    let action: () -> Void
-//
-//    let imageSize: CGFloat = 25 // Adjusted size
-//
-//    var body: some View {
-//        ZStack {
-//            // Background
-//            Circle()
-//                .fill(Color.themePurple)
-//                .frame(width: imageSize * 3, height: imageSize * 3)
-//
-//            // Conditional display of Progress Ring
-//            if showProgressRing {
-//                Circle()
-//                    .stroke(Color.white.opacity(0.3), lineWidth: 5)
-//                    .frame(width: imageSize * 3, height: imageSize * 3)
-//
-//                Circle()
-//                    .trim(from: 0, to: fillAmount)
-//                    .stroke(Color.red, lineWidth: 8)
-//                    .frame(width: imageSize * 3, height: imageSize * 3)
-//                    .rotationEffect(.degrees(-180))
-//                    .animation(.linear(duration: 5), value: fillAmount)
-//            }
-//
-//            // Mic Button
-//            Button(action: {
-//                self.action()
-//                self.startFilling()
-//            }) {
-//                Image(systemName: "mic.fill")
-//                    .font(.largeTitle)
-//                    .foregroundColor(.white)
-//            }
-//        }
-//    }
-//
-//    private func startFilling() {
-//        fillAmount = 0.0 // Reset the fill amount
-//        showProgressRing = true // Show the progress ring
-//        withAnimation(.linear(duration: 5)) {
-//            fillAmount = 1.0 // Fill the ring over 5 seconds
-//        }
-//        // Hide the progress ring after 5 seconds
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-//            self.showProgressRing = false
-//        }
-//    }
-//}
+struct MicButtonWithProgressRing: View {
+    @State private var fillAmount: CGFloat = 0.0
+    @State var showProgressRing: Bool
+
+    let imageSize: CGFloat = 25 // Adjusted size
+
+    var body: some View {
+        ZStack {
+            // Background
+            Circle()
+                .fill(Color.themePurple)
+                .frame(width: imageSize * 3, height: imageSize * 3)
+
+            // Conditional display of Progress Ring
+            if showProgressRing {
+                Circle()
+                    .stroke(Color.white.opacity(0.3), lineWidth: 5)
+                    .frame(width: imageSize * 3, height: imageSize * 3)
+
+                Circle()
+                    .trim(from: 0, to: fillAmount)
+                    .stroke(Color.red, lineWidth: 8)
+                    .frame(width: imageSize * 3, height: imageSize * 3)
+                    .rotationEffect(.degrees(-180))
+                    .animation(.linear(duration: 5), value: fillAmount)
+            }
+
+            // Mic Button
+            Button(action: {
+                self.startFilling()
+            }) {
+                Image(systemName: "mic.fill")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+            }
+            .onChange(of: showProgressRing) { _, _ in
+                startFilling()
+            }
+        }
+    }
+
+    private func startFilling() {
+        fillAmount = 0.0 // Reset the fill amount
+        showProgressRing = true // Show the progress ring
+        withAnimation(.linear(duration: 5)) {
+            fillAmount = 1.0 // Fill the ring over 5 seconds
+        }
+        // Hide the progress ring after 5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.showProgressRing = false
+        }
+    }
+}
 //
 //#Preview {
 //    FullScreenControlView(isNowPlaying: true, repeatAction: {}, stopAction: {}, micAction: {}, playAction: {}, nextAction: {}, endAction: {})

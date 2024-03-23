@@ -21,6 +21,8 @@ struct QuizView: View {
     @Binding var isNowPlaying: Bool
     @Binding var nextTapped: Bool
     @Binding var repeatTapped: Bool
+    @Binding var interactionState: InteractionState
+    @State var testInteractionState: InteractionState = .idle
     
     
     var body: some View {
@@ -91,16 +93,19 @@ struct QuizView: View {
             .onAppear {
                 generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "")
                 showContent()
-                print("Test QuizView has Registered \(String(describing: quizSetter.configuration?.questions.count)) Questions ready for viewing")
             }
             .onChange(of: currentQuestionIndex) { _, _ in
                 showContent()
-                print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
+                
             }
             .onChange(of: quizSetter.configuration) { _, _ in
                 showContent()
             }
         }
+        .sheet(isPresented: .constant(self.interactionState == .isListening), content: {
+            MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
+                .presentationDetents([.height(100)])
+        })
         .preferredColorScheme(.dark)
         .background(generator.dominantBackgroundColor)
     }
@@ -207,7 +212,7 @@ struct QuizView: View {
     @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
     let quizSetter = QuizPlayerView.QuizSetter()
     quizSetter.configuration = config
-    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), nextTapped: .constant(false), repeatTapped: .constant(false))
+    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), nextTapped: .constant(false), repeatTapped: .constant(false), interactionState: .constant(.idle))
 }
 
 
