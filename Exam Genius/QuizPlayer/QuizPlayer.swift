@@ -144,14 +144,13 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     }
     
     fileprivate func playAudio(audioFileName: String) {
-        audioPlayer?.stop()
         interactionState = .isNowPlaying
         
         let path = audioFileName
         guard let fileURL = URL(string: path) else { return }
         
-        let fileManager = FileManager.default
-        let url = URL(fileURLWithPath: audioFileName)
+//        let fileManager = FileManager.default
+//        let url = URL(fileURLWithPath: audioFileName)
         
         do {
             try AVAudioSession.sharedInstance().setActive(true) // Ensure the session is active

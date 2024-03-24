@@ -77,7 +77,6 @@ struct LandingPage: View {
                 }
                 .onReceive(quizPlayer.$isNowPlaying, perform: { isNowPlayng in
                     self.isPlaying = isNowPlayng
-                    print("Landing screen has registered isPlaying as: \(isPlaying)")
                 })
                 .task {
                     await loadDefaultCollection()

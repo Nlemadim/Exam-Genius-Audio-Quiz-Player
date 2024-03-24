@@ -831,6 +831,157 @@ enum InteractionState {
    ]
  }
  
+ 
+ ////////
+ Raw server response: {"topics":["Healthcare Industry Overview","Healthcare Finance Basics","Healthcare Revenue Cycle Management","Healthcare Insurance Basics","Healthcare Accounting","Healthcare Budgeting","Financial Analysis in Healthcare","Healthcare Financial Management","Healthcare Financial Reporting","Healthcare Economics","Healthcare Law and Regulations","Healthcare Strategic Planning","Healthcare Information Systems","Healthcare Risk Management","Healthcare Operations Management","Healthcare Investment Management","Healthcare Capital Financing","Healthcare Costing and Decision Making","Healthcare Auditing","Healthcare Compliance","Healthcare Quality and Performance Improvement","Healthcare Policy","Healthcare Data Analysis","Healthcare Financial Planning","Healthcare Organizational Behavior","Healthcare Marketing","Healthcare Ethics","Healthcare Human Resources Management","Patient Financial Services","Managed Care","Healthcare Taxation","Nonprofit Healthcare Organizations","For-profit Healthcare Organizations","Healthcare Mergers and Acquisitions","Healthcare Financial Forecasting","Healthcare Supply Chain Management","Healthcare Project Management","Healthcare Contract Management","Healthcare Reimbursement Models","Healthcare Fraud and Abuse","Healthcare Information Technology","Healthcare Innovation and Entrepreneurship","Healthcare Leadership and Governance","Healthcare Negotiation and Conflict Resolution","Healthcare Change Management"]}
+ Starting fetchQuestionData for examName: Certified Healthcare Financial Professional with topics: ["Healthcare Organizational Behavior"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Healthcare%20Financial%20Professional&topicValue=Healthcare%20Organizational%20Behavior&numberValue=3
+ Raw Response: {
+   "examName": "Certified Healthcare Financial Professional",
+   "topics": [
+     "Healthcare Organizational Behavior"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best describes the term 'organizational behavior' within a healthcare setting?",
+       "options": {
+         "A": "The administrative tasks involved in running a healthcare facility",
+         "B": "The study of how individuals and groups act within the organizations where they work",
+         "C": "The financial management practices of healthcare institutions",
+         "D": "The legal regulations governing healthcare facilities"
+       },
+       "correctOption": "B",
+       "overview": "Organizational behavior is the study of how individuals and groups act within the organizations where they work. In healthcare, understanding organizational behavior is crucial for improving patient care, enhancing teamwork, and developing effective leadership."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What role does leadership play in healthcare organizational behavior?",
+       "options": {
+         "A": "Leadership has no significant impact on organizational behavior.",
+         "B": "Leadership primarily focuses on financial management.",
+         "C": "Leadership influences organizational culture, employee satisfaction, and patient care.",
+         "D": "Leadership is only relevant in administrative tasks."
+       },
+       "correctOption": "C",
+       "overview": "In healthcare organizational behavior, leadership plays a crucial role in shaping organizational culture, enhancing employee satisfaction, and ultimately improving patient care. Effective leaders inspire, motivate, and guide individuals towards achieving the organization's goals."
+     },
+     {
+       "questionNumber": 3,
+       "question": "How does effective communication impact healthcare organizational behavior?",
+       "options": {
+         "A": "It has no significant impact.",
+         "B": "It leads to increased patient satisfaction and safety.",
+         "C": "It only affects the relationship between staff members.",
+         "D": "It is only important for legal documentation."
+       },
+       "correctOption": "B",
+       "overview": "Effective communication is vital in healthcare organizational behavior as it leads to increased patient satisfaction and safety. Clear communication among healthcare professionals ensures that patient care is coordinated, errors are minimized, and the healthcare team works efficiently towards common goals."
+     }
+   ]
+ }
+ 
+ /////////California Bar Exam
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Professional Responsibility and Ethics","Understanding the California Rules of Professional Conduct","Understanding the American Bar Association (ABA) Model Rules of Professional Conduct","Confidentiality of Information","Conflict of Interest","Competence","Legal Malpractice","Communication with Clients","Fees and Fee Agreements","Roles of the Lawyer","Unauthorized Practice of Law","Advertising and Solicitation","Civil Procedure","Understanding Jurisdiction and Venue","Understanding Pleadings and Motions","Understanding Pre-Trial Procedures","Understanding Trial Procedures","Understanding Post-Trial Procedures","Understanding Evidence","Understanding Discovery","Understanding Appeals","Criminal Law and Procedure","Understanding Crimes Against Persons","Understanding Crimes Against Property","Understanding Inchoate Crimes","Understanding Constitutional Protections for Defendants","Understanding Criminal Procedure Before Trial","Understanding Criminal Trial Procedure","Understanding Sentencing and Appeals","Contracts","Understanding Contract Formation","Understanding Contract Performance","Understanding Contract Breach","Understanding Contract Remedies","Torts","Understanding Intentional Torts","Understanding Negligence","Understanding Strict Liability","Understanding Defamation","Understanding Privacy"]}
+ Starting fetchQuestionData for examName: California Bar Exam with topics: ["Understanding Crimes Against Property"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=California%20Bar%20Exam&topicValue=Understanding%20Crimes%20Against%20Property&numberValue=3
+ Raw Response: {
+   "examName": "California Bar Exam",
+   "topics": [
+     "Understanding Crimes Against Property"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is considered a crime against property?",
+       "options": {
+         "A": "Assault",
+         "B": "Burglary",
+         "C": "Kidnapping",
+         "D": "Murder"
+       },
+       "correctOption": "B",
+       "overview": "Crimes against property involve the theft or destruction of someone else's property. Among the options, burglary is a crime against property because it involves entering a building illegally with the intent to commit a crime, typically theft."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is required to prove the crime of arson?",
+       "options": {
+         "A": "The defendant's intention to harm a person",
+         "B": "The defendant's accidental burning of their property",
+         "C": "The deliberate setting of a fire to property",
+         "D": "Proof of theft prior to the fire"
+       },
+       "correctOption": "C",
+       "overview": "Arson requires the intentional setting of a fire to property. It is a crime against property that involves deliberately setting fire to buildings, wildland areas, or other property with the intent to cause damage."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following best defines larceny?",
+       "options": {
+         "A": "Unlawful taking of someone's personal property with the intent to keep it permanently",
+         "B": "Entering a building illegally with intent to commit a crime",
+         "C": "Taking a vehicle without the owner's consent",
+         "D": "Damaging someone's property intentionally"
+       },
+       "correctOption": "A",
+       "overview": "Larceny is defined as the unlawful taking and carrying away of someone else's personal property with the intent to deprive the rightful owner of it permanently. It is a specific type of theft and does not involve force or breaking into someone's property, distinguishing it from burglary and robbery."
+     }
+   ]
+ }
+ 
+ //////Medical College Admission Test
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Biology: Molecular Biology","Biology: Microbiology","Biology: Embryology","Biology: Evolution","Biology: Genetics","Biology: Biological Systems","Biology: Cell Structure and Function","Chemistry: General Chemistry","Chemistry: Organic Chemistry","Chemistry: Acid-Base Chemistry","Chemistry: Thermodynamics","Chemistry: Kinetics","Chemistry: Spectroscopy","Chemistry: Separation","Chemistry: Structure and Stereochemistry of Organic Compounds","Physics: Mechanics","Physics: Thermodynamics","Physics: Circuits","Physics: Optics and Light","Physics: Atomic and Nuclear Phenomena","Physics: Fluids and Gases","Biochemistry: Amino Acids and Proteins","Biochemistry: Metabolism","Biochemistry: Enzymes","Biochemistry: Molecular Genetics","Biochemistry: Lipid Metabolism","Biochemistry: Carbohydrate Metabolism","Psychology: Sensation and Perception","Psychology: Learning and Memory","Psychology: Life Span Development","Psychology: Social Psychology","Psychology:"]}
+ Starting fetchQuestionData for examName: Medical Colledge Admission Test with topics: ["Biochemistry: Amino Acids and Proteins"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Medical%20Colledge%20Admission%20Test&topicValue=Biochemistry:%20Amino%20Acids%20and%20Proteins&numberValue=3
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "Biochemistry",
+     "Amino Acids and Proteins"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following amino acids is essential in the human diet?",
+       "options": {
+         "A": "Alanine",
+         "B": "Valine",
+         "C": "Glutamine",
+         "D": "Asparagine"
+       },
+       "correctOption": "B",
+       "overview": "Essential amino acids cannot be synthesized de novo by the organism (in this case, humans), and therefore must be supplied in the diet. Valine is one of the nine essential amino acids, making it a critical component of the human diet for protein synthesis and various metabolic functions."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which level of protein structure is determined by hydrogen bonding between the backbone components of the polypeptide chain?",
+       "options": {
+         "A": "Primary structure",
+         "B": "Secondary structure",
+         "C": "Tertiary structure",
+         "D": "Quaternary structure"
+       },
+       "correctOption": "B",
+       "overview": "The secondary structure of proteins is formed by hydrogen bonds between the backbone atoms in the polypeptide chain. This level of structure includes alpha-helices and beta-sheets, which are stabilized by hydrogen bonding patterns that do not involve the side chains of the amino acids."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following best describes the quaternary structure of a protein?",
+       "options": {
+         "A": "The sequence of amino acids in a protein",
+         "B": "The alpha-helices and beta-sheets that are formed by hydrogen bonding",
+         "C": "The overall 3D structure of a single polypeptide chain",
+         "D": "The assembly of multiple polypeptide subunits into a functional protein complex"
+       },
+       "correctOption": "D",
+       "overview": "The quaternary structure of a protein refers to the assembly of multiple polypeptide chains (subunits) into a larger functional complex. This level of structure is critical for the function of many proteins, including enzymes and structural proteins, allowing for intricate interactions and regulatory mechanisms."
+     }
+   ]
+ }
+ 
  ///////Certified Public Accountant
  Raw server response: {"topics":["Auditing and Attestation","Understanding Auditing Process","Internal Controls and Risk Assessment","Performing Further Procedures and Obtaining Evidence","Forming Conclusions and Reporting","Business Environment and Concepts","Corporate Governance","Economic Concepts and Analysis","Financial Management","Information Technology","Operations Management","Financial Accounting and Reporting","Conceptual Framework","Standard-Setting and Financial Reporting","Select Financial Statement Accounts","Select Transactions","State and Local Governments","Regulation","Ethics","Professional and Legal Responsibilities","Federal Tax Process","Procedures and Law","Business Law","Federal Taxation of Property Transactions","Federal Taxation of Individuals","Federal Taxation of Entities"]}
  Raw Response: {

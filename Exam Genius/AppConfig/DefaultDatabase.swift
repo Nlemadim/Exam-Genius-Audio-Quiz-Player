@@ -101,7 +101,17 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Certified Fraud Examiner", acronym: "CFE", category: .finance, about: "The CFE Exam tests knowledge in financial fraud, law, investigations, and fraud prevention and deterrence, administered by ACFE.", image: "CFE-Exam-Basic"),
             
-            ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: .healthcare, about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam")
+            ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: .healthcare, about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam"),
+            
+            ExamDetails(name: "Medical Colledge Admission Test", acronym: "MCAT", category: .healthcare, about: "A computer-based standardized examination for prospective medical students, including both Allopathic M.D. and Osteopathic D.O., in the United States, Australia, Canada, and the Caribbean Island", image: "MCAT-Exam-Pro"),
+            
+            ExamDetails(name: "Barista Certification", acronym: "", category: .professional, about: "", image: "BARISTERCert-Exam"),
+            
+            ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: .legal, about: "A standardized test administered by the Law School Admission Council (LSAC) for prospective law school candidates", image: "LSAT-Exam-Basic"),
+            
+            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: .legal, about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering")
+            
+            
 
             //MARK FOR IMAGE GEN
 //            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: .healthcare, about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
