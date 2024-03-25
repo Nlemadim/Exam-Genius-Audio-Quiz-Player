@@ -1,0 +1,47 @@
+
+
+{
+  "examName": "Certified Fraud Examiner",
+  "topics": [
+    "Testifying as an Expert Witness in Fraud Cases"
+  ],
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "Which of the following is NOT a key quality of an effective expert witness in fraud cases?",
+      "options": {
+        "A": "Ability to simplify complex information",
+        "B": "Having a bias towards the hiring party",
+        "C": "Strong communication skills",
+        "D": "Credibility and professionalism"
+      },
+      "correctOption": "B",
+      "overview": "An effective expert witness in fraud cases must be able to simplify complex information, have strong communication skills, and maintain credibility and professionalism. Having a bias towards the hiring party undermines the expert's credibility and is not a key quality."
+    },
+    {
+      "questionNumber": 2,
+      "question": "What is the primary purpose of an expert witness's testimony in a fraud case?",
+      "options": {
+        "A": "To prove the guilt of the defendant",
+        "B": "To provide specialized knowledge to help the trier of fact understand the evidence or determine a fact in issue",
+        "C": "To replace the jury in decision making",
+        "D": "To advocate for the hiring party"
+      },
+      "correctOption": "B",
+      "overview": "The primary purpose of an expert witness's testimony in a fraud case is to provide specialized knowledge to help the trier of fact (judge or jury) understand the evidence or determine a fact in issue, not to advocate for any party or replace the jury in decision making."
+    },
+    {
+      "questionNumber": 3,
+      "question": "Which of the following best describes the 'Daubert Standard'?",
+      "options": {
+        "A": "A rule that allows expert witnesses to testify without being cross-examined",
+        "B": "A guideline for determining the admissibility of expert witness testimony",
+        "C": "A legal principle that prohibits the use of expert witnesses in fraud cases",
+        "D": "A standard for evaluating the financial damages in a fraud case"
+      },
+      "correctOption": "B",
+      "overview": "The 'Daubert Standard' is a guideline set by the Supreme Court for determining the admissibility of expert witness testimony. It requires that the testimony is based on sufficient facts or data, is the product of reliable principles and methods, and the expert has applied the principles and methods reliably to the facts of the case."
+    }
+  ]
+}
+

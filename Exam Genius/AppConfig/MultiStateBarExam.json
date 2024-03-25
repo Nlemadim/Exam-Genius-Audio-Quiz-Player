@@ -1,0 +1,83 @@
+
+
+{
+  "examName": "California Bar Exam",
+  "topics": [
+    "Understanding Crimes Against Property", "Constitutional Law"
+  ],
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "Which of the following is considered a crime against property?",
+      "options": {
+        "A": "Assault",
+        "B": "Burglary",
+        "C": "Kidnapping",
+        "D": "Murder"
+      },
+      "correctOption": "B",
+      "overview": "Crimes against property involve the theft or destruction of someone else's property. Among the options, burglary is a crime against property because it involves entering a building illegally with the intent to commit a crime, typically theft."
+    },
+    {
+      "questionNumber": 2,
+      "question": "What is required to prove the crime of arson?",
+      "options": {
+        "A": "The defendant's intention to harm a person",
+        "B": "The defendant's accidental burning of their property",
+        "C": "The deliberate setting of a fire to property",
+        "D": "Proof of theft prior to the fire"
+      },
+      "correctOption": "C",
+      "overview": "Arson requires the intentional setting of a fire to property. It is a crime against property that involves deliberately setting fire to buildings, wildland areas, or other property with the intent to cause damage."
+    },
+    {
+      "questionNumber": 3,
+      "question": "Which of the following best defines larceny?",
+      "options": {
+        "A": "Unlawful taking of someone's personal property with the intent to keep it permanently",
+        "B": "Entering a building illegally with intent to commit a crime",
+        "C": "Taking a vehicle without the owner's consent",
+        "D": "Damaging someone's property intentionally"
+      },
+      "correctOption": "A",
+      "overview": "Larceny is defined as the unlawful taking and carrying away of someone else's personal property with the intent to deprive the rightful owner of it permanently. It is a specific type of theft and does not involve force or breaking into someone's property, distinguishing it from burglary and robbery."
+    },
+    {
+      "questionNumber": 4,
+      "question": "Which principle asserts that the law should govern a nation, as opposed to being governed by decisions of individual government officials?",
+      "options": {
+        "A": "Rule of Law",
+        "B": "Separation of Powers",
+        "C": "Judicial Review",
+        "D": "Parliamentary Sovereignty"
+      },
+      "correctOption": "A",
+      "overview": "The Rule of Law is a fundamental principle in constitutional law that asserts the importance of law governing a nation rather than arbitrary decisions by individual government officials. It ensures that all individuals and authorities within the state, public and private, are bound by and entitled to the benefit of laws."
+    },
+    {
+      "questionNumber": 5,
+      "question": "Which of the following best describes the concept of Parliamentary Sovereignty?",
+      "options": {
+        "A": "The judiciary's ability to interpret the law",
+        "B": "The division of powers among branches of government",
+        "C": "The legislature's authority to make or unmake any law",
+        "D": "The executive's power to enforce laws"
+      },
+      "correctOption": "C",
+      "overview": "Parliamentary Sovereignty is a key principle in the UK's constitutional law, which means that Parliament has the supreme legal authority and can create or end any law. Generally, the courts cannot overrule its legislation and no Parliament can pass laws that future Parliaments cannot change."
+    },
+    {
+      "questionNumber": 6,
+      "question": "What does the Separation of Powers principle entail?",
+      "options": {
+        "A": "The independence of the judiciary from the other branches of government",
+        "B": "The division of government responsibilities into distinct branches to limit any one branch from exercising the core functions of another",
+        "C": "The ability of the judiciary to declare legislative acts unconstitutional",
+        "D": "The concentration of power within the legislative branch"
+      },
+      "correctOption": "B",
+      "overview": "The Separation of Powers is a doctrine of constitutional law under which the three branches of government (executive, legislative, and judicial) are kept separate. This is to prevent abuse of power and to provide for checks and balances within the government. Each branch has its own responsibilities, and its powers are distinct from those of the other branches."
+    }
+  ]
+}
+

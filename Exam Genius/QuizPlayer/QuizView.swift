@@ -24,7 +24,6 @@ struct QuizView: View {
     @Binding var interactionState: InteractionState
     @State var testInteractionState: InteractionState = .idle
     
-    
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 10) {
@@ -102,7 +101,7 @@ struct QuizView: View {
                 showContent()
             }
         }
-        .sheet(isPresented: $presentMicModal, content: {
+        .sheet(isPresented: .constant(interactionState == .isListening), content: {
             MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                 .presentationDetents([.height(100)])
         })

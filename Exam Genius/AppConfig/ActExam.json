@@ -1,0 +1,119 @@
+
+
+{
+  "examName": "ACT Exam",
+  "topics": [
+    "Reading Comprehension", "Rhetorical Skills", "Verbs"
+  ],
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "What is the primary purpose of the passage?",
+      "options": {
+        "A": "To persuade readers to adopt a new perspective",
+        "B": "To inform readers about a historical event",
+        "C": "To entertain readers with a fictional story",
+        "D": "To describe a scientific process"
+      },
+      "correctOption": "B",
+      "overview": "The primary purpose of most passages in the Reading Comprehension section of the ACT Exam is to inform. This question tests the student's ability to understand the main idea or purpose of a given passage. In this case, the correct answer is 'To inform readers about a historical event,' which implies that the passage provides factual information about an event that occurred in the past."
+    },
+    {
+      "questionNumber": 2,
+      "question": "According to the passage, what effect did the event have on the population?",
+      "options": {
+        "A": "It caused a significant decrease in the population",
+        "B": "It led to a widespread migration",
+        "C": "It had no noticeable effect on the population",
+        "D": "It resulted in an increase in population diversity"
+      },
+      "correctOption": "A",
+      "overview": "This question requires the student to identify specific effects mentioned in the passage. The correct answer, 'It caused a significant decrease in the population,' suggests that the event had a negative impact, reducing the number of people in the affected area. This type of question assesses the student's ability to draw conclusions based on the information provided in the passage."
+    },
+    {
+      "questionNumber": 3,
+      "question": "What can be inferred about the author's perspective on the event?",
+      "options": {
+        "A": "The author views the event as a tragedy",
+        "B": "The author believes the event was beneficial",
+        "C": "The author is indifferent to the event",
+        "D": "The author thinks the event has been misunderstood"
+      },
+      "correctOption": "A",
+      "overview": "Inference questions like this one ask the student to go beyond the explicit information provided and make educated guesses about the author's views or the implications of the event. The correct answer, 'The author views the event as a tragedy,' indicates that the passage likely conveys a sense of loss or sadness regarding the event, showcasing the student's ability to interpret tone and perspective."
+    },
+    {
+      "questionNumber": 4,
+      "question": "Which of the following sentences best introduces a paragraph that aims to emphasize the importance of renewable energy sources?",
+      "options": {
+        "A": "Many countries continue to rely heavily on fossil fuels, despite the known environmental impacts.",
+        "B": "Renewable energy sources have been in use for decades, with varying degrees of success.",
+        "C": "In recent years, the cost of solar panels has decreased significantly, making it a more viable option for many homeowners.",
+        "D": "The quest for renewable energy sources has become more urgent as the effects of climate change become more apparent."
+      },
+      "correctOption": "D",
+      "overview": "Option D is the best introduction for a paragraph emphasizing the importance of renewable energy sources because it directly addresses the urgency and relevance of the topic in the context of climate change. It sets a tone that underscores the critical nature of the discussion, making it the most suitable choice among the provided options."
+    },
+    {
+      "questionNumber": 5,
+      "question": "Which transition best connects two ideas where the second idea contrasts with the first?",
+      "options": {
+        "A": "Furthermore,",
+        "B": "Similarly,",
+        "C": "However,",
+        "D": "In addition,"
+      },
+      "correctOption": "C",
+      "overview": "The word 'However,' is used to introduce a statement that contrasts with or seems to contradict something that has been said previously. In the context of connecting two ideas where the second contrasts with the first, 'However,' is the correct transition, indicating a shift in direction or point of view."
+    },
+    {
+      "questionNumber": 6,
+      "question": "In the context of writing for a specific audience, why is it important to use language and examples that the audience will understand?",
+      "options": {
+        "A": "To ensure the audience feels valued and respected.",
+        "B": "To make the text more complex and challenging.",
+        "C": "To match the audience's level of understanding and interests, making the information more accessible and engaging.",
+        "D": "To use as many technical terms as possible to impress the audience."
+      },
+      "correctOption": "C",
+      "overview": "Using language and examples that the audience will understand is crucial because it matches the audience's level of understanding and interests. This approach makes the information more accessible and engaging, ensuring that the audience can easily comprehend and relate to the content being presented."
+    },
+    {
+      "questionNumber": 7,
+      "question": "Which of the following sentences uses a verb correctly?",
+      "options": {
+        "A": "He go to the store every Sunday.",
+        "B": "She gos to the gym in the mornings.",
+        "C": "They goes to the library for study sessions.",
+        "D": "We go to the beach during summer."
+      },
+      "correctOption": "D",
+      "overview": "The correct use of the verb 'go' in this context is 'We go to the beach during summer.' This sentence correctly matches the subject 'We' with the plural form of the verb 'go', which does not require an 'es' or 's' ending like in the other options, making it grammatically correct."
+    },
+    {
+      "questionNumber": 8,
+      "question": "Identify the sentence with the correct verb tense.",
+      "options": {
+        "A": "She will goes to the dentist next week.",
+        "B": "He study for his exams every night.",
+        "C": "They have been studying for the test since last month.",
+        "D": "We was at the concert last night."
+      },
+      "correctOption": "C",
+      "overview": "Option C, 'They have been studying for the test since last month,' correctly uses the present perfect continuous tense, indicating an action that started in the past and is continuing into the present. The other options misuse verb tenses: 'goes' should be 'go' in future tense (A), 'study' should be 'studies' for third person singular present tense (B), and 'was' should be 'were' for the subject 'We' in past tense (D)."
+    },
+    {
+      "questionNumber": 9,
+      "question": "Which sentence correctly uses an irregular verb?",
+      "options": {
+        "A": "She teached me how to play the piano.",
+        "B": "He has ran five miles every morning.",
+        "C": "They have eaten all the cookies.",
+        "D": "I goed to the market yesterday."
+      },
+      "correctOption": "C",
+      "overview": "Option C, 'They have eaten all the cookies,' correctly uses the past participle form 'eaten' of the irregular verb 'eat.' The other options incorrectly use the past tense or past participle forms of irregular verbs: 'teached' should be 'taught' (A), 'ran' should be 'run' when used with 'has' (B), and 'goed' should be 'went' (D)."
+    }
+  ]
+}
+
