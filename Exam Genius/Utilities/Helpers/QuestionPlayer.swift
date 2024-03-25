@@ -38,12 +38,35 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         }
     }
     
-    func playAudioQuestion(audioFile: String) {
+    func playAudioQuestions(audioFile: String) {
         interactionState = .isNowPlaying
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
             self.audioFiles.append(audioFile)
             self.currentIndex = 0
             self.playAudioFileAtIndex(self.currentIndex)
+        }
+    }
+    
+    func playSingleAudioQuestion(audioFile: String) {
+        interactionState = .isNowPlaying
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {  // Adding a slight delay
+            self.playQuestionAudioFile(audioFile)
+        }
+    }
+    
+    private func playQuestionAudioFile(_ audioFile: String) {
+        let path = audioFile
+        
+        guard let fileURL = URL(string: path) else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay() // Prepare the player
+            audioPlayer?.play()
+        } catch {
+            print("Could not load file: \(error)")
         }
     }
     
@@ -66,18 +89,6 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         }
     }
     
-//    func playQuestion(audioFileName: String) {
-//        self.isFinishedPlaying = false
-//        if interactionState == .isNowPlaying {
-//            audioPlayer?.stop()
-//            print("Stopped current playback")
-//            playAudio(audioFileName: audioFileName)
-//            isNowPlaying = true
-//        } else {
-//            playAudio(audioFileName: audioFileName)
-//        }
-//    }
-    
     func readQuestionContent(questionContent: String) {
         let utterance = AVSpeechUtterance(string: questionContent)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // You can change the language here
@@ -86,26 +97,6 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         interactionState = .isNowPlaying
         speechSynthesizer.speak(utterance)
     }
-    
-//    fileprivate func playAudio(audioFileName: String) {
-//        let path = audioFileName
-//        guard let fileURL = URL(string: path) else { return }
-//        
-//        do {
-//            try AVAudioSession.sharedInstance().setActive(true) 
-//            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
-//            audioPlayer?.delegate = self
-//            audioPlayer?.prepareToPlay() // Prepare the player
-//            interactionState = .isNowPlaying
-//            audioPlayer?.play()
-//            print("Player is now playing")
-//            
-//        } catch {
-//            print("Could not load file: \(error)")
-//            ///Use Siri in case of error
-//            //readQuestionContent(questionContent: audioFileName)
-//        }
-//    }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         

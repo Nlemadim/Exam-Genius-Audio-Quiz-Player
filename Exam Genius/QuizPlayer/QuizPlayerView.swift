@@ -103,13 +103,6 @@ struct QuizPlayerView: View {
             .onAppear {
                 if let audioQuiz = selectedQuizPackage {
                     quizSetter.loadQuizConfiguration(quizPackage: audioQuiz)
-                    
-                    quizSetter.setActions(
-                        playPauseQuiz: { self.playAudioQuiz() },
-                        nextQuestion: { self.goToNextQuestion() },
-                        repeatQuestion: { self.goToPreviousQuestion() },
-                        endQuiz: { /* Handle end quiz */ }
-                    )
                 }
             }
             .onChange(of: selectedQuizPackage) { _, newValue in
@@ -118,6 +111,7 @@ struct QuizPlayerView: View {
                 }
             }
             .onChange(of: currentQuestionIndex) { _, newValue in
+                self.currentQuestionIndex = newValue
                 goToNextQuestion()
             }
             .onChange(of: questionPlayer.isFinishedPlaying, initial: false, { _, newValue in
@@ -129,12 +123,12 @@ struct QuizPlayerView: View {
                 self.interactionState = interactionState
 
             })
-//            .onReceive(responseListener.$selectedOption) { selectedOption in
-//                if let selectedQuizPackage = user.selectedQuizPackage {
-//                    self.currentQuestions[self.currentQuestionIndex].selectedOption = selectedOption
-//                    analyseResponse()
-//                }     
-//            }
+            .onReceive(responseListener.$selectedOption) { selectedOption in
+                if user.selectedQuizPackage != nil {
+                    self.currentQuestions[self.currentQuestionIndex].selectedOption = selectedOption
+                    analyseResponse()
+                }     
+            }
             .background(
                 generator.dominantBackgroundColor.opacity(0.5)
             )
@@ -147,18 +141,9 @@ struct QuizPlayerView: View {
             print("Current Question Index on QuizPlayerView is \(currentQuestionIndex)")
             print("Current Question Index on QuizPlayerView is \(currentQuestions.count)")
             print("\(self.currentQuestions[self.currentQuestionIndex].questionAudio)")
-            questionPlayer.playAudioQuestion(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
-            //playAudioQuestion(audioFileName: self.currentQuestions[self.currentQuestionIndex].questionAudio)
-//            if let pack = user.selectedQuizPackage {
-//                print("User question id at current question index is: \(pack.questions[self.currentQuestionIndex].questionAudio)")
-//                let currentQuestion = pack.questions[self.currentQuestionIndex].questionAudio
-//                print(currentQuestion)
-//                questionPlayer.playQuestion(audioFileName: currentQuestion)
-//                 
-//                //playAudioFileAtIndex(self.currentQuestionIndex)
-//            }
-//            
-//            //playAudioQuestion()
+            questionPlayer.playAudioQuestions(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
+//            questionPlayer.playAudioQuestions(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
+
         })
         .onAppear {
             generator.updateDominantColor(fromImageNamed: backgroundImage)
@@ -281,34 +266,15 @@ extension QuizPlayerView {
         return total
     }
     
-    func playAudioQuiz() {
-        if let package = user.selectedQuizPackage {
-            let list = package.questions
-            let playList = list.compactMap{$0.questionAudio}
-           // quizPlayer.playSampleQuiz(audioFileNames: playList)
-        }
-    }
-    
-//    func playAudioQuestion(qustionNumber: Int) {
-//        guard qustionNumber < self.currentQuestions.count else { return }
-//        let index = qustionNumber
-//        playAudioFileAtIndex(index)
-//    }
-//    
-//    private func playAudioFileAtIndex(_ index: Int) {
-//        //questionPlayer.playQuestion(audioFileName: audioFile)
+//    func playAudioQuiz() {
 //        if let package = user.selectedQuizPackage {
-//            let collection = package.questions
-//            if index < collection.count {
-//                return
-//            } else {
-//                let currentQuestion = collection[index]
-//                let audioFile = currentQuestion.questionAudio
-//                quizPlayer.playNow(audioFileName: audioFile)
-//                //quizPlayer.playAudioQuestion(audioFile: audioFile)
-//            }
+////            let list = package.questions
+////            let playList = list.compactMap{$0.questionAudio}
+//           // quizPlayer.playSampleQuiz(audioFileNames: playList)
 //        }
 //    }
+    
+
     
     func analyseResponse() {
         if !isPlaying, !self.selectedOption.isEmptyOrWhiteSpace {
@@ -324,11 +290,9 @@ extension QuizPlayerView {
     
     private func goToNextQuestion() {
         if let questionCount = configuration?.questions.count, currentQuestionIndex < questionCount - 1 {
-            self.currentQuestionIndex += 1
-            //questionPlayer.playQuestion(audioFileName: self.currentQuestions[self.currentQuestionIndex].questionAudio)
-            print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
+            questionPlayer.playSingleAudioQuestion(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
+            print("Current Question Index on QuizPlayer is \(self.currentQuestions[self.currentQuestionIndex].questionAudio)")
         }
-        
     }
     
     private func goToPreviousQuestion() {

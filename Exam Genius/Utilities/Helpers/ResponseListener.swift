@@ -42,7 +42,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
             
             // Optionally, retrieve and process the transcript after stopping
             self.getTranscript { newTranscript in
-                self.selectedOption = self.processTranscript(transcript: newTranscript)
+                
                 print("Processing completed")
                 print("Listener published user's response as: \(self.selectedOption)")
             }
@@ -53,6 +53,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     fileprivate func getTranscript(completion: @escaping (String) -> Void) {
         cancellable = speechRecognizer.$transcript
             .sink { newTranscript in
+                self.selectedOption = self.processTranscript(transcript: newTranscript)
                 completion(newTranscript)
                 print("Listener registered new response transcript:\(newTranscript)")
             }

@@ -1,0 +1,154 @@
+
+
+{
+  "examName": "Certified Public Accountant",
+  "topics": [
+    "Financial Accounting and Reporting", "Internal Controls"
+  ],
+  "questions": [
+    {
+      "questionNumber": 1,
+      "question": "Which of the following statements is true regarding IFRS and U.S. GAAP?",
+      "options": {
+        "A": "IFRS requires development costs to be expensed when incurred.",
+        "B": "U.S. GAAP allows for revaluation of plant, property, and equipment.",
+        "C": "IFRS does not allow for inventory to be written down.",
+        "D": "U.S. GAAP requires development costs to be capitalized if certain criteria are met."
+      },
+      "correctOption": "D",
+      "overview": "Under U.S. GAAP, development costs can be capitalized if certain criteria are met, allowing these costs to be amortized over their useful life. This contrasts with IFRS, which generally requires development costs to be expensed as incurred unless they meet specific criteria for capitalization."
+    },
+    {
+      "questionNumber": 2,
+      "question": "How is comprehensive income defined?",
+      "options": {
+        "A": "Net income plus other comprehensive income.",
+        "B": "Gross income minus operating expenses.",
+        "C": "Total revenue minus total expenses.",
+        "D": "Net income adjusted for changes in equity."
+      },
+      "correctOption": "A",
+      "overview": "Comprehensive income is defined as net income plus other comprehensive income. Other comprehensive income includes revenues, expenses, gains, and losses that are not included in net income and are instead listed in a separate section of a company's equity."
+    },
+    {
+      "questionNumber": 3,
+      "question": "Which of the following is not a characteristic of a liability?",
+      "options": {
+        "A": "It involves a transfer of assets or services at a future date.",
+        "B": "It is a present obligation.",
+        "C": "It results from past transactions or events.",
+        "D": "It must have a fixed and determinable amount."
+      },
+      "correctOption": "D",
+      "overview": "While many liabilities have a fixed and determinable amount, this is not a required characteristic for a financial obligation to be classified as a liability. Liabilities can also include estimated amounts, such as provisions for warranties or lawsuits."
+    },
+    {
+      "questionNumber": 4,
+      "question": "Which of the following is NOT a component of internal control according to the COSO framework?",
+      "options": {
+        "A": "Risk Assessment",
+        "B": "Information and Communication",
+        "C": "Monitoring Activities",
+        "D": "Cost-Benefit Analysis"
+      },
+      "correctOption": "D",
+      "overview": "The COSO framework identifies five components of internal control: control environment, risk assessment, control activities, information and communication, and monitoring activities. Cost-Benefit Analysis is not listed as a component of internal control by COSO."
+    },
+    {
+      "questionNumber": 5,
+      "question": "What is the primary purpose of segregation of duties in internal control systems?",
+      "options": {
+        "A": "To ensure that no single individual has control over all phases of a transaction",
+        "B": "To increase efficiency within the organization",
+        "C": "To comply with tax regulations",
+        "D": "To facilitate employee training"
+      },
+      "correctOption": "A",
+      "overview": "The primary purpose of segregation of duties within internal control systems is to prevent fraud and errors. This is achieved by ensuring that no single individual has control over all phases of a transaction, thereby reducing the risk of unauthorized actions."
+    },
+    {
+      "questionNumber": 6,
+      "question": "Which of the following best describes the 'control environment'?",
+      "options": {
+        "A": "It involves the procedures that ensure that management's directives are carried out.",
+        "B": "It is the set of standards, processes, and structures that provide the basis for carrying out internal control across the organization.",
+        "C": "It includes the necessary actions to detect, prevent, and correct fraud and errors.",
+        "D": "It refers to the mechanism for tracking the performance of the organization against its goals."
+      },
+      "correctOption": "B",
+      "overview": "The 'control environment' is the foundation of the COSO framework's five components of internal control. It sets the tone of an organization, influencing the control consciousness of its people. It is the basis for all other components of internal control, providing discipline and structure."
+    },
+    {
+      "questionNumber": 7,
+      "question": "Which of the following is considered an asset?",
+      "options": {
+        "A": "Accounts Payable",
+        "B": "Cash",
+        "C": "Dividends",
+        "D": "Sales Revenue"
+      },
+      "correctOption": "B",
+      "overview": "Assets are resources owned by a business that have economic value. Cash is an asset because it represents a resource that can be used to facilitate business operations and transactions. Accounts Payable is a liability, Dividends are distributions to shareholders, and Sales Revenue is an income statement account, not an asset."
+    },
+    {
+      "questionNumber": 8,
+      "question": "Which of the following accounts would appear on the income statement?",
+      "options": {
+        "A": "Inventory",
+        "B": "Accounts Receivable",
+        "C": "Sales Revenue",
+        "D": "Buildings"
+      },
+      "correctOption": "C",
+      "overview": "The income statement reports a company's financial performance over a specific accounting period. Sales Revenue is an income statement account that reflects the income earned from selling goods or services. Inventory and Buildings are considered assets, while Accounts Receivable is also an asset representing money owed to the company."
+    },
+    {
+      "questionNumber": 9,
+      "question": "Which of the following is a liability?",
+      "options": {
+        "A": "Cash",
+        "B": "Accounts Payable",
+        "C": "Prepaid Insurance",
+        "D": "Common Stock"
+      },
+      "correctOption": "B",
+      "overview": "Liabilities are obligations of a company that arise during the course of its operations. Accounts Payable is a liability account that represents amounts the company owes to suppliers or vendors. Cash and Prepaid Insurance are assets, and Common Stock represents equity, not a liability."
+    },
+    {
+      "questionNumber": 10,
+      "question": "Which of the following best describes the primary objective of financial statement auditing?",
+      "options": {
+        "A": "Detection and prevention of fraud",
+        "B": "Assurance on the accuracy of financial statements",
+        "C": "Compliance with tax laws",
+        "D": "Evaluation of financial statement presentation"
+      },
+      "correctOption": "B",
+      "overview": "The primary objective of financial statement auditing is to provide assurance that the financial statements are free from material misstatement, whether caused by error or fraud. This helps users of the financial statements, such as investors and creditors, make informed decisions."
+    },
+    {
+      "questionNumber": 11,
+      "question": "Which of the following represents a type of audit evidence?",
+      "options": {
+        "A": "Physical examination",
+        "B": "Management's opinion",
+        "C": "Future financial projections",
+        "D": "Advertising brochures"
+      },
+      "correctOption": "A",
+      "overview": "Audit evidence is all the information used by the auditor in arriving at the conclusions on which the audit opinion is based. Physical examination, also known as inspection, is a type of audit evidence where the auditor physically examines assets, documents, or records."
+    },
+    {
+      "questionNumber": 12,
+      "question": "What is the purpose of an auditor's report?",
+      "options": {
+        "A": "To provide an opinion on the effectiveness of internal control",
+        "B": "To describe the scope of the audit",
+        "C": "To express an opinion on the financial statements",
+        "D": "To highlight areas for financial improvement"
+      },
+      "correctOption": "C",
+      "overview": "The purpose of an auditor's report is to express an opinion on whether the financial statements are prepared, in all material respects, in accordance with an applicable financial reporting framework. This opinion helps users of the financial statements understand whether they can rely on the financial statements for making decisions."
+    }
+  ]
+}
