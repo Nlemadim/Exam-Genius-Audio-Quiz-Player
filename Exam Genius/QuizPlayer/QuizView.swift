@@ -52,7 +52,6 @@ struct QuizView: View {
                     
                 }
                 .padding(.horizontal)
-
                 
                 VStack(alignment: .center, spacing: 0) {
                     questionContent(question)
@@ -69,22 +68,12 @@ struct QuizView: View {
                         .padding(.horizontal, 10)
                 )
                 
-                Image(systemName: "line.3.horizontal")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                    .activeGlow(generator.dominantLightToneColor, radius: 0.7)
-                    .hAlign(.trailing)
-                    .padding(.horizontal, 20)
-                    .onTapGesture {
-                        dismiss()
-                    }
-                
                 Spacer()
                 
-                PlayerControlButtons(isNowPlaying: isNowPlaying,
+                PlayerControlButtons(isNowPlaying: .constant(interactionState == .isNowPlaying),
                                      themeColor: generator.dominantLightToneColor,
-                                     repeatAction: {},
-                                     playAction: { isNowPlaying.toggle() },
+                                     repeatAction: { },
+                                     playAction: { isNowPlaying.toggle()},
                                      nextAction: { currentQuestionIndex += 1 }
                 )
             }
@@ -107,6 +96,11 @@ struct QuizView: View {
         })
         .preferredColorScheme(.dark)
         .background(generator.dominantBackgroundColor)
+    }
+    
+    func play() {
+        //currentQuestionIndex = 0
+        isNowPlaying.toggle()
     }
     
     

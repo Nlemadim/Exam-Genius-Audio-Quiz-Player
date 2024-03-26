@@ -204,7 +204,6 @@ struct LandingPage: View {
             let list = audioQuiz.questions
             let playList = list.compactMap{$0.questionAudio}
             playSample(playlist: playList)
-            
         }
     }
     

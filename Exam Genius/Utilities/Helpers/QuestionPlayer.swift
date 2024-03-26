@@ -38,17 +38,17 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         }
     }
     
-    func playAudioQuestions(audioFile: String) {
+    func playAudioQuestions(audioFile: [String], currentNumber: Int) {
         interactionState = .isNowPlaying
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
-            self.audioFiles.append(audioFile)
-            self.currentIndex = 0
-            self.playAudioFileAtIndex(self.currentIndex)
+            self.audioFiles.append(contentsOf: audioFile)
+            self.playAudioFileAtIndex(currentNumber)
         }
     }
     
     func playSingleAudioQuestion(audioFile: String) {
         interactionState = .isNowPlaying
+        print("Question Player is now playing audioFile at: \(audioFile)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {  // Adding a slight delay
             self.playQuestionAudioFile(audioFile)
         }
@@ -101,11 +101,10 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         
         if flag {
-            audioPlayer?.stop()
-            interactionState = .idle
-            isFinishedPlaying = true
-            isNowPlaying = false
-            print("Player is now idle")
+            DispatchQueue.main.async {
+                self.interactionState = .isDonePlaying
+                self.audioPlayer?.stop()
+            }
         }
     }
     

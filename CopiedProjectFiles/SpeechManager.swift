@@ -29,9 +29,6 @@ class SpeechManager: ObservableObject {
     
     @Published var transcript: String = ""
     
-    @State private var presentExporter: Bool = false
-    @State private var showingAlert: Bool = false
-    
     public var isRecording = false
     
     private var task: SFSpeechRecognitionTask?

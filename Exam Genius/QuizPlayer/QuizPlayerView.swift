@@ -18,8 +18,8 @@ struct QuizPlayerView: View {
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @StateObject private var generator = ColorGenerator()
-    @ObservedObject var questionPlayer = QuestionPlayer()
-    @ObservedObject var responseListener = ResponseListener()
+    @StateObject var questionPlayer = QuestionPlayer()
+    @StateObject var responseListener = ResponseListener()
     @StateObject var quizSetter = QuizPlayerView.QuizSetter()
     
    
@@ -39,9 +39,6 @@ struct QuizPlayerView: View {
     
     @State private var currentQuestionIndex: Int = 0
     @State private var selectedOption: String = ""
-    
-    
-    
 
     var cancellables = Set<AnyCancellable>()
     
@@ -56,7 +53,7 @@ struct QuizPlayerView: View {
     var body: some View {
         NavigationView {
             ZStack(alignment: .topLeading) {
-
+                
                 VStack(alignment: .leading, spacing: 4.0) {
                     ScrollView(showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 4.0){
@@ -64,7 +61,6 @@ struct QuizPlayerView: View {
                                 .resizable()
                                 .frame(width: 280, height: 280)
                                 .cornerRadius(25)
-                            
                         }
                         .frame(maxWidth: .infinity)
                         .frame(height: 300)
@@ -114,21 +110,44 @@ struct QuizPlayerView: View {
                 self.currentQuestionIndex = newValue
                 goToNextQuestion()
             }
-            .onChange(of: questionPlayer.isFinishedPlaying, initial: false, { _, newValue in
-                if newValue == true {
+            .onChange(of: questionPlayer.interactionState) { _, newValue in
+                self.interactionState = newValue
+                if newValue == .isDonePlaying {
+                    print("QuizPlayer interaction State is: \(self.interactionState)")
                     responseListener.recordAnswer()
                 }
-            })
-            .onReceive(responseListener.$interactionState, perform: { interactionState in
-                self.interactionState = interactionState
-
-            })
-            .onReceive(responseListener.$selectedOption) { selectedOption in
-                if user.selectedQuizPackage != nil {
-                    self.currentQuestions[self.currentQuestionIndex].selectedOption = selectedOption
-                    analyseResponse()
-                }     
             }
+            .onChange(of: responseListener.interactionState) { _, newValue in
+                self.interactionState = newValue
+                DispatchQueue.main.async {
+                    self.interactionState = newValue
+                    print("QuizPlayer interaction State is: \(self.interactionState)")
+                    if newValue == .idle {
+                        self.selectedOption = responseListener.userTranscript
+                        print("Quiz view has registered new selectedOption as: \(self.selectedOption)")
+                        analyseResponse()
+                    }
+                }
+            }
+//            .onChange(of: responseListener.selectedOption) { _, selectedOption in
+//                print("Quiz View has recieved selected option:\(selectedOption)")
+//                if user.selectedQuizPackage != nil {
+//                    DispatchQueue.main.async {
+//                        self.currentQuestions[safe: self.currentQuestionIndex]?.selectedOption = selectedOption
+//                        print("Saved user selection as \(String(describing: self.currentQuestions[safe: self.currentQuestionIndex]?.selectedOption))")
+//                    
+//                    }
+//                    
+//                }
+//            }
+//            .onReceive(responseListener.$interactionState, perform: { interactionState in
+//                self.interactionState = interactionState
+//                if interactionState == .isListening {
+//                    print("Response Listener interaction State: \(interactionState)")
+//                    //self.interactionState = interactionState
+//                    print("QuizPlayer interaction State is: \(self.interactionState)")
+//                }
+//            })
             .background(
                 generator.dominantBackgroundColor.opacity(0.5)
             )
@@ -137,13 +156,13 @@ struct QuizPlayerView: View {
             QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, presentMicModal: $presentMicModal, repeatTapped: $repeatTapped, interactionState: $interactionState)
         }
         .onChange(of: playTapped, { _, _ in
+            
             print("Play Pressed")
             print("Current Question Index on QuizPlayerView is \(currentQuestionIndex)")
-            print("Current Question Index on QuizPlayerView is \(currentQuestions.count)")
+            print("Current Question count is \(currentQuestions.count)")
             print("\(self.currentQuestions[self.currentQuestionIndex].questionAudio)")
-            questionPlayer.playAudioQuestions(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
-//            questionPlayer.playAudioQuestions(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
-
+            
+            questionPlayer.playSingleAudioQuestion(audioFile: self.currentQuestions[self.currentQuestionIndex].questionAudio)
         })
         .onAppear {
             generator.updateDominantColor(fromImageNamed: backgroundImage)
@@ -220,7 +239,6 @@ extension QuizPlayerView {
     }
 }
         
- 
 
 extension QuizPlayerView {
     
@@ -265,25 +283,20 @@ extension QuizPlayerView {
         let total = UserDefaultsManager.userHighScore()
         return total
     }
-    
-//    func playAudioQuiz() {
-//        if let package = user.selectedQuizPackage {
-////            let list = package.questions
-////            let playList = list.compactMap{$0.questionAudio}
-//           // quizPlayer.playSampleQuiz(audioFileNames: playList)
-//        }
-//    }
-    
-
-    
+ 
     func analyseResponse() {
-        if !isPlaying, !self.selectedOption.isEmptyOrWhiteSpace {
-            self.currentQuestion?.selectedOption = self.selectedOption
-            currentQuestion?.isAnswered = true
-            print("Question Answered")
-            if currentQuestion?.selectedOption == currentQuestion?.correctOption {
-                currentQuestion?.isAnsweredCorrectly = true
-                print("Question was answered correctly!")
+        if !self.selectedOption.isEmptyOrWhiteSpace {
+            print("Saving response")
+            let currentQuestion = self.currentQuestions[self.currentQuestionIndex]
+            currentQuestion.selectedOption = self.selectedOption
+            currentQuestion.isAnswered = true
+            
+            if currentQuestion.selectedOption == currentQuestion.correctOption {
+                currentQuestion.isAnsweredCorrectly = true
+                print("Save complete")
+                print("Question Answered")
+                print("User selected \(self.currentQuestions[self.currentQuestionIndex].selectedOption) option")
+                print("Question \(self.currentQuestions[self.currentQuestionIndex].id) was answered correctly?: \(self.currentQuestions[self.currentQuestionIndex].isAnsweredCorrectly)")
             }
         }
     }
@@ -296,9 +309,7 @@ extension QuizPlayerView {
     }
     
     private func goToPreviousQuestion() {
-        if self.currentQuestionIndex > 0 {
-            //questionPlayer.playQuestion(audioFileName: self.currentQuestions[self.currentQuestionIndex].questionAudio)
-        }
+        
     }
     
     private func selectOption(_ option: String) {

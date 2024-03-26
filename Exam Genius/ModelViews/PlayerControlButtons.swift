@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerControlButtons: View {
-    @State var isNowPlaying: Bool
+    @Binding var isNowPlaying: Bool
 
     var quizPlayer = QuizPlayer.shared
     var themeColor: Color?
@@ -24,7 +24,7 @@ struct PlayerControlButtons: View {
                 CircularButton(
                     isPlaying: .constant(false),
                     isDownloading: .constant(false),
-                    imageLabel: "arrow.clockwise",
+                    imageLabel: "slider.horizontal.3",
                     color: themeColor ?? .clear,
                     buttonAction: { repeatAction() })
 
@@ -54,6 +54,6 @@ struct PlayerControlButtons: View {
 
 
 #Preview {
-    PlayerControlButtons(isNowPlaying: false, repeatAction: {}, playAction: {}, nextAction: {})
+    PlayerControlButtons(isNowPlaying: .constant(true), repeatAction: {}, playAction: {}, nextAction: {})
         .preferredColorScheme(.dark)
 }

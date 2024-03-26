@@ -13,8 +13,6 @@ struct DefaultDatabase {
         [
             ExamDetails(name: "California Bar Exam", acronym: "CBX", category: .legal, about: "A licensure exam for practicing law in California.", image: "BarExam-Exam"),
             
-            ExamDetails(name: "Medical College Admission Test", acronym: "MCAT", category: .science, about: "A standardized exam for prospective medical students in the USA.", image: "MCAT-Exam"),
-            
             ExamDetails(name: "Certified Public Accountant Exam", acronym: "CPA", category: .business, about: "Exam for accounting professionals to become certified public accountants in the USA.", image: "CPA-Exam"),
             
             ExamDetails(name: "National Council Licensure Examination for Registered Nurses", acronym: "NCLEX-RN", category: .healthcare, about: "A national exam for the licensing of nurses in the USA.", image: "NCLEX-RN-Exam"),
@@ -109,6 +107,8 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: .legal, about: "A standardized test administered by the Law School Admission Council (LSAC) for prospective law school candidates", image: "LSAT-Exam-Basic"),
             
+            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: .technology, about: "Certification for IT and information security leaders in cloud security.", image: "CloudComputing"),
+            
             ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: .legal, about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering")
             
             
@@ -127,7 +127,7 @@ struct DefaultDatabase {
 //            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: .technology, about: "Certification for professionals working with SAP software solutions.", image: "SAP-Exam"),
 //            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: .technology, about: "Certification for individuals using Google Cloud technologies.", image: "GoogleCloud-Exam"),
 //            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: .technology, about: "Certification for Linux system administrators.", image: "LPIC-Exam"),
-//            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: .technology, about: "Certification for IT and information security leaders in cloud security.", image: "CCSP-Exam"),
+
     
         ]
     }
