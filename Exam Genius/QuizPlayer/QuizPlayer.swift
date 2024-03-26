@@ -139,31 +139,31 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     func playNow(audioFileName: String) {
         playerState = .isPlayingQuestion
         // Start playing the audio file
-        playAudio(audioFileName: audioFileName)
+        //playAudio(audioFileName: audioFileName)
         
     }
     
-    fileprivate func playAudio(audioFileName: String) {
-        interactionState = .isNowPlaying
-        
-        let path = audioFileName
-        guard let fileURL = URL(string: path) else { return }
-        
-//        let fileManager = FileManager.default
-//        let url = URL(fileURLWithPath: audioFileName)
-        
-        do {
-            try AVAudioSession.sharedInstance().setActive(true) // Ensure the session is active
-            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
-            audioPlayer?.delegate = self
-            audioPlayer?.prepareToPlay() // Prepare the player
-            audioPlayer?.play()
-        } catch {
-            print("Could not load file: \(error)")
-            ///Use Siri in case of error
-            //readQuestionContent(questionContent: audioFileName)
-        }
-    }
+//    fileprivate func playAudio(audioFileName: String) {
+//        interactionState = .isNowPlaying
+//        
+//        let path = audioFileName
+//        guard let fileURL = URL(string: path) else { return }
+//        
+////        let fileManager = FileManager.default
+////        let url = URL(fileURLWithPath: audioFileName)
+//        
+//        do {
+//            try AVAudioSession.sharedInstance().setActive(true) // Ensure the session is active
+//            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+//            audioPlayer?.delegate = self
+//            audioPlayer?.prepareToPlay() // Prepare the player
+//            audioPlayer?.play()
+//        } catch {
+//            print("Could not load file: \(error)")
+//            ///Use Siri in case of error
+//            //readQuestionContent(questionContent: audioFileName)
+//        }
+//    }
       
     fileprivate func checkSelectedOptionAndUpdateState() {
         if UserDefaultsManager.isOnContinuousFlow() /* && !selectedOption.isEmpty */{
@@ -192,67 +192,67 @@ class QuizPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeechRec
     }
     
     //MARK: Recording Methods
-    func recordAnswer() {
-        interactionState = .isListening
-        startRecordingAndTranscribing()
-    }
-    
-    fileprivate func startRecordingAndTranscribing() {
-        guard interactionState == .isListening else { return }
-        
-        print("Starting transcription...")
-        self.isRecordingAnswer = true
-        playerState = .isAwaitingAnswer
-        
-        // Immediately start transcribing
-        self.speechRecognizer.transcribe()
-        print("Transcribing started")
-        
-        // Schedule to stop transcribing after 5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.speechRecognizer.stopTranscribing()
-            self.isRecordingAnswer = false
-            print("Transcription stopped")
-            
-            // Optionally, retrieve and process the transcript after stopping
-            self.getTranscript { newTranscript in
-                self.selectedOption = self.processTranscript(transcript: newTranscript)
-                self.interactionState = .hasResponded
-                print("Processing completed")
-                
-                // Further processing or state update can be done here
-                self.checkSelectedOptionAndUpdateState()
-            }
-        }
-    }
-    
-    
-    fileprivate func getTranscript(completion: @escaping (String) -> Void) {
-        cancellable = speechRecognizer.$transcript
-            .sink { newTranscript in
-                completion(newTranscript)
-            }
-    }
-    
-    func processTranscript(transcript: String) -> String {
-        interactionState = .isProcessing
-        let processedTranscript = WordProcessor.processWords(from: transcript)
-        self.selectedOption = processedTranscript
-        
-        if processedTranscript.isEmptyOrWhiteSpace {
-            playerState = .failureTranscribingAnswer
-            interactionState = .errorResponse
-            //MARK: TODO
-            //playErrorTranscriptionSound()
-        } else {
-            playerState = .successTranscribingAnswer
-            interactionState = .successfulResponse
-            //MARK: TODO
-            //playSuccessFulTranscriptionSound()
-        }
-        
-        return processedTranscript
-    }
+//    func recordAnswer() {
+//        interactionState = .isListening
+//        startRecordingAndTranscribing()
+//    }
+//    
+//    fileprivate func startRecordingAndTranscribing() {
+//        guard interactionState == .isListening else { return }
+//        
+//        print("Starting transcription...")
+//        self.isRecordingAnswer = true
+//        playerState = .isAwaitingAnswer
+//        
+//        // Immediately start transcribing
+//        self.speechRecognizer.transcribe()
+//        print("Transcribing started")
+//        
+//        // Schedule to stop transcribing after 5 seconds
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//            self.speechRecognizer.stopTranscribing()
+//            self.isRecordingAnswer = false
+//            print("Transcription stopped")
+//            
+//            // Optionally, retrieve and process the transcript after stopping
+//            self.getTranscript { newTranscript in
+//                self.selectedOption = self.processTranscript(transcript: newTranscript)
+//                self.interactionState = .hasResponded
+//                print("Processing completed")
+//                
+//                // Further processing or state update can be done here
+//                self.checkSelectedOptionAndUpdateState()
+//            }
+//        }
+//    }
+//    
+//    
+//    fileprivate func getTranscript(completion: @escaping (String) -> Void) {
+//        cancellable = speechRecognizer.$transcript
+//            .sink { newTranscript in
+//                completion(newTranscript)
+//            }
+//    }
+//    
+//    func processTranscript(transcript: String) -> String {
+//        interactionState = .isProcessing
+//        let processedTranscript = WordProcessor.processWords(from: transcript)
+//        self.selectedOption = processedTranscript
+//        
+//        if processedTranscript.isEmptyOrWhiteSpace {
+//            playerState = .failureTranscribingAnswer
+//            interactionState = .errorResponse
+//            //MARK: TODO
+//            //playErrorTranscriptionSound()
+//        } else {
+//            playerState = .successTranscribingAnswer
+//            interactionState = .successfulResponse
+//            //MARK: TODO
+//            //playSuccessFulTranscriptionSound()
+//        }
+//        
+//        return processedTranscript
+//    }
     
     deinit {
         cancellable?.cancel()

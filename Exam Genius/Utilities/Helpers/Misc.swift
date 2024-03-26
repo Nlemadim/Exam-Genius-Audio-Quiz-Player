@@ -44,6 +44,7 @@ enum WordProcessor: String {
 
 enum InteractionState {
     case isNowPlaying
+    case isDonePlaying
     case isListening
     case isProcessing
     case errorResponse
@@ -70,6 +71,8 @@ enum InteractionState {
             return "Waiting for response"
         case .successfulResponse:
             return "Response successfully processed"
+        case .isDonePlaying:
+            return "Has Finished Playing"
         }
     }
 }
@@ -224,6 +227,57 @@ enum InteractionState {
        },
        "correctOption": "C",
        "overview": "X-rays are the type of radiation most commonly used in dental radiography. They have the ability to penetrate tissues and structures, creating images that help in diagnosing a wide range of dental conditions, from cavities and gum disease to impacted teeth and jaw abnormalities."
+     }
+   ]
+ }
+ 
+ ////////Barista Certification
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Coffee History","Coffee Bean Varieties","Coffee Cultivation and Harvesting","Coffee Processing Methods","Coffee Roasting Techniques","Understanding Coffee Grind Sizes","Coffee Cupping and Tasting","Espresso Basics","Espresso Machine Operation","Espresso Machine Maintenance","Milk Steaming and Frothing","Latte Art Techniques","Brew Methods and Techniques","Cold Brew and Iced Coffee Techniques","Coffee Brewing Water Temperature","Coffee to Water Ratio","Coffee Extraction Principles","Coffee Pairing with Food","Customer Service Skills","Cash Handling and Register Operation","Health and Safety Standards in Coffee Shops","Coffee Shop Equipment Use and Maintenance","Coffee Shop Management","Coffee Shop Marketing and Promotion","Specialty Coffee Industry Trends","Coffee Shop Menu Design","Coffee Shop Layout and Workflow","Understanding Coffee Sustainability Issues","Ethical Sourcing of Coffee","Coffee Shop Business Plan Development","Barista Vocabulary and Terminology","Seasonal Coffee Drink Recipes","Non-Dairy Milk Options for Coffee","Nutritional Information of Coffee Drinks","Dealing with Customer Complaints in Coffee Shops,"]}
+ Starting fetchQuestionData for examName: Barista Certification with topics: ["Coffee Roasting Techniques"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Barista%20Certification&topicValue=Coffee%20Roasting%20Techniques&numberValue=3
+
+ Raw Response: {
+   "examName": "Barista Certification",
+   "topics": [
+     "Coffee Roasting Techniques"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What does the term 'first crack' refer to in coffee roasting?",
+       "options": {
+         "A": "The initial phase of roasting where beans absorb heat",
+         "B": "The point at which coffee beans begin to expand and crack",
+         "C": "The final stage of roasting before cooling begins",
+         "D": "The initial sorting process before roasting"
+       },
+       "correctOption": "B",
+       "overview": "The 'first crack' in coffee roasting refers to a critical point where the coffee beans begin to expand and crack open due to the heat. This marks the transition from the drying phase to the actual roasting phase, where the beans start developing their characteristic flavors and aromas."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which roasting level is characterized by a shiny, dark surface on the beans due to oil?",
+       "options": {
+         "A": "Light roast",
+         "B": "Medium roast",
+         "C": "Medium-dark roast",
+         "D": "Dark roast"
+       },
+       "correctOption": "D",
+       "overview": "Dark roast coffee beans are characterized by a shiny, dark surface, which is a result of the oils within the beans emerging due to the high temperatures experienced during the roasting process. This level of roasting brings out a pronounced bitterness and reduces the acidity of the coffee."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the main purpose of the cooling process immediately after coffee beans are roasted?",
+       "options": {
+         "A": "To prepare the beans for immediate packaging",
+         "B": "To enhance the beans' natural flavors",
+         "C": "To stop the roasting process and prevent over-roasting",
+         "D": "To reduce the beans' moisture content further"
+       },
+       "correctOption": "C",
+       "overview": "The main purpose of the cooling process immediately after coffee beans are roasted is to stop the roasting process and prevent the beans from over-roasting. This is crucial for preserving the desired flavor profile and ensuring the quality of the coffee."
      }
    ]
  }
