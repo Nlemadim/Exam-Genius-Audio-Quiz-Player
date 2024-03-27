@@ -78,7 +78,6 @@ enum InteractionState {
 }
 
 
-
 //MARK: SERVER RESPONSE OBJECT (TOPICS REQUEST)
 /** Response HTTP Status code: 200
  Raw server response: {"topics":["Constitutional Law","Constitutional Law - Bill of Rights","Constitutional Law - Separation of Powers","Constitutional Law - Federalism","Constitutional Law - Individual Rights","Criminal Law","Criminal Law - Crimes Against the Person","Criminal Law - Crimes Against Property","Criminal Law - Inchoate Crimes","Criminal Law - Defenses","Criminal Procedure","Criminal Procedure - Fourth Amendment","Criminal Procedure - Fifth Amendment","Criminal Procedure - Sixth Amendment","Real Property Law","Real Property Law - Land Ownership","Real Property Law - Landlord-Tenant Law","Real Property Law - Real Estate Transactions","Torts","Torts - Intentional Torts","Torts - Negligence","Torts - Strict Liability","Torts - Defamation","Torts - Privacy Torts","Evidence","Evidence - Relevancy","Evidence - Hearsay","Evidence - Privileges","Evidence - Presentation of Evidence","Civil Procedure","Civil Procedure - Jurisdiction","Civil Procedure - Pleadings","Civil Procedure - Pretrial Procedures,"]}
@@ -230,6 +229,56 @@ enum InteractionState {
      }
    ]
  }
+
+ ////////Certified Cloud Security Professional
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Cloud Computing Concepts","Cloud Reference Architecture","Cloud Computing Security Challenges","Cloud Service Models (IaaS","PaaS","SaaS)","Cloud Deployment Models (Public","Private","Hybrid","Community)","Cloud Data Security","Cloud Platform & Infrastructure Security","Cloud Application Security","Cloud Security Operations","Legal","Risk and Compliance","Cloud Governance","Cloud Data Lifecycle","Cloud Data Storage Architectures","Cloud Data Security Controls","Cloud Data Discovery","Data Rights Management","Storage & Data Security in Cloud","Data Backup and Recovery","Cloud Infrastructure Components","Cloud Risk Assessment","Cloud Audit Processes","Cloud Security Policies & Procedures","Identity & Access Management","User Identity Verification Methods","Identity Federation Protocols","Single Sign-On & Federation","Access Control Models in Cloud","Identity Provisioning","Cloud Network Security","Network Security Architecture","Cloud Network Security Controls","Virtualization Basics","Virtualization Security","Cloud Resource Management","Incident Response in Cloud","Forensics in Cloud","Business Continuity & Disaster Recovery","Legal Requirements & Unique Risks in Cloud"]}
+ Starting fetchQuestionData for examName: Certified Cloud Security Professional with topics: ["Cloud Resource Management"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Cloud%20Security%20Professional&topicValue=Cloud%20Resource%20Management&numberValue=3
+ Raw Response: {
+   "examName": "Certified Cloud Security Professional",
+   "topics": [
+     "Cloud Resource Management"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is a key benefit of cloud resource tagging?",
+       "options": {
+         "A": "Increases the complexity of cloud architecture",
+         "B": "Improves the ability to manage and allocate costs",
+         "C": "Decreases the visibility of resources",
+         "D": "Limits the scalability of cloud resources"
+       },
+       "correctOption": "B",
+       "overview": "Tagging resources in the cloud allows organizations to assign metadata to cloud resources. This metadata can be used for various purposes, including cost allocation, management, and governance. By improving the ability to manage and allocate costs, organizations can gain better insights into their spending and usage patterns, leading to more efficient resource utilization and cost savings."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of implementing Cloud Access Security Brokers (CASBs)?",
+       "options": {
+         "A": "To provide a physical security layer for cloud data centers",
+         "B": "To act as intermediaries between users and cloud service providers",
+         "C": "To replace traditional network firewalls",
+         "D": "To increase the operational complexity of cloud services"
+       },
+       "correctOption": "B",
+       "overview": "Cloud Access Security Brokers (CASBs) are security policy enforcement points that sit between cloud service consumers and cloud service providers. The primary purpose of CASBs is to provide visibility into cloud application usage, enforce security policies, and protect against threats. They act as intermediaries to ensure that the organization's security policies are consistently applied across all cloud services, helping to maintain security and compliance."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following strategies is MOST effective in ensuring data security in a multi-cloud environment?",
+       "options": {
+         "A": "Using a single cloud service provider for all data storage needs",
+         "B": "Relying solely on the security measures provided by cloud service providers",
+         "C": "Implementing a centralized identity and access management (IAM) system",
+         "D": "Storing all sensitive data on-premises to avoid cloud risks"
+       },
+       "correctOption": "C",
+       "overview": "In a multi-cloud environment, where an organization uses multiple cloud service providers, ensuring data security becomes complex due to the differing security models and controls across providers. Implementing a centralized identity and access management (IAM) system is the most effective strategy. This approach allows organizations to manage user identities and permissions consistently across all cloud services, reducing the risk of unauthorized access and ensuring that security policies are uniformly applied."
+     }
+   ]
+ }
  
  ////////Barista Certification
  Response HTTP Status code: 200
@@ -334,9 +383,7 @@ enum InteractionState {
  }
  
  
- 
- 
- //////
+ //////Architect Registration Exam
  Response HTTP Status code: 200
  Raw server response: {"topics":["Architectural Design Principles","Architectural History","Building Codes and Regulations","Site Planning","Building Systems Integration","Environmental Systems","Structural Systems","Construction Documentation","Building Materials and Assemblies","Sustainability in Architecture","Architectural Theories","Urban Design","Architectural Graphics and Visualization","Project Management in Architecture","Architectural Programming","Building Economics","Professional Practice Ethics","Accessibility and Universal Design","Adaptive Reuse","Building Information Modeling (BIM)","Construction Project Management","Building Envelope Systems","Space Planning","Interior Architecture","Acoustics in Architecture","Lighting Design","Fire Protection Systems","Plumbing Systems","HVAC Systems","Electrical Systems","Security and Safety Considerations","Architectural Research Methods","Design Thinking","Landscape Architecture","Architectural Technology","Contract Documents and Administration","Cost Estimation","Project Delivery Methods","Risk Management in Architecture","Historic Preservation","Furniture Design","Zoning Laws","Residential Design","Commercial Design","Institutional Design","Industrial Design","Building Resilience","Human Behavior in Built Environment","Building Codes and Ins"]}
  Starting fetchQuestionData for examName: Architect Registration Exam with topics: ["Plumbing Systems"] and number: 3
@@ -536,6 +583,93 @@ enum InteractionState {
      }
    ]
  }
+ 
+ 
+ ////////Certified Six Sigma Green Belt Exam
+ Raw server response: {"topics":["Six Sigma Fundamentals","Definition of Six Sigma","History of Six Sigma","Six Sigma Methodologies","Lean Six Sigma","Six Sigma vs Lean","DMAIC Methodology","Define phase in DMAIC","Measure phase in DMAIC","Analyze phase in DMAIC","Improve phase in DMAIC","Control phase in DMAIC","DMADV Methodology","Define phase in DMADV","Measure phase in DMADV","Analyze phase in DMADV","Design phase in DMADV","Verify phase in DMADV","DPMO and Sigma Levels","Understanding of Variation","Role of Green Belt in Six Sigma","Six Sigma Project Selection","Project Charter in Six Sigma","Voice of Customer (VOC)","Critical To Quality (CTQ)","Quality Function Deployment (QFD)","Process Mapping","SIPOC Diagram","Value Stream Mapping","Cause and Effect Diagram","Pareto Analysis","Control Charts","Statistical Process Control","Measurement System Analysis","Capability Analysis","Hypothesis Testing","Correlation and Regression Analysis","Design of"]}
+ Starting fetchQuestionData for examName: Certified Six Sigma Green Belt Exam with topics: ["Six Sigma Methodologies"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Certified%20Six%20Sigma%20Green%20Belt%20Exam&topicValue=Six%20Sigma%20Methodologies&numberValue=3
+ Raw Response: {
+   "examName": "Certified Six Sigma Green Belt Exam",
+   "topics": [
+     "Six Sigma Methodologies"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is a primary objective of Six Sigma?",
+       "options": {
+         "A": "Increasing team morale",
+         "B": "Reducing process variation",
+         "C": "Expanding market share",
+         "D": "Decreasing employee turnover"
+       },
+       "correctOption": "B",
+       "overview": "The primary objective of Six Sigma is to reduce process variation and improve quality by applying a data-driven approach. This methodology aims at minimizing defects and improving processes in manufacturing, services, and other industries."
+     },
+     {
+       "questionNumber": 2,
+       "question": "In the DMAIC methodology of Six Sigma, what does the 'M' stand for?",
+       "options": {
+         "A": "Management",
+         "B": "Measure",
+         "C": "Modify",
+         "D": "Maintain"
+       },
+       "correctOption": "B",
+       "overview": "In the DMAIC (Define, Measure, Analyze, Improve, Control) methodology of Six Sigma, 'M' stands for Measure. This phase focuses on measuring the current process to collect relevant data for further analysis."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following tools is commonly used in the Analyze phase of DMAIC?",
+       "options": {
+         "A": "Pareto Chart",
+         "B": "Flowchart",
+         "C": "SIPOC Diagram",
+         "D": "Check Sheet"
+       },
+       "correctOption": "A",
+       "overview": "A Pareto Chart is commonly used in the Analyze phase of DMAIC to identify and prioritize problems or defects in a process. It is a visual tool that helps teams focus on the most significant issues based on the 80/20 rule."
+     },
+ {
+   "questionNumber": 1,
+   "question": "What does DFSS stand for in the context of Six Sigma?",
+   "options": {
+     "A": "Design for Six Sigma",
+     "B": "Define for System Success",
+     "C": "Design for System Solutions",
+     "D": "Define for Six Sigma"
+   },
+   "correctOption": "A",
+   "overview": "DFSS stands for Design for Six Sigma. It is a methodology aimed at designing products, services, and processes that meet customer needs and expectations from the very beginning, by incorporating Six Sigma principles from the earliest stages of design."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which of the following is NOT a phase in the DFSS (Design for Six Sigma) methodology?",
+   "options": {
+     "A": "Analyze",
+     "B": "Define",
+     "C": "Verify",
+     "D": "Optimize"
+   },
+   "correctOption": "D",
+   "overview": "The DFSS (Design for Six Sigma) methodology typically includes phases such as Define, Measure, Analyze, Design, and Verify (DMADV). 'Optimize' is not traditionally listed as a phase in the DFSS methodology, which focuses on understanding customer needs and ensuring the design meets these needs before implementation."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which DFSS methodology phase focuses on identifying and prioritizing customer needs and requirements?",
+   "options": {
+     "A": "Measure",
+     "B": "Analyze",
+     "C": "Define",
+     "D": "Design"
+   },
+   "correctOption": "C",
+   "overview": "In the DFSS (Design for Six Sigma) methodology, the 'Define' phase focuses on identifying the project goals and customer needs and requirements. It sets the foundation for the project by clearly outlining what needs to be achieved to ensure customer satisfaction."
+ }
+   ]
+ }
+ 
  
  
  //////Medical College Admission Test

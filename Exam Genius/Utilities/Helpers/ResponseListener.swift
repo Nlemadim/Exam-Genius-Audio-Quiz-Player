@@ -37,7 +37,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.speechRecognizer.stopTranscribing()
             self.isRecordingAnswer = false
-            self.interactionState = .isProcessing
+            
             print("Transcription stopped")
             
             self.getTranscript()
@@ -55,6 +55,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     }
     
     func processTranscript(transcript: String) -> String {
+        self.interactionState = .isProcessing
         let processedTranscript = WordProcessor.processWords(from: transcript)
         self.selectedOption = processedTranscript
         

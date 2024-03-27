@@ -47,26 +47,44 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
     }
     
     func playSingleAudioQuestion(audioFile: String) {
+        audioPlayer?.stop()
+        audioPlayer = nil
         interactionState = .isNowPlaying
-        print("Question Player is now playing audioFile at: \(audioFile)")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {  // Adding a slight delay
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self = self else { return }
             self.playQuestionAudioFile(audioFile)
+            print("Question Player is now playing audioFile at: \(audioFile)")
         }
     }
+
     
     private func playQuestionAudioFile(_ audioFile: String) {
         let path = audioFile
         
-        guard let fileURL = URL(string: path) else { return }
+        guard let fileURL = URL(string: path) else {
+            print("Invalid file URL for audio file: \(audioFile)")
+            return
+        }
         
         do {
-            try AVAudioSession.sharedInstance().setActive(true)
+            // Attempt to configure and activate the audio session if not already in the desired state.
+            let audioSession = AVAudioSession.sharedInstance()
+            if audioSession.category != .playback || audioSession.mode != .default {
+                try audioSession.setCategory(.playback, mode: .default)
+                try audioSession.setActive(true)
+            }
+            
+            // Stop and nil out the current player before initializing a new one.
+            audioPlayer?.stop()
+            audioPlayer = nil
+
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
-            audioPlayer?.prepareToPlay() // Prepare the player
+            audioPlayer?.prepareToPlay()
             audioPlayer?.play()
         } catch {
-            print("Could not load file: \(error)")
+            print("Could not load file: \(error.localizedDescription)")
         }
     }
     
@@ -99,16 +117,15 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        
-        if flag {
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if flag {
                 self.interactionState = .isDonePlaying
-                self.audioPlayer?.stop()
+            } else {
+                // Handle unsuccessful playback if needed
+                print("Playback finished unsuccessfully")
             }
+            self.audioPlayer?.stop()
+            self.audioPlayer = nil // Proper cleanup
         }
-    }
-    
-    deinit {
-        cancellable?.cancel()
     }
 }
