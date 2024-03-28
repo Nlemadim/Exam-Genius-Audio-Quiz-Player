@@ -13,8 +13,6 @@ struct DefaultDatabase {
         [
             ExamDetails(name: "California Bar Exam", acronym: "CBX", category: .legal, about: "A licensure exam for practicing law in California.", image: "BarExam-Exam"),
             
-            ExamDetails(name: "Medical College Admission Test", acronym: "MCAT", category: .science, about: "A standardized exam for prospective medical students in the USA.", image: "MCAT-Exam"),
-            
             ExamDetails(name: "Certified Public Accountant Exam", acronym: "CPA", category: .business, about: "Exam for accounting professionals to become certified public accountants in the USA.", image: "CPA-Exam"),
             
             ExamDetails(name: "National Council Licensure Examination for Registered Nurses", acronym: "NCLEX-RN", category: .healthcare, about: "A national exam for the licensing of nurses in the USA.", image: "NCLEX-RN-Exam"),
@@ -101,7 +99,19 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Certified Fraud Examiner", acronym: "CFE", category: .finance, about: "The CFE Exam tests knowledge in financial fraud, law, investigations, and fraud prevention and deterrence, administered by ACFE.", image: "CFE-Exam-Basic"),
             
-            ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: .healthcare, about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam")
+            ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: .healthcare, about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam"),
+            
+            ExamDetails(name: "Medical Colledge Admission Test", acronym: "MCAT", category: .healthcare, about: "A computer-based standardized examination for prospective medical students, including both Allopathic M.D. and Osteopathic D.O., in the United States, Australia, Canada, and the Caribbean Island", image: "MCAT-Exam-Pro"),
+            
+            ExamDetails(name: "Barista Certification", acronym: "", category: .professional, about: "", image: "BARISTERCert-Exam"),
+            
+            ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: .legal, about: "A standardized test administered by the Law School Admission Council (LSAC) for prospective law school candidates", image: "LSAT-Exam-Basic"),
+            
+            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: .technology, about: "Certification for IT and information security leaders in cloud security.", image: "CloudComputing"),
+            
+            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: .legal, about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering")
+            
+            
 
             //MARK FOR IMAGE GEN
 //            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: .healthcare, about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
@@ -117,7 +127,7 @@ struct DefaultDatabase {
 //            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: .technology, about: "Certification for professionals working with SAP software solutions.", image: "SAP-Exam"),
 //            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: .technology, about: "Certification for individuals using Google Cloud technologies.", image: "GoogleCloud-Exam"),
 //            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: .technology, about: "Certification for Linux system administrators.", image: "LPIC-Exam"),
-//            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: .technology, about: "Certification for IT and information security leaders in cloud security.", image: "CCSP-Exam"),
+
     
         ]
     }

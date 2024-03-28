@@ -19,9 +19,11 @@ struct QuizView: View {
     @ObservedObject var quizSetter: QuizPlayerView.QuizSetter
     @Binding var currentQuestionIndex: Int
     @Binding var isNowPlaying: Bool
+    @Binding var isCorrectAnswer: Bool
+    @Binding var presentMicModal: Bool
     @Binding var nextTapped: Bool
-    @Binding var repeatTapped: Bool
-    
+    @Binding var interactionState: InteractionState
+    @State var testInteractionState: InteractionState = .idle
     
     var body: some View {
         ZStack {
@@ -51,7 +53,6 @@ struct QuizView: View {
                     
                 }
                 .padding(.horizontal)
-
                 
                 VStack(alignment: .center, spacing: 0) {
                     questionContent(question)
@@ -68,43 +69,57 @@ struct QuizView: View {
                         .padding(.horizontal, 10)
                 )
                 
-                Image(systemName: "line.3.horizontal")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                    .activeGlow(generator.dominantLightToneColor, radius: 0.7)
-                    .hAlign(.trailing)
-                    .padding(.horizontal, 20)
-                    .onTapGesture {
-                        dismiss()
-                    }
-                
                 Spacer()
                 
-                PlayerControlButtons(isNowPlaying: isNowPlaying,
+                PlayerControlButtons(isNowPlaying: .constant(interactionState == .isNowPlaying),
                                      themeColor: generator.dominantLightToneColor,
-                                     repeatAction: {},
-                                     playAction: { isNowPlaying.toggle() },
-                                     nextAction: { currentQuestionIndex += 1 }
+                                     repeatAction: { dismiss() },
+                                     playAction: { playAudio()},
+                                     nextAction: { goToNextQuestion() }
                 )
             }
             .padding(.top, 16)
             .onAppear {
                 generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "")
                 showContent()
-                print("Test QuizView has Registered \(String(describing: quizSetter.configuration?.questions.count)) Questions ready for viewing")
             }
             .onChange(of: currentQuestionIndex) { _, _ in
                 showContent()
-                print("Current Question Index on QuizPlayer is \(currentQuestionIndex)")
             }
             .onChange(of: quizSetter.configuration) { _, _ in
                 showContent()
             }
         }
+        .sheet(isPresented: .constant(interactionState == .isListening), content: {
+            MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
+                .presentationDetents([.height(100)])
+        })
+        .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
+            ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
+                .presentationDetents([.height(200)])
+                .onAppear {
+                    //print(isCorrectAnswer)
+                    //MARK: Simulating Overview readout
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self.interactionState = .idle
+                        print(isCorrectAnswer)
+                    }
+                }
+        })
         .preferredColorScheme(.dark)
         .background(generator.dominantBackgroundColor)
     }
     
+    func playAudio() {
+        isNowPlaying.toggle()
+    }
+    
+    func goToNextQuestion() {
+        guard let nextQuestions = quizSetter.configuration?.questions else { return }
+        guard nextQuestions.indices.contains(currentQuestionIndex), currentQuestionIndex < nextQuestions.count - 1 else { return }
+        nextTapped.toggle()
+        currentQuestionIndex += 1
+    }
     
     func showContent() {
         // Safely unwrap configuration and ensure currentIndex is within the range of questions.
@@ -207,7 +222,7 @@ struct QuizView: View {
     @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
     let quizSetter = QuizPlayerView.QuizSetter()
     quizSetter.configuration = config
-    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), nextTapped: .constant(false), repeatTapped: .constant(false))
+    return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), nextTapped: .constant(false), interactionState: .constant(.idle))
 }
 
 

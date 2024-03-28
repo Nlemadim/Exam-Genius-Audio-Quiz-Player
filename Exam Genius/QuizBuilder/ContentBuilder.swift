@@ -116,7 +116,7 @@ class ContentBuilder {
                     let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
                     let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
                     let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
-                    let builtNewQuestion = QuestionContent(id: UUID(), questionContent: question.questionContent, topic: question.topic, options: question.options, correctOption: question.correctOption, questionAudio: audioUrl, questionNoteAudio: "")
+                   
                     let finishedQuestion = Question(id: UUID())
                     finishedQuestion.questionContent = question.questionContent
                     finishedQuestion.topic = question.topic
@@ -159,34 +159,54 @@ class ContentBuilder {
     }
     
     private func downloadReadOut(readOut: String) async -> String? {
-        var fileUrl: String = ""
+        var fileName: String? = nil
         do {
-            let audioFile = try await networkService.fetchAudioData(content: readOut)
-            let urlString = saveAudioDataToFile(audioFile)
-            fileUrl = urlString?.path ?? ""
-            print("Downloaded audio file URL: \(fileUrl)")
-            
+            let audioData = try await networkService.fetchAudioData(content: readOut)
+            if let savedFileName = saveAudioDataToFile(audioData) {
+                fileName = savedFileName
+                print("Downloaded and saved audio file name: \(savedFileName)")
+            } else {
+                print("Failed to save the audio file.")
+            }
         } catch {
             print("Failed to download audio file: \(error.localizedDescription)")
         }
         
-        return fileUrl
+        return fileName
     }
+
     
-    private func saveAudioDataToFile(_ data: Data) -> URL? {
+    private func saveAudioDataToFile(_ data: Data) -> String? {
         let fileManager = FileManager.default
-        let documentsDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileName = UUID().uuidString + ".mp3"
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
         
         do {
             try data.write(to: fileURL)
-            return fileURL
+            return fileName
         } catch {
             print("Error saving audio file: \(error)")
             return nil
         }
     }
+    
+    private func saveAudioDataToFile2(_ data: Data) -> String? {
+        let fileManager = FileManager.default
+        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileName = UUID().uuidString + ".mp3"  // This is what you'll save and use later
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        
+        do {
+            try data.write(to: fileURL)
+            // Return just the file name instead of the full URL
+            return fileName
+        } catch {
+            print("Error saving audio file: \(error)")
+            return nil
+        }
+    }
+
     
     private func questionContentPrompt(examName: String, topics: [String], numberOfQuestions: Int) -> String {
         return """

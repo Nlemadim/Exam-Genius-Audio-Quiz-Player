@@ -77,7 +77,6 @@ struct LandingPage: View {
                 }
                 .onReceive(quizPlayer.$isNowPlaying, perform: { isNowPlayng in
                     self.isPlaying = isNowPlayng
-                    print("Landing screen has registered isPlaying as: \(isPlaying)")
                 })
                 .task {
                     await loadDefaultCollection()
@@ -115,15 +114,14 @@ struct LandingPage: View {
                     }
                 }
             })
-            
             .tabItem {
-                TabIcons(title: "Home", icon: "house.fill")
+                TabIcons(title: "Home", icon: "square.grid.2x2")
             }
             .tag(0)
 
             QuizPlayerView()
                 .tabItem {
-                    TabIcons(title: "Explore", icon: "globe")
+                    TabIcons(title: "Quiz Player", icon: "play.tv")
                 }
                 .tag(1)
             
@@ -133,8 +131,7 @@ struct LandingPage: View {
                 }
                 .tag(2)
         }
-        .tint(.teal)
-
+        .tint(.white).activeGlow(.white, radius: 2)
     }
     
     
@@ -205,7 +202,6 @@ struct LandingPage: View {
             let list = audioQuiz.questions
             let playList = list.compactMap{$0.questionAudio}
             playSample(playlist: playList)
-            
         }
     }
     
@@ -255,29 +251,5 @@ struct LandingPage: View {
     
 }
 
-
-struct View2: View {
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .ignoresSafeArea()
-            VStack {
-                Image(systemName: "globe")
-                Text("Work in Progress")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .frame(alignment: .topLeading)
-            }
-        }
-        .preferredColorScheme(.dark)
-        .navigationBarBackButtonHidden(true)
-        .background(
-            Image("Logo")
-                .offset(x:  220, y: +230)
-                .blur(radius: 30)
-        )
-    }
-}
 
 

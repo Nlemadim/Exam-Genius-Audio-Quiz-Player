@@ -360,11 +360,68 @@ struct PlaySampleButton: View {
             .foregroundStyle(.white)
         }
     }
-    
+}
+
+struct MicButtonWithProgressRing: View {
+    @State private var fillAmount: CGFloat = 0.0
+    @State var showProgressRing: Bool
+
+    let imageSize: CGFloat = 25 // Adjusted size
+
+    var body: some View {
+        ZStack {
+            // Background
+            Circle()
+                .fill(Color.themePurple)
+                .frame(width: imageSize * 3, height: imageSize * 3)
+
+            // Conditional display of Progress Ring
+            if showProgressRing {
+                Circle()
+                    .stroke(Color.white.opacity(0.3), lineWidth: 5)
+                    .frame(width: imageSize * 3, height: imageSize * 3)
+
+                Circle()
+                    .trim(from: 0, to: fillAmount)
+                    .stroke(Color.white, lineWidth: 4)
+                    .frame(width: imageSize * 3, height: imageSize * 3)
+                    .rotationEffect(.degrees(-270))
+                    .animation(.linear(duration: 5), value: fillAmount)
+            }
+
+            // Mic Button
+            Button(action: {
+                self.startFilling()
+            }) {
+                Image(systemName: "mic.fill")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+            }
+            
+        }
+        .onAppear { startFilling() }
+    }
+
+    private func startFilling() {
+        fillAmount = 0.0 // Reset the fill amount
+        showProgressRing = true // Show the progress ring
+        withAnimation(.linear(duration: 5)) {
+            fillAmount = 1.0 // Fill the ring over 5 seconds
+        }
+        // Hide the progress ring after 5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.showProgressRing = false
+        }
+    }
 }
 
 enum ButtonState {
     case `default`, loading, playing
+}
+
+#Preview {
+    MicButtonWithProgressRing(showProgressRing: true)
+        .preferredColorScheme(.dark)
 }
 
 #Preview {
