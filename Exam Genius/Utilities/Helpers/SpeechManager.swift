@@ -178,6 +178,7 @@ class SpeechManager: ObservableObject {
     func reset() {
         task?.cancel()
         audioEngine?.stop()
+        
         audioEngine = nil
         recognitionRequest = nil
         task = nil

@@ -114,7 +114,6 @@ struct LandingPage: View {
                     }
                 }
             })
-            
             .tabItem {
                 TabIcons(title: "Home", icon: "square.grid.2x2")
             }
@@ -133,7 +132,6 @@ struct LandingPage: View {
                 .tag(2)
         }
         .tint(.white).activeGlow(.white, radius: 2)
-
     }
     
     
@@ -253,29 +251,5 @@ struct LandingPage: View {
     
 }
 
-
-struct View2: View {
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .ignoresSafeArea()
-            VStack {
-                Image(systemName: "globe")
-                Text("Work in Progress")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .frame(alignment: .topLeading)
-            }
-        }
-        .preferredColorScheme(.dark)
-        .navigationBarBackButtonHidden(true)
-        .background(
-            Image("Logo")
-                .offset(x:  220, y: +230)
-                .blur(radius: 30)
-        )
-    }
-}
 
 
