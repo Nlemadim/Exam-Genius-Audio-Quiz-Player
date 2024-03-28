@@ -52,6 +52,10 @@ enum InteractionState {
     case hasResponded
     case idle
     case successfulResponse
+    case isCorrectAnswer
+    case isIncorrectAnswer
+    case errorTranscription
+    case successfulTranscription
     
     var status: String {
         switch self {
@@ -72,7 +76,15 @@ enum InteractionState {
         case .successfulResponse:
             return "Response successfully processed"
         case .isDonePlaying:
-            return "Has Finished Playing"
+            return "Has finished playing"
+        case .isCorrectAnswer:
+            return "Answer is correct"
+        case .isIncorrectAnswer:
+            return "Answer is incorrect"
+        case .errorTranscription:
+            return "Error transcribing response"
+        case .successfulTranscription:
+            return "Response Transcribed"
         }
     }
 }
@@ -722,6 +734,247 @@ enum InteractionState {
      }
    ]
  }
+ 
+ //////////Certified Cloud Security Professional
+ Raw server response: {"topics":["Cloud Computing Concepts","Cloud Reference Architecture","Cloud Computing Security Challenges","Cloud Data Security","Cloud Platform & Infrastructure Security","Cloud Application Security","Cloud Security Operations","Legal & Compliance Issues in Cloud Computing","Cloud Service Models (IaaS","PaaS","SaaS)","Cloud Deployment Models (Private","Public","Hybrid","Community)","Cloud Security Architecture","Cloud Data Life Cycle","Cloud Data Storage Architectures","Data Security & Encryption","Cloud Infrastructure Components","Virtualization in Cloud","Container Security","Cloud Network Security","Identity and Access Management in Cloud","Physical Security for Cloud Infrastructure","Incident Response in Cloud","Disaster Recovery & Business Continuity in Cloud","Security Assessment and Testing in Cloud","Security in Cloud Software Development Life Cycle","Cloud Service Level Agreement","Cloud Security Policies and Procedures","Risk Management in Cloud","Cloud Security Standards and Certifications","Ethical and Privacy Considerations in Cloud","Cloud Audit and Assurance","Secure Cloud Migration","Cloud Cryptography","Cloud Security Threats and Countermeasures","Cloud Security Best Practices"]}
+ Raw Response: {
+   "examName": "Certified Cloud Security Professional",
+   "topics": ["Secure Cloud Migration"],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is the MOST critical factor to ensure the security of data during a cloud migration?",
+       "options": {
+         "A": "Selecting a cloud service provider with the lowest cost.",
+         "B": "Ensuring proper data encryption both at rest and in transit.",
+         "C": "Migrating all data at once to reduce the migration timeline.",
+         "D": "Choosing a cloud service provider in the same country."
+       },
+       "correctOption": "B",
+       "overview": "Ensuring proper data encryption both at rest and in transit is crucial during cloud migration to prevent unauthorized access and ensure data confidentiality. This protects the data as it moves to the cloud and while it is stored within the cloud environment."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the PRIMARY benefit of using a multi-cloud strategy for cloud migration?",
+       "options": {
+         "A": "It ensures data is encrypted.",
+         "B": "It reduces the dependency on a single cloud service provider.",
+         "C": "It automatically complies with all regulatory requirements.",
+         "D": "It guarantees zero downtime."
+       },
+       "correctOption": "B",
+       "overview": "A multi-cloud strategy reduces dependency on a single cloud service provider, offering benefits such as improved reliability, risk management, and potentially better cost efficiency. It allows organizations to leverage the best services of different providers and avoid vendor lock-in."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which activity is MOST important during the initial phase of a secure cloud migration?",
+       "options": {
+         "A": "Selecting the cloud service model (IaaS, PaaS, SaaS).",
+         "B": "Defining clear roles and responsibilities.",
+         "C": "Performing a comprehensive security risk assessment.",
+         "D": "Establishing a direct connection to the cloud provider."
+       },
+       "correctOption": "C",
+       "overview": "Performing a comprehensive security risk assessment is crucial in the initial phase of cloud migration. It helps identify potential security risks and vulnerabilities that could impact the migrated data and applications, allowing for the development of appropriate mitigation strategies."
+     },
+ {
+   "questionNumber": 1,
+   "question": "Which legislation primarily deals with the enhancement of electronic communications privacy, and also protects against unauthorized access of cloud storage?",
+   "options": {
+     "A": "Sarbanes-Oxley Act",
+     "B": "Federal Information Security Management Act (FISMA)",
+     "C": "Electronic Communications Privacy Act (ECPA)",
+     "D": "General Data Protection Regulation (GDPR)"
+   },
+   "correctOption": "C",
+   "overview": "The Electronic Communications Privacy Act (ECPA) was enacted to extend government restrictions on wire taps from telephone calls to include transmissions of electronic data by computer. It also protects against unauthorized access of cloud storage, making it critical legislation in the context of cloud computing and privacy."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which of the following best describes the responsibility of cloud service providers in relation to data protection under GDPR?",
+   "options": {
+     "A": "Data controllers only",
+     "B": "Data processors only",
+     "C": "Both data controllers and data processors",
+     "D": "Neither data controllers nor data processors"
+   },
+   "correctOption": "C",
+   "overview": "Under the General Data Protection Regulation (GDPR), cloud service providers can act as both data controllers and data processors. This depends on the specific services and data handling practices. They have responsibilities under GDPR to ensure personal data is processed lawfully, transparently, and securely."
+ },
+ {
+   "questionNumber": 3,
+   "question": "What principle of cloud computing legal issues emphasizes the importance of ensuring that cloud-based applications and services meet local and international legal requirements?",
+   "options": {
+     "A": "Jurisdiction",
+     "B": "Data sovereignty",
+     "C": "Compliance",
+     "D": "Privacy"
+   },
+   "correctOption": "C",
+   "overview": "The principle of 'Compliance' in cloud computing legal issues emphasizes the need for cloud-based applications and services to adhere to both local and international legal and regulatory requirements. This is crucial to avoid legal penalties and ensure data protection and privacy standards are met."
+ },
+ {
+   "questionNumber": 1,
+   "question": "Which of the following is NOT a cloud data protection principle?",
+   "options": {
+     "A": "Data Encryption",
+     "B": "Data Localization",
+     "C": "Data Availability",
+     "D": "Data Obfuscation"
+   },
+   "correctOption": "C",
+   "overview": "Data Availability is a principle of data security focused on ensuring that data is accessible when needed by authorized users, but it is not specifically a data protection technique aimed at safeguarding data from unauthorized access or alterations. Data protection principles such as Data Encryption, Data Localization, and Data Obfuscation are designed to protect data from unauthorized access and ensure its confidentiality and integrity."
+ },
+ {
+   "questionNumber": 2,
+   "question": "What is the primary purpose of using encryption in cloud data security?",
+   "options": {
+     "A": "To enhance the performance of cloud services",
+     "B": "To ensure data integrity",
+     "C": "To prevent unauthorized data access",
+     "D": "To increase data storage capacity"
+   },
+   "correctOption": "C",
+   "overview": "The primary purpose of using encryption in cloud data security is to prevent unauthorized data access. Encryption transforms readable data into an unreadable format, which can only be converted back to its original form with the correct decryption key, thereby ensuring that even if the data is intercepted or accessed by unauthorized individuals, it remains unintelligible and secure."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which of the following best describes the concept of data localization in cloud computing?",
+   "options": {
+     "A": "Storing data in multiple locations to ensure redundancy",
+     "B": "Restricting the physical location of data storage to comply with legal requirements",
+     "C": "Using local encryption methods for data security",
+     "D": "Localizing the user interface of cloud services for different regions"
+   },
+   "correctOption": "B",
+   "overview": "Data localization in cloud computing refers to the practice of restricting the physical location of data storage to comply with legal requirements. This often involves storing data within a particular jurisdiction to adhere to the laws and regulations of that region, which may dictate that certain types of data must not leave the geographical boundaries of the country."
+ },
+ {
+   "questionNumber": 1,
+   "question": "Which of the following is a characteristic of a community cloud model?",
+   "options": {
+     "A": "It is owned and operated by a single organization.",
+     "B": "It supports multiple organizations sharing computing resources.",
+     "C": "It is dedicated to the public and offers the highest level of scalability.",
+     "D": "It is a composition of two or more distinct cloud infrastructures."
+   },
+   "correctOption": "B",
+   "overview": "A community cloud model is designed to allow multiple organizations to share computing resources. Unlike the public cloud, which is open to any user, the community cloud serves a specific group of users with common interests or requirements. This model provides a balance between the scalability of the public cloud and the control and security of a private cloud."
+ },
+ {
+   "questionNumber": 2,
+   "question": "What is a primary benefit of using a community cloud model for organizations with similar regulatory compliance requirements?",
+   "options": {
+     "A": "Decreased security and privacy concerns",
+     "B": "Increased computational power",
+     "C": "Cost reduction through shared resources",
+     "D": "Unlimited storage capacity"
+   },
+   "correctOption": "C",
+   "overview": "One of the primary benefits of using a community cloud model for organizations with similar regulatory compliance requirements is cost reduction through shared resources. By pooling resources, such as storage and processing capabilities, organizations can achieve economies of scale, leading to lower costs compared to using a private cloud or individual public cloud services. This model also facilitates compliance with specific regulations, as all participating entities face similar legal and regulatory frameworks."
+ },
+ {
+   "questionNumber": 3,
+   "question": "In the context of cloud security, what advantage does a community cloud offer over a public cloud?",
+   "options": {
+     "A": "It offers unlimited resources.",
+     "B": "It provides a higher level of security and privacy.",
+     "C": "It is more cost-effective for individual users.",
+     "D": "It offers a wider range of services."
+   },
+   "correctOption": "B",
+   "overview": "A community cloud offers a higher level of security and privacy compared to a public cloud. This is because it serves a specific group of users rather than the general public, allowing for more controlled access and shared security policies. Organizations within a community cloud can collaborate on security standards and protocols, ensuring that the infrastructure meets their specific security and privacy requirements."
+ },
+ {
+   "questionNumber": 1,
+   "question": "Which layer of cloud computing architecture is directly used by end-users?",
+   "options": {
+     "A": "Infrastructure as a Service (IaaS)",
+     "B": "Platform as a Service (PaaS)",
+     "C": "Software as a Service (SaaS)",
+     "D": "Network as a Service (NaaS)"
+   },
+   "correctOption": "C",
+   "overview": "Software as a Service (SaaS) is the layer of cloud computing architecture that is directly used by end-users. It provides access to application software and databases. Cloud providers manage the infrastructure and platforms that run the applications."
+ },
+ {
+   "questionNumber": 2,
+   "question": "In cloud reference architecture, what does the 'control layer' primarily manage?",
+   "options": {
+     "A": "Physical hardware resources",
+     "B": "User access and identity",
+     "C": "Data encryption and security",
+     "D": "Deployment of services and applications"
+   },
+   "correctOption": "B",
+   "overview": "In cloud reference architecture, the 'control layer' primarily manages user access and identity. It ensures that only authorized users can access certain resources and services, playing a crucial role in cloud security."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which of the following is NOT a characteristic of cloud computing?",
+   "options": {
+     "A": "On-demand self-service",
+     "B": "Broad network access",
+     "C": "Limited scalability",
+     "D": "Resource pooling"
+   },
+   "correctOption": "C",
+   "overview": "Limited scalability is NOT a characteristic of cloud computing. In contrast, one of the defining characteristics of cloud computing is rapid elasticity or scalability, which allows systems to easily scale up or down according to demand."
+ }
+ 
+   ]
+ }
+ 
+ 
+ 
+ /////////
+ Raw Response: {
+   "examName": "Certified Cloud Security Professional",
+   "topics": [
+     "Cloud Security",
+     "Ethical Hacking"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is NOT a common cloud computing service model?",
+       "options": {
+         "A": "Infrastructure as a Service (IaaS)",
+         "B": "Platform as a Service (PaaS)",
+         "C": "Software as a Service (SaaS)",
+         "D": "Data as a Service (DaaS)"
+       },
+       "correctOption": "D",
+       "overview": "The three common cloud computing service models are Infrastructure as a Service (IaaS), Platform as a Service (PaaS), and Software as a Service (SaaS). Data as a Service (DaaS) is not typically classified among the foundational cloud service models."
+     },
+     {
+       "questionNumber": 2,
+       "question": "In ethical hacking, what is the primary purpose of penetration testing?",
+       "options": {
+         "A": "To steal data from competitors",
+         "B": "To identify and exploit vulnerabilities in a system",
+         "C": "To perform an audit of the system's user accounts",
+         "D": "To repair vulnerabilities in a system"
+       },
+       "correctOption": "B",
+       "overview": "The primary purpose of penetration testing in ethical hacking is to identify and exploit vulnerabilities in a system. This helps in understanding the weaknesses of the system and in improving its security posture, not to steal data or repair the vulnerabilities directly."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which principle of cloud security involves ensuring that data is only accessible by authorized users?",
+       "options": {
+         "A": "Data Integrity",
+         "B": "Data Confidentiality",
+         "C": "Data Availability",
+         "D": "Data Redundancy"
+       },
+       "correctOption": "B",
+       "overview": "Data Confidentiality is a principle of cloud security that involves ensuring that data is only accessible by authorized users. It is crucial for protecting sensitive information from unauthorized access and breaches."
+     }
+   ]
+ }
+ 
+ 
  
 
  SWIFT:

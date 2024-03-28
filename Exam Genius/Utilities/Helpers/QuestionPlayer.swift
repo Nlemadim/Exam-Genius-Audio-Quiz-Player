@@ -28,6 +28,8 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         configureAudioSession()
     }
     
+
+    
     func configureAudioSession() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -60,12 +62,20 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
 
     
     private func playQuestionAudioFile(_ audioFile: String) {
-        let path = audioFile
+        //        let path = audioFile
+        //
+        //        guard let fileURL = URL(string: path) else {
+        //            print("Invalid file URL for audio file: \(audioFile)")
+        //            return
+        //        }
         
-        guard let fileURL = URL(string: path) else {
-            print("Invalid file URL for audio file: \(audioFile)")
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Documents directory not found")
             return
         }
+        
+        let fileURL = documentsDirectory.appendingPathComponent(audioFile)
         
         do {
             // Attempt to configure and activate the audio session if not already in the desired state.
@@ -78,7 +88,7 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
             // Stop and nil out the current player before initializing a new one.
             audioPlayer?.stop()
             audioPlayer = nil
-
+            
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()

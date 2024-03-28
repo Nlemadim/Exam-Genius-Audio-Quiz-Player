@@ -34,12 +34,12 @@ struct ConfirmationModalView: View {
     @Binding var interactionState: InteractionState
     var mainColor: Color
     var subColor: Color
-    var isCorrect: Bool
+    @State var isCorrect: Bool
     
     var body: some View {
         VStack(alignment: .center) {
     
-            Image(systemName:isCorrect ?  "hand.thumbsup.fill" : "hand.thumbsdown.fill" )
+            Image(systemName: isCorrect ?  "hand.thumbsup.fill" : "hand.thumbsdown.fill" )
                 .resizable()
                 .foregroundStyle(subColor)
                 .frame(width: 80, height: 80)

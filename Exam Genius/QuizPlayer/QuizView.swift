@@ -73,7 +73,7 @@ struct QuizView: View {
                 
                 PlayerControlButtons(isNowPlaying: .constant(interactionState == .isNowPlaying),
                                      themeColor: generator.dominantLightToneColor,
-                                     repeatAction: { },
+                                     repeatAction: { dismiss() },
                                      playAction: { playAudio()},
                                      nextAction: { goToNextQuestion() }
                 )
@@ -98,9 +98,11 @@ struct QuizView: View {
             ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
                 .presentationDetents([.height(200)])
                 .onAppear {
+                    //print(isCorrectAnswer)
                     //MARK: Simulating Overview readout
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         self.interactionState = .idle
+                        print(isCorrectAnswer)
                     }
                 }
         })
@@ -109,11 +111,7 @@ struct QuizView: View {
     }
     
     func playAudio() {
-        if isNowPlaying {
-            self.isNowPlaying = false
-        } else {
-            self.isNowPlaying = true
-        }
+        isNowPlaying.toggle()
     }
     
     func goToNextQuestion() {
@@ -122,8 +120,6 @@ struct QuizView: View {
         nextTapped.toggle()
         currentQuestionIndex += 1
     }
-
-    
     
     func showContent() {
         // Safely unwrap configuration and ensure currentIndex is within the range of questions.

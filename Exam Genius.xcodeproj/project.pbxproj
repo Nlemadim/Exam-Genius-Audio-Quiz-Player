@@ -245,6 +245,7 @@
 				0B2A87E62BAE09BD001571DD /* QuestionVisualizerMaker.swift */,
 				0B304AD12BAFBA870004F56F /* QuestionPlayer.swift */,
 				0B304AD32BAFBD720004F56F /* ResponseListener.swift */,
+				0B4ACCD72B89A61500377BE7 /* SpeechManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -267,7 +268,6 @@
 			children = (
 				0B4ACCC72B89A61500377BE7 /* PlayerContentInfo.swift */,
 				0B4ACCD32B89A61500377BE7 /* FullScreenControlView.swift */,
-				0B4ACCD72B89A61500377BE7 /* SpeechManager.swift */,
 				0B4ACCE32B89A61500377BE7 /* MiniQuizControlView.swift */,
 				0B4ACCBA2B899B3200377BE7 /* AiAssistantContentView.swift */,
 				0B4ACD0E2B89A82800377BE7 /* CustomQuestionDisplayView.swift */,

@@ -37,7 +37,7 @@ struct QuizPlayerView: View {
     @State private var nextTapped: Bool = false
     @State private var repeatTapped: Bool = false
     @State private var presentMicModal: Bool = false
-    @State private var presentConfirmationModal: Bool = false
+    @State var presentConfirmationModal: Bool = false
     
     @State var currentQuestionIndex: Int = 0
     @State var selectedOption: String = ""
@@ -109,9 +109,15 @@ struct QuizPlayerView: View {
                 }
             }
             .onChange(of: nextTapped) { _, _ in
-                
                 goToNextQuestion()
             }
+//            .onChange(of: presentConfirmationModal) { _, newValue in
+//                if newValue == true {
+//                    DispatchQueue.main.async {
+//                        self.interactionState = .isCorrectAnswer
+//                    }
+//                }
+//            }
             .onChange(of: questionPlayer.interactionState) { _, newValue in
                 self.interactionState = newValue
                 if newValue == .isDonePlaying {
@@ -122,7 +128,7 @@ struct QuizPlayerView: View {
             .onChange(of: responseListener.interactionState) { _, newValue in
                 self.interactionState = newValue
                 DispatchQueue.main.async {
-                    self.interactionState = newValue
+                    //self.interactionState = newValue
                     print("QuizPlayer interaction State is: \(self.interactionState)")
                     if newValue == .idle {
                         self.selectedOption = responseListener.userTranscript
@@ -136,7 +142,7 @@ struct QuizPlayerView: View {
             )
         }
         .fullScreenCover(isPresented: $expandSheet) {
-            QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, isCorrectAnswer: $presentConfirmationModal, presentMicModal: $presentMicModal, nextTapped: $repeatTapped, interactionState: $interactionState)
+            QuizView(quizSetter: quizSetter, currentQuestionIndex: $currentQuestionIndex, isNowPlaying: $playTapped, isCorrectAnswer: $presentConfirmationModal, presentMicModal: $presentMicModal, nextTapped: $nextTapped, interactionState: $interactionState)
         }
         .onChange(of: playTapped, { _, _ in
             playQuestion()

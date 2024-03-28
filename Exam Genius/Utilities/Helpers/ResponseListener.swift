@@ -17,8 +17,10 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     @Published var userTranscript: String = ""
     @Published var interactionState: InteractionState = .idle
     
-    private var speechRecognizer = SpeechManager()
     var cancellable: AnyCancellable?
+    private var speechRecognizer = SpeechManager()
+    private var retryCount = 0
+    private let maxRetryCount = 2
     
     func recordAnswer() {
         startRecordingAndTranscribing()
@@ -54,7 +56,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         self.userTranscript = self.selectedOption
     }
     
-    func processTranscript(transcript: String) -> String {
+    fileprivate func processTranscript(transcript: String) -> String {
         self.interactionState = .isProcessing
         let processedTranscript = WordProcessor.processWords(from: transcript)
         self.selectedOption = processedTranscript
@@ -71,6 +73,29 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         
         interactionState = .idle
         return processedTranscript
+    }
+    
+    func speechRecognitionTask(_ task: SFSpeechRecognitionTask, didFinishRecognition recognitionResult: SFSpeechRecognitionResult) {
+        // This method is called when the speech recognizer successfully recognizes speech from the audio file.
+        DispatchQueue.main.async {
+            self.interactionState = .hasResponded
+        }
+    }
+
+    func speechRecognitionTask(_ task: SFSpeechRecognitionTask, didFinishSuccessfully successfully: Bool) {
+        ///Automatically retrying recording after error transcription
+        if !successfully && retryCount < maxRetryCount {
+            DispatchQueue.main.async {
+                self.interactionState = .errorTranscription
+                self.speechRecognizer.reset()
+                self.startRecordingAndTranscribing()
+                self.retryCount += 1
+            }
+        }
+        
+        if !successfully {
+            self.interactionState = .errorTranscription
+        }
     }
     
     deinit {
