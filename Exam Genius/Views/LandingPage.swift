@@ -136,7 +136,7 @@ struct LandingPage: View {
     
     
     private func buildContentFromVm(audioQuiz: AudioQuizPackage) {
-        let viewModel = AudioQuizDetailView.AudioQuizDetailVM(audioQuiz: audioQuiz)
+        let viewModel = AudioQuizDetailView.`AudioQuizDetailVM`(audioQuiz: audioQuiz)
         viewModel.buildAudioQuizContent(name: audioQuiz)
     }
     

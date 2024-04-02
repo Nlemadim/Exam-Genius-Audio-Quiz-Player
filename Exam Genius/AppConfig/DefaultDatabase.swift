@@ -109,29 +109,34 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: .technology, about: "Certification for IT and information security leaders in cloud security.", image: "CloudComputing"),
             
-            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: .legal, about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering")
+            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: .legal, about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering"),
             
+            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: .healthcare, about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
             
+            ExamDetails(name: "United States Medical Licensing Examination Step 3", acronym: "USMLE Step 3", category: .healthcare, about: "Assesses whether participants can apply medical knowledge and understanding of biomedical and clinical science essential for the unsupervised practice of medicine, with an emphasis on patient management in ambulatory settings.", image: "USMLE-Step-3-Basic"),
+            
+            ExamDetails(name: "SAT Exam", acronym: "SAT", category: .education, about: "A standardized test widely used for college admissions in the United States.", image: "SAT-Exam"),
+            
+            ExamDetails(name: "Pharmacy College Admission Test", acronym: "PCAT", category: .healthcare, about: "A computer-based standardized test that helps to identify qualified applicants to pharmacy colleges.", image: "PCAT-Exam"),
+            
+            ExamDetails(name: "Veterinary Technician National Exam", acronym: "VTNE", category: .healthcare, about: "A credentialing examination for veterinary technicians.", image: "VTNE-Exam"),
+            
+            ExamDetails(name: "Optometry Admission Test", acronym: "OAT", category: .healthcare, about: "The test required for admission into optometry programs in the United States.", image: "OAT-Exam"),
+            
+            ExamDetails(name: "Praxis Exam", acronym: "Praxis", category: .education, about: "A series of American teacher certification exams that measure", image: "OAT-Exam"),ExamDetails(name: "Fundamentals of Engineering Exam", acronym: "FE", category: .engineering, about: "An exam that must be passed to become a licensed engineer in the United States.", image: "PRAXIS-Exam"),
+            
+            ExamDetails(name: "Structural Engineering Exam", acronym: "SE", category: .engineering, about: "A specialized exam for engineers focusing on the design and safety of structures.", image: "SE-Exam"),
+            
+            ExamDetails(name: "ITIL Certification Exam", acronym: "ITIL", category: .technology, about: "ITIL (Information Technology Infrastructure Library) Certification Exam focuses on IT service management, professionalism, and the comprehensive approach that ITIL embodies for aligning IT services with business needs.", image: "ITIL-Exam"),
+            
+            ExamDetails(name: "PRINCE2 Certification Exam", acronym: "PRINCE2", category: .business, about: "PRINCE2 (Projects IN Controlled Environments) Certification Exam audio quiz packet focuses on project management, organization, and structure, and reflecting the methodology's focus on process-based approaches for effective project management.", image: "PRINCE2-Exam"),
+            
+            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: .technology, about: "SAP Certification Exam involves highlighting elements of enterprise resource planning (ERP), business processes, and data analysis, given SAP's role in integrating various business operations and providing data-driven solutions.", image: "SAP-Exam"),
+            
+            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: .technology, about: "Focuses on testing knowledge of the cutting-edge nature of cloud computing, Google's innovative ecosystem, and the technical expertise required to achieve certification.", image: "GoogleCloud-Exam"),
+            
+            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: .technology, about: "Certification for Linux system administrators.", image: "LPIC-Exam")
 
-            //MARK FOR IMAGE GEN
-//            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: .healthcare, about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
-//            ExamDetails(name: "United States Medical Licensing Examination Step 3", acronym: "USMLE Step 3", category: .healthcare, about: "Assesses whether participants can apply medical knowledge and understanding of biomedical and clinical science essential for the unsupervised practice of medicine, with an emphasis on patient management in ambulatory settings.", image: "USMLE-Step-3-Basic")
-//            ExamDetails(name: "SAT Exam", acronym: "SAT", category: .education, about: "A standardized test widely used for college admissions in the United States.", image: "SAT-Exam"),
-//            ExamDetails(name: "Optometry Admission Test", acronym: "OAT", category: .healthcare, about: "The test required for admission into optometry programs in the United States.", image: "OAT-Exam"),
-//            ExamDetails(name: "Pharmacy College Admission Test", acronym: "PCAT", category: .healthcare, about: "A computer-based standardized test that helps to identify qualified applicants to pharmacy colleges.", image: "PCAT-Exam"),
-//            ExamDetails(name: "Veterinary Technician National Exam", acronym: "VTNE", category: .healthcare, about: "A credentialing examination for veterinary technicians.", image: "VTNE-Exam"),
-//            ExamDetails(name: "Praxis Exam", acronym: "Praxis", category: .education, about: "A series of American teacher certification exams that measure", image: "OAT-Exam"),ExamDetails(name: "Fundamentals of Engineering Exam", acronym: "FE", category: .engineering, about: "An exam that must be passed to become a licensed engineer in the United States.", image: "FE-Exam"),
-//            ExamDetails(name: "Structural Engineering Exam", acronym: "SE", category: .engineering, about: "A specialized exam for engineers focusing on the design and safety of structures.", image: "SE-Exam"),
-//            ExamDetails(name: "ITIL Certification Exam", acronym: "ITIL", category: .technology, about: "Certification for IT service management based on ITIL practices.", image: "ITIL-Exam"),
-//            ExamDetails(name: "PRINCE2 Certification Exam", acronym: "PRINCE2", category: .business, about: "A process-based method for effective project management.", image: "PRINCE2-Exam"),
-//            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: .technology, about: "Certification for professionals working with SAP software solutions.", image: "SAP-Exam"),
-//            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: .technology, about: "Certification for individuals using Google Cloud technologies.", image: "GoogleCloud-Exam"),
-//            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: .technology, about: "Certification for Linux system administrators.", image: "LPIC-Exam"),
-
-    
         ]
     }
 }
-
-
-//Create an Art work fit for a mobile phone application that represents the "Certified Healthcare Financial Professional" Exam. Make the image visually appealing based on the context of the exam especially relating the symbols commonly associated with exams of this kind. there should be no people in the image in PNG
