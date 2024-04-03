@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import UIKit
+//import UIKit
 
 extension CGFloat {
     static var screenWidth: Double {
@@ -27,7 +27,6 @@ extension CGFloat {
         return screenWidth * per;
         //screenWidth: 375 * 0.5
     }
-    
 }
 
 extension UIImage {

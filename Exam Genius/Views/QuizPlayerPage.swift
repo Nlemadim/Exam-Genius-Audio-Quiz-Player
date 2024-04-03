@@ -72,7 +72,7 @@ struct QuizPlayerPage: View {
                 }
                 .task {
                     await loadDefaultCollection()
-                    updateCollections()
+                    
                     
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                     
@@ -94,10 +94,8 @@ struct QuizPlayerPage: View {
             }
             /// Hiding tabBar when Sheet is expended
             .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
-            
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, interactionState: $interactionState)
-                
             }
             .onChange(of: didTapDownload, { _, newValue in
                 if newValue {
@@ -122,24 +120,21 @@ struct QuizPlayerPage: View {
             }
             .tag(0)
             
-            ExploreAudioQuizView()
+            MyLibrary()
                 .tabItem {
-                    TabIcons(title: "Browse", icon: "square.grid.2x2")
+                    TabIcons(title: "Quiz player", icon: "play.circle")
                 }
                 .tag(1)
             
-            MyLibrary()
+            ExploreAudioQuizView()
                 .tabItem {
-                    TabIcons(title: "Quiz player", icon: "books.vertical.fill")
+                    TabIcons(title: "Browse", icon: "square.grid.2x2")
                 }
                 .tag(2)
         }
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
-            updateCollections()
             generator.updateDominantColor(fromImageNamed: backgroundImage)
-            
-            
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .preferredColorScheme(.dark)
@@ -224,6 +219,8 @@ struct QuizPlayerPage: View {
             
             try! modelContext.save()
         }
+        
+        updateCollections()
     }
 }
 
@@ -284,10 +281,11 @@ struct QuizCarouselView: View {
                     Image(quiz.imageUrl)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 240, height: 240)
+                        .frame(width: 220, height: 220)
                         .cornerRadius(10.0)
                     
-                    Text(quiz.name)
+                    Text(quiz.acronym)
+                        .font(.callout)
                         .fontWeight(.black)
                         .lineLimit(3)
                         .multilineTextAlignment(.center)
@@ -305,7 +303,7 @@ struct QuizCarouselView: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-        .frame(height: 380)
+        .frame(height: 320)
     }
 }
 
@@ -324,9 +322,9 @@ struct HorizontalQuizListView: View {
                 .hAlign(.leading)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8.0) {
+                HStack(spacing: 0) {
                     ForEach(quizzes, id: \.self) { quiz in
-                        ImageAndTitleView(title: quiz.name, titleImage: quiz.imageUrl, tapAction: tapAction, quiz: quiz)
+                        ImageAndTitleView(title: quiz.acronym, titleImage: quiz.imageUrl, tapAction: tapAction, quiz: quiz)
                     }
                 }
             }
@@ -349,13 +347,13 @@ struct ImageAndTitleView: View {
             Image(titleImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 180, height: 180)
+                .frame(width: 160, height: 160)
                 .cornerRadius(10.0)
             Text(title)
-                .font(.system(size: 16))
-                .lineLimit(2)
+                .font(.system(size: 13))
+                .lineLimit(2, reservesSpace: true)
                 .multilineTextAlignment(.leading)
-                .frame(width: 180)
+                .frame(width: 160)
                 .padding(.horizontal, 8)
                 .padding(.bottom)
         }

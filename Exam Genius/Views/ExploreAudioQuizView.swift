@@ -29,7 +29,6 @@ struct ExploreAudioQuizView: View {
                                 let quizItem = MyPlaylistItem(from: quiz)
                                 AudQuizCardViewMid(quiz: quizItem)
                                     .onTapGesture {
-                                        print(quiz.name)
                                         self.selectedQuizPackage = quiz
                                     }
                             }
@@ -45,7 +44,6 @@ struct ExploreAudioQuizView: View {
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: .constant(false), interactionState: $interactionState)
-                    
             }
             .navigationTitle("Explore")
             .navigationBarTitleDisplayMode(.large)
@@ -71,7 +69,6 @@ struct ExploreAudioQuizView: View {
             }
         }
         
-        // Remove categories with no quizzes
         result = result.filter { !$0.value.isEmpty }
         
         return result

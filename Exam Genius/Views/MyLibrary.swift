@@ -15,6 +15,7 @@ struct MyLibrary: View {
     @EnvironmentObject var appState: AppState
     
     @State var playlist: [String] = ["Yellow", "Red", "Blue", "Green", "Orange", "Black", "Teal"]
+    
     var body: some View {
         ZStack {
             VStack {
@@ -32,15 +33,16 @@ struct MyLibrary: View {
                     Image("Logo")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
+                        .frame(width: 60, height: 60)
                         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                     
                     VStack(alignment: .leading, spacing: 4) {
                         /// Long Name
                         HStack {
                             Text("Audio Quiz Player")
-                                .font(.headline)
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
+                                .lineLimit(2, reservesSpace: false)
                                 .fontWeight(.semibold)
                             Image(systemName: "headphones")
                             
@@ -52,12 +54,13 @@ struct MyLibrary: View {
                         }
                         .foregroundStyle(.white)
                         
-                        Spacer().frame(height: 40)
+                        
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.horizontal)
+                .padding(.top, 20)
                 
                 VStack(alignment: .leading, spacing: 12.0) {
                     LabeledContent("Total Questions", value: "\(user.selectedQuizPackage?.questions.count ?? 0)")
@@ -65,7 +68,7 @@ struct MyLibrary: View {
                     LabeledContent("Quizzes Completed", value: "\(user.selectedQuizPackage?.questions.count ?? 0)")
                     LabeledContent("Current High Score", value: "\(user.selectedQuizPackage?.questions.count ?? 0)%")
                 }
-                .font(.callout)
+                .font(.footnote)
                 .padding(.horizontal)
                 .padding()
                 
@@ -76,13 +79,15 @@ struct MyLibrary: View {
                         .font(.headline)
                     
                     Spacer()
-                    
+                     
                     Button("", systemImage: "line.3.horizontal") {
                         
                     }
                 }
                 .foregroundStyle(.white)
                 .padding(.horizontal)
+                
+                Divider()
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
