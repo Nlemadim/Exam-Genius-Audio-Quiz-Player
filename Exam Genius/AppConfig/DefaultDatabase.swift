@@ -19,7 +19,7 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Project Management Professional Exam", acronym: "PMP", category: [.business], about: "Certification exam for project managers.", image: "PMP-Exam"),
             
-            ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: [.legal, .topCollection], about: "A standardized test for admissions to law schools in the USA.", image: "LSAT-Exam-Basic"),
+            ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: [.legal, .topColledgePicks], about: "A standardized test for admissions to law schools in the USA.", image: "LSAT-Exam-Basic"),
             
             ExamDetails(name: "CompTIA A+", acronym: "A+", category: [.technology], about: "Certification for entry-level computer technicians.", image: "COMPTIA-APlus-Exam"),
             
@@ -33,7 +33,7 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Series 7 Exam", acronym: "Series 7", category: [.finance], about: "Qualification exam for stockbrokers in the USA.", image: "Series7-Exam"),
             
-            ExamDetails(name: "Graduate Record Examinations", acronym: "GRE", category: [.education, .topCollection, .topColledgePicks], about: "A standardized test for admissions to graduate schools.", image: "GRE-Exam"),
+            ExamDetails(name: "Graduate Record Examinations", acronym: "GRE", category: [.education, .topColledgePicks], about: "A standardized test for admissions to graduate schools.", image: "GRE-Exam"),
             
             ExamDetails(name: "Test of English as a Foreign Language", acronym: "TOEFL", category: [.language, .topColledgePicks, .education], about: "A standardized test to measure the English language ability of non-native speakers.", image: "TOFEL-Exam"),
             
@@ -51,7 +51,7 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Certified Information Systems Security Professional Exam", acronym: "CISSP", category: [.technology], about: "An advanced-level certification for IT pros serious about careers in information security.", image: "CISSP-Exam"),
             
-            ExamDetails(name: "Certified ScrumMaster Exam", acronym: "CSM", category: [.business, .professional], about: "Certification for project managers in agile development methodology to lead Scrum teams.", image: "CSM-Exam"),
+            ExamDetails(name: "Certified ScrumMaster Exam", acronym: "CSM", category: [.business, .professional, .topProfessionalCertification], about: "Certification for project managers in agile development methodology to lead Scrum teams.", image: "CSM-Exam"),
             
             ExamDetails(name: "Certified Six Sigma Green Belt Exam", acronym: "CSSGB", category: [.business], about: "Certification that recognizes professionals who are skilled in facilitating team activities within Six Sigma.", image: "CSSGB-Exam-Basic"),
             
@@ -63,9 +63,9 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Swift Programming Language", acronym: "Swift", category: [.technology], about: "Certification for developers in the Swift programming language, used for iOS and macOS applications.", image: "SwiftProgramming"),
             
-            ExamDetails(name: "ACT Exam", acronym: "ACT", category: [.education, .topColledgePicks, .topCollection], about: "A standardized test for high school achievement and college admissions in the United States.", image: "ACT-Exam-Basic"),
+            ExamDetails(name: "ACT Exam", acronym: "ACT", category: [.education, .topColledgePicks], about: "A standardized test for high school achievement and college admissions in the United States.", image: "ACT-Exam-Basic"),
             
-            ExamDetails(name: "Advanced Placement Exams", acronym: "AP", category: [.education, .topColledgePicks, .topCollection], about: "Exams that offer high school students the opportunity to earn college credit, advanced placement, or both, in various subject areas.", image: "AFP-Exam-Basic"),
+            ExamDetails(name: "Advanced Placement Exams", acronym: "AP", category: [.education, .topColledgePicks], about: "Exams that offer high school students the opportunity to earn college credit, advanced placement, or both, in various subject areas.", image: "AFP-Exam-Basic"),
             
             ExamDetails(name: "Dental Admission Test", acronym: "DAT", category: [.healthcare], about: "A standardized test to assess the qualification of dental school applicants in the United States and Canada.", image: "DAT-Exam-Basic"),
             
@@ -75,7 +75,7 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Kotlin Programming Language", acronym: "Kotlin", category: [.technology], about: "", image: "Kotlin"),
             
-            ExamDetails(name: "AWS Certified Solutions Architect Exam", acronym: "AWS CSA", category: [.technology, .topProfessionalCertification, .topCollection], about: "Certification for individuals designing distributed systems on AWS.", image: "AWS-Exam-Basic"),
+            ExamDetails(name: "AWS Certified Solutions Architect Exam", acronym: "AWS CSA", category: [.technology, .topCollection], about: "Certification for individuals designing distributed systems on AWS.", image: "AWS-Exam-Basic"),
             
             ExamDetails(name: "Microsoft Azure Fundamentals Exam", acronym: "Azure Fundamentals", category: [.technology, .topProfessionalCertification], about: "Certification covering basic Azure concepts and services", image: "Azure-Exam-Basic"),
             
@@ -93,53 +93,51 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Certified Management Accountant", acronym: "CMA", category: [.finance], about: "Certification for accountants and financial professionals in business.", image: "CMA-Exam-Basic"),
             
-            ExamDetails(name: "Certified Public Accountant", acronym: "CPA", category: [.finance, .professional, .topCollection, .topProfessionalCertification], about: "Licensure for accountants to practice public accounting in the United States.", image: "CPA-Exam-Basic"),
-            
-            ExamDetails(name: "Certified Internal Auditor", acronym: "CIA", category: [.finance, .professional, .topCollection, .topProfessionalCertification], about: "Certification for professionals who conduct internal audits.", image: "CIA-Exam-Basic"),
+            ExamDetails(name: "Certified Internal Auditor", acronym: "CIA", category: [.finance, .professional, .topProfessionalCertification], about: "Certification for professionals who conduct internal audits.", image: "CIA-Exam-Basic"),
             
             ExamDetails(name: "Certified Fraud Examiner", acronym: "CFE", category: [.finance], about: "The CFE Exam tests knowledge in financial fraud, law, investigations, and fraud prevention and deterrence, administered by ACFE.", image: "CFE-Exam-Basic"),
             
-            ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: [.healthcare, .topCollection], about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam"),
+            ExamDetails(name: "United States Medical Licensing Examination Step 1", acronym: "USMLE Step 1", category: [.healthcare, .topProfessionalCertification, .topColledgePicks], about: "Assesses whether medical students or graduates understand and can apply important concepts of the basic sciences to the practice of medicine. Focuses on principles and mechanisms underlying health, disease, and modes of therapy.", image: "USMLESTEP1-Exam"),
             
-            ExamDetails(name: "Medical Colledge Admission Test", acronym: "MCAT", category: [.healthcare, .topCollection], about: "A computer-based standardized examination for prospective medical students, including both Allopathic M.D. and Osteopathic D.O., in the United States, Australia, Canada, and the Caribbean Island", image: "MCAT-Exam-Pro"),
+            ExamDetails(name: "Medical Colledge Admission Test", acronym: "MCAT", category: [.healthcare, .topCollection, .topColledgePicks], about: "A computer-based standardized examination for prospective medical students, including both Allopathic M.D. and Osteopathic D.O., in the United States, Australia, Canada, and the Caribbean Island", image: "MCAT-Exam-Pro"),
             
             ExamDetails(name: "Barista Certification", acronym: "", category: [.professional], about: "", image: "BARISTERCert-Exam"),
             
-            ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: [.legal, .education, .topCollection], about: "A standardized test administered by the Law School Admission Council (LSAC) for prospective law school candidates", image: "LSAT-Exam-Basic"),
+            ExamDetails(name: "Law School Admission Test", acronym: "LSAT", category: [.legal, .education, .topColledgePicks], about: "A standardized test administered by the Law School Admission Council (LSAC) for prospective law school candidates", image: "LSAT-Exam-Basic"),
             
-            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: [.technology], about: "Certification for IT and information security leaders in cloud security.", image: "CloudComputing"),
+            ExamDetails(name: "Certified Cloud Security Professional", acronym: "CCSP", category: [.technology, .topProfessionalCertification], about: "Certification for IT and information security leaders in cloud security.", image: "CloudComputing"),
             
-<<<<<<< Updated upstream
-            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: .legal, about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering"),
-=======
-            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: [.technology, .legal], about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering")
->>>>>>> Stashed changes
+
+            ExamDetails(name: "Privacy Engineering", acronym: "Privacy", category: [.technology, .business], about: " This series test knowledge of guidelines for privacy engineering, including the management of privacy risks in the design and development of systems", image: "PrivacyEngineering"),
+
             
-            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: .healthcare, about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
+            ExamDetails(name: "United States Medical Licensing Examination Step 2 Clinical Knowledge", acronym: "USMLE Step 2 CK", category: [.healthcare, .topColledgePicks, .topProfessionalCertification], about: "Tests medical knowledge and understanding of clinical science necessary for the provision of patient care under supervision, with an emphasis on health promotion and disease prevention.", image: "USMLE-Step-2-CK-Basic"),
             
-            ExamDetails(name: "United States Medical Licensing Examination Step 3", acronym: "USMLE Step 3", category: .healthcare, about: "Assesses whether participants can apply medical knowledge and understanding of biomedical and clinical science essential for the unsupervised practice of medicine, with an emphasis on patient management in ambulatory settings.", image: "USMLE-Step-3-Basic"),
+            ExamDetails(name: "United States Medical Licensing Examination Step 3", acronym: "USMLE Step 3", category: [.healthcare, .topProfessionalCertification, .topColledgePicks], about: "Assesses whether participants can apply medical knowledge and understanding of biomedical and clinical science essential for the unsupervised practice of medicine, with an emphasis on patient management in ambulatory settings.", image: "USMLE-Step-3-Basic"),
             
-            ExamDetails(name: "SAT Exam", acronym: "SAT", category: .education, about: "A standardized test widely used for college admissions in the United States.", image: "SAT-Exam"),
+            ExamDetails(name: "SAT Exam", acronym: "SAT", category: [.topCollection, .education, .topColledgePicks], about: "A standardized test widely used for college admissions in the United States.", image: "SAT-Exam"),
             
-            ExamDetails(name: "Pharmacy College Admission Test", acronym: "PCAT", category: .healthcare, about: "A computer-based standardized test that helps to identify qualified applicants to pharmacy colleges.", image: "PCAT-Exam"),
+            ExamDetails(name: "Pharmacy College Admission Test", acronym: "PCAT", category: [.healthcare], about: "A computer-based standardized test that helps to identify qualified applicants to pharmacy colleges.", image: "PCAT-Exam"),
             
-            ExamDetails(name: "Veterinary Technician National Exam", acronym: "VTNE", category: .healthcare, about: "A credentialing examination for veterinary technicians.", image: "VTNE-Exam"),
+            ExamDetails(name: "Veterinary Technician National Exam", acronym: "VTNE", category: [.healthcare], about: "A credentialing examination for veterinary technicians.", image: "VTNE-Exam"),
             
-            ExamDetails(name: "Optometry Admission Test", acronym: "OAT", category: .healthcare, about: "The test required for admission into optometry programs in the United States.", image: "OAT-Exam"),
+            ExamDetails(name: "Optometry Admission Test", acronym: "OAT", category: [.healthcare], about: "The test required for admission into optometry programs in the United States.", image: "OAT-Exam"),
             
-            ExamDetails(name: "Praxis Exam", acronym: "Praxis", category: .education, about: "A series of American teacher certification exams that measure", image: "OAT-Exam"),ExamDetails(name: "Fundamentals of Engineering Exam", acronym: "FE", category: .engineering, about: "An exam that must be passed to become a licensed engineer in the United States.", image: "PRAXIS-Exam"),
+            ExamDetails(name: "Praxis Exam", acronym: "Praxis", category: [.education, .topColledgePicks], about: "A series of American teacher certification exams that measure", image: "PRAXIS-Exam"),
             
-            ExamDetails(name: "Structural Engineering Exam", acronym: "SE", category: .engineering, about: "A specialized exam for engineers focusing on the design and safety of structures.", image: "SE-Exam"),
+            ExamDetails(name: "Structural Engineering Exam", acronym: "SE", category: [.engineering], about: "A specialized exam for engineers focusing on the design and safety of structures.", image: "SE-Exam"),
             
-            ExamDetails(name: "ITIL Certification Exam", acronym: "ITIL", category: .technology, about: "ITIL (Information Technology Infrastructure Library) Certification Exam focuses on IT service management, professionalism, and the comprehensive approach that ITIL embodies for aligning IT services with business needs.", image: "ITIL-Exam"),
+            ExamDetails(name: "ITIL Certification Exam", acronym: "ITIL", category: [.technology], about: "ITIL (Information Technology Infrastructure Library) Certification Exam focuses on IT service management, professionalism, and the comprehensive approach that ITIL embodies for aligning IT services with business needs.", image: "ITIL-Exam"),
             
-            ExamDetails(name: "PRINCE2 Certification Exam", acronym: "PRINCE2", category: .business, about: "PRINCE2 (Projects IN Controlled Environments) Certification Exam audio quiz packet focuses on project management, organization, and structure, and reflecting the methodology's focus on process-based approaches for effective project management.", image: "PRINCE2-Exam"),
+            ExamDetails(name: "PRINCE2 Certification Exam", acronym: "PRINCE2", category: [.business], about: "PRINCE2 (Projects IN Controlled Environments) Certification Exam audio quiz packet focuses on project management, organization, and structure, and reflecting the methodology's focus on process-based approaches for effective project management.", image: "PRINCE2-Exam"),
             
-            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: .technology, about: "SAP Certification Exam involves highlighting elements of enterprise resource planning (ERP), business processes, and data analysis, given SAP's role in integrating various business operations and providing data-driven solutions.", image: "SAP-Exam"),
+            ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: [.technology], about: "SAP Certification Exam involves highlighting elements of enterprise resource planning (ERP), business processes, and data analysis, given SAP's role in integrating various business operations and providing data-driven solutions.", image: "SAP-Exam"),
             
-            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: .technology, about: "Focuses on testing knowledge of the cutting-edge nature of cloud computing, Google's innovative ecosystem, and the technical expertise required to achieve certification.", image: "GoogleCloud-Exam"),
+            ExamDetails(name: "Google Cloud Certified Exam", acronym: "GCP", category: [.technology, .topCollection], about: "Focuses on testing knowledge of the cutting-edge nature of cloud computing, Google's innovative ecosystem, and the technical expertise required to achieve certification.", image: "GoogleCloud-Exam"),
             
-            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: .technology, about: "Certification for Linux system administrators.", image: "LPIC-Exam")
+            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LPIC", category: [.technology, .topProfessionalCertification, .topCollection], about: "Certification for Linux system administrators.", image: "LPIC-Exam")
+            
+            //ExamDetails(name: "Fundamentals of Engineering Exam", acronym: "FE", category: [.engineering], about: "An exam that must be passed to become a licensed engineer in the United States.", image: "SE-Exam"),
 
         ]
     }

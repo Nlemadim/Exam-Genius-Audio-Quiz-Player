@@ -219,7 +219,9 @@ struct LandingPage: View {
     
     func playSample(playlist: [String]) {
         isPlaying.toggle()
-        quizPlayer.playSampleQuiz(audioFileNames: playlist)
+        let player = QuestionPlayer()
+        player.playAudioQuestions(audioFileNames: playlist)
+        //quizPlayer.playSampleQuiz(audioFileNames: playlist)
     }
     
     func downloadAudioQuiz(_ audioQuiz: AudioQuizPackage) async throws {

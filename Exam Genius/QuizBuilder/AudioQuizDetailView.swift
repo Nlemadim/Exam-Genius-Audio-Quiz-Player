@@ -85,7 +85,7 @@ struct AudioQuizDetailView: View {
                             CircularPlayButton(isPlaying: $isNowPlaying,
                                                isDownloading: $isDownloadingSample,
                                                color: generator.dominantLightToneColor,
-                                               playAction: { user.selectedQuizPackage = audioQuiz/*self.didTapPlaySample = true*/ }
+                                               playAction: { self.didTapPlaySample = true }
                             )
                             .zIndex(1.0)
                             .padding()
@@ -149,7 +149,7 @@ struct AudioQuizDetailView: View {
         .preferredColorScheme(.dark)
         .onAppear {
             generator.updateAllColors(fromImageNamed: audioQuiz.imageUrl)
-            updatePacketStatus()
+            
         }
     }
     
@@ -167,7 +167,6 @@ struct AudioQuizDetailView: View {
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
-            updatePacketStatus()
             stillDownloading = false
         }
     }
@@ -187,13 +186,6 @@ struct AudioQuizDetailView: View {
         } else {
             print("No JSON files found in bundle.")
         }
-    }
-    
-    func updatePacketStatus() {
-        let questionCount = audioQuiz.questions.count
-        let topicsCount = audioQuiz.questions.count
-        print("\(questionCount) questions saved")
-        print("\(topicsCount) topics saved")
     }
 }
 

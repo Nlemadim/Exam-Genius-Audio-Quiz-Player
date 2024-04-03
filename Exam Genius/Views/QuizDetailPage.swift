@@ -14,17 +14,13 @@ struct QuizDetailPage: View {
     @Environment(\.modelContext) private var modelContext
     
     @ObservedObject private var viewModel: QuizDetailPageVM
-    @ObservedObject var quizPlayer = QuizPlayer.shared
     
     @StateObject private var generator = ColorGenerator()
     
     @Bindable var audioQuiz: AudioQuizPackage
-    @Binding var isDownloading: Bool
-    @Binding var isNowPlaying: Bool
-    @Binding var isDownloadingSample: Bool
-    @Binding var didTapDownload: Bool
-    @Binding var didTapPlaySample: Bool
-    
+    @Binding var interactionState: InteractionState
+
+    @Binding var didTapSample: Bool
     @State var topicLabel: String = ""
     @State var stillDownloading: Bool = false
     
@@ -33,7 +29,7 @@ struct QuizDetailPage: View {
     @State var downloadButtonLabel: String = "Download Audio Quiz"
     
     @State var packetSizeDetails: String = "Packet contains over 72 hours of listening time with over 670 questions and answers spanning across 127 topics"
-    //@State var sampleButtonLabel: String = "Download Sample Question"
+    
     @State var sampleButtonLabel: String = "Download Sample Question" {
         didSet {
            sampleButtonLabel = audioQuiz.questions.isEmpty ? "Download Sample Question" : "Play Sample Question"
@@ -45,14 +41,11 @@ struct QuizDetailPage: View {
     let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
     var error: Error?
     
-    init(audioQuiz: AudioQuizPackage, isDownloading: Binding<Bool>, didTapDownload: Binding<Bool>, isNowPlaying: Binding<Bool>, isDownloadingSample: Binding<Bool>, didTapPlaySample:  Binding<Bool>) {
+    init(audioQuiz: AudioQuizPackage, didTapSample: Binding<Bool>, interactionState: Binding<InteractionState>) {
         viewModel = QuizDetailPageVM(audioQuiz: audioQuiz)
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
-        _didTapDownload = didTapDownload
-        _isDownloading = isDownloading
-        _isNowPlaying = isNowPlaying
-        _isDownloadingSample = isDownloadingSample
-        _didTapPlaySample = didTapPlaySample
+        _didTapSample = didTapSample
+        _interactionState = interactionState
     }
     
     var body: some View {
@@ -100,15 +93,22 @@ struct QuizDetailPage: View {
                             
                             Divider()
                             
-                            PlainClearButton(color: generator.dominantBackgroundColor, label: "Play sample") {
-                                
+//                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(isDownloadingSample ? 0.6 : 1), label: isDownloadingSample ? "Downloading" : isNowPlaying ? "Playing" : "Play sample") {
+//                                self.didTapPlaySample = true
+//                            }
+//                            .disabled(isDownloadingSample)
+                            
+                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0.6 : 1), label: interactionState == .isDownloading ? "Downloading" : interactionState == .isNowPlaying ? "Playing" : "Play sample") {
+                                self.didTapSample = true
                             }
+                            .disabled(interactionState == .isDownloading || interactionState == .isNowPlaying)
                             
                             PlainClearButton(color: generator.dominantBackgroundColor, label: "Add to Library") {
-                                
+                                //user.selectedQuizPackage = audioQuiz
                             }
                             
                             PlainClearButton(color: generator.dominantBackgroundColor, label: "Customize", image: "wand.and.stars.inverse") {
+                                
                             }
                         }
                         .padding()
@@ -193,7 +193,7 @@ struct QuizDetailPage: View {
         @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)California Bar (MBE)California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
    
         
-        return QuizDetailPage(audioQuiz: package, isDownloading: .constant(false), didTapDownload: .constant(false), isNowPlaying: .constant(false), isDownloadingSample: .constant(false), didTapPlaySample: .constant(false))
+        return QuizDetailPage(audioQuiz: package, didTapSample: .constant(false), interactionState: .constant(.idle))
             .modelContainer(container)
             .environmentObject(user)
     } catch {

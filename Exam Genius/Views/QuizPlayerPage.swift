@@ -18,8 +18,11 @@ struct QuizPlayerPage: View {
     @EnvironmentObject var appState: AppState
     
     @StateObject var generator = ColorGenerator()
+    @StateObject var questionPlayer = QuestionPlayer()
+    
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
+    @State var interactionState: InteractionState = .idle
     @State var didTapDownload = false
     @State var expandSheet: Bool = false
     @State var isDownloading: Bool = false
@@ -65,6 +68,7 @@ struct QuizPlayerPage: View {
                             })
                         }
                     }
+                    .zIndex(1)
                 }
                 .task {
                     await loadDefaultCollection()
@@ -92,8 +96,8 @@ struct QuizPlayerPage: View {
             .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
             
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                QuizDetailPage(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying, isDownloadingSample: $isDownloadingSample, didTapPlaySample: $didTapPlaySample)
-                    
+                QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, interactionState: $interactionState)
+                
             }
             .onChange(of: didTapDownload, { _, newValue in
                 if newValue {
@@ -107,17 +111,11 @@ struct QuizPlayerPage: View {
                     }
                 }
             })
+            .onChange(of: questionPlayer.interactionState, { _, newValue in
+                updatePlayState(interactionState: newValue)
+            })
             .onChange(of: didTapPlaySample, { _, newValue in
-                if newValue {
-                    
-                    if let selectedQuizPackage = self.selectedQuizPackage {
-                        print(selectedQuizPackage.name)
-                        
-                        Task {
-                            //try await downloadSample(selectedQuizPackage)
-                        }
-                    }
-                }
+                playingSampleQuiz(didTapPlay: newValue)
             })
             .tabItem {
                 TabIcons(title: "Quiz Player", icon: "play.circle")
@@ -145,6 +143,61 @@ struct QuizPlayerPage: View {
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .preferredColorScheme(.dark)
+    }
+    
+    func downloadSample(_ audioQuiz: AudioQuizPackage) async throws {
+        guard audioQuiz.questions.isEmpty else { return }
+        DispatchQueue.main.async {
+            isDownloadingSample.toggle()
+        }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        // Begin content building process
+        let content = try await contentBuilder.buildForProd(for: audioQuiz.name)
+        print("Downloaded Detail Page Content: \(content)")
+        
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+            isDownloadingSample = false
+            let list = audioQuiz.questions
+            let playList = list.compactMap{$0.questionAudio}
+            playSample(playlist: playList)
+        }
+    }
+    
+    private func playSample(playlist: [String]) {
+        isPlaying.toggle()
+        questionPlayer.playAudioQuestions(audioFileNames: playlist)
+    }
+    
+    private func playNow(_ audioQuiz: AudioQuizPackage) {
+        let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
+        isPlaying.toggle()
+        let audioFile = playlist[0]
+        questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
+    }
+    
+    private func updatePlayState(interactionState: InteractionState) {
+        if interactionState == .isNowPlaying || interactionState == .isDonePlaying {
+            DispatchQueue.main.async {
+                self.interactionState = interactionState
+            }
+        }
+    }
+    
+    func playingSampleQuiz(didTapPlay: Bool) {
+        if didTapPlay {
+            if let selectedQuizPackage = self.selectedQuizPackage {
+                if selectedQuizPackage.questions.isEmpty {
+                    Task {
+                        try await downloadSample(selectedQuizPackage)
+                    }
+                } else {
+                    playNow(selectedQuizPackage)
+                }
+            }
+        }
     }
     
     func updateCollections() {
