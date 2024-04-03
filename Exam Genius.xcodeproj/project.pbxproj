@@ -87,6 +87,8 @@
 		0BD5C8022BB7BB70005FB2E4 /* PerformanceHistoryGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD5C8012BB7BB70005FB2E4 /* PerformanceHistoryGraph.swift */; };
 		0BD5C8042BB7BBB5005FB2E4 /* SummaryInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD5C8032BB7BBB5005FB2E4 /* SummaryInfoView.swift */; };
 		0BD5C8062BB7BBDC005FB2E4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD5C8052BB7BBDC005FB2E4 /* Constants.swift */; };
+		0BE2798E2BBDA16D0006F85B /* MyLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE2798D2BBDA16D0006F85B /* MyLibrary.swift */; };
+		0BE279902BBDADC20006F85B /* CustomTabIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */; };
 		0BFBCAA52BB5B74A006A29C2 /* CustomLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFBCAA42BB5B74A006A29C2 /* CustomLogo.swift */; };
 /* End PBXBuildFile section */
 
@@ -194,6 +196,8 @@
 		0BD5C8012BB7BB70005FB2E4 /* PerformanceHistoryGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceHistoryGraph.swift; sourceTree = "<group>"; };
 		0BD5C8032BB7BBB5005FB2E4 /* SummaryInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryInfoView.swift; sourceTree = "<group>"; };
 		0BD5C8052BB7BBDC005FB2E4 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0BE2798D2BBDA16D0006F85B /* MyLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLibrary.swift; sourceTree = "<group>"; };
+		0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabIcon.swift; sourceTree = "<group>"; };
 		0BE6941E2BB1333D009D5344 /* CybersecurityAnalystExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CybersecurityAnalystExam.json; sourceTree = "<group>"; };
 		0BE6941F2BB133D3009D5344 /* CertifiedFraudExaminer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CertifiedFraudExaminer.json; sourceTree = "<group>"; };
 		0BE694212BB13441009D5344 /* CertifiedFraudExaminerTopics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CertifiedFraudExaminerTopics.json; sourceTree = "<group>"; };
@@ -343,6 +347,7 @@
 				0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */,
 				0BCE72A22BA3649800A9E7D6 /* QuizPlayerPage.swift */,
 				0BCB0A752BBBC339002DA5FD /* QuizDetailPage.swift */,
+				0BE2798D2BBDA16D0006F85B /* MyLibrary.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -396,6 +401,7 @@
 				0B2A87E42BAE07DC001571DD /* PlayerControlButtons.swift */,
 				0BFBCAA42BB5B74A006A29C2 /* CustomLogo.swift */,
 				0BD5C7FF2BB7B047005FB2E4 /* PlayerTitleView.swift */,
+				0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -673,6 +679,7 @@
 				0B4ACD072B89A61500377BE7 /* QuizPlayerExtensions.swift in Sources */,
 				0BBD5AF22B8E7A31005BD87B /* AudioQuizPlaceHolder.swift in Sources */,
 				0B8C9EEF2B9EC3820032AA80 /* QuizView.swift in Sources */,
+				0BE2798E2BBDA16D0006F85B /* MyLibrary.swift in Sources */,
 				0B2A87E92BAE8BF8001571DD /* MicModalView.swift in Sources */,
 				0BD5C8022BB7BB70005FB2E4 /* PerformanceHistoryGraph.swift in Sources */,
 				0B5E0F012BA9B6D3003C5406 /* RelevantTopicsCard.swift in Sources */,
@@ -697,6 +704,7 @@
 				0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */,
 				0B4ACCFD2B89A61500377BE7 /* SpeechManager.swift in Sources */,
 				0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */,
+				0BE279902BBDADC20006F85B /* CustomTabIcon.swift in Sources */,
 				0B5E0EF62BA9B274003C5406 /* QuizPlayerView.swift in Sources */,
 				0B2A87E72BAE09BD001571DD /* QuestionVisualizerMaker.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,

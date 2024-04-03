@@ -119,7 +119,6 @@ struct AudioQuizPlayerView: View  {
         }
         .onAppear {
             generator.updateAllColors(fromImageNamed: user.audioQuizPackage?.imageUrl ?? "IconImage")
-            //generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "IconImage")
             withAnimation(.easeInOut(duration: 0.35)) {
                 animateContent = true
             }

@@ -50,3 +50,45 @@ struct RelevantTopicsCard: View {
     RelevantTopicsCard(topicName: "Web Application Vulnerabilities Application Vulnerabilities. Application Vulnerabilities", quizImage: "COMPTIA-Security-Exam-Basic", numberOfQuestions: 23)
         .preferredColorScheme(.dark)
 }
+
+
+struct LibraryItemView: View {
+    let title: String
+    let titleImage: String
+    var audioFile: String?
+    var audioCollection: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8.0) {
+            HStack{
+                Image(titleImage)
+                    .resizable()
+                    .frame(width: 64, height: 64)
+                    .aspectRatio(contentMode: .fit)
+                    .cornerRadius(4)
+                    .padding(.leading)
+                
+                VStack(spacing: 8.0) {
+                    Text(title)
+                        .font(.footnote)
+                        .fontWeight(.light)
+                        .lineLimit(2, reservesSpace: false)
+                        .hAlign(.leading)
+                        .activeGlow(.white, radius: 0.4)
+                    
+                }
+                .padding(8.0)
+            }
+        }
+        .frame(height: 75)
+        .background(.clear)
+        .foregroundColor(.white)
+        .cornerRadius(5)
+//        .overlay(
+//            Rectangle()
+//                .stroke(Color.gray, lineWidth: 0.5)
+//            
+//        )
+    }
+}
+

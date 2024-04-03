@@ -118,7 +118,7 @@ struct QuizPlayerPage: View {
                 playingSampleQuiz(didTapPlay: newValue)
             })
             .tabItem {
-                TabIcons(title: "Quiz Player", icon: "play.circle")
+                TabIcons(title: "Home", icon: "house.fill")
             }
             .tag(0)
             
@@ -128,9 +128,9 @@ struct QuizPlayerPage: View {
                 }
                 .tag(1)
             
-            SettingsPage()
+            MyLibrary()
                 .tabItem {
-                    TabIcons(title: "My Library", icon: "books.vertical.fill")
+                    TabIcons(title: "Quiz player", icon: "books.vertical.fill")
                 }
                 .tag(2)
         }
@@ -230,9 +230,12 @@ struct QuizPlayerPage: View {
 
 #Preview {
     let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
-    
+    let user = User()
+    let appState = AppState()
     let playListItemFromContainer = MyPlaylistItem(from: container)
     return QuizPlayerPage()
+        .environmentObject(user)
+        .environmentObject(appState)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
 }

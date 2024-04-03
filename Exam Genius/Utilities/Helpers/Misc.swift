@@ -390,6 +390,42 @@ enum InteractionState {
    "examName": "Linux Professional Institute Certification",
    "topics": ["SSH (Secure Shell)"],
    "questions": [
+ {
+   "questionNumber": 1,
+   "question": "Which command is used to create a GPG key pair?",
+   "options": {
+     "A": "gpg --gen-key",
+     "B": "gpg --create-key",
+     "C": "openssl genpkey",
+     "D": "ssh-keygen"
+   },
+   "correctOption": "A",
+   "overview": "The command 'gpg --gen-key' is used to create a GPG (GNU Privacy Guard) key pair, which is essential for encrypting and decrypting data to ensure its security. GPG is a widely used tool for securing communication and data storage on Linux systems."
+ },
+ {
+   "questionNumber": 2,
+   "question": "What is the purpose of the 'ssh-keygen' command?",
+   "options": {
+     "A": "To generate a GPG key pair",
+     "B": "To generate an SSH key pair",
+     "C": "To encrypt a file with a password",
+     "D": "To sign a document digitally"
+   },
+   "correctOption": "B",
+   "overview": "The 'ssh-keygen' command is used to generate a pair of SSH keys, which are used for secure shell access to remote machines without needing a password. SSH keys provide a more secure way of logging into a server with SSH than using a password alone."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which option with the 'gpg' command is used to encrypt a file?",
+   "options": {
+     "A": "--export",
+     "B": "--decrypt",
+     "C": "--encrypt",
+     "D": "--list-keys"
+   },
+   "correctOption": "C",
+   "overview": "The '--encrypt' option with the 'gpg' command is used to encrypt files. Encryption is a method of securing data by converting it into a code to prevent unauthorized access. GPG provides a robust framework for encrypting and decrypting data, ensuring its confidentiality."
+ }
      {
        "questionNumber": 1,
        "question": "Which port is the default for SSH connections?",
