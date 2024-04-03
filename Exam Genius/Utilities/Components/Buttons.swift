@@ -293,12 +293,13 @@ struct CapsuleButton: View {
                     Image(systemName: imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25)
+                        .frame(height: 44)
                 }
             }
             .padding(3)
             .foregroundColor(.white)
             .background(isPressed ? actionColor : defaultColor)
+            .frame(width: .infinity)
             .cornerRadius(3)
         }
         .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isPressed, activeBackgroundColor: .clear, activeBorderColor: borderColor ?? .teal, disabledBackgroundColor: .clear, disabledBorderColor: .clear, activeGlow: true, activeGlowColor: .teal))

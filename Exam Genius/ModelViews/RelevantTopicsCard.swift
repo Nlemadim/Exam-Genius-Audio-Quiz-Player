@@ -16,9 +16,9 @@ struct RelevantTopicsCard: View {
             HStack{
                 Image(quizImage)
                     .resizable()
-                    .frame(width: 100, height: 100)
+                    .frame(width: 44, height: 44)
                     .aspectRatio(contentMode: .fit)
-                    .cornerRadius(10)
+                    .cornerRadius(4)
                     .padding(.leading)
                 
                 VStack(spacing: 8.0) {
@@ -28,21 +28,18 @@ struct RelevantTopicsCard: View {
                         .lineLimit(3, reservesSpace: false)
                         .hAlign(.leading)
                         .activeGlow(.white, radius: 0.4)
-                    //Spacer()
-                    Text("\(numberOfQuestions) Questions")
-                        .font(.footnote)
-                        .hAlign(.leading)
                     
                 }
                 .padding(8.0)
             }
+           
         }
-        .frame(height: 120)
+        .frame(height: 55)
         .background(.ultraThinMaterial)
         .foregroundColor(.white)
-        .cornerRadius(20)
+        .cornerRadius(5)
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 5)
                 .stroke(Color.white, lineWidth: 0.5)
                 .activeGlow(.white, radius: 1)
         )

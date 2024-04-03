@@ -22,7 +22,7 @@ struct ContentView: View {
             SignInPage()
             
         case .signedIn:
-            LandingPage()
+            QuizPlayerPage()
             
         case .audioQuizSelected:
             QuizPlayerView()
@@ -40,6 +40,6 @@ struct ContentView: View {
         .environmentObject(user)
         .environmentObject(appState)
         .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self, DownloadedAudioQuiz.self], inMemory: true)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self], inMemory: true)
         
 }

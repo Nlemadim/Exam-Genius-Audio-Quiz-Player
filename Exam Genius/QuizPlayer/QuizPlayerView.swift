@@ -111,13 +111,6 @@ struct QuizPlayerView: View {
             .onChange(of: nextTapped) { _, _ in
                 goToNextQuestion()
             }
-//            .onChange(of: presentConfirmationModal) { _, newValue in
-//                if newValue == true {
-//                    DispatchQueue.main.async {
-//                        self.interactionState = .isCorrectAnswer
-//                    }
-//                }
-//            }
             .onChange(of: questionPlayer.interactionState) { _, newValue in
                 self.interactionState = newValue
                 if newValue == .isDonePlaying {
@@ -238,7 +231,7 @@ extension QuizPlayerView {
         .environmentObject(user)
         .environmentObject(appState)
         .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
   
 }
 

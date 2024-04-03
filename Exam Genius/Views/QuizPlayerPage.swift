@@ -6,88 +6,382 @@
 //
 
 import SwiftUI
+import SwiftData
+import Combine
+import AVKit
+
 
 struct QuizPlayerPage: View {
-    @State var backgroundImage: String = "USMLESTEP1-Exam" {
-        didSet {
-            if !quiz.quizImage.isEmpty {
-                backgroundImage = quiz.quizImage
-            }
-        }
-    }
-    @StateObject private var generator = ColorGenerator()
-    var quiz: DownloadedAudioQuizContainer
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var user: User
+    @EnvironmentObject var appState: AppState
+    
+    @StateObject var generator = ColorGenerator()
+    @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    
+    @State var didTapDownload = false
+    @State var expandSheet: Bool = false
+    @State var isDownloading: Bool = false
+    @State var didTapPlaySample: Bool = false
+    @State var isDownloadingSample: Bool = false
+    @State var isPlaying: Bool = false
+    @State var bottomSheetOffset = -UIScreen.main.bounds.width
+    @State var selectedTab = 0
+    @State var currentItem: Int = 0
+    @State var backgroundImage: String = ""
+    @State var selectedQuizPackage: AudioQuizPackage?
+    @State var topCollectionQuizzes: [AudioQuizPackage] = []
+    @State var topFreeCollection: [AudioQuizPackage] = []
+    @State var topProCollection: [AudioQuizPackage] = []
+    @State var topColledgeCollection: [AudioQuizPackage] = []
+    @State var path = [AudioQuizPackage]()
+    @State var selectedCategory: ExamCategory?
+    @Namespace var animation
+    
+    
+    let categories = ExamCategory.allCases
+    let categoryOrder: [ExamCategory] = [.topProfessionalCertification, .topColledgePicks, .history, .free]
+    var cancellables = Set<AnyCancellable>()
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Rectangle()
-                .fill(.clear)
-                .background(
-                    LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black]), startPoint: .top, endPoint: .bottom)
-                )
-
-            
-            VStack(alignment: .center) {
-                if !quiz.quizImage.isEmpty {
-                    Image(backgroundImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .clipped()
-                } else {
-                    Image(quiz.quizImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .clipped()
+        TabView(selection: $selectedTab) {
+            NavigationStack(path: $path) {
+                ZStack(alignment: .topLeading) {
+                    BackgroundView(backgroundImage: backgroundImage, color: generator.dominantBackgroundColor)
+                    
+                    ScrollView(showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            QuizCarouselView(quizzes: topCollectionQuizzes, currentItem: $currentItem, generator: generator, backgroundImage: $backgroundImage, tapAction: {
+                                selectedQuizPackage = topCollectionQuizzes[currentItem]
+                            })
+                            
+                            HorizontalQuizListView(quizzes: topColledgeCollection, title: "Most popular in the U.S", tapAction: { quiz in
+                                selectedQuizPackage = quiz
+                            })
+                            
+                            HorizontalQuizListView(quizzes: topProCollection, title: "Top Professional Certifications", tapAction: { quiz in
+                                selectedQuizPackage = quiz
+                            })
+                        }
+                    }
+                }
+                .task {
+                    await loadDefaultCollection()
+                    updateCollections()
+                    
+                    generator.updateDominantColor(fromImageNamed: backgroundImage)
+                    
+                }
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        Button(action: {}) {
+                            Image(systemName: "person.circle")
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Button(action: {}) {
+                            Image(systemName: "slider.horizontal.3")
+                                .foregroundStyle(.white)
+                        }
+                    }
                 }
             }
-            .frame(height: 280)
-            .blur(radius: 60)
+            /// Hiding tabBar when Sheet is expended
+            .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
             
-                VStack(alignment: .leading, spacing: 10) {
+            .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
+                QuizDetailPage(audioQuiz: selectedQuiz, isDownloading: $isDownloading, didTapDownload: $didTapDownload, isNowPlaying: $isPlaying, isDownloadingSample: $isDownloadingSample, didTapPlaySample: $didTapPlaySample)
                     
-                    Text("Currently Playing")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.horizontal)
+            }
+            .onChange(of: didTapDownload, { _, newValue in
+                if newValue {
                     
-                    TabView {
-                        ForEach(0 ..< 5) { item in
-                            CurrentQuizView(name: quiz.name, image: quiz.quizImage, color: generator.dominantDarkToneColor, numberOfQuestions: 10, playButtonAction: {})
+                    if let selectedQuizPackage = self.selectedQuizPackage {
+                        print(selectedQuizPackage.name)
+                        
+                        Task {
+                            // try await downloadAudioQuiz(selectedQuizPackage)
                         }
                     }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 380)
-                    
-                    VStack(alignment: .leading, spacing: 4.0){
-                        Text("Most Relevant Topics")
-                            .fontWeight(.bold)
-                            .foregroundStyle(.primary)
-                            .padding(.horizontal)
-                        HStack {
-                            Text("Download questions on these topics specifically and add to your playlist")
-                                .font(.footnote)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.leading)
-                            Spacer()
-                                
-                        }
-                        .padding(.horizontal)
-                    }
-     
                 }
+            })
+            .onChange(of: didTapPlaySample, { _, newValue in
+                if newValue {
+                    
+                    if let selectedQuizPackage = self.selectedQuizPackage {
+                        print(selectedQuizPackage.name)
+                        
+                        Task {
+                            //try await downloadSample(selectedQuizPackage)
+                        }
+                    }
+                }
+            })
+            .tabItem {
+                TabIcons(title: "Quiz Player", icon: "play.circle")
+            }
+            .tag(0)
+            
+            ExploreAudioQuizView()
+                .tabItem {
+                    TabIcons(title: "Browse", icon: "square.grid.2x2")
+                }
+                .tag(1)
+            
+            SettingsPage()
+                .tabItem {
+                    TabIcons(title: "My Library", icon: "books.vertical.fill")
+                }
+                .tag(2)
         }
         .onAppear {
+            UITabBar.appearance().barTintColor = UIColor.black
+            updateCollections()
             generator.updateDominantColor(fromImageNamed: backgroundImage)
+            
+            
         }
+        .tint(.white).activeGlow(.white, radius: 2)
         .preferredColorScheme(.dark)
-
+    }
+    
+    func updateCollections() {
+        let topCollection = audioQuizCollection.filter { $0.category.contains(.topCollection) }
+        let topPro = audioQuizCollection.filter { $0.category.contains(.topProfessionalCertification) }
+        let topColledge = audioQuizCollection.filter { $0.category.contains(.topColledgePicks) }
+        DispatchQueue.main.async {
+            self.topCollectionQuizzes.append(contentsOf: topCollection)
+            self.topColledgeCollection.append(contentsOf: topColledge)
+            self.topProCollection.append(contentsOf: topPro)
+        }
+    }
+    
+    
+    func loadDefaultCollection() async {
+        guard audioQuizCollection.isEmpty else { return }
+        
+        let collection = DefaultDatabase().getAllExamDetails()
+        collection.forEach { examDetail in
+            
+            let newPackage = AudioQuizPackage(from: examDetail)
+            
+            modelContext.insert(newPackage)
+            
+            try! modelContext.save()
+        }
     }
 }
 
 
 #Preview {
-    @State var package = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "USMLESTEP1-Exam")
-   return QuizPlayerPage(quiz: package)
-  
+    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
+    
+    let playListItemFromContainer = MyPlaylistItem(from: container)
+    return QuizPlayerPage()
+        .preferredColorScheme(.dark)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
 }
+
+struct BackgroundView: View {
+    var backgroundImage: String
+    var color: Color
+    
+    var body: some View {
+        Rectangle()
+            .fill(.clear)
+            .frame(height: 300)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [color, .black]), startPoint: .top, endPoint: .bottom)
+            )
+            .overlay {
+                Image(backgroundImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
+            }
+            .frame(height: 300)
+            .blur(radius: 100)
+    }
+}
+
+
+struct QuizCarouselView: View {
+    var quizzes: [AudioQuizPackage]
+    @Binding var currentItem: Int
+    @ObservedObject var generator: ColorGenerator
+    @Binding var backgroundImage: String
+    let tapAction: () -> Void
+    
+    var body: some View {
+        Text("Top Picks")
+            .font(.headline)
+            .fontWeight(.bold)
+            .padding(.horizontal)
+            .hAlign(.leading)
+        
+        TabView(selection: $currentItem) {
+            ForEach(quizzes.indices, id: \.self) { index in
+                let quiz = quizzes[index]
+                VStack(spacing: 4) {
+                    Image(quiz.imageUrl)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 240, height: 240)
+                        .cornerRadius(10.0)
+                    
+                    Text(quiz.name)
+                        .fontWeight(.black)
+                        .lineLimit(3)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 180)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom)
+                }
+                .onTapGesture {
+                    tapAction()
+                }
+                .onAppear {
+                    generator.updateAllColors(fromImageNamed: quiz.imageUrl)
+                    backgroundImage = quiz.imageUrl // Update background
+                }
+            }
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+        .frame(height: 380)
+    }
+}
+
+
+struct HorizontalQuizListView: View {
+    var quizzes: [AudioQuizPackage]
+    var title: String
+    let tapAction: (AudioQuizPackage) -> Void
+
+    var body: some View {
+        VStack(spacing: 4.0) {
+            Text(title)
+                .font(.headline)
+                .fontWeight(.bold)
+                .padding(.horizontal)
+                .hAlign(.leading)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8.0) {
+                    ForEach(quizzes, id: \.self) { quiz in
+                        ImageAndTitleView(title: quiz.name, titleImage: quiz.imageUrl, tapAction: tapAction, quiz: quiz)
+                    }
+                }
+            }
+            .scrollTargetLayout()
+            .scrollTargetBehavior(.viewAligned)
+        }
+    }
+}
+
+
+
+struct ImageAndTitleView: View {
+    var title: String
+    var titleImage: String
+    let tapAction: (AudioQuizPackage) -> Void
+    var quiz: AudioQuizPackage // Assume this is passed to the view
+
+    var body: some View {
+        VStack {
+            Image(titleImage)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 180, height: 180)
+                .cornerRadius(10.0)
+            Text(title)
+                .font(.system(size: 16))
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .frame(width: 180)
+                .padding(.horizontal, 8)
+                .padding(.bottom)
+        }
+        .onTapGesture {
+            tapAction(quiz)
+        }
+    }
+}
+
+
+
+struct PerformanceView: View {
+    var body: some View {
+        VStack {
+            Text("Performance")
+                .fontWeight(.bold)
+                .foregroundStyle(.primary)
+                .hAlign(.leading)
+            
+            Rectangle()
+                .fill(Material.ultraThin)
+                .frame(height: 220)
+                .cornerRadius(20)
+                .overlay {
+                    ZStack {
+                        Image(systemName: "chart.bar.xaxis.ascending")
+                            .resizable()
+                            .frame(width: 280, height: 200)
+                            .opacity(0.05)
+                        VStack {
+                            Spacer()
+                            Text("No performance history yet")
+                            Spacer()
+                        }
+                    }
+                }
+        }
+        .padding()
+    }
+}
+
+
+
+
+//                                Text("Recommended listens")
+//                                    .fontWeight(.bold)
+//                                    .foregroundStyle(.primary)
+//                                    .hAlign(.leading)
+//
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+
+
+//                            VStack(spacing: 16.0) {
+//                                Text("Top collection samples")
+//                                    .fontWeight(.bold)
+//                                    .foregroundStyle(.primary)
+//                                    .hAlign(.leading)
+//
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                                RelevantTopicsCard(topicName: "Swift Programming Language", quizImage: "SwiftProgramming", numberOfQuestions: 25)
+//                            }
+//                            .padding()
+//
+
+
+
+//                            Text("Course details")
+//                                .fontWeight(.bold)
+//                                .foregroundStyle(.primary)
+//                                .padding(.horizontal)
+//                                .hAlign(.leading)
+//
+//                            VStack(spacing: 8.0){
+//                                LabeledContent("Total Questions", value: "\(quiz.audioCollection?.count ?? 0 )")
+//                                LabeledContent("Questions Answered", value: "\(quiz.audioCollection?.count ?? 0)")
+//                                LabeledContent("Quizzes Completed", value: "\(quiz.audioCollection?.count ?? 0 )")
+//                                LabeledContent("Current High Score", value: "\(quiz.audioCollection?.count ?? 0)%")
+//                                LabeledContent("Current High Score", value: "\(quiz.audioCollection?.count ?? 0)%")
+//                            }
+//                            .padding()

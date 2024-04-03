@@ -180,7 +180,7 @@ struct UserHomePage: View {
         .environmentObject(user)
         .environmentObject(appState)
         .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
     
 }
 

@@ -14,22 +14,25 @@ class Topic: ObservableObject, Identifiable {
     @Attribute(.unique) var name: String
     var isPresented: Bool
     var numberOfPresentations: Int
+    var audioLecture: String
     
-    init(name: String, isPresented: Bool, numberOfPresentations: Int) {
+    init(name: String, isPresented: Bool, numberOfPresentations: Int, audioLecture: String) {
         self.name = name
         self.isPresented = isPresented
         self.numberOfPresentations = numberOfPresentations
+        self.audioLecture = audioLecture
     }
     
     init(name: String) {
         self.name = name
         self.isPresented = false
         self.numberOfPresentations = 0
+        self.audioLecture = ""
     }
 }
 
 @Model
-class Performance: Identifiable, Hashable {
+class PerformanceModel: Identifiable, Hashable {
     let id: UUID
     var date: Date
     var score: CGFloat

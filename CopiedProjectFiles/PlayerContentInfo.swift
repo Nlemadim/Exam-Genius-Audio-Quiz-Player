@@ -36,20 +36,7 @@ struct PlayerContentInfo: View {
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            MiniQuizControlView(
-                recordAction: {/*quizPlayer.recordAnswer()*/},
-                
-                playPauseAction: { /* Implement play/pause action */ },
-                
-                nextAction: { /*quizPlayer.playNextQuestion()*/ },
-                
-                repeatAction: {
-//                    if let question = quizPlayer.currentQuestion {
-//                        quizPlayer.replayQuestion(question: question)
-//                    }
-                }
-            )
-            .offset(x: 25)
+  
              
         }
         .foregroundStyle(.teal)
