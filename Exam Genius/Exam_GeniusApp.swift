@@ -20,6 +20,6 @@ struct Exam_GeniusApp: App {
                 .environmentObject(appState)
                 .preferredColorScheme(.dark)
         }
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self, DownloadedAudioQuiz.self])
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self])
     }
 }

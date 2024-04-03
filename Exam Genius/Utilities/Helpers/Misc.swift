@@ -56,6 +56,7 @@ enum InteractionState {
     case isIncorrectAnswer
     case errorTranscription
     case successfulTranscription
+    case isDownloading
     
     var status: String {
         switch self {
@@ -85,6 +86,8 @@ enum InteractionState {
             return "Error transcribing response"
         case .successfulTranscription:
             return "Response Transcribed"
+        case .isDownloading:
+            return "Downloading"
         }
     }
 }
@@ -238,6 +241,226 @@ enum InteractionState {
        },
        "correctOption": "C",
        "overview": "X-rays are the type of radiation most commonly used in dental radiography. They have the ability to penetrate tissues and structures, creating images that help in diagnosing a wide range of dental conditions, from cavities and gum disease to impacted teeth and jaw abnormalities."
+     }
+   ]
+ }
+ 
+ ////////SAT
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Reading Comprehension","Understanding of Main Ideas in Texts","Identifying Supporting Details in Texts","Drawing Inferences from Texts","Understanding Vocabulary in Context","Understanding of Author's Purpose","Understanding of Rhetorical Devices","Understanding of Text Structures","Understanding of Tone and Style in Texts","Understanding of Textual Evidence","Critical Reading Skills","Analyzing Arguments in Texts","Understanding of Synonyms and Antonyms","Understanding of Word Roots","Prefixes and Suffixes","Understanding of Figurative Language","Understanding of Connotation and Denotation","Understanding of Sentence Completion","Writing and Language Test","Identifying Sentence Errors","Improving Sentences and Paragraphs","Understanding Grammar and Usage","Understanding of Punctuation","Understanding of Sentence Structure","Understanding of Conventions of Standard English","Understanding of Verb Tense","Understanding of Subject-Verb Agreement","Understanding of Pronoun Agreement","Understanding of Parallel Structure","Understanding of Modifier Placement","Understanding of Idiomatic Expressions","Understanding of Wordiness and"]}
+ Starting fetchQuestionData for examName: SAT Exam with topics: ["Understanding of Wordiness and"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=SAT%20Exam&topicValue=Understanding%20of%20Wordiness%20and&numberValue=3
+ Raw Response: {
+   "examName": "SAT Exam",
+   "topics": [
+     "Understanding of Wordiness"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following sentences is the least wordy and most effective?",
+       "options": {
+         "A": "The reason for the failure of the project was primarily because of unforeseen weather conditions.",
+         "B": "Unforeseen weather conditions were primarily the reason why the project failed.",
+         "C": "The project failed primarily because of unforeseen weather conditions.",
+         "D": "Primarily, it was unforeseen weather conditions that were the reason for the project's failure."
+       },
+       "correctOption": "C",
+       "overview": "Option C is the most direct and concise way to convey the information, making it the least wordy. It avoids unnecessary phrases like 'the reason for' and 'was because,' which are common sources of wordiness."
+     },
+ {
+   "questionNumber": 1,
+   "question": "What is the primary purpose of the SAT exam?",
+   "options": {
+     "A": "To assess students' readiness for college",
+     "B": "To evaluate teachers' effectiveness",
+     "C": "For high school graduation requirements",
+     "D": "To measure intelligence"
+   },
+   "correctOption": "A",
+   "overview": "The SAT exam is designed primarily to assess a high school student's readiness for college. Colleges often use SAT scores as a part of the admissions process."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which section is not a part of the SAT exam?",
+   "options": {
+     "A": "Mathematics",
+     "B": "Critical Reading",
+     "C": "Science",
+     "D": "Writing and Language"
+   },
+   "correctOption": "C",
+   "overview": "The SAT exam includes sections on Mathematics, Critical Reading, and Writing and Language. There is no specific Science section, although some science-related questions can be found within the other sections."
+ },
+ {
+   "questionNumber": 3,
+   "question": "What is the time duration of the SAT exam without the essay?",
+   "options": {
+     "A": "2 hours 45 minutes",
+     "B": "3 hours",
+     "C": "3 hours 45 minutes",
+     "D": "4 hours"
+   },
+   "correctOption": "B",
+   "overview": "The SAT exam lasts 3 hours without the essay section. If the essay section is included, the total time increases to 3 hours and 50 minutes."
+ }
+     {
+       "questionNumber": 2,
+       "question": "Identify the sentence that eliminates unnecessary wordiness.",
+       "options": {
+         "A": "She made adjustments to the plan in order to reduce the time that was necessary to complete it.",
+         "B": "She adjusted the plan to reduce the necessary time to complete it.",
+         "C": "In order to complete it, she made necessary adjustments to the plan to reduce the time.",
+         "D": "She adjusted the plan to reduce the completion time."
+       },
+       "correctOption": "D",
+       "overview": "Option D is the most concise choice, effectively communicating the same idea without the redundancy found in the other options. It eliminates phrases like 'in order to' and 'that was necessary,' which contribute to wordiness."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which sentence best avoids unnecessary words?",
+       "options": {
+         "A": "At this point in time, we need to make a decision as to whether or not we will proceed.",
+         "B": "We need to decide whether we will proceed or not.",
+         "C": "We need to make a decision about proceeding.",
+         "D": "Now, we must decide whether to proceed."
+       },
+       "correctOption": "D",
+       "overview": "Option D is the most straightforward and concise, avoiding the wordiness present in the other choices. Phrases like 'at this point in time' and 'as to whether or not' are unnecessarily verbose."
+     }
+   ]
+ }
+ 
+ /////// GOOGLECLOUD
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Google Cloud Platform Fundamentals","Understanding Google Cloud Architecture","Understanding Google Cloud Services","Google Cloud Storage","Google Cloud Databases","Google Cloud Networking","Google Compute Engine","Google App Engine","Google Kubernetes Engine","Google Cloud Functions","Google Cloud Operations","Google Cloud Security","Google Cloud IAM","Google Cloud Billing and Pricing","Google Cloud SDK","Google Cloud APIs","Google Cloud Console","Google Cloud CLI","Google Cloud Machine Learning Services","Google Cloud Data Analytics Services","Google Cloud IoT Services","Google Cloud Bigtable","Google Cloud Spanner","Google Cloud Pub/Sub","Google Cloud Firestore","Google Cloud Memorystore","Google Cloud Filestore","Google Cloud Load Balancing","Google Cloud DNS","Google Cloud VPC","Google Cloud Interconnect","Google Cloud VPN","Google Cloud Armor","Google Cloud Secret Manager","Google Cloud Security Command Center","Google Cloud Identity-Aware Proxy","Google Cloud Key Management Service","Google Cloud Audit Logs","Google Cloud Data Loss Prevention API","Google Cloud Deployment Manager","Google Cloud Cloud Build","Google"]}
+ Starting fetchQuestionData for examName: Google Cloud Certified Exam with topics: ["Google Cloud Databases"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Google%20Cloud%20Certified%20Exam&topicValue=Google%20Cloud%20Databases&numberValue=3
+ Raw Response: {
+   "examName": "Google Cloud Certified Exam",
+   "topics": [
+     "Google Cloud Databases"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which Google Cloud database service is fully managed and scales automatically to meet application demand?",
+       "options": {
+         "A": "Cloud SQL",
+         "B": "Cloud Spanner",
+         "C": "Firestore",
+         "D": "Bigtable"
+       },
+       "correctOption": "B",
+       "overview": "Cloud Spanner is a fully managed relational database with unlimited scale, strong consistency, and up to 99.999% availability. It is designed to scale automatically to meet the demand of your applications."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What type of database is Cloud Bigtable best suited for?",
+       "options": {
+         "A": "Relational database workloads",
+         "B": "NoSQL database workloads for web applications",
+         "C": "Analytical workloads and time-series data",
+         "D": "Mobile and gaming applications"
+       },
+       "correctOption": "C",
+       "overview": "Cloud Bigtable is ideal for storing large amounts of single-keyed data with very low latency. It is especially good for analytical workloads and time-series data."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is a key feature of Firestore?",
+       "options": {
+         "A": "SQL-like queries",
+         "B": "Automatic multi-region replication",
+         "C": "Support for hierarchical data structures",
+         "D": "All of the above"
+       },
+       "correctOption": "D",
+       "overview": "Firestore is a highly scalable NoSQL database for mobile, web, and server development. It features SQL-like queries, automatic multi-region replication, and support for hierarchical data structures."
+     }
+   ]
+ }
+ 
+ ////////LINUX
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Linux System Architecture","Filesystem Hierarchy Standard","Linux Installation and Package Management","GNU and Unix Commands","Devices","Linux Filesystems","Filesystem Hierarchy Standard","Shells","Scripting and Data Management","User Interfaces and Desktops","Administrative Tasks","Essential System Services","Networking Fundamentals","Security","Linux Kernel","Boot","Initialization","Shutdown and Runlevels","Linux Package Management","Hostnames","Network Interfaces","Network Services","Domain Name Service","SSH (Secure Shell)","TCP Wrappers","Linux Firewalls","NTP Server Configuration","System Log Configuration","Linux File Sharing","Samba Server Configuration","NFS Server Configuration","HTTP Server Configuration","Squid Proxy Server Configuration","Postfix Mail Transfer Agent","Sendmail Mail Transfer Agent","IMAP and POP3 Servers","Postgresql Database Configuration","MySQL Database Configuration","DNS Server Configuration","File Sharing with NFS","Configuring Samba","Apache and HTTP Services","Linux Web Hosting","DHCP and Pxe Boot","Linux VPNs","Linux Firewalls Using"]}
+ Starting fetchQuestionData for examName: Linux Professional Institute Certification with topics: ["SSH (Secure Shell)"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Linux%20Professional%20Institute%20Certification&topicValue=SSH%20(Secure%20Shell)&numberValue=3
+ Raw Response: {
+   "examName": "Linux Professional Institute Certification",
+   "topics": ["SSH (Secure Shell)"],
+   "questions": [
+ {
+   "questionNumber": 1,
+   "question": "Which command is used to create a GPG key pair?",
+   "options": {
+     "A": "gpg --gen-key",
+     "B": "gpg --create-key",
+     "C": "openssl genpkey",
+     "D": "ssh-keygen"
+   },
+   "correctOption": "A",
+   "overview": "The command 'gpg --gen-key' is used to create a GPG (GNU Privacy Guard) key pair, which is essential for encrypting and decrypting data to ensure its security. GPG is a widely used tool for securing communication and data storage on Linux systems."
+ },
+ {
+   "questionNumber": 2,
+   "question": "What is the purpose of the 'ssh-keygen' command?",
+   "options": {
+     "A": "To generate a GPG key pair",
+     "B": "To generate an SSH key pair",
+     "C": "To encrypt a file with a password",
+     "D": "To sign a document digitally"
+   },
+   "correctOption": "B",
+   "overview": "The 'ssh-keygen' command is used to generate a pair of SSH keys, which are used for secure shell access to remote machines without needing a password. SSH keys provide a more secure way of logging into a server with SSH than using a password alone."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which option with the 'gpg' command is used to encrypt a file?",
+   "options": {
+     "A": "--export",
+     "B": "--decrypt",
+     "C": "--encrypt",
+     "D": "--list-keys"
+   },
+   "correctOption": "C",
+   "overview": "The '--encrypt' option with the 'gpg' command is used to encrypt files. Encryption is a method of securing data by converting it into a code to prevent unauthorized access. GPG provides a robust framework for encrypting and decrypting data, ensuring its confidentiality."
+ }
+     {
+       "questionNumber": 1,
+       "question": "Which port is the default for SSH connections?",
+       "options": {
+         "A": "21",
+         "B": "22",
+         "C": "80",
+         "D": "443"
+       },
+       "correctOption": "B",
+       "overview": "SSH (Secure Shell) connections typically use port 22 by default. This port is designated for encrypted communication and is used for secure logins, file transfers, and more."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which command can be used to generate SSH keys?",
+       "options": {
+         "A": "ssh-keygen",
+         "B": "ssh-copy-id",
+         "C": "ssh-agent",
+         "D": "ssh-add"
+       },
+       "correctOption": "A",
+       "overview": "The 'ssh-keygen' command is used to generate SSH keys. It creates a public/private key pair for secure SSH authentication."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the main advantage of using SSH keys over passwords?",
+       "options": {
+         "A": "Easier to remember",
+         "B": "No need for usernames",
+         "C": "Increased security",
+         "D": "Faster connection speeds"
+       },
+       "correctOption": "C",
+       "overview": "The main advantage of using SSH keys over passwords is increased security. SSH keys provide a more secure method of logging into a server with SSH than using a password alone. With SSH keys, a user can log into a server without having to remember or enter their password."
      }
    ]
  }

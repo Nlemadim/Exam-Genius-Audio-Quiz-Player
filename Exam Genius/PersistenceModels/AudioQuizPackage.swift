@@ -19,7 +19,7 @@ class AudioQuizPackage: ObservableObject, Identifiable {
     var category: [ExamCategory]
     var topics: [Topic]
     var questions: [Question]
-    var performance: [Performance]
+    var performance: [PerformanceModel]
     
     init(id: UUID) {
         self.id = id
@@ -82,7 +82,7 @@ class AudioQuizPackage: ObservableObject, Identifiable {
         self.performance = []
     }
     
-    init(id: UUID, name: String, acronym: String, about: String, imageUrl: String, category: [ExamCategory], topics: [Topic], questions: [Question], performance: [Performance]) {
+    init(id: UUID, name: String, acronym: String, about: String, imageUrl: String, category: [ExamCategory], topics: [Topic], questions: [Question], performance: [PerformanceModel]) {
         self.id = id
         self.name = name
         self.acronym = acronym
@@ -101,7 +101,7 @@ class AudioQuizPackage: ObservableObject, Identifiable {
             acronym: examDetails.acronym,
             about: examDetails.about,
             imageUrl: examDetails.image,
-            category: [examDetails.category],
+            category: examDetails.category,
             topics: [],
             questions: [],
             performance: []
@@ -109,7 +109,7 @@ class AudioQuizPackage: ObservableObject, Identifiable {
     }
 }
 
-enum ExamCategory: String, Codable, Identifiable, CaseIterable {
+enum ExamCategory: String, Codable, Identifiable, CaseIterable, Hashable {
     case science = "Science"
     case technology = "Technology"
     case healthcare = "Healthcare"
@@ -122,6 +122,12 @@ enum ExamCategory: String, Codable, Identifiable, CaseIterable {
     case finance = "Finance"
     case miscellaneous = "Miscellaneous"
     case education = "Educational"
+    case topColledgePicks = "Top Colledge Picks"
+    case topProfessionalCertification = "Top Pro Certifications"
+    case history = "History"
+    case free = "Sponsored"
+    case topCollection
+    
 
     var id: Self { self } // This makes ExamCategory conform to Identifiable
 
@@ -151,6 +157,16 @@ enum ExamCategory: String, Codable, Identifiable, CaseIterable {
             return "Miscellaneous"
         case .education:
             return "Educational"
+        case .topColledgePicks:
+            return "Top colledge picks"
+        case .topProfessionalCertification:
+            return "Top proffesional certifications"
+        case .history:
+            return "History"
+        case .free:
+            return "Sponsored"
+        case .topCollection:
+            return "Top Picks"
         }
     }
 }
@@ -224,20 +240,21 @@ struct ExamDetails: Identifiable {
     let id = UUID()
     let name: String
     let acronym: String
-    let category: ExamCategory
+    let category: [ExamCategory]
     let about: String
     let image: String
 }
 
+
 extension AudioQuizPackage {
-    convenience init(from examDetails: ExamDetails, topics: [Topic] = [], questions: [Question] = [], performance: [Performance] = []) {
+    convenience init(from examDetails: ExamDetails, topics: [Topic] = [], questions: [Question] = [], performance: [PerformanceModel] = []) {
         self.init(
             id: examDetails.id,
             name: examDetails.name,
             acronym: examDetails.acronym,
             about: examDetails.about,
             imageUrl: examDetails.image,
-            category: [examDetails.category], // Wrap the single category in an array
+            category: examDetails.category, 
             topics: topics,
             questions: questions,
             performance: performance
@@ -254,7 +271,7 @@ extension AudioQuizPackage {
         package.imageUrl = content.imageUrl
              
         package.topics = content.topics.map { topicContent in
-            Topic(name: topicContent.name, isPresented: topicContent.isPresented, numberOfPresentations: topicContent.numberOfPresentations)
+            Topic(name: topicContent.name, isPresented: topicContent.isPresented, numberOfPresentations: topicContent.numberOfPresentations, audioLecture: "")
         }
 
         package.questions = content.questions.map { questionContent in
@@ -289,7 +306,7 @@ struct TestAudioQuizPackage {
     var category: [ExamCategory]
     var topics: [Topic]
     var questions: [Question]
-    var performance: [Performance]
+    var performance: [PerformanceModel]
     
     init(id: UUID) {
         self.id = id

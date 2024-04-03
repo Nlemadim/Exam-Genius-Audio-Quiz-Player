@@ -119,7 +119,8 @@ struct LandingPage: View {
             }
             .tag(0)
 
-            QuizPlayerView()
+            //QuizPlayerView()
+            QuizPlayerPage()
                 .tabItem {
                     TabIcons(title: "Quiz Player", icon: "play.tv")
                 }
@@ -135,8 +136,19 @@ struct LandingPage: View {
     }
     
     
+    
+    private func userPlayerItem() -> PlaylistItem {
+        let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
+       
+        let playListItemFromContainer = MyPlaylistItem(from: container)
+        
+        return playListItemFromContainer
+        
+    }
+    
+    
     private func buildContentFromVm(audioQuiz: AudioQuizPackage) {
-        let viewModel = AudioQuizDetailView.AudioQuizDetailVM(audioQuiz: audioQuiz)
+        let viewModel = AudioQuizDetailView.`AudioQuizDetailVM`(audioQuiz: audioQuiz)
         viewModel.buildAudioQuizContent(name: audioQuiz)
     }
     
@@ -207,7 +219,9 @@ struct LandingPage: View {
     
     func playSample(playlist: [String]) {
         isPlaying.toggle()
-        quizPlayer.playSampleQuiz(audioFileNames: playlist)
+        let player = QuestionPlayer()
+        player.playAudioQuestions(audioFileNames: playlist)
+        //quizPlayer.playSampleQuiz(audioFileNames: playlist)
     }
     
     func downloadAudioQuiz(_ audioQuiz: AudioQuizPackage) async throws {
@@ -247,9 +261,31 @@ struct LandingPage: View {
         .environmentObject(user)
         .environmentObject(appState)
         .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, Performance.self], inMemory: true)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
     
 }
 
 
 
+//                        CustomNavigationBar(categories: categories, selectedCategory: $selectedCategory)
+//                        /// Content main view
+//                        ScrollView(.vertical, showsIndicators: false) {
+//
+//                            VStack(spacing: 10) {
+//                                ForEach(filteredAudioQuizCollection, id: \.self) { quiz in
+//                                    AudioQuizPackageView(quiz: quiz)
+//                                        .onTapGesture {
+//                                            selectedQuizPackage = quiz
+//                                            user.selectedQuizPackage = quiz
+//                                        }
+//                                }
+//
+//                                Rectangle()
+//                                    .fill(.clear)
+//                                    .frame(height: 200)
+//                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                            }
+//                        }
+//                        .containerRelativeFrame(.vertical)
+//                        .scrollTargetLayout()
+//                        .scrollTargetBehavior(.viewAligned)

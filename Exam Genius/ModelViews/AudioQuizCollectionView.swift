@@ -45,7 +45,7 @@ struct AudioQuizCollectionView: View {
                         .padding(5)
                         .frame(maxWidth: .infinity)
                         .background(Color.black.opacity(0.7))
-                        
+
                 }
             }
         }
@@ -56,6 +56,123 @@ struct AudioQuizCollectionView: View {
     }
 }
 
+#Preview {
+    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "COMPTIA-APlus-Exam")
+   
+    let playListItemFromContainer = MyPlaylistItem(from: container)
+    return AudioQuizCollectionViewV2(quiz: playListItemFromContainer)
+        .preferredColorScheme(.dark)
+}
+
 //#Preview {
-//    AudioQuizCollectionView(quiz: <#AudioQuizPackage#>)
+//    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "COMPTIA-APlus-Exam")
+//   
+//    let playListItemFromContainer = MyPlaylistItem(from: container)
+//    return AudioQuizCollectionViewV3(quiz: playListItemFromContainer)
+//        .preferredColorScheme(.dark)
 //}
+
+#Preview {
+    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "COMPTIA-APlus-Exam")
+   
+    let playListItemFromContainer = MyPlaylistItem(from: container)
+    return AudQuizCardViewMid(quiz: playListItemFromContainer)
+        .preferredColorScheme(.dark)
+}
+
+struct AudioQuizCollectionViewV2: View {
+    let quiz: PlaylistItem
+    @StateObject var generator = ColorGenerator()
+
+    var body: some View {
+        VStack(spacing: 4) {
+            ZStack {
+                Image(quiz.titleImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 160, height: 180)
+                    .cornerRadius(10)
+            }
+
+            Text(quiz.title)
+                .font(.caption)
+//                .font(.system(size: 16))
+                .lineLimit(3, reservesSpace: true)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
+                .padding(.bottom)
+                
+        }
+        .padding(.vertical, 8)
+        .frame(width: 160)
+        .background(RoundedRectangle(cornerRadius: 10).fill(generator.dominantBackgroundColor))
+        .onAppear {
+            generator.updateAllColors(fromImageNamed: quiz.titleImage)
+        }
+    }
+}
+
+struct AudioQuizCollectionViewV3: View {
+    let quiz: PlaylistItem
+    @StateObject var generator = ColorGenerator()
+
+    var body: some View {
+        VStack(spacing: 4) {
+            ZStack {
+                Image(quiz.titleImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 300, height: 300) // Adjusted to represent a square aspect ratio
+                    .cornerRadius(10)
+            }
+
+            Text(quiz.title)
+                .font(.system(size: 16))
+                .lineLimit(3, reservesSpace: true)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
+                .padding(.bottom)
+                
+        }
+        .padding(.vertical, 8)
+        .frame(width: 300) // Adjusted to match the width of the image
+        .background(RoundedRectangle(cornerRadius: 10).fill(generator.dominantBackgroundColor))
+        .onAppear {
+            generator.updateAllColors(fromImageNamed: quiz.titleImage)
+        }
+    }
+}
+
+
+struct AudQuizCardViewMid: View {
+    let quiz: PlaylistItem
+    @StateObject var generator = ColorGenerator()
+
+    var body: some View {
+        VStack(spacing: 4) {
+            ZStack {
+                Image(quiz.titleImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 180, height: 180)
+                    .cornerRadius(10.0)
+            }
+
+            Text(quiz.title)
+                .font(.system(size: 16))
+                .lineLimit(3, reservesSpace: true)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
+                .padding(.bottom)
+                
+        }
+        .frame(width: 180)
+        .cornerRadius(10.0)
+        .background(RoundedRectangle(cornerRadius: 10).fill(.black))
+        .onAppear {
+            generator.updateAllColors(fromImageNamed: quiz.titleImage)
+        }
+    }
+        
+}
+

@@ -40,11 +40,13 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         }
     }
     
-    func playAudioQuestions(audioFile: [String], currentNumber: Int) {
+    func playAudioQuestions(audioFileNames: [String]) {
+        guard !audioFileNames.isEmpty else { return }
         interactionState = .isNowPlaying
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adding a slight delay
-            self.audioFiles.append(contentsOf: audioFile)
-            self.playAudioFileAtIndex(currentNumber)
+            self.audioFiles = audioFileNames
+            self.currentIndex = 0
+            self.playAudioFileAtIndex(self.currentIndex)
         }
     }
     
@@ -62,12 +64,6 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
 
     
     private func playQuestionAudioFile(_ audioFile: String) {
-        //        let path = audioFile
-        //
-        //        guard let fileURL = URL(string: path) else {
-        //            print("Invalid file URL for audio file: \(audioFile)")
-        //            return
-        //        }
         
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -78,14 +74,13 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
         let fileURL = documentsDirectory.appendingPathComponent(audioFile)
         
         do {
-            // Attempt to configure and activate the audio session if not already in the desired state.
+            
             let audioSession = AVAudioSession.sharedInstance()
             if audioSession.category != .playback || audioSession.mode != .default {
                 try audioSession.setCategory(.playback, mode: .default)
                 try audioSession.setActive(true)
             }
             
-            // Stop and nil out the current player before initializing a new one.
             audioPlayer?.stop()
             audioPlayer = nil
             
@@ -103,17 +98,34 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpeec
             return
         }
         
-        let path = audioFiles[index]
-        guard let fileURL = URL(string: path) else { return }
+        let fileManager = FileManager.default
         
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Documents directory not found")
+            return
+        }
+        
+        let audioFile = audioFiles[index]
+        
+        let fileURL = documentsDirectory.appendingPathComponent(audioFile)
+       
         do {
-            try AVAudioSession.sharedInstance().setActive(true)
+            
+            let audioSession = AVAudioSession.sharedInstance()
+            if audioSession.category != .playback || audioSession.mode != .default {
+                try audioSession.setCategory(.playback, mode: .default)
+                try audioSession.setActive(true)
+            }
+            
+            audioPlayer?.stop()
+            audioPlayer = nil
+            
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
-            audioPlayer?.prepareToPlay() // Prepare the player
+            audioPlayer?.prepareToPlay()
             audioPlayer?.play()
         } catch {
-            print("Could not load file: \(error)")
+            print("Could not load file: \(error.localizedDescription)")
         }
     }
     

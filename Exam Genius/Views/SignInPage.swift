@@ -32,6 +32,8 @@ struct SignInPage: View {
                     Spacer()
                 }
                 .padding()
+                
+               
 
                 // Slide 2
                 VStack(spacing: 10) {
