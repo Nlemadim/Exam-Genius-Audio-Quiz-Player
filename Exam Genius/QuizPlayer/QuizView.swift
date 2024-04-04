@@ -226,9 +226,9 @@ struct QuizView: View {
 }
 
 
-struct PlayerContent {
-    var titleImage: Image
-    var title: String
-    var shortTitle: String
-    var questions: [String] = []
-}
+//struct PlayerContent {
+//    var titleImage: Image
+//    var title: String
+//    var shortTitle: String
+//    var questions: [String] = []
+//}

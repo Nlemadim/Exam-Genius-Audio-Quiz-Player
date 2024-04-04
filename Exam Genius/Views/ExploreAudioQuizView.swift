@@ -43,7 +43,7 @@ struct ExploreAudioQuizView: View {
                 }
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: .constant(false), interactionState: $interactionState)
+                QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: .constant(false), didTapDownload: .constant(false), goToLibrary: .constant(false), interactionState: $interactionState)
             }
             .navigationTitle("Explore")
             .navigationBarTitleDisplayMode(.large)

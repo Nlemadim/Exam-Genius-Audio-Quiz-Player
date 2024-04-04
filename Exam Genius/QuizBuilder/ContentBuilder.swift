@@ -29,6 +29,15 @@ class ContentBuilder {
         return container
     }
     
+    func buildQuestionContent(for examName: String) async throws -> Container {
+        print("Building test Content")
+        try await buildTopics(examName: examName)
+        try await buildQuestionsProdEnv(examName: examName)
+        await buildQuestionReadout()
+
+        return container
+    }
+    
     func alternateBuildTestContent(for examName: String) async throws -> Container {
         print("Building test Content")
         try await buildTestTopics(examName: examName)
@@ -115,6 +124,7 @@ class ContentBuilder {
                 group.addTask {
                     let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
                     let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    
                     let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
                    
                     let finishedQuestion = Question(id: UUID())
@@ -132,13 +142,35 @@ class ContentBuilder {
         }
     }
     
+    private func buildQuestionReadout() async {
+        await withTaskGroup(of: Void.self) { group in
+            for (index, question) in temporaryQuestionContent.enumerated() {
+                group.addTask {
+                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
+                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    
+                    let finishedQuestion = Question(id: UUID())
+                    finishedQuestion.questionContent = question.questionContent
+                    finishedQuestion.topic = question.topic
+                    finishedQuestion.options = question.options
+                    finishedQuestion.correctOption = question.correctOption
+                    finishedQuestion.questionNote = readOut
+                    
+                    // Safely append to builtQuestions
+                    self.container.questions.append(finishedQuestion)
+                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+                }
+            }
+        }
+    }
+    
     private func determineContext(for index: Int, totalCount: Int) -> String {
         if index == 0 {
             return "New Question"
         } else if index == totalCount - 1 {
             return "New Question"
         } else {
-            return "Next Question"
+            return "New Question"
         }
     }
    

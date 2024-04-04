@@ -392,6 +392,42 @@ enum InteractionState {
    "questions": [
  {
    "questionNumber": 1,
+   "question": "Which command is used to install a package in Debian-based systems?",
+   "options": {
+     "A": "yum install",
+     "B": "apt-get install",
+     "C": "rpm -i",
+     "D": "zypper install"
+   },
+   "correctOption": "B",
+   "overview": "In Debian-based systems, such as Ubuntu, the 'apt-get install' command is used to install packages. It handles the downloading and installation of packages from configured repositories."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which command can be used to search for a package in RPM-based systems?",
+   "options": {
+     "A": "apt search",
+     "B": "yum search",
+     "C": "dnf search",
+     "D": "pkg search"
+   },
+   "correctOption": "B",
+   "overview": "In RPM-based systems, like CentOS and Fedora, 'yum search' is a common command to search for packages in the repositories. It allows users to find packages by name or description."
+ },
+ {
+   "questionNumber": 3,
+   "question": "What is the purpose of the 'dpkg -i' command in Linux?",
+   "options": {
+     "A": "To update all installed packages",
+     "B": "To remove a package",
+     "C": "To install a Debian package",
+     "D": "To list all installed packages"
+   },
+   "correctOption": "C",
+   "overview": "The 'dpkg -i' command is used in Debian-based Linux distributions to install Debian packages (.deb files). It is a lower-level tool compared to 'apt-get' and does not resolve dependencies automatically."
+ }
+ {
+   "questionNumber": 1,
    "question": "Which command is used to create a GPG key pair?",
    "options": {
      "A": "gpg --gen-key",
@@ -1148,6 +1184,56 @@ enum InteractionState {
    ]
  }
  
+ /////////PRAXIS
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Reading and Language Arts Development","Reading and Language Arts Instruction","Reading and Language Arts Assessment","Mathematics Development","Mathematics Instruction","Mathematics Assessment","Social Studies Development","Social Studies Instruction","Social Studies Assessment","Science Development","Science Instruction","Science Assessment","Art","Music","and Physical Education Development","Art","Music","and Physical Education Instruction","Art","Music","and Physical Education Assessment","Health and Physical Education Development","Health and Physical Education Instruction","Health and Physical Education Assessment","Early Childhood Development","Early Childhood Instruction","Early Childhood Assessment","Special Education Development","Special Education Instruction","Special Education Assessment","English as a Second Language Development","English as a Second Language Instruction","English as a Second Language Assessment","Instructional Design","Classroom Management","Student Engagement","Differentiated Instruction","Assessment and Evaluation","Professional Ethics","Legal and Professional Issues in Education","Child and Adolescent Development","Educational Psychology","Pedagogical Content Knowledge","Instructional Strategies","Curriculum Planning","Understanding Student Diversity","Special Education Laws and Regulations","Teaching Strategies for"]}
+ Starting fetchQuestionData for examName: Praxis Exam with topics: ["Music"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Praxis%20Exam&topicValue=Music&numberValue=3
+ Raw Response: {
+   "examName": "Praxis Exam",
+   "topics": [
+     "Music"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which period in music history is known for its emphasis on emotion and individualism?",
+       "options": {
+         "A": "Baroque",
+         "B": "Classical",
+         "C": "Romantic",
+         "D": "Medieval"
+       },
+       "correctOption": "C",
+       "overview": "The Romantic period in music history, spanning from the late 18th century to the early 19th century, is characterized by its emphasis on emotion, individual expression, and the glorification of all the past and nature. It was a reaction against the strict rules and norms of the Classical period, focusing more on personal emotional expression."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is a characteristic feature of Baroque music?",
+       "options": {
+         "A": "Homophonic texture",
+         "B": "Complex polyphony",
+         "C": "Simplified rhythms",
+         "D": "Use of electronic instruments"
+       },
+       "correctOption": "B",
+       "overview": "Baroque music, which flourished from the late 16th century to the mid-18th century, is known for its complex polyphony. This style involves multiple independent melody lines (voices) intertwining with each other, a stark contrast to the homophonic texture that became more prevalent in the Classical period that followed."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the term for the speed of the beat in a musical piece?",
+       "options": {
+         "A": "Dynamics",
+         "B": "Tempo",
+         "C": "Harmony",
+         "D": "Melody"
+       },
+       "correctOption": "B",
+       "overview": "Tempo refers to the speed at which a piece of music is played, measured in beats per minute (BPM). It is a crucial aspect of music that can affect the mood and feel of a piece, ranging from slow and solemn to fast and lively."
+     }
+   ]
+ }
+ 
  
  
  /////////
@@ -1158,6 +1244,114 @@ enum InteractionState {
      "Ethical Hacking"
    ],
    "questions": [
+ {
+   "questionNumber": 1,
+   "question": "What is the primary focus of cloud security?",
+   "options": {
+     "A": "Ensuring physical security of cloud data centers",
+     "B": "Protecting cloud-based data and infrastructure from threats",
+     "C": "Creating cloud-based applications",
+     "D": "Monitoring network traffic only"
+   },
+   "correctOption": "B",
+   "overview": "The primary focus of cloud security is to protect cloud-based data and infrastructure from threats, such as unauthorized access, data breaches, and other cyber threats. This involves implementing various security measures and controls to safeguard data, applications, and the associated infrastructure in the cloud."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which of the following is NOT a responsibility of a Cloud Security Professional?",
+   "options": {
+     "A": "Designing cloud infrastructure",
+     "B": "Implementing security controls",
+     "C": "Managing physical access to data centers",
+     "D": "Ensuring compliance with regulatory standards"
+   },
+   "correctOption": "C",
+   "overview": "While Cloud Security Professionals are responsible for designing secure cloud infrastructure, implementing security controls, and ensuring compliance with regulatory standards, managing physical access to data centers is typically the responsibility of the data center's physical security team, not the cloud security professional."
+ },
+ {
+   "questionNumber": 3,
+   "question": "What is a key benefit of using cloud-based security solutions?",
+   "options": {
+     "A": "Unlimited physical access",
+     "B": "Reduced operational costs",
+     "C": "Single point of failure",
+     "D": "Increased manual processes"
+   },
+   "correctOption": "B",
+   "overview": "A key benefit of using cloud-based security solutions is reduced operational costs. Cloud security solutions can be more cost-effective than traditional on-premises solutions because they often require less hardware investment, reduced maintenance, and can scale with the needs of the business."
+ }
+ {
+   "questionNumber": 1,
+   "question": "What is the primary function of a Cloud Access Security Broker (CASB)?",
+   "options": {
+     "A": "To provide a physical security presence in data centers",
+     "B": "To manage the network infrastructure of cloud providers",
+     "C": "To enforce security policies between cloud users and cloud service providers",
+     "D": "To broker deals between cloud service providers and consumers"
+   },
+   "correctOption": "C",
+   "overview": "A Cloud Access Security Broker (CASB) primarily functions to enforce security policies between cloud users and cloud service providers. It acts as a gatekeeper, allowing organizations to extend the reach of their security policies beyond their own infrastructure."
+ },
+ {
+   "questionNumber": 1,
+   "question": "What is the first step in the cloud forensic process?",
+   "options": {
+     "A": "Collection",
+     "B": "Examination",
+     "C": "Identification",
+     "D": "Reporting"
+   },
+   "correctOption": "C",
+   "overview": "The first step in the cloud forensic process is Identification. This involves identifying the source of the incident or the data that needs to be collected for analysis. It sets the stage for the subsequent steps of collection, examination, and reporting."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which of the following is a challenge unique to cloud forensics?",
+   "options": {
+     "A": "Data volatility",
+     "B": "Multi-tenancy",
+     "C": "Chain of custody",
+     "D": "All of the above"
+   },
+   "correctOption": "B",
+   "overview": "While data volatility and maintaining the chain of custody are challenges in both traditional and cloud forensics, multi-tenancy is unique to cloud environments. It refers to the sharing of physical and virtual resources among multiple users, which can complicate the process of isolating and collecting relevant forensic data."
+ },
+ {
+   "questionNumber": 3,
+   "question": "What role does the CSP's SLA play in cloud forensics?",
+   "options": {
+     "A": "Defines the forensic services offered by the CSP",
+     "B": "Dictates the pricing of the cloud services",
+     "C": "Specifies the geographic location of data storage",
+     "D": "None of the above"
+   },
+   "correctOption": "A",
+   "overview": "The Service Level Agreement (SLA) between a Cloud Service Provider (CSP) and the customer can define the forensic services offered by the CSP. It may include provisions for data preservation, logging, and access to data for forensic purposes, which are crucial for conducting investigations in cloud environments."
+ }
+ {
+   "questionNumber": 2,
+   "question": "Which of the following is NOT a common feature of CASB solutions?",
+   "options": {
+     "A": "Data loss prevention",
+     "B": "User and entity behavior analytics",
+     "C": "Physical security management",
+     "D": "Threat protection"
+   },
+   "correctOption": "C",
+   "overview": "Physical security management is not a common feature of CASB solutions. CASBs typically focus on data security, threat protection, and monitoring user activities and behaviors in the cloud, rather than managing physical security aspects of cloud infrastructure."
+ },
+ {
+   "questionNumber": 3,
+   "question": "How does a CASB help in compliance and governance in cloud environments?",
+   "options": {
+     "A": "By providing physical security audits",
+     "B": "By offering financial advice on cloud spending",
+     "C": "By enforcing compliance with regulatory standards",
+     "D": "By managing the cloud service provider's infrastructure"
+   },
+   "correctOption": "C",
+   "overview": "A Cloud Access Security Broker (CASB) helps in compliance and governance in cloud environments by enforcing compliance with regulatory standards. It ensures that cloud services are used in a way that complies with the relevant laws and regulations, helping organizations to manage risk and maintain compliance."
+ }
      {
        "questionNumber": 1,
        "question": "Which of the following is NOT a common cloud computing service model?",
@@ -1195,6 +1389,489 @@ enum InteractionState {
        "overview": "Data Confidentiality is a principle of cloud security that involves ensuring that data is only accessible by authorized users. It is crucial for protecting sensitive information from unauthorized access and breaches."
      }
    ]
+ }
+ 
+ /////////GRE
+ Building test Content
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Analytical Writing Assessment Overview","Argument Task Analysis","Issue Task Analysis","Analytical Writing Assessment Practice","Verbal Reasoning Reading Comprehension","Verbal Reasoning Text Completion","Verbal Reasoning Sentence Equivalence","Verbal Reasoning Vocabulary","Verbal Reasoning Practice","Quantitative Reasoning Arithmetic","Quantitative Reasoning Algebra","Quantitative Reasoning Geometry","Quantitative Reasoning Data Analysis","Quantitative Reasoning Word Problems","Quantitative Reasoning Practice","GRE Test Taking Strategies","GRE Study Plan Creation","GRE Scoring System Understanding","GRE Registration Process","GRE Adaptive Testing Understanding","Time Management Strategies for GRE","GRE Test Day Preparation","GRE Analytical Writing Scoring Guide Understanding","GRE Verbal Reasoning Scoring Guide Understanding","GRE Quantitative Reasoning Scoring Guide Understanding","Understanding the GRE Computer-Delivered Test Interface","GRE Test Centers Understanding","GRE Subject Tests Overview","GRE Subject Tests Preparation","Understanding the GRE Paper-Delivered Test","GRE ScoreSelect Option Understanding","GRE"]}
+ Starting fetchQuestionData for examName: Graduate Record Examinations with topics: ["Verbal Reasoning Reading Comprehension", "GRE Subject Tests Overview", "Verbal Reasoning Vocabulary", "Time Management Strategies for GRE", "GRE Analytical Writing Scoring Guide Understanding"] and number: 5
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Record%20Examinations&topicValue=Verbal%20Reasoning%20Reading%20Comprehension&numberValue=5
+ Raw Response: {
+   "examName": "Graduate Record Examinations",
+   "topics": [
+     "Verbal Reasoning",
+     "Reading Comprehension"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the main purpose of the passage?",
+       "options": {
+         "A": "To outline the history of a scientific discovery",
+         "B": "To argue against a common misconception",
+         "C": "To compare and contrast two theories",
+         "D": "To describe the impact of technology on society"
+       },
+       "correctOption": "B",
+       "overview": "The main purpose of most passages in reading comprehension sections is to present an argument or a perspective. This question tests the ability to discern the author's primary objective, which, in this case, is to argue against a common misconception."
+     },
+     {
+       "questionNumber": 2,
+       "question": "According to the passage, what effect does X have on Y?",
+       "options": {
+         "A": "It significantly improves Y's effectiveness",
+         "B": "It has no noticeable impact on Y",
+         "C": "It slightly hinders Y's performance",
+         "D": "It completely negates Y's benefits"
+       },
+       "correctOption": "A",
+       "overview": "Understanding cause and effect is crucial in reading comprehension. This question requires analyzing the relationship between two elements (X and Y) mentioned in the passage. The correct answer is that X significantly improves Y's effectiveness, highlighting the importance of grasping detailed relationships in texts."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following best describes the tone of the passage?",
+       "options": {
+         "A": "Skeptical",
+         "B": "Optimistic",
+         "C": "Neutral",
+         "D": "Critical"
+       },
+       "correctOption": "D",
+       "overview": "Tone is a subtle yet crucial aspect of passages that can influence the reader's understanding and interpretation. This question focuses on identifying the author's attitude towards the subject matter, which is critical in this context."
+     },
+     {
+       "questionNumber": 4,
+       "question": "The author is most likely to agree with which of the following statements?",
+       "options": {
+         "A": "Innovation is not always beneficial.",
+         "B": "Historical context is irrelevant to current issues.",
+         "C": "All opinions are equally valid.",
+         "D": "Technology has only positive impacts."
+       },
+       "correctOption": "A",
+       "overview": "Identifying the author's likely agreements or disagreements with certain statements can test comprehension and inferential reading skills. This question assesses the ability to infer the author's perspective on innovation, which is not always seen as beneficial."
+     },
+     {
+       "questionNumber": 5,
+       "question": "What can be inferred about the future of X as discussed in the passage?",
+       "options": {
+         "A": "It is uncertain but promising.",
+         "B": "It will likely decline due to external factors.",
+         "C": "No significant changes are expected.",
+         "D": "It is expected to revolutionize its field."
+       },
+       "correctOption": "A",
+       "overview": "Inference questions require reading between the lines and drawing conclusions based on the information provided. This question examines the ability to infer the future prospects of X, which, according to the passage, are uncertain but promising."
+     }
+   ]
+ }
+ Attempting to decode response to QuestionDataObject.
+ Successfully decoded response to QuestionDataObject.
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Record%20Examinations&topicValue=GRE%20Subject%20Tests%20Overview&numberValue=5
+ Raw Response: {
+   "examName": "Graduate Record Examinations",
+   "topics": [
+     "GRE Subject Tests Overview"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary purpose of the GRE Subject Tests?",
+       "options": {
+         "A": "To assess undergraduate achievement in specific fields of study",
+         "B": "To evaluate English language proficiency",
+         "C": "To test general analytical writing skills",
+         "D": "To measure general verbal and quantitative reasoning"
+       },
+       "correctOption": "A",
+       "overview": "The GRE Subject Tests are designed to assess undergraduate achievement in specific fields of study, helping graduate schools assess an applicant's qualifications and readiness for graduate-level academic work within specific disciplines."
+     },
+     {
+       "questionNumber": 2,
+       "question": "How many GRE Subject Tests are available?",
+       "options": {
+         "A": "Three",
+         "B": "Five",
+         "C": "Six",
+         "D": "Eight"
+       },
+       "correctOption": "C",
+       "overview": "There are six GRE Subject Tests available, covering areas such as Mathematics, Physics, Chemistry, Biology, Psychology, and Literature in English. These tests allow students to demonstrate their knowledge and skill level within specific disciplines."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is NOT a GRE Subject Test?",
+       "options": {
+         "A": "Computer Science",
+         "B": "Mathematics",
+         "C": "Physics",
+         "D": "Psychology"
+       },
+       "correctOption": "A",
+       "overview": "As of the last update, the Computer Science GRE Subject Test has been discontinued. The available tests include Mathematics, Physics, Chemistry, Biology, Psychology, and Literature in English."
+     },
+     {
+       "questionNumber": 4,
+       "question": "What is the typical format of GRE Subject Tests?",
+       "options": {
+         "A": "Multiple-choice questions only",
+         "B": "Essay responses only",
+         "C": "A combination of multiple-choice and essay responses",
+         "D": "Short answer and multiple-choice questions"
+       },
+       "correctOption": "A",
+       "overview": "GRE Subject Tests are composed entirely of multiple-choice questions, tailored to measure the test taker's ability to understand and analyze material within a specific field of study."
+     },
+     {
+       "questionNumber": 5,
+       "question": "How are GRE Subject Tests scored?",
+       "options": {
+         "A": "On a scale from 130 to 170",
+         "B": "On a scale from 200 to 800",
+         "C": "Pass or Fail",
+         "D": "On a scale from 100 to 300"
+       },
+       "correctOption": "B",
+       "overview": "GRE Subject Tests are scored on a scale from 200 to 800, in 10-point increments. This scoring system allows graduate programs to compare applicants' readiness and qualifications for advanced study in specific disciplines."
+     }
+   ]
+ }
+ Attempting to decode response to QuestionDataObject.
+ Successfully decoded response to QuestionDataObject.
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Record%20Examinations&topicValue=Verbal%20Reasoning%20Vocabulary&numberValue=5
+ Raw Response: {
+   "examName": "Graduate Record Examinations",
+   "topics": [
+     "Verbal Reasoning Vocabulary"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What does the word 'aberrant' mean?",
+       "options": {
+         "A": "Normal",
+         "B": "Deviant",
+         "C": "Happy",
+         "D": "Sad"
+       },
+       "correctOption": "B",
+       "overview": "The word 'aberrant' means deviating from the norm. In the context of behavior, it refers to actions that are unusual or atypical."
+     },
+     {
+       "questionNumber": 2,
+       "question": "If something is described as 'ephemeral', how long does it last?",
+       "options": {
+         "A": "Eternally",
+         "B": "For a very long time",
+         "C": "For a very short time",
+         "D": "Indefinitely"
+       },
+       "correctOption": "C",
+       "overview": "'Ephemeral' describes something that lasts for a very short time. It emphasizes the transient nature of objects, events, or experiences."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following words is synonymous with 'laconic'?",
+       "options": {
+         "A": "Verbose",
+         "B": "Wordy",
+         "C": "Concise",
+         "D": "Prolix"
+       },
+       "correctOption": "C",
+       "overview": "The word 'laconic' describes a style of speaking or writing that is brief and to the point, making 'concise' its synonym."
+     },
+     {
+       "questionNumber": 4,
+       "question": "What does 'magnanimous' best describe?",
+       "options": {
+         "A": "A small gesture",
+         "B": "A generous or forgiving nature",
+         "C": "A selfish act",
+         "D": "A minor achievement"
+       },
+       "correctOption": "B",
+       "overview": "'Magnanimous' refers to someone who is generous in forgiving an insult or injury and free from petty resentfulness or the need to seek retribution."
+     },
+     {
+       "questionNumber": 5,
+       "question": "The term 'nebulous' is best described as?",
+       "options": {
+         "A": "Clear and distinct",
+         "B": "Vague or ill-defined",
+         "C": "Bright and luminous",
+         "D": "Dark and gloomy"
+       },
+       "correctOption": "B",
+       "overview": "'Nebulous' describes something that is vague or ill-defined. It can refer to concepts, ideas, or physical objects that are not clearly outlined or understood."
+     }
+   ]
+ }
+ Attempting to decode response to QuestionDataObject.
+ Successfully decoded response to QuestionDataObject.
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Record%20Examinations&topicValue=Time%20Management%20Strategies%20for%20GRE&numberValue=5
+ Raw Response: {
+   "examName": "Graduate Record Examinations",
+   "topics": [
+     "Time Management Strategies for GRE"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the first step in effective time management for the GRE?",
+       "options": {
+         "A": "Taking practice tests",
+         "B": "Creating a study schedule",
+         "C": "Learning the exam format",
+         "D": "Reviewing all subject matter"
+       },
+       "correctOption": "B",
+       "overview": "The first step in effective time management for the GRE is creating a study schedule. This helps allocate your study time efficiently across all the topics you need to cover."
+     },
+     {
+       "questionNumber": 2,
+       "question": "How can one maximize their study efficiency for the GRE?",
+       "options": {
+         "A": "By studying for long hours without breaks",
+         "B": "Focusing only on their weakest subjects",
+         "C": "Using timed practice tests to simulate exam conditions",
+         "D": "Skipping the essay section during practice"
+       },
+       "correctOption": "C",
+       "overview": "Maximizing study efficiency for the GRE can be achieved by using timed practice tests to simulate exam conditions. This approach helps improve both knowledge and time management skills."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What should be avoided when preparing for the GRE to ensure effective time management?",
+       "options": {
+         "A": "Taking regular breaks",
+         "B": "Cramming all study into the last week",
+         "C": "Reviewing correct answers to practice questions",
+         "D": "Setting realistic study goals"
+       },
+       "correctOption": "B",
+       "overview": "When preparing for the GRE, cramming all study into the last week should be avoided to ensure effective time management. It is important to spread out study sessions over a longer period."
+     },
+     {
+       "questionNumber": 4,
+       "question": "Which technique is most beneficial for managing time during the GRE exam itself?",
+       "options": {
+         "A": "Answering all questions in order",
+         "B": "Spending the same amount of time on every question",
+         "C": "Skipping difficult questions and returning to them later",
+         "D": "Focusing on the essay section first"
+       },
+       "correctOption": "C",
+       "overview": "Skipping difficult questions and returning to them later is a beneficial technique for managing time during the GRE exam itself. This ensures that you answer as many questions as possible within the time limit."
+     },
+     {
+       "questionNumber": 5,
+       "question": "What is a key strategy for the quantitative section of the GRE?",
+       "options": {
+         "A": "Memorizing formulas",
+         "B": "Guessing quickly to save time",
+         "C": "Using the calculator for all questions",
+         "D": "Identifying and practicing weak areas"
+       },
+       "correctOption": "D",
+       "overview": "A key strategy for the quantitative section of the GRE is identifying and practicing weak areas. Focusing on improving these areas can significantly enhance performance and time management on the exam."
+     }
+   ]
+ }
+ Attempting to decode response to QuestionDataObject.
+ Successfully decoded response to QuestionDataObject.
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Record%20Examinations&topicValue=GRE%20Analytical%20Writing%20Scoring%20Guide%20Understanding&numberValue=5
+ Raw Response: {
+   "examName": "Graduate Record Examinations",
+   "topics": [
+     "GRE Analytical Writing Scoring Guide Understanding"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary factor considered in scoring GRE Analytical Writing essays?",
+       "options": {
+         "A": "The length of the essay",
+         "B": "The clarity and precision of the argument",
+         "C": "The number of sources cited",
+         "D": "The use of high-level vocabulary"
+       },
+       "correctOption": "B",
+       "overview": "GRE Analytical Writing essays are primarily scored based on the clarity and precision of the argument presented. While other factors like grammar and vocabulary are considered, the ability to construct a coherent and persuasive argument is paramount."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is NOT a criterion for scoring GRE Analytical Writing essays?",
+       "options": {
+         "A": "Development of ideas",
+         "B": "Organization",
+         "C": "Spelling accuracy",
+         "D": "Analytical reasoning"
+       },
+       "correctOption": "C",
+       "overview": "GRE Analytical Writing essays are scored based on critical thinking and analytical writing skills, including the development of ideas, organization, and analytical reasoning. Spelling accuracy, while important for overall coherence, is not a primary scoring criterion."
+     },
+     {
+       "questionNumber": 3,
+       "question": "A '6' score on the GRE Analytical Writing section indicates what level of writing skill?",
+       "options": {
+         "A": "Fundamental",
+         "B": "Competent",
+         "C": "Advanced",
+         "D": "Outstanding"
+       },
+       "correctOption": "D",
+       "overview": "A score of '6' on the GRE Analytical Writing section indicates 'Outstanding' writing skill. This score reflects insightful, well-articulated analysis of complex ideas, with superior control of the elements of effective writing."
+     },
+     {
+       "questionNumber": 4,
+       "question": "Which aspect of an essay is NOT directly assessed in the GRE Analytical Writing score?",
+       "options": {
+         "A": "The writer's stance on the issue",
+         "B": "The originality of the argument",
+         "C": "The logical flow of ideas",
+         "D": "The correctness of factual information"
+       },
+       "correctOption": "D",
+       "overview": "While the correctness of factual information can contribute to the credibility of an argument, the GRE Analytical Writing score does not directly assess factual accuracy. It focuses more on the presentation, development, and logical structuring of the argument."
+     },
+     {
+       "questionNumber": 5,
+       "question": "What does a score of '0' on the GRE Analytical Writing section indicate?",
+       "options": {
+         "A": "The essay was off-topic",
+         "B": "The essay was written in a language other than English",
+         "C": "The essay was not submitted",
+         "D": "All of the above"
+       },
+       "correctOption": "D",
+       "overview": "A score of '0' on the GRE Analytical Writing section can indicate that the essay was off-topic, written in a language other than English, or not submitted at all. It reflects a lack of response to the given task."
+     }
+   ]
+ }
+ 
+ 
+ /////////LSAT
+ {
+   "questionNumber": 1,
+   "question": "What does the Due Process Clause in the Fifth Amendment apply to?",
+   "options": {
+     "A": "Actions of the federal government",
+     "B": "Actions of the state government",
+     "C": "Both federal and state governments",
+     "D": "None of the above"
+   },
+   "correctOption": "A",
+   "overview": "The Due Process Clause in the Fifth Amendment applies to actions of the federal government. The Fourteenth Amendment extends similar protections against the states."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which of the following is a requirement for procedural due process?",
+   "options": {
+     "A": "Right to a public trial",
+     "B": "Right to be heard",
+     "C": "Right to bear arms",
+     "D": "Right to privacy"
+   },
+   "correctOption": "B",
+   "overview": "Procedural due process requires that an individual has the right to be heard, notice of the proceeding, and a fair opportunity to present evidence."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Substantive due process protects individuals from which of the following?",
+   "options": {
+     "A": "Unfair laws",
+     "B": "Unfair procedures",
+     "C": "Government interference in certain fundamental rights",
+     "D": "All of the above"
+   },
+   "correctOption": "C",
+   "overview": "Substantive due process protects individuals from government interference in certain fundamental rights, such as privacy, family relations, and marriage."
+ },
+ {
+   "questionNumber": 4,
+   "question": "What is the 'shocks the conscience' test related to?",
+   "options": {
+     "A": "Procedural due process",
+     "B": "Substantive due process",
+     "C": "Equal protection",
+     "D": "First Amendment rights"
+   },
+   "correctOption": "B",
+   "overview": "The 'shocks the conscience' test is related to substantive due process and is used to determine whether government conduct is so egregious, so outrageous, that it may fairly be said to shock the contemporary conscience."
+ },
+ {
+   "questionNumber": 5,
+   "question": "Which amendment is primarily concerned with state action in regard to due process?",
+   "options": {
+     "A": "First Amendment",
+     "B": "Fifth Amendment",
+     "C": "Fourteenth Amendment",
+     "D": "Nineteenth Amendment"
+   },
+   "correctOption": "C",
+   "overview": "The Fourteenth Amendment is primarily concerned with state action in regard to due process, ensuring that states do not deny individuals life, liberty, or property without due process of law."
+ },
+ {
+   "questionNumber": 6,
+   "question": "Economic regulation is subject to what level of scrutiny under substantive due process analysis?",
+   "options": {
+     "A": "Strict scrutiny",
+     "B": "Intermediate scrutiny",
+     "C": "Rational basis review",
+     "D": "Exacting scrutiny"
+   },
+   "correctOption": "C",
+   "overview": "Economic regulation is subject to rational basis review under substantive due process analysis, meaning the law is presumed valid if it is rationally related to a legitimate government interest."
+ },
+ {
+   "questionNumber": 7,
+   "question": "Which of the following rights is NOT explicitly protected by the Constitution but has been recognized under substantive due process?",
+   "options": {
+     "A": "Right to contract",
+     "B": "Right to privacy",
+     "C": "Right to vote",
+     "D": "Right to bear arms"
+   },
+   "correctOption": "B",
+   "overview": "The right to privacy is not explicitly protected by the Constitution but has been recognized under substantive due process. This includes decisions related to marriage, procreation, contraception, family relationships, child rearing, and education."
+ },
+ {
+   "questionNumber": 8,
+   "question": "Which case established the principle that fundamental rights include parental rights to direct the education and upbringing of their children?",
+   "options": {
+     "A": "Roe v. Wade",
+     "B": "Meyer v. Nebraska",
+     "C": "Brown v. Board of Education",
+     "D": "Miranda v. Arizona"
+   },
+   "correctOption": "B",
+   "overview": "Meyer v. Nebraska established the principle that fundamental rights under substantive due process include parental rights to direct the education and upbringing of their children."
+ },
+ {
+   "questionNumber": 9,
+   "question": "The principle that laws depriving an individual of life, liberty, or property must be fair, reasonable, and just, pertains to which concept?",
+   "options": {
+     "A": "Substantive due process",
+     "B": "Procedural due process",
+     "C": "Equal protection",
+     "D": "Judicial review"
+   },
+   "correctOption": "A",
+   "overview": "Substantive due process is the concept that laws depriving an individual of life, liberty, or property must be fair, reasonable, and just. It evaluates the essence of the law itself beyond the procedures used to enforce it."
+ },
+ {
+   "questionNumber": 10,
+   "question": "The requirement for a neutral and detached decision maker is part of which due process requirement?",
+   "options": {
+     "A": "Procedural due process",
+     "B": "Substantive due process",
+     "C": "Equal protection",
+     "D": "None of the above"
+   },
+   "correctOption": "A",
+   "overview": "The requirement for a neutral and detached decision maker is part of procedural due process, ensuring that individuals have a fair opportunity to argue their case before an unbiased tribunal."
  }
  
  

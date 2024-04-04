@@ -14,43 +14,29 @@ struct QuizDetailPage: View {
     @Environment(\.modelContext) private var modelContext
     
     @ObservedObject private var viewModel: QuizDetailPageVM
-    
     @StateObject private var generator = ColorGenerator()
     
     @Bindable var audioQuiz: AudioQuizPackage
+    
     @Binding var interactionState: InteractionState
-
     @Binding var didTapSample: Bool
-    @State var topicLabel: String = ""
+    @Binding var didTapDownload: Bool
+    @Binding var goToLibrary: Bool
+    @State var downloadButtonLabel: String = "Free Download"
+    @State var playButtonLabel: String = "Play Sample"
     @State var stillDownloading: Bool = false
     
-    
-    @State var numberOfTopics: Int = 0
-    @State var downloadButtonLabel: String = "Download Audio Quiz"
-    
-    @State var packetSizeDetails: String = "Packet contains over 72 hours of listening time with over 670 questions and answers spanning across 127 topics"
-    
-    @State var sampleButtonLabel: String = "Download Sample Question" {
-        didSet {
-           sampleButtonLabel = audioQuiz.questions.isEmpty ? "Download Sample Question" : "Play Sample Question"
-        }
-    }
-    
-    private let networkService = NetworkService.shared
-    
-    let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-    var error: Error?
-    
-    init(audioQuiz: AudioQuizPackage, didTapSample: Binding<Bool>, interactionState: Binding<InteractionState>) {
+    init(audioQuiz: AudioQuizPackage, didTapSample: Binding<Bool>, didTapDownload: Binding<Bool>, goToLibrary: Binding<Bool>, interactionState: Binding<InteractionState>) {
         viewModel = QuizDetailPageVM(audioQuiz: audioQuiz)
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
         _didTapSample = didTapSample
         _interactionState = interactionState
+        _didTapDownload = didTapDownload
+        _goToLibrary = goToLibrary
     }
     
     var body: some View {
         NavigationView {
-            
             ZStack(alignment: .topLeading) {
                 Rectangle()
                     .fill(.clear)
@@ -93,22 +79,17 @@ struct QuizDetailPage: View {
                             
                             Divider()
                             
-//                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(isDownloadingSample ? 0.6 : 1), label: isDownloadingSample ? "Downloading" : isNowPlaying ? "Playing" : "Play sample") {
-//                                self.didTapPlaySample = true
-//                            }
-//                            .disabled(isDownloadingSample)
-                            
-                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0.6 : 1), label: interactionState == .isDownloading ? "Downloading" : interactionState == .isNowPlaying ? "Playing" : "Play sample") {
-                                self.didTapSample = true
+                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0.6 : 1), label: playButtonLabel) {
+                                playSampleQuestion()
                             }
                             .disabled(interactionState == .isDownloading || interactionState == .isNowPlaying)
                             
-                            PlainClearButton(color: generator.dominantBackgroundColor, label: "Add to Library") {
-                                //user.selectedQuizPackage = audioQuiz
+                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0.6 : 1), label: audioQuiz.questions.isEmpty ?  downloadButtonLabel : "View In Library") {
+                                downloadAudioQuiz()
                             }
+                            .disabled(interactionState == .isDownloading || interactionState == .isNowPlaying)
                             
                             PlainClearButton(color: generator.dominantBackgroundColor, label: "Customize", image: "wand.and.stars.inverse") {
-                                
                             }
                         }
                         .padding()
@@ -159,7 +140,9 @@ struct QuizDetailPage: View {
                     }
                 }
             }
-            
+            .onChange(of: interactionState, { _, newState in
+                updateState(newState)
+            })
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {dismiss()}, label: {
@@ -179,9 +162,57 @@ struct QuizDetailPage: View {
             }
         }
         .onAppear {
-            generator.updateDominantColor(fromImageNamed: audioQuiz.imageUrl)
+            updateViewColors()
+        }
+        .onDisappear {
+          resetView()
         }
         .preferredColorScheme(.dark)
+    }
+    
+    private func downloadAudioQuiz() {
+        guard audioQuiz.questions.isEmpty else {
+            goToLibrary = true
+            dismiss()
+            return
+        }
+        self.didTapDownload = true
+    }
+    
+    private func playSampleQuestion() {
+        self.didTapSample = true
+    }
+    
+    private func updateViewColors() {
+        generator.updateDominantColor(fromImageNamed: audioQuiz.imageUrl)
+    }
+    
+    private func updateState(_ state: InteractionState) {
+        if state == .isDownloading {
+            DispatchQueue.main.async {
+                self.downloadButtonLabel = "Downloading"
+            }
+        } else if state == .isNowPlaying {
+            DispatchQueue.main.async {
+                self.playButtonLabel = "Now playing"
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.interactionState = .idle
+                self.didTapSample = false
+                self.didTapDownload = false
+                self.downloadButtonLabel = "Free Download"
+                self.playButtonLabel = "Play Sample"
+                
+            }
+        }
+    }
+    
+    private func resetView() {
+        self.interactionState = .idle
+        self.didTapSample = false
+        self.goToLibrary = false
+        self.didTapDownload = false
     }
 }
 
@@ -193,7 +224,7 @@ struct QuizDetailPage: View {
         @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)California Bar (MBE)California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
    
         
-        return QuizDetailPage(audioQuiz: package, didTapSample: .constant(false), interactionState: .constant(.idle))
+        return QuizDetailPage(audioQuiz: package, didTapSample: .constant(false), didTapDownload: .constant(false), goToLibrary:  .constant(false), interactionState: .constant(.idle))
             .modelContainer(container)
             .environmentObject(user)
     } catch {
@@ -205,31 +236,35 @@ struct QuizDetailPage: View {
 
 extension QuizDetailPage {
     class QuizDetailPageVM: ObservableObject {
+        @Published var interactionState: InteractionState = .idle
         var error: Error?
         @Bindable var audioQuiz: AudioQuizPackage
         private let networkService = NetworkService.shared
         private let quizPlayer = QuizPlayer.shared
         var isDownloading: Bool = false
         
+        
         init(audioQuiz: AudioQuizPackage) {
             self.audioQuiz = audioQuiz
         }
         
         func buildAudioQuizContent(name audioQuiz: AudioQuizPackage)  {
-            isDownloading = true
+            interactionState = .isDownloading
             let contentBuilder = ContentBuilder(networkService: networkService)
             Task {
                 do {
-                    let content = try await contentBuilder.buildForProd(for: audioQuiz.name)
+                    let content = try await contentBuilder.buildQuestionContent(for: audioQuiz.name)
                     DispatchQueue.main.async {
                         audioQuiz.topics.append(contentsOf: content.topics)
                         audioQuiz.questions.append(contentsOf: content.questions)
-                        self.isDownloading = false
+                        self.interactionState = .idle
+                        
                     }
                 } catch {
                     DispatchQueue.main.async { [weak self] in
                         self?.isDownloading = false
                         self?.error = error
+                        self?.interactionState = .errorResponse
                     }
                 }
             }

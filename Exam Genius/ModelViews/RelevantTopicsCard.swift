@@ -51,16 +51,23 @@ struct RelevantTopicsCard: View {
         .preferredColorScheme(.dark)
 }
 
+#Preview {
+    LibraryItemView(title: "Web Application Vulnerabilities", titleImage: "COMPTIA-Security-Exam-Basic", interactionState: .constant(.idle), isDownlaoded: .constant(false))
+        .preferredColorScheme(.dark)
+}
+
 
 struct LibraryItemView: View {
     let title: String
     let titleImage: String
     var audioFile: String?
-    var audioCollection: String?
+    var audioCollection: [String]?
+    @Binding var interactionState: InteractionState
+    @Binding var isDownlaoded: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8.0) {
-            HStack{
+            HStack {
                 Image(titleImage)
                     .resizable()
                     .frame(width: 64, height: 64)
@@ -68,14 +75,30 @@ struct LibraryItemView: View {
                     .cornerRadius(4)
                     .padding(.leading)
                 
-                VStack(spacing: 8.0) {
+                VStack(spacing: 2.0) {
                     Text(title)
                         .font(.footnote)
                         .fontWeight(.light)
-                        .lineLimit(2, reservesSpace: false)
+                        .lineLimit(2, reservesSpace: true)
                         .hAlign(.leading)
                         .activeGlow(.white, radius: 0.4)
                     
+                    
+                    HStack {
+                        Button(!isDownlaoded ? "Download" : "Play" ) {
+                            
+                        }
+                        //.buttonStyle(.bordered)
+                        .font(.footnote)
+                        .hAlign(.leading)
+                        
+                        SpinnerView()
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .opacity(interactionState == .isDownloading ? 1 : 0)
+                    }
+                    
+
                 }
                 .padding(8.0)
             }
