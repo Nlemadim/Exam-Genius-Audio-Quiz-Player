@@ -63,11 +63,8 @@ struct MyLibrary: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(audioPlaylist, id: \.self) { content in
-                            PlayerContentItemView(content: content, interactionState: $interactionState, isDownloaded: $isDownloaded)
-                                .onTapGesture {
-                                    self.expandSheet.toggle()
-                                }
-                            
+                            PlayerContentItemView(content: content, playContent: {self.expandSheet.toggle()}, interactionState: $interactionState, isDownloaded: $isDownloaded)
+                                
                             Divider().padding()
                         }
                     }
