@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */; };
-		0B2289942BC0712800DB1F34 /* VUMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2289932BC0712800DB1F34 /* VUMeterView.swift */; };
-		0B2289962BC07B6D00DB1F34 /* LibraryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2289952BC07B6D00DB1F34 /* LibraryItemView.swift */; };
+		0B0DC87F2BC0843C009F12A6 /* LibraryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */; };
+		0B0DC8812BC08488009F12A6 /* VUMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC8802BC08488009F12A6 /* VUMeterView.swift */; };
+		0B0DC8842BC086AB009F12A6 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC8832BC086AB009F12A6 /* HomePage.swift */; };
 		0B24F8572B96E0CB00CC9E9A /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */; };
 		0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */; };
 		0B2A87E12BAE07B2001571DD /* QuizViewConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */; };
@@ -121,8 +122,9 @@
 
 /* Begin PBXFileReference section */
 		0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBuilder.swift; sourceTree = "<group>"; };
-		0B2289932BC0712800DB1F34 /* VUMeterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUMeterView.swift; sourceTree = "<group>"; };
-		0B2289952BC07B6D00DB1F34 /* LibraryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItemView.swift; sourceTree = "<group>"; };
+		0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItemView.swift; sourceTree = "<group>"; };
+		0B0DC8802BC08488009F12A6 /* VUMeterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUMeterView.swift; sourceTree = "<group>"; };
+		0B0DC8832BC086AB009F12A6 /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
 		0B24F8562B96E0CB00CC9E9A /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItemView.swift; sourceTree = "<group>"; };
 		0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizViewConfigurations.swift; sourceTree = "<group>"; };
@@ -257,6 +259,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B0DC8822BC08689009F12A6 /* HomePageGroup */ = {
+			isa = PBXGroup;
+			children = (
+				0B0DC8832BC086AB009F12A6 /* HomePage.swift */,
+				0B0DC8862BC086D5009F12A6 /* HomePageExtensions */,
+				0B0DC8852BC086B2009F12A6 /* SubViews */,
+			);
+			name = HomePageGroup;
+			sourceTree = "<group>";
+		};
+		0B0DC8852BC086B2009F12A6 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = SubViews;
+			sourceTree = "<group>";
+		};
+		0B0DC8862BC086D5009F12A6 /* HomePageExtensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = HomePageExtensions;
+			sourceTree = "<group>";
+		};
+		0B0DC8872BC0871E009F12A6 /* ExplorePageGroup */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ExplorePageGroup;
+			sourceTree = "<group>";
+		};
+		0B0DC8882BC08756009F12A6 /* FullScreenCoverViews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = FullScreenCoverViews;
+			sourceTree = "<group>";
+		};
 		0B2E968D2B87F183001D8D7B /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -397,6 +437,9 @@
 		0BB9DDFF2B865830004F848A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B0DC8882BC08756009F12A6 /* FullScreenCoverViews */,
+				0B0DC8872BC0871E009F12A6 /* ExplorePageGroup */,
+				0B0DC8822BC08689009F12A6 /* HomePageGroup */,
 				0B709EA12BBE0011006C5E58 /* MyLibraryGroup */,
 				0BB9DE002B865830004F848A /* AudioQuizPlayerView.swift */,
 				0BB9DE012B865830004F848A /* LaunchPage.swift */,
@@ -462,8 +505,8 @@
 				0BFBCAA42BB5B74A006A29C2 /* CustomLogo.swift */,
 				0BD5C7FF2BB7B047005FB2E4 /* PlayerTitleView.swift */,
 				0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */,
-				0B2289932BC0712800DB1F34 /* VUMeterView.swift */,
-				0B2289952BC07B6D00DB1F34 /* LibraryItemView.swift */,
+				0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */,
+				0B0DC8802BC08488009F12A6 /* VUMeterView.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -730,6 +773,7 @@
 				0B709EA82BBE00ED006C5E58 /* AudioQuizProgressView.swift in Sources */,
 				0BD5C8042BB7BBB5005FB2E4 /* SummaryInfoView.swift in Sources */,
 				0B4ACD112B89CB8E00377BE7 /* Test.swift in Sources */,
+				0B0DC8812BC08488009F12A6 /* VUMeterView.swift in Sources */,
 				0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */,
 				0B42E3DB2B8D4FA000DC3565 /* KnowledgeTestContentView.swift in Sources */,
 				0B4ACCF92B89A61500377BE7 /* FullScreenControlView.swift in Sources */,
@@ -741,6 +785,7 @@
 				0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */,
 				0BBD5AF42B8E8371005BD87B /* AudioQuizSearchCollectionView.swift in Sources */,
 				0B4ACD0D2B89A72300377BE7 /* Misc.swift in Sources */,
+				0B0DC87F2BC0843C009F12A6 /* LibraryItemView.swift in Sources */,
 				0B4ACD072B89A61500377BE7 /* QuizPlayerExtensions.swift in Sources */,
 				0BBD5AF22B8E7A31005BD87B /* AudioQuizPlaceHolder.swift in Sources */,
 				0B8C9EEF2B9EC3820032AA80 /* QuizView.swift in Sources */,
@@ -761,7 +806,6 @@
 				0B304AD22BAFBA870004F56F /* QuestionPlayer.swift in Sources */,
 				0BCE72A32BA3649800A9E7D6 /* QuizPlayerPage.swift in Sources */,
 				0BBD5AEE2B8E7844005BD87B /* SampleExam.swift in Sources */,
-				0B2289942BC0712800DB1F34 /* VUMeterView.swift in Sources */,
 				0BB9DE192B865885004F848A /* User.swift in Sources */,
 				0B2A87E12BAE07B2001571DD /* QuizViewConfigurations.swift in Sources */,
 				0B709EAD2BBE02E8006C5E58 /* MyLibraryVM.swift in Sources */,
@@ -787,8 +831,8 @@
 				0B4ACCEB2B89A61500377BE7 /* QuizPlayer.swift in Sources */,
 				0BB9DE1A2B865885004F848A /* AudioQuizPackage.swift in Sources */,
 				0BB9DE1E2B865885004F848A /* AppState.swift in Sources */,
-				0B2289962BC07B6D00DB1F34 /* LibraryItemView.swift in Sources */,
 				0B5E0EF82BA9B3F7003C5406 /* TestData.swift in Sources */,
+				0B0DC8842BC086AB009F12A6 /* HomePage.swift in Sources */,
 				0B42E3D62B8CFFB300DC3565 /* Config.swift in Sources */,
 				0B42E3D22B8C842D00DC3565 /* AudioQuizPlayer.swift in Sources */,
 				0BBD5AF62B8E8AD8005BD87B /* CustomNavigationBar.swift in Sources */,
