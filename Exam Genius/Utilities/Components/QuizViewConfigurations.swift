@@ -12,7 +12,6 @@ struct QuizViewConfiguration: Equatable {
     var name: String
     var shortTitle: String
     var questions: [QuestionVisualizer] = []
-    var config: ControlConfiguration
     
     static func == (lhs: QuizViewConfiguration, rhs: QuizViewConfiguration) -> Bool {
         return lhs.name == rhs.name

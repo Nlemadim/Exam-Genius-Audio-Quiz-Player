@@ -41,11 +41,6 @@ struct QuizPlayerView: View {
     
     @State var currentQuestionIndex: Int = 0
     @State var selectedOption: String = ""
-
-    var audioPlayer: AVAudioPlayer?
-    var speechSynthesizer = AVSpeechSynthesizer()
-    var cancellable: AnyCancellable?
-    var audioFiles: [String] = []
     
     @Namespace private var animation
     
@@ -198,21 +193,8 @@ extension QuizPlayerView {
                 imageUrl: quizPackage.imageUrl,
                 name: quizPackage.name,
                 shortTitle: quizPackage.acronym,
-                questions: questions,
-                config: ControlConfiguration(
-                    playPauseQuiz: { [weak self] in
-                        self?.playPauseQuiz?()
-                    },
-                    nextQuestion: { [weak self] in
-                        self?.nextQuestion?()
-                    },
-                    repeatQuestion: { [weak self] in
-                        self?.repeatQuestion?()
-                    },
-                    endQuiz: { [weak self] in
-                        self?.endQuiz?()
-                    }
-                )
+                questions: questions
+                
             )
             
             self.configuration = newConfiguration

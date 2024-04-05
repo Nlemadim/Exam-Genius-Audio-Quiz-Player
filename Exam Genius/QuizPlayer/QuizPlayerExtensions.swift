@@ -31,7 +31,6 @@ extension QuizPlayer {
     }
     
     func startQuiz() {
-        
         print("Quiz has started")
         //playAudioQuizIntro()
         if let question = currentQuestion/* && instructionIsFinishedPlaying */{

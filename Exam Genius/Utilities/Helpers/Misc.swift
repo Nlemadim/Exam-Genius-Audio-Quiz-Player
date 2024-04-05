@@ -57,37 +57,40 @@ enum InteractionState {
     case errorTranscription
     case successfulTranscription
     case isDownloading
+    case finishedDownloading
     
     var status: String {
         switch self {
         case .isNowPlaying:
-            return "Now playing"
+            return "Now Playing"
         case .isListening:
             return "Listening"
         case .errorResponse:
-            return "Error response"
+            return "Error Response"
         case .hasResponded:
-            return "Recieved a response"
+            return "Recieved Response"
         case .idle:
-            return "Start"
+            return "Ready"
         case .isProcessing:
             return "Processing"
         case .awaitingResponse:
-            return "Waiting for response"
+            return "Awaiting Response"
         case .successfulResponse:
-            return "Response successfully processed"
+            return "Successfully Response"
         case .isDonePlaying:
-            return "Has finished playing"
+            return "Finished Playing"
         case .isCorrectAnswer:
             return "Answer is correct"
         case .isIncorrectAnswer:
             return "Answer is incorrect"
         case .errorTranscription:
-            return "Error transcribing response"
+            return "Error Transcribing Response"
         case .successfulTranscription:
             return "Response Transcribed"
         case .isDownloading:
             return "Downloading"
+        case .finishedDownloading:
+            return "Finished Downloading"
         }
     }
 }
@@ -161,6 +164,43 @@ enum InteractionState {
      "AWS Compute Services"
    ],
    "questions": [
+ {
+   "questionNumber": 1,
+   "question": "What is the primary purpose of Amazon SNS?",
+   "options": {
+     "A": "To collect and process large streams of data records",
+     "B": "To store and retrieve any amount of data at any time",
+     "C": "To coordinate the flow of messages between different software applications",
+     "D": "To provide a managed service for messaging and mobile notifications"
+   },
+   "correctOption": "D",
+   "overview": "Amazon Simple Notification Service (SNS) is a managed service that provides message queuing and mobile notifications for microservices, distributed systems, and serverless applications. It enables you to decouple microservices, distributed systems, and serverless applications, and send notifications to end-users using mobile push, SMS, and email."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Which of the following is a feature of Amazon SNS?",
+   "options": {
+     "A": "Virtual servers in the cloud",
+     "B": "Data warehousing service",
+     "C": "Fan-out message delivery to multiple endpoints",
+     "D": "Automated data backup and recovery"
+   },
+   "correctOption": "C",
+   "overview": "Amazon SNS supports the fan-out message delivery feature, which allows messages to be sent to multiple subscribers, including Amazon SQS queues, AWS Lambda functions, HTTPS endpoints, and email addresses. This feature is particularly useful for broadcasting messages to a wide audience or distributing information efficiently across multiple consumers."
+ },
+ {
+   "questionNumber": 3,
+   "question": "What type of messaging patterns does Amazon SNS support?",
+   "options": {
+     "A": "Request-response",
+     "B": "Point-to-point",
+     "C": "Publish-subscribe",
+     "D": "All of the above"
+   },
+   "correctOption": "C",
+   "overview": "Amazon SNS is designed to support the publish-subscribe (pub/sub) messaging pattern. In this pattern, messages are published to topics, which are logical access points and communication channels. Subscribers to a topic automatically receive messages published to it. This pattern decouples the producer of messages from the consumer, allowing for scalable and flexible message-based communication."
+ }
+ 
      {
        "questionNumber": 1,
        "question": "Which AWS service allows you to run code without provisioning or managing servers?",

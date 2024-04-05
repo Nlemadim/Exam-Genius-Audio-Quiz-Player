@@ -219,7 +219,7 @@ struct QuizView: View {
 
 #Preview {
     @State var curIndex = 0
-    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", config: ControlConfiguration(playPauseQuiz: {}, nextQuestion: {}, repeatQuestion: {}, endQuiz: {}))
+    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP")
     let quizSetter = QuizPlayerView.QuizSetter()
     quizSetter.configuration = config
     return QuizView(quizSetter: quizSetter, currentQuestionIndex: .constant(0), isNowPlaying: .constant(false), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), nextTapped: .constant(false), interactionState: .constant(.idle))

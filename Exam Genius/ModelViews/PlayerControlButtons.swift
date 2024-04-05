@@ -10,7 +10,6 @@ import SwiftUI
 struct PlayerControlButtons: View {
     @Binding var isNowPlaying: Bool
 
-    var quizPlayer = QuizPlayer.shared
     var themeColor: Color?
     var repeatAction: () -> Void
     var playAction: () -> Void

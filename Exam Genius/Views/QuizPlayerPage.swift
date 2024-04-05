@@ -43,7 +43,6 @@ struct QuizPlayerPage: View {
     @State var selectedCategory: ExamCategory?
     @Namespace var animation
     
-    
     let categories = ExamCategory.allCases
     let categoryOrder: [ExamCategory] = [.topProfessionalCertification, .topColledgePicks, .history, .free]
     var cancellables = Set<AnyCancellable>()
