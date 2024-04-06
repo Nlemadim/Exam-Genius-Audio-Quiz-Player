@@ -131,9 +131,26 @@ struct DefaultDatabase {
             
             ExamDetails(name: "Google Cloud", acronym: "Google Cloud", category: [.technology, .topCollection], about: "Focuses on testing knowledge of the cutting-edge nature of cloud computing, Google's innovative ecosystem, and the technical expertise required to achieve certification.", image: "GoogleCloud-Exam"),
             
-            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LINUX", category: [.technology, .topProfessionalCertification, .topCollection], about: "Certification for Linux system administrators.", image: "LPIC-Exam")
+            ExamDetails(name: "Linux Professional Institute Certification", acronym: "LINUX", category: [.technology, .topProfessionalCertification, .topCollection], about: "Certification for Linux system administrators.", image: "LPIC-Exam"),
             
             //ExamDetails(name: "Fundamentals of Engineering Exam", acronym: "FE", category: [.engineering], about: "An exam that must be passed to become a licensed engineer in the United States.", image: "SE-Exam"),
+            
+            //MARK: Culture and Society Group
+            
+            ExamDetails(name: "World Civilizations", acronym: "World Civilizations", category: [.cultureAndSociety], about: "Explore the foundations of today's world through the lens of ancient civilizations. This quiz journeys across time from Mesopotamia to the Mesoamerican empires, uncovering the innovations, cultures, and legacies that shaped humanity. Prepare to traverse continents and epochs, revealing the interconnectedness of societies that laid the groundwork for modern life.", image: "World-Civ-Quiz"),
+            
+            ExamDetails(name: "Black American History", acronym: "Black American History", category: [.cultureAndSociety, .history], about: "Dive into the profound narrative of Black American History, from the harrowing passages of slavery to the triumphant Civil Rights Movement, and beyond. This exam sheds light on the pivotal roles, struggles, and achievements of African Americans in shaping the nation. Engage with the stories of resilience, culture, and influence that define the African American experience.", image: "BlackAmericanHistory-Quiz"),
+            
+            ExamDetails(name: "World Literature", acronym: "World Literature", category: [.cultureAndSociety], about: "Embark on a literary odyssey across the globe with the World Literature quiz. From the epic tales of ancient civilizations to contemporary masterpieces that have touched millions, this exam celebrates the power of words across cultures and epochs. Uncover the themes, authors, and works that have transcended borders, sparking imaginations and influencing generations.", image: "WorldLiterature-Quiz"),
+            
+            ExamDetails(name: "World Religions", acronym: "World Religions", category: [.cultureAndSociety, .history], about: "Navigate the diverse spiritual landscapes of our world through the World Religions quiz. This exploration delves into the beliefs, rituals, and histories of major faiths, including Hinduism, Buddhism, Christianity, Islam, and more. Discover the philosophies and practices that have guided civilizations, inspired art, and fostered communities across millennia.", image: "WorldReligions-Quiz"),
+            
+            ExamDetails(name: "Mega Structures of America", acronym: "Mega Structures of America", category: [.cultureAndSociety, .technology], about: "Marvel at the architectural wonders and engineering feats of American mega structures. This quiz takes you on a tour of iconic landmarks, from towering skyscrapers to massive dams, exploring the innovation, design, and technology behind these colossal constructions. Understand how these structures have shaped the American skyline and spirit.", image: "MegaStructures-Quiz"),
+            
+            ExamDetails(name: "The United States Constitution", acronym: "The U.S Constitution", category: [.cultureAndSociety, .legal], about: "Unlock the cornerstone of American democracy with the United States Constitution quiz. This examination traces the origins, amendments, and pivotal moments that have defined the Constitution’s role in American law and society. Learn about the principles, debates, and interpretations that continue to influence the governance of the United States.", image: "US-Constitution-Quiz"),
+            
+            ExamDetails(name: "The Harlem Renaissance", acronym: "The Harlem Renaissance", category: [.cultureAndSociety], about: "Celebrate the Harlem Renaissance, a golden age of African American culture. This quiz highlights the explosion of creativity in the 1920s Harlem, showcasing the writers, artists, musicians, and thinkers who transformed American culture. Delve into the works and legacy of this vibrant period, and discover its lasting impact on art and society.", image: "Harlem-Ren-Quiz")
+            
 
         ]
     }

@@ -110,23 +110,24 @@ class AudioQuizPackage: ObservableObject, Identifiable {
 }
 
 enum ExamCategory: String, Codable, Identifiable, CaseIterable, Hashable {
-    case science = "Science"
-    case technology = "Technology"
-    case healthcare = "Healthcare"
-    case legal = "Legal"
-    case business = "Business"
-    case itCertifications = "IT Certifications"
-    case professional = "Professional"
-    case language = "Language"
-    case engineering = "Engineering"
-    case finance = "Finance"
-    case miscellaneous = "Miscellaneous"
-    case education = "Educational"
-    case topColledgePicks = "Top Colledge Picks"
-    case topProfessionalCertification = "Top Pro Certifications"
-    case history = "History"
-    case free = "Sponsored"
+    case science
+    case technology
+    case healthcare
+    case legal
+    case business
+    case itCertifications
+    case professional
+    case language
+    case engineering
+    case finance
+    case miscellaneous
+    case education
+    case topColledgePicks
+    case topProfessionalCertification
+    case history
+    case free
     case topCollection
+    case cultureAndSociety
     
 
     var id: Self { self } // This makes ExamCategory conform to Identifiable
@@ -144,7 +145,7 @@ enum ExamCategory: String, Codable, Identifiable, CaseIterable, Hashable {
         case .business:
             return "Business"
         case .itCertifications:
-            return "IT Certifications"
+            return "Information Technology"
         case .professional:
             return "Professional"
         case .language:
@@ -158,15 +159,17 @@ enum ExamCategory: String, Codable, Identifiable, CaseIterable, Hashable {
         case .education:
             return "Educational"
         case .topColledgePicks:
-            return "Top colledge picks"
+            return "Colledge"
         case .topProfessionalCertification:
-            return "Top proffesional certifications"
+            return "Proffesional"
         case .history:
             return "History"
         case .free:
             return "Sponsored"
         case .topCollection:
             return "Top Picks"
+        case .cultureAndSociety:
+            return "Culture and Society"
         }
     }
 }

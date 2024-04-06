@@ -103,10 +103,10 @@ struct QuizDetailPage: View {
                             
                             HStack(spacing: 16.0) {
                                 ForEach(audioQuiz.category, id: \.self) { category in
-                                    Text(category.rawValue)
-                                        .font(.caption2)
+                                    Text(category.descr)
+                                        .font(.system(size: 10))
                                         .fontWeight(.light)
-                                        .lineLimit(2, reservesSpace: false)
+                                        .lineLimit(1)
                                         .padding(10)
                                         .background(
                                             RoundedRectangle(cornerRadius: 10)

@@ -39,6 +39,7 @@ struct QuizPlayerPage: View {
     @State var topFreeCollection: [AudioQuizPackage] = []
     @State var topProCollection: [AudioQuizPackage] = []
     @State var topColledgeCollection: [AudioQuizPackage] = []
+    @State var cultureAndSociety: [AudioQuizPackage] = []
     @State var path = [AudioQuizPackage]()
     @State var selectedCategory: ExamCategory?
     @Namespace var animation
@@ -64,6 +65,10 @@ struct QuizPlayerPage: View {
                             })
                             
                             HorizontalQuizListView(quizzes: topProCollection, title: "Top Professional Certifications", tapAction: { quiz in
+                                selectedQuizPackage = quiz
+                            })
+                            
+                            HorizontalQuizListView(quizzes: cultureAndSociety, title: "Culture And Society", subtitle: "Discover the History, Literature, Innovation of Cultures and Societies Worldwide", tapAction: { quiz in
                                 selectedQuizPackage = quiz
                             })
                         }
@@ -230,10 +235,12 @@ struct QuizPlayerPage: View {
         let topCollection = audioQuizCollection.filter { $0.category.contains(.topCollection) }
         let topPro = audioQuizCollection.filter { $0.category.contains(.topProfessionalCertification) }
         let topColledge = audioQuizCollection.filter { $0.category.contains(.topColledgePicks) }
+        let cultureAndSociety = audioQuizCollection.filter { $0.category.contains(.cultureAndSociety) }
         DispatchQueue.main.async {
             self.topCollectionQuizzes.append(contentsOf: topCollection)
             self.topColledgeCollection.append(contentsOf: topColledge)
             self.topProCollection.append(contentsOf: topPro)
+            self.cultureAndSociety.append(contentsOf: cultureAndSociety)
         }
     }
     
@@ -340,15 +347,30 @@ struct QuizCarouselView: View {
 struct HorizontalQuizListView: View {
     var quizzes: [AudioQuizPackage]
     var title: String
+    var subtitle: String?
     let tapAction: (AudioQuizPackage) -> Void
 
     var body: some View {
         VStack(spacing: 4.0) {
-            Text(title)
-                .font(.headline)
+            Text(title.uppercased())
+                .font(.subheadline)
                 .fontWeight(.bold)
+                .kerning(-0.5) // Reduces the default spacing between characters
                 .padding(.horizontal)
+                .lineLimit(1) // Ensures the text does not wrap
+                .truncationMode(.tail) // Adds "..." at the end if the text is too long
                 .hAlign(.leading)
+                
+
+            
+            if let subtitle {
+                Text(subtitle)
+                    .font(.footnote)
+                    .padding(.horizontal)
+                    .hAlign(.leading)
+                    .foregroundStyle(.linearGradient(colors: [.primary, .primary.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 0) {
