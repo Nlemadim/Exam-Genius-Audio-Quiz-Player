@@ -13,7 +13,7 @@ struct QuizDetailPage: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
-    @ObservedObject private var viewModel: QuizDetailPageVM
+//    @ObservedObject private var viewModel: QuizDetailPageVM
     @StateObject private var generator = ColorGenerator()
     
     @Bindable var audioQuiz: AudioQuizPackage
@@ -27,7 +27,7 @@ struct QuizDetailPage: View {
     @State var stillDownloading: Bool = false
     
     init(audioQuiz: AudioQuizPackage, didTapSample: Binding<Bool>, didTapDownload: Binding<Bool>, goToLibrary: Binding<Bool>, interactionState: Binding<InteractionState>) {
-        viewModel = QuizDetailPageVM(audioQuiz: audioQuiz)
+//        viewModel = QuizDetailPageVM(audioQuiz: audioQuiz)
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
         _didTapSample = didTapSample
         _interactionState = interactionState
@@ -240,7 +240,6 @@ extension QuizDetailPage {
         var error: Error?
         @Bindable var audioQuiz: AudioQuizPackage
         private let networkService = NetworkService.shared
-        private let quizPlayer = QuizPlayer.shared
         var isDownloading: Bool = false
         
         
@@ -290,17 +289,6 @@ extension QuizDetailPage {
             }
         }
         
-        func playAudioQuizSample(playlist: [String]) {
-            sampleContent(audioQuiz: audioQuiz)
-        }
-        
-        func sampleContent(audioQuiz: AudioQuizPackage) {
-            let samples  = getPlaylist(audioQuiz: audioQuiz)
-            let playlist = samples.map{ $0.questionAudio }
-            let sortedPlaylist = playlist.sorted()
-            quizPlayer.playSampleQuiz(audioFileNames: sortedPlaylist)
-           // isNowPlaying = true
-        }
         
         func getPlaylist(audioQuiz: AudioQuizPackage) -> [Question] {
             var playlist: [Question] = []

@@ -22,10 +22,10 @@ struct ContentView: View {
             SignInPage()
             
         case .signedIn:
-            QuizPlayerPage()
+            HomePage()
             
         case .audioQuizSelected:
-            QuizPlayerPage()
+            HomePage()
             
         case .none:
             LaunchPage()

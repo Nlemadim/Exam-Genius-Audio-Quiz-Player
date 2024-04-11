@@ -25,16 +25,16 @@ extension MyLibrary {
             self.audioPlaylist.append(.topic(overview))
         }
         
-        func loadMockData() {
-            audioPlaylist = [
-                .audioQuiz(AudioQuiz(title: "Quiz 1", audioCollection: ["Track 1", "Track 2"], titleImage: "IconImage")),
-                .topic(TopicOverview(title: "Topic 1", audiofile: "File 1", titleImage: "IconImage"))
-            ]
-        }
-        
-        var questionCount: Int {
-            let count = UserDefaults.standard.object(forKey: "numberOfTestQuestions") as? Int
-            return count ?? 0
-        }
+//        func loadMockData() {
+//            audioPlaylist = [
+//                .audioQuiz(AudioQuiz(title: "Quiz 1", audioCollection: ["Track 1", "Track 2"], titleImage: "IconImage")),
+//                .topic(TopicOverview(title: "Topic 1", audiofile: "File 1", titleImage: "IconImage"))
+//            ]
+//        }
+//        
+//        var questionCount: Int {
+//            let count = UserDefaults.standard.object(forKey: "numberOfTestQuestions") as? Int
+//            return count ?? 0
+//        }
     }
 }

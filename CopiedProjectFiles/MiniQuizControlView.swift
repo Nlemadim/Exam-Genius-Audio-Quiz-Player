@@ -13,8 +13,6 @@ struct MiniQuizControlView: View {
     var nextAction: () -> Void
     var repeatAction: () -> Void
     
-    @State private var fillAmount: CGFloat = 0.0
-    @State private var showProgressRing: Bool = false
     @State private var tappedPlay: Bool = false
     let imageSize: CGFloat = 18
     
@@ -22,7 +20,7 @@ struct MiniQuizControlView: View {
         HStack(spacing: 20) {
             // Repeat Button
             Button(action: repeatAction) {
-                Image(systemName: "memories")
+                Image(systemName: "mic.circle")
                     .font(.title2)
             }
             
@@ -46,17 +44,6 @@ struct MiniQuizControlView: View {
         .padding(.horizontal)
     }
     
-    private func startFilling() {
-        fillAmount = 0.0 // Reset the fill amount
-        showProgressRing = true // Show the progress ring
-        withAnimation(.linear(duration: 5)) {
-            fillAmount = 1.0 // Fill the ring over 5 seconds
-        }
-        // Hide the progress ring after 5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.showProgressRing = false
-        }
-    }
 }
 
 #Preview {

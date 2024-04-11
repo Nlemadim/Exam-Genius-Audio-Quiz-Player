@@ -1,27 +1,11 @@
 //
-//  PlaylistHeaderView.swift
+//  PlayerContentItemView.swift
 //  Exam Genius
 //
-//  Created by Tony Nlemadim on 4/3/24.
+//  Created by Tony Nlemadim on 4/11/24.
 //
 
-import Foundation
 import SwiftUI
-
-struct PlaylistHeaderView: View {
-    var body: some View {
-        HStack {
-            Text("Playlist")
-                .font(.headline)
-            
-            Spacer()
-             
-            Button("", systemImage: "line.3.horizontal") { }
-        }
-        .foregroundStyle(.white)
-        .padding(.horizontal)
-    }
-}
 
 struct PlayerContentItemView: View {
     let content: PlayerContent
@@ -38,4 +22,3 @@ struct PlayerContentItemView: View {
         }
     }
 }
-

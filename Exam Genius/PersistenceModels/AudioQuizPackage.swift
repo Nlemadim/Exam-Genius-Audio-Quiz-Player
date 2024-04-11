@@ -110,24 +110,24 @@ class AudioQuizPackage: ObservableObject, Identifiable {
 }
 
 enum ExamCategory: String, Codable, Identifiable, CaseIterable, Hashable {
-    case science
-    case technology
-    case healthcare
-    case legal
-    case business
-    case itCertifications
-    case professional
-    case language
-    case engineering
-    case finance
-    case miscellaneous
-    case education
-    case topColledgePicks
-    case topProfessionalCertification
-    case history
-    case free
-    case topCollection
-    case cultureAndSociety
+    case science = "Science"
+    case technology = "Technology"
+    case healthcare = "Healthcare"
+    case legal = "Legal"
+    case business = "Business"
+    case itCertifications = "Information Technology"
+    case professional = "Proffesional"
+    case language = "Language"
+    case engineering = "Engineering"
+    case finance = "Finance"
+    case miscellaneous = "Education"
+    case education = "Educational"
+    case topColledgePicks = "Colledge"
+    case topProfessionalCertification = "Profesional Certification"
+    case history = "History"
+    case free = "Free"
+    case topCollection = "Top Picks"
+    case cultureAndSociety = "Culture and Society"
     
 
     var id: Self { self } // This makes ExamCategory conform to Identifiable
@@ -161,7 +161,7 @@ enum ExamCategory: String, Codable, Identifiable, CaseIterable, Hashable {
         case .topColledgePicks:
             return "Colledge"
         case .topProfessionalCertification:
-            return "Proffesional"
+            return "Profesional Certification"
         case .history:
             return "History"
         case .free:

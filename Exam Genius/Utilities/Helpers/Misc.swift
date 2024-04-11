@@ -285,6 +285,57 @@ enum InteractionState {
    ]
  }
  
+ 
+ ////////AWS
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Architect - Associate Exam: Understanding of AWS Cloud Architecture","Basics of Cloud Computing","AWS Global Infrastructure","AWS Cloud Security Fundamentals","Identity and Access Management (IAM)","Amazon Virtual Private Cloud (VPC)","Elastic Compute Cloud (EC2)","Amazon Simple Storage Service (S3)","Amazon Elastic Block Store (EBS)","Amazon Relational Database Service (RDS)","Amazon DynamoDB","AWS Elastic Beanstalk","AWS Lambda","AWS CloudFormation","Understanding of Elastic Load Balancing","Auto Scaling and Route 53","Amazon Simple Notification Service (SNS)","Amazon Simple Queue Service (SQS)","Amazon Simple Workflow Service (SWF)","AWS Key Management Service (KMS)","AWS CloudTrail","AWS CloudWatch","AWS Trusted Advisor","AWS Config","Understanding of AWS Billing and Pricing","AWS Management Console","AWS Command Line Interface (CLI)","AWS Software Development Kits (SDKs)","Disaster Recovery on AWS","High Availability Design on AWS","Migration to AWS","Network Design on AWS","Serverless Architecture"]}
+ Starting fetchQuestionData for examName: AWS Certified Solutions with topics: ["Disaster Recovery on AWS"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=AWS%20Certified%20Solutions&topicValue=Disaster%20Recovery%20on%20AWS&numberValue=3
+ Raw Response: {
+   "examName": "AWS Certified Solutions Architect",
+   "topics": [
+     "Disaster Recovery on AWS"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which AWS service is primarily used for content delivery and to cache files at edge locations?",
+       "options": {
+         "A": "Amazon S3",
+         "B": "Amazon EC2",
+         "C": "AWS Lambda",
+         "D": "Amazon CloudFront"
+       },
+       "correctOption": "D",
+       "overview": "Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment. It is primarily used to cache files at edge locations to provide users with faster access to content."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following AWS services is most suitable for disaster recovery due to its geographical distribution of data?",
+       "options": {
+         "A": "Amazon EBS",
+         "B": "Amazon S3",
+         "C": "Amazon RDS",
+         "D": "AWS Global Accelerator"
+       },
+       "correctOption": "B",
+       "overview": "Amazon S3 is most suitable for disaster recovery among the options given due to its durability and geographical distribution of data. It provides a highly durable storage infrastructure designed for mission-critical and primary data storage. Objects are redundantly stored on multiple devices across a minimum of three Availability Zones to ensure the durability of 99.999999999% (11 9's)."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What AWS service allows you to replicate your network in a new region for disaster recovery?",
+       "options": {
+         "A": "AWS Direct Connect",
+         "B": "Amazon VPC",
+         "C": "AWS Transit Gateway",
+         "D": "Amazon Route 53"
+       },
+       "correctOption": "B",
+       "overview": "Amazon VPC (Virtual Private Cloud) allows you to provision a logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define. This service enables you to replicate your network in a new region for disaster recovery, providing the ability to have a backup network ready in case of a disaster."
+     }
+   ]
+ }
+ 
  ////////SAT
  Response HTTP Status code: 200
  Raw server response: {"topics":["Reading Comprehension","Understanding of Main Ideas in Texts","Identifying Supporting Details in Texts","Drawing Inferences from Texts","Understanding Vocabulary in Context","Understanding of Author's Purpose","Understanding of Rhetorical Devices","Understanding of Text Structures","Understanding of Tone and Style in Texts","Understanding of Textual Evidence","Critical Reading Skills","Analyzing Arguments in Texts","Understanding of Synonyms and Antonyms","Understanding of Word Roots","Prefixes and Suffixes","Understanding of Figurative Language","Understanding of Connotation and Denotation","Understanding of Sentence Completion","Writing and Language Test","Identifying Sentence Errors","Improving Sentences and Paragraphs","Understanding Grammar and Usage","Understanding of Punctuation","Understanding of Sentence Structure","Understanding of Conventions of Standard English","Understanding of Verb Tense","Understanding of Subject-Verb Agreement","Understanding of Pronoun Agreement","Understanding of Parallel Structure","Understanding of Modifier Placement","Understanding of Idiomatic Expressions","Understanding of Wordiness and"]}
