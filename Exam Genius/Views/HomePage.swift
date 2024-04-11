@@ -110,6 +110,13 @@ struct HomePage:View {
                     isPlaying = true
                 }
             })
+            .onChange(of: selectedQuizPackage, { _, newValue in
+                if (newValue != nil) {
+                    if let package = self.selectedQuizPackage {
+                        user.selectedQuizPackage = package
+                    }
+                }
+            })
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -152,6 +159,18 @@ struct HomePage:View {
                 .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
         }
         .preferredColorScheme(.dark)
+    }
+    
+    func loadUserPackage() {
+        if let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName") {
+            let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName })
+            
+            self.selectedQuizPackage = matchingQuizPackage
+            
+        } else {
+ 
+            self.selectedQuizPackage = nil
+        }
     }
     
     @ViewBuilder
