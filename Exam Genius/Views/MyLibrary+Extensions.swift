@@ -9,17 +9,34 @@ import Foundation
 
 extension MyLibrary {
     func updatePlaylist() {
+        // Extracting question IDs already present in the downloaded collection
+        let existingQuestionIds = downloadedAudioQuizCollection.flatMap { $0.questions }.map { $0.id }
+
         let filteredQuizPackages = audioQuizCollection.filter { audioQuizPackage in
+            // Filter out audioQuizPackages where all questions are already in the downloaded collection
             audioQuizPackage.questions.contains { question in
-                !question.questionAudio.isEmptyOrWhiteSpace
+                !question.questionAudio.isEmptyOrWhiteSpace && !existingQuestionIds.contains(question.id)
             }
         }
-        
-        self.downloadedAudioQuizCollection = filteredQuizPackages
-        downloadedAudioQuizCollection.forEach { audioQuiz in
+
+        self.downloadedAudioQuizCollection.append(contentsOf: filteredQuizPackages)
+     
+        filteredQuizPackages.forEach { audioQuiz in
             addAudioQuizToLibrary(from: audioQuiz)
         }
     }
+//    func updatePlaylist() {
+//        let filteredQuizPackages = audioQuizCollection.filter { audioQuizPackage in
+//            audioQuizPackage.questions.contains { question in
+//                !question.questionAudio.isEmptyOrWhiteSpace
+//            }
+//        }
+//        
+//        self.downloadedAudioQuizCollection = filteredQuizPackages
+//        downloadedAudioQuizCollection.forEach { audioQuiz in
+//            addAudioQuizToLibrary(from: audioQuiz)
+//        }
+//    }
     
     private func addAudioQuizToLibrary(from package: AudioQuizPackage?) {
         guard let package = package else { return }

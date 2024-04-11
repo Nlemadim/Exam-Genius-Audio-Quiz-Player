@@ -31,7 +31,7 @@ struct FullScreenQuizPlayer2: View {
     @Binding var presentMicModal: Bool
     @Binding var nextTapped: Bool
     @Binding var interactionState: InteractionState
-   
+    
     var animation: Namespace.ID
     var body: some View {
         NavigationView {
@@ -80,7 +80,7 @@ struct FullScreenQuizPlayer2: View {
                             Image(systemName: "text.quote")
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 20.0)
-                                
+                            
                         })
                     }
                 }
@@ -90,11 +90,30 @@ struct FullScreenQuizPlayer2: View {
                     withAnimation(.easeInOut(duration: 0.35)) {
                         animateContent = true
                     }
+                    showContent()
+                }
+                .onChange(of: currentQuestionIndex) { _, _ in
+                    showContent()
+                }
+                .onChange(of: quizSetter.configuration) { _, _ in
+                    showContent()
                 }
             }
             .sheet(isPresented: .constant(interactionState == .isListening), content: {
                 MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
+            })
+            .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
+                ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
+                    .presentationDetents([.height(200)])
+                    .onAppear {
+                        //print(isCorrectAnswer)
+                        //MARK: Simulating Overview readout
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            self.interactionState = .idle
+                            print(isCorrectAnswer)
+                        }
+                    }
             })
         }
     }
@@ -108,6 +127,20 @@ struct FullScreenQuizPlayer2: View {
         guard nextQuestions.indices.contains(currentQuestionIndex), currentQuestionIndex < nextQuestions.count - 1 else { return }
         nextTapped.toggle()
         currentQuestionIndex += 1
+    }
+    
+    func showContent() {
+        // Safely unwrap configuration and ensure currentIndex is within the range of questions.
+        guard let questions = quizSetter.configuration?.questions, questions.indices.contains(currentQuestionIndex) else { return }
+        
+        let currentQuestion = questions[currentQuestionIndex]
+        
+        // Update state with the current question and options
+        question = currentQuestion.questionContent
+        optionA = currentQuestion.optionA
+        optionB = currentQuestion.optionB
+        optionC = currentQuestion.optionC
+        optionD = currentQuestion.optionD
     }
     
     private func startTypingAnimation(for text: String) {

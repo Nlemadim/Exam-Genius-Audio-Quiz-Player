@@ -285,6 +285,55 @@ enum InteractionState {
    ]
  }
  
+ ////////Response HTTP Status code: 200
+ Raw server response: {"topics":["Analytical Writing Assessment: Issue Task","Analytical Writing Assessment: Argument Task","Verbal Reasoning: Reading Comprehension","Verbal Reasoning: Text Completion","Verbal Reasoning: Sentence Equivalence","Verbal Reasoning: Vocabulary","Verbal Reasoning: Critical Reading","Quantitative Reasoning: Arithmetic","Quantitative Reasoning: Algebra","Quantitative Reasoning: Geometry","Quantitative Reasoning: Data Analysis","Quantitative Reasoning: Problem Solving","Quantitative Reasoning: Quantitative Comparison","Test Taking Strategies","Time Management During Exam","Understanding GRE Scoring System","GRE Test Format","Review of Basic Math Concepts","Review of English Grammar","Practice with GRE Sample Questions","Writing Persuasive Essays","Understanding Research Design","Interpreting Data","Probability and Statistics","Functions and Graphs","Integer Properties","Percents","Ratios","Proportions","Powers and Roots","Word Problems","Linear Equations","Quadratic Equations","Polynomials","Geometry: Lines"]}
+ Starting fetchQuestionData for examName: Graduate Record Examinations with topics: ["Analytical Writing Assessment: Argument Task"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Record%20Examinations&topicValue=Analytical%20Writing%20Assessment:%20Argument%20Task&numberValue=3
+ Raw Response: {
+   "examName": "Graduate Record Examinations",
+   "topics": [
+     "Analytical Writing Assessment: Argument Task"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the first step in analyzing an argument for the GRE Analytical Writing Assessment, Argument Task?",
+       "options": {
+         "A": "Identify the conclusion of the argument.",
+         "B": "Write the introduction of your essay.",
+         "C": "List potential counterarguments.",
+         "D": "Summarize the argument."
+       },
+       "correctOption": "A",
+       "overview": "The first step in analyzing an argument for the GRE Analytical Writing Assessment, Argument Task, is to identify the conclusion of the argument. Understanding the main point the author is trying to make is crucial before you can evaluate the evidence and reasoning they use to support it."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is NOT a common flaw to look for in the arguments presented in the GRE Analytical Writing Assessment, Argument Task?",
+       "options": {
+         "A": "Overgeneralization.",
+         "B": "Circular reasoning.",
+         "C": "Use of relevant evidence.",
+         "D": "False cause and effect."
+       },
+       "correctOption": "C",
+       "overview": "In the GRE Analytical Writing Assessment, Argument Task, candidates are asked to evaluate the logical soundness of an argument. Therefore, the use of relevant evidence is not a flaw but a strength in an argument. Common flaws include overgeneralization, circular reasoning, and false cause and effect."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the primary objective when writing your response to the Argument Task in the GRE Analytical Writing section?",
+       "options": {
+         "A": "To agree or disagree with the argument's conclusion.",
+         "B": "To analyze the argument's logical soundness without taking a position.",
+         "C": "To present your own argument on the issue.",
+         "D": "To summarize the argument's main points."
+       },
+       "correctOption": "B",
+       "overview": "The primary objective when writing your response to the Argument Task in the GRE Analytical Writing section is to analyze the logical soundness of the argument without taking a position. This involves evaluating the evidence and reasoning the author uses, rather than agreeing or disagreeing with the conclusion."
+     }
+   ]
+ }
+ 
  
  ////////AWS
  Response HTTP Status code: 200

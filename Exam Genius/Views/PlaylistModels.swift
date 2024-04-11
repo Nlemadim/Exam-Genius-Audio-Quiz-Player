@@ -19,12 +19,14 @@ enum PlayerContent: Hashable {
 }
 
 struct AudioQuiz: PlayableContent, Hashable {
+    var id = UUID()
     var title: String
     var audioCollection: [String]
     var titleImage: String
 }
 
 struct TopicOverview: PlayableContent, Hashable {
+    var id = UUID()
     var title: String
     var audiofile: String
     var titleImage: String

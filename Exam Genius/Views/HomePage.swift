@@ -19,6 +19,7 @@ struct HomePage:View {
     @StateObject var generator = ColorGenerator()
     @StateObject var questionPlayer = QuestionPlayer()
     @StateObject var keyboardObserver = KeyboardObserver()
+    @ObservedObject var libraryPlaylist = MyLibrary.LibraryPlaylist()
     
     @State var interactionState: InteractionState = .idle
     
@@ -99,6 +100,12 @@ struct HomePage:View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
+            .onReceive(libraryPlaylist.$startedPlaying, perform: { startQuiz in
+                if startQuiz {
+                    self.expandSheet = true
+                    isPlaying = true
+                }
+            })
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -137,14 +144,14 @@ struct HomePage:View {
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
-            BottomMiniPlayer()
+            BottomMiniPlayer(playlistConfig: libraryPlaylist)
                 .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
         }
         .preferredColorScheme(.dark)
     }
     
     @ViewBuilder
-    private func BottomMiniPlayer() -> some View {
+    private func BottomMiniPlayer(playlistConfig: MyLibrary.LibraryPlaylist) -> some View {
         // Implement the minimized version of the bottom sheet here
         ZStack {
             Rectangle()
@@ -152,7 +159,7 @@ struct HomePage:View {
                 .cornerRadius(10)
                 .background(.black)
                 .overlay {
-                    MiniPlayer(expandSheet: $expandSheet, animation: animation)
+                    MiniPlayer(libraryPlaylist: libraryPlaylist, selectedQuizPackage: self.$selectedQuizPackage, expandSheet: $expandSheet, startPlaying: $isPlaying, animation: animation)
                         .offset(y: 3)
                 }
         }

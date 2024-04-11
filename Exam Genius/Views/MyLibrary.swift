@@ -30,7 +30,7 @@ struct MyLibrary: View {
     @State var audioPlaylist: [PlayerContent] = []
     @State var interactionState: InteractionState = .idle
     
-    @State private var playTapped: Bool = false
+//    @State private var playTapped: Bool = false
     @State private var nextTapped: Bool = false
     @State private var repeatTapped: Bool = false
     @State private var presentMicModal: Bool = false
@@ -64,6 +64,7 @@ struct MyLibrary: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(Array(audioPlaylist.enumerated()), id: \.element) { index, content in
+                            
                             PlayerContentItemView(content: content, playContent: { playlistConfig.startedPlaying = true }, interactionState: $interactionState, isDownloaded: $isDownloaded)
                                 
                             Divider().padding()

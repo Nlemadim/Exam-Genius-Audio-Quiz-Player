@@ -23,6 +23,7 @@ struct MiniPlayer: View {
     @StateObject var responseListener = ResponseListener()
     @StateObject var quizSetter = MiniPlayer.MiniPlayerConfiguration()
     @State var configuration: QuizViewConfiguration?
+    @Binding var selectedQuizPackage: AudioQuizPackage?
     
     @State var interactionState: InteractionState = .idle
     
@@ -37,10 +38,11 @@ struct MiniPlayer: View {
     @State private var presentMicModal: Bool = false
     
     @Binding var expandSheet: Bool
+    @Binding var startPlaying: Bool
     
     
     var animation: Namespace.ID
-    var selectedQuizPackage: AudioQuizPackage?
+    
 
     var body: some View {
         HStack(spacing: 10) {
@@ -64,8 +66,8 @@ struct MiniPlayer: View {
             
             MiniQuizControlView(
                 recordAction: {},
-                playPauseAction: {},
-                nextAction: {},
+                playPauseAction: { playQuestion() },
+                nextAction: { goToNextQuestion() },
                 repeatAction: {}
             )
         }
@@ -83,14 +85,18 @@ struct MiniPlayer: View {
             }
         }
         .onReceive(libraryPlaylist.$startedPlaying, perform: { startPlaying in
-            if startPlaying {
-                self.expandSheet = startPlaying
-                playQuestion()
-            }
+            print("Observed Playlist has started playing: \(startPlaying)")
+            startAudioQuiz(startPlaying)
         })
         .onChange(of: selectedQuizPackage) { _, newValue in
             if let newPackage = newValue {
                 quizSetter.loadQuizConfiguration(quizPackage: newPackage)
+                print("MiniPlayer has selected Quiz: \(newPackage.name)")
+            }
+        }
+        .onChange(of: startPlaying) { _, newValue in
+            if newValue {
+                startAudioQuiz(true)
             }
         }
         .onChange(of: nextTapped) { _, _ in
@@ -138,15 +144,28 @@ extension MiniPlayer {
         if currentQuestions.indices.contains(currentQuestionIndex) {
             let currentPosition = self.currentQuestionIndex
             let audio = self.currentQuestions[currentPosition].questionAudio
-            questionPlayer.playSingleAudioQuestion(audioFile: audio)
+            self.expandSheet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                questionPlayer.playSingleAudioQuestion(audioFile: audio)
+            }
+        }
+    }
+    
+    func startAudioQuiz(_ startPlaying: Bool) {
+        if startPlaying {
+            if let package = user.audioQuizPackage {
+                self.selectedQuizPackage = package
+                playQuestion()
+            }
         }
     }
     
     var currentQuestions: [Question] {
         var questions: [Question] = []
-        if let selectedPackage = user.selectedQuizPackage {
+        if let selectedPackage = user.audioQuizPackage {
             let currentQuestions = selectedPackage.questions
-            questions.append(contentsOf: currentQuestions)
+            questions = currentQuestions
+            print("Miniplayer has recieved \(questions.count) questions")
         }
         
         return questions
