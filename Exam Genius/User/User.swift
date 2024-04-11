@@ -35,6 +35,13 @@ final class User: ObservableObject {
         didSet {
             hasSelectedAudioQuiz = selectedQuizPackage != nil
             audioQuizPackage = selectedQuizPackage
+            
+            // Save the name of the selected quiz package to UserDefaults only if it's not nil
+            if let packageName = selectedQuizPackage?.name {
+                UserDefaults.standard.set(packageName, forKey: "userSelectedPackageName")
+            }
+            // No else part to remove the stored value
         }
     }
+
 }

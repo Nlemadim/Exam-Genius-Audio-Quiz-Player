@@ -15,6 +15,20 @@ extension HomePage {
         }
     }
     
+    func loadUserPackage() {
+        if let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName") {
+            let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName })
+            
+            self.selectedQuizPackage = matchingQuizPackage
+        } else {
+ 
+            self.selectedQuizPackage = nil
+        }
+        
+        user.selectedQuizPackage = self.selectedQuizPackage
+    }
+
+    
     func downloadFullPackage(_ audioQuiz: AudioQuizPackage) async throws {
         guard audioQuiz.questions.isEmpty else { return }
         DispatchQueue.main.async {

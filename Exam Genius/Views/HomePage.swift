@@ -49,6 +49,10 @@ struct HomePage:View {
     
     let categories = ExamCategory.allCases
     let categoryOrder: [ExamCategory] = [.topProfessionalCertification, .topColledgePicks, .history, .free]
+    
+    init() {
+        loadUserPackage()
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {

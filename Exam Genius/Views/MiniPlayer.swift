@@ -84,22 +84,22 @@ struct MiniPlayer: View {
                 quizSetter.loadQuizConfiguration(quizPackage: audioQuiz)
             }
         }
-        .onReceive(libraryPlaylist.$startedPlaying, perform: { startPlaying in
+        .onChange(of: startPlaying) {_, startPlaying in
             print("Observed Playlist has started playing: \(startPlaying)")
             startAudioQuiz(startPlaying)
-        })
+        }
         .onChange(of: selectedQuizPackage) { _, newValue in
             if let newPackage = newValue {
                 quizSetter.loadQuizConfiguration(quizPackage: newPackage)
                 print("MiniPlayer has selected Quiz: \(newPackage.name)")
             }
         }
-        .onChange(of: startPlaying) { _, newValue in
+        .onChange(of: playTapped) { _, newValue in
             if newValue {
                 startAudioQuiz(true)
             }
         }
-        .onChange(of: nextTapped) { _, _ in
+        .onChange(of: currentQuestionIndex) { _, _ in
             goToNextQuestion()
         }
         .onChange(of: questionPlayer.interactionState) { _, newValue in
