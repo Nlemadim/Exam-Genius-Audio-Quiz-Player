@@ -96,6 +96,17 @@ enum InteractionState {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
 //MARK: SERVER RESPONSE OBJECT (TOPICS REQUEST)
 /** Response HTTP Status code: 200
  Raw server response: {"topics":["Constitutional Law","Constitutional Law - Bill of Rights","Constitutional Law - Separation of Powers","Constitutional Law - Federalism","Constitutional Law - Individual Rights","Criminal Law","Criminal Law - Crimes Against the Person","Criminal Law - Crimes Against Property","Criminal Law - Inchoate Crimes","Criminal Law - Defenses","Criminal Procedure","Criminal Procedure - Fourth Amendment","Criminal Procedure - Fifth Amendment","Criminal Procedure - Sixth Amendment","Real Property Law","Real Property Law - Land Ownership","Real Property Law - Landlord-Tenant Law","Real Property Law - Real Estate Transactions","Torts","Torts - Intentional Torts","Torts - Negligence","Torts - Strict Liability","Torts - Defamation","Torts - Privacy Torts","Evidence","Evidence - Relevancy","Evidence - Hearsay","Evidence - Privileges","Evidence - Presentation of Evidence","Civil Procedure","Civil Procedure - Jurisdiction","Civil Procedure - Pleadings","Civil Procedure - Pretrial Procedures,"]}
@@ -281,6 +292,662 @@ enum InteractionState {
        },
        "correctOption": "C",
        "overview": "X-rays are the type of radiation most commonly used in dental radiography. They have the ability to penetrate tissues and structures, creating images that help in diagnosing a wide range of dental conditions, from cavities and gum disease to impacted teeth and jaw abnormalities."
+     }
+   ]
+ }
+ 
+ 
+ /////////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["AP Biology: Cellular Processes","AP Biology: Evolution","AP Biology: Interactions","AP Biology: Energy Transfer","AP Biology: Genetics","AP Biology: Information Transfer,"]}
+ Starting fetchQuestionData for examName: Advanced Placement Exams with topics: ["AP Biology: Cellular Processes"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Advanced%20Placement%20Exams&topicValue=AP%20Biology:%20Cellular%20Processes&numberValue=3
+ Raw Response: {
+   "examName": "Advanced Placement Exams",
+   "topics": [
+     "AP Biology: Cellular Processes"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best describes the role of the mitochondria?",
+       "options": {
+         "A": "Protein synthesis",
+         "B": "Photosynthesis",
+         "C": "Cellular respiration",
+         "D": "DNA replication"
+       },
+       "correctOption": "C",
+       "overview": "Mitochondria are known as the powerhouses of the cell because they convert oxygen and nutrients into adenosine triphosphate (ATP), which powers cellular activities. This process, known as cellular respiration, is crucial for energy production in eukaryotic cells."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary function of ribosomes in a cell?",
+       "options": {
+         "A": "Energy production",
+         "B": "Protein synthesis",
+         "C": "Lipid synthesis",
+         "D": "Detoxifying chemicals"
+       },
+       "correctOption": "B",
+       "overview": "Ribosomes play a critical role in a cell by synthesizing proteins. They translate messenger RNA (mRNA) into polypeptide chains, which are then folded into functional proteins. This process is essential for the growth and repair of cells."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which process occurs in the chloroplasts?",
+       "options": {
+         "A": "Cellular respiration",
+         "B": "Protein synthesis",
+         "C": "Photosynthesis",
+         "D": "DNA replication"
+       },
+       "correctOption": "C",
+       "overview": "Chloroplasts are the site of photosynthesis in plant and algae cells. This process converts light energy, water, and carbon dioxide into glucose (a sugar) and oxygen. This is fundamental for producing the energy and organic materials needed for plant growth and oxygen for the planet."
+     }
+   ]
+ }
+ /////////MCATS
+ Building test Content
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Biology: Cellular Structure and Functions","Biology: Evolution and Diversity","Biology: Biological Systems and Organ Systems","Biology: Genetics and Heredity","Biology: Reproduction and Development","Biology: Organismal Behavior and Ecology,"]}
+ Starting fetchQuestionData for examName: Medical Colledge Admission Test with topics: ["Biology: Cellular Structure and Functions"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Medical%20Colledge%20Admission%20Test&topicValue=Biology:%20Cellular%20Structure%20and%20Functions&numberValue=3
+ 
+ 
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "General Chemistry"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is a physical change?",
+       "options": {
+         "A": "Burning of wood",
+         "B": "Boiling of water",
+         "C": "Rusting of iron",
+         "D": "Baking a cake"
+       },
+       "correctOption": "B",
+       "overview": "A physical change is a type of change in which the form of matter is altered but one substance is not transformed into another. Boiling of water is a physical change because it changes from liquid to gas without changing its chemical composition."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the correct electron configuration for the carbon atom?",
+       "options": {
+         "A": "1s2 2s2 2p2",
+         "B": "1s2 2s2 2p4",
+         "C": "1s2 2s2 2p6",
+         "D": "1s2 2s1 2p3"
+       },
+       "correctOption": "A",
+       "overview": "The electron configuration of an atom describes the orbitals occupied by electrons on the atom. For carbon, with six electrons, the correct configuration is 1s2 2s2 2p2, filling the 1s orbital, then the 2s orbital, and finally placing two electrons in the 2p orbital."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following solutions is considered acidic?",
+       "options": {
+         "A": "A solution with a pH of 7",
+         "B": "A solution with a pH of 8",
+         "C": "A solution with a pH of 6",
+         "D": "A solution with a pH of 7.5"
+       },
+       "correctOption": "C",
+       "overview": "pH is a scale used to specify the acidity or basicity of an aqueous solution. Solutions with a pH less than 7 are considered acidic, pH 7 is neutral, and those with pH greater than 7 are considered basic. Therefore, a solution with a pH of 6 is acidic."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "Biochemistry",
+     "Transcription",
+     "Translation"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following enzymes is responsible for unwinding the DNA double helix during transcription?",
+       "options": {
+         "A": "DNA ligase",
+         "B": "RNA polymerase",
+         "C": "Helicase",
+         "D": "Topoisomerase"
+       },
+       "correctOption": "B",
+       "overview": "During transcription, RNA polymerase is the enzyme responsible for unwinding the DNA double helix. It reads the DNA template strand and synthesizes a complementary RNA strand. Helicase is involved in DNA replication, not transcription."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following processes occurs in the cytoplasm in eukaryotic cells?",
+       "options": {
+         "A": "DNA replication",
+         "B": "Transcription",
+         "C": "Translation",
+         "D": "Mitosis"
+       },
+       "correctOption": "C",
+       "overview": "In eukaryotic cells, translation occurs in the cytoplasm where ribosomes synthesize proteins based on the mRNA sequence. Transcription and DNA replication occur in the nucleus, while mitosis is the process of cell division."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following mRNA codons signals the start of translation?",
+       "options": {
+         "A": "UAA",
+         "B": "UAG",
+         "C": "AUG",
+         "D": "UGA"
+       },
+       "correctOption": "C",
+       "overview": "The mRNA codon AUG signals the start of translation, coding for the amino acid methionine. UAA, UAG, and UGA are stop codons that signal the end of translation."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "Biology: Microbiology"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is NOT a characteristic of bacteria?",
+       "options": {
+         "A": "Cell wall containing peptidoglycan",
+         "B": "Presence of membrane-bound organelles",
+         "C": "Ability to perform binary fission",
+         "D": "Ribosomes for protein synthesis"
+       },
+       "correctOption": "B",
+       "overview": "Bacteria are prokaryotic organisms that lack membrane-bound organelles, which distinguishes them from eukaryotes. They have a cell wall containing peptidoglycan, can reproduce through binary fission, and have ribosomes for protein synthesis."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following best describes the role of plasmids in bacteria?",
+       "options": {
+         "A": "Structural support",
+         "B": "Energy production",
+         "C": "Genetic material exchange",
+         "D": "Protein synthesis"
+       },
+       "correctOption": "C",
+       "overview": "Plasmids are small, circular DNA molecules found in bacteria that are separate from the bacterial chromosome. They play a crucial role in genetic material exchange through processes such as conjugation, transformation, and transduction, and can confer advantageous traits such as antibiotic resistance."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the primary function of the bacterial flagellum?",
+       "options": {
+         "A": "DNA replication",
+         "B": "Cell division",
+         "C": "Motility",
+         "D": "Protein synthesis"
+       },
+       "correctOption": "C",
+       "overview": "The primary function of the bacterial flagellum is motility. It acts as a rotary motor that propels the bacterium through its environment, allowing it to move towards nutrients or away from harmful substances."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "Molecular Biology"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is a purine base in DNA?",
+       "options": {
+         "A": "Adenine",
+         "B": "Cytosine",
+         "C": "Thymine",
+         "D": "Uracil"
+       },
+       "correctOption": "A",
+       "overview": "Adenine and guanine are purine bases found in DNA, characterized by their double-ring structure. Cytosine, thymine (in DNA), and uracil (in RNA) are pyrimidine bases, which have a single-ring structure."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which process describes the synthesis of RNA from a DNA template?",
+       "options": {
+         "A": "Translation",
+         "B": "Transcription",
+         "C": "Replication",
+         "D": "Reverse transcription"
+       },
+       "correctOption": "B",
+       "overview": "Transcription is the process by which the information in a strand of DNA is copied into a new molecule of messenger RNA (mRNA). This process is necessary for the gene expression and is the first step in the central dogma of molecular biology, which also includes translation and possibly reverse transcription."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the role of tRNA in protein synthesis?",
+       "options": {
+         "A": "Carries amino acids to the ribosome",
+         "B": "Forms the ribosomal subunits",
+         "C": "Transcribes mRNA from DNA",
+         "D": "Provides the template for protein synthesis"
+       },
+       "correctOption": "A",
+       "overview": "Transfer RNA (tRNA) is responsible for bringing amino acids to the ribosome, where they are added to the growing polypeptide chain in the order specified by the mRNA sequence. Each tRNA molecule is specific to one amino acid and has an anticodon that pairs with the corresponding codon on the mRNA during translation."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "Biology: Cellular Structure and Functions"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What structure within the cell is primarily responsible for generating ATP, the energy currency of the cell?",
+       "options": {
+         "A": "Nucleus",
+         "B": "Mitochondrion",
+         "C": "Endoplasmic Reticulum",
+         "D": "Golgi Apparatus"
+       },
+       "correctOption": "B",
+       "overview": "The mitochondrion is known as the powerhouse of the cell. It is where cellular respiration occurs, a process that breaks down nutrient molecules to produce ATP, the energy currency of the cell. This makes the mitochondrion essential for energy production."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is a function of the cell membrane?",
+       "options": {
+         "A": "Protein synthesis",
+         "B": "DNA replication",
+         "C": "Regulating the movement of substances into and out of the cell",
+         "D": "Energy storage"
+       },
+       "correctOption": "C",
+       "overview": "The cell membrane, also known as the plasma membrane, is selectively permeable, meaning it controls the movement of substances into and out of the cell. This is crucial for maintaining homeostasis within the cell by regulating its internal environment."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which organelle is responsible for the synthesis of lipids and detoxification of poisons?",
+       "options": {
+         "A": "Lysosome",
+         "B": "Ribosome",
+         "C": "Smooth Endoplasmic Reticulum",
+         "D": "Peroxisome"
+       },
+       "correctOption": "C",
+       "overview": "The smooth endoplasmic reticulum (smooth ER) has various functions, including the synthesis of lipids and hormones, and detoxification of drugs and poisons. Unlike the rough ER, it lacks ribosomes on its surface, which is why it is involved in lipid synthesis rather than protein synthesis."
+     }
+   ]
+ }
+ 
+ 
+ 
+ Raw Response: {
+   "examName": "Medical College Admission Test",
+   "topics": [
+     "Biology: Cellular Structure and Functions"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What structure within the cell is primarily responsible for generating ATP, the energy currency of the cell?",
+       "options": {
+         "A": "Nucleus",
+         "B": "Mitochondrion",
+         "C": "Endoplasmic Reticulum",
+         "D": "Golgi Apparatus"
+       },
+       "correctOption": "B",
+       "overview": "The mitochondrion is known as the powerhouse of the cell. It is where cellular respiration occurs, a process that breaks down nutrient molecules to produce ATP, the energy currency of the cell. This makes the mitochondrion essential for energy production."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is a function of the cell membrane?",
+       "options": {
+         "A": "Protein synthesis",
+         "B": "DNA replication",
+         "C": "Regulating the movement of substances into and out of the cell",
+         "D": "Energy storage"
+       },
+       "correctOption": "C",
+       "overview": "The cell membrane, also known as the plasma membrane, is selectively permeable, meaning it controls the movement of substances into and out of the cell. This is crucial for maintaining homeostasis within the cell by regulating its internal environment."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which organelle is responsible for the synthesis of lipids and detoxification of poisons?",
+       "options": {
+         "A": "Lysosome",
+         "B": "Ribosome",
+         "C": "Smooth Endoplasmic Reticulum",
+         "D": "Peroxisome"
+       },
+       "correctOption": "C",
+       "overview": "The smooth endoplasmic reticulum (smooth ER) has various functions, including the synthesis of lipids and hormones, and detoxification of drugs and poisons. Unlike the rough ER, it lacks ribosomes on its surface, which is why it is involved in lipid synthesis rather than protein synthesis."
+     }
+   ]
+ }
+ 
+ /////////LINUX
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["GNU and Unix Commands","Linux Installation and Package Management","Devices","Linux Filesystems","Filesystem Hierarchy Standard","Shells","Scripting and Data Management","User Interfaces and Desktops","Administrative Tasks","Essential System Services","Networking Fundamentals","Security","Linux Kernel","Boot","Initialization","Shutdown and Runlevels","File and Service Sharing","System Maintenance","Hardware Configuration","Virtualization and Cloud","Troubleshooting and System Rescue","Basic File Permissions","Advanced File Permissions","Disk Partitioning","File Management","Text Processing","Process Management","File Editors","Shell Environment","Graphical User Interface","User and Group Management","System Startup and Shutdown","Job Scheduling","Localization and Internationalization","System Logging","Mail Transfer Agent (MTA) Basics","Networking Configuration","System Security","Network Client Management","DNS Server","Web Services","File Sharing","Network Troubleshooting","SQL Data Management","Accessibility","Automation and Scripting","Cryptography","Host Security","User Account Security","Network Security","Security Administration,"]}
+ Starting fetchQuestionData for examName: Linux Professional Institute Certification with topics: ["Initialization"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Linux%20Professional%20Institute%20Certification&topicValue=Initialization&numberValue=3
+ Raw Response: {
+   "examName": "Linux Professional Institute Certification",
+   "topics": [
+     "Initialization"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the first process started by the Linux kernel during boot?",
+       "options": {
+         "A": "init",
+         "B": "systemd",
+         "C": "bash",
+         "D": "syslogd"
+       },
+       "correctOption": "A",
+       "overview": "The first process started by the Linux kernel during boot is 'init'. It is responsible for starting all other processes."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is responsible for system and service manager in modern Linux systems?",
+       "options": {
+         "A": "init",
+         "B": "systemd",
+         "C": "Upstart",
+         "D": "sysvinit"
+       },
+       "correctOption": "B",
+       "overview": "systemd is the system and service manager in modern Linux systems, responsible for initializing the system and managing system processes."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What command can be used to list the current target units in systemd?",
+       "options": {
+         "A": "systemctl list-units",
+         "B": "systemctl list-targets",
+         "C": "systemctl --all",
+         "D": "ls /etc/systemd/system"
+       },
+       "correctOption": "B",
+       "overview": "The command 'systemctl list-targets' is used to list the current target units in systemd, providing an overview of the system state."
+     }
+   ]
+ }
+ 
+ 
+ ////////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["English Grammar and Usage","Punctuation and Sentence Structure","Writing Style and Tone","Reading Comprehension","Contextual Vocabulary","Textual Analysis","Interpretation of Literary Texts","Interpretation of Scientific Texts","Interpretation of Social Studies Texts","Critical Reading Skills","Logical Reasoning","Essay Writing","Thesis Statement Formulation","Argument Development","Evidence Usage in Writing","Basic Arithmetic","Algebra I","Algebra II","Geometry","Trigonometry","Mathematical Problem Solving","Data Interpretation","Probability and Statistics","Scientific Notation","Logarithms","Quadratic Equations","Polynomials","Functions","Coordinate Geometry","Plane Geometry","Solid Geometry","Graphing Calculations","Scientific Investigation","Data Representation in Science","Research Summaries in Science","Conflicting Viewpoints in Science","Understanding of Earth and Space Sciences","Understanding of Biology","Understanding of Chemistry","Understanding of Physics","Experimentation in Science","Hypothesis Testing","Scientific Observation and Interpretation","Scientific Knowledge Integration","Time Management","Test-T"]}
+ Starting fetchQuestionData for examName: ACT with topics: ["Trigonometry"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=ACT&topicValue=Trigonometry&numberValue=3
+ Raw Response: {
+   "examName": "ACT",
+   "topics": [
+     "Trigonometry"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the sine of 90 degrees?",
+       "options": {
+         "A": "0",
+         "B": "1",
+         "C": "1/2",
+         "D": "√2/2"
+       },
+       "correctOption": "B",
+       "overview": "The sine of 90 degrees is 1. This is a fundamental property in trigonometry, indicating the ratio of the length of the side opposite the angle to the length of the hypotenuse in a right-angled triangle."
+     },
+     {
+       "questionNumber": 2,
+       "question": "If cos(θ) = 1/2, what is the value of θ?",
+       "options": {
+         "A": "30 degrees",
+         "B": "45 degrees",
+         "C": "60 degrees",
+         "D": "90 degrees"
+       },
+       "correctOption": "C",
+       "overview": "If cos(θ) = 1/2, then θ is 60 degrees. This is because the cosine function represents the ratio of the adjacent side to the hypotenuse in a right-angled triangle, and this specific value occurs at 60 degrees."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the tangent of 45 degrees?",
+       "options": {
+         "A": "1",
+         "B": "0",
+         "C": "√2",
+         "D": "√3/3"
+       },
+       "correctOption": "A",
+       "overview": "The tangent of 45 degrees is 1. Tangent represents the ratio of the opposite side to the adjacent side in a right-angled triangle. At 45 degrees, these sides are of equal length, making the ratio 1."
+     }
+   ]
+ }
+ 
+ 
+ ///////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Reading Comprehension","Understanding Academic Texts","Identifying Main Ideas in Texts","Understanding Implicit Information in Texts","Understanding Explicit Information in Texts","Deducing Meaning from Context","Vocabulary Development","Synonyms and Antonyms","Idiomatic Expressions","Phrasal Verbs","English Grammar","Sentence Structure","Verb Tenses","Modal Verbs","Active and Passive Voice","Direct and Indirect Speech","Conditional Sentences","Punctuation","Spelling","Pronunciation","Accent Reduction","Intonation and Stress","Speaking Fluency","Participating in a Conversation","Giving Oral Presentations","Listening Comprehension","Understanding Different Accents","Note-taking Strategies","Paraphrasing and Summarizing","Writing Essays","Organizing Ideas in Writing","Developing a Thesis Statement","Supporting Arguments in Writing","Revision Strategies","Proofreading Techniques","Understanding the TOEFL Exam Format","Time Management Strategies for the TOEFL","Test-taking Strategies for the TOEFL."]}
+ Starting fetchQuestionData for examName: Test of English as a Foreign Language with topics: ["Giving Oral Presentations"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Test%20of%20English%20as%20a%20Foreign%20Language&topicValue=Giving%20Oral%20Presentations&numberValue=3
+ Raw Response: {
+   "examName": "Test of English as a Foreign Language",
+   "topics": [
+     "Giving Oral Presentations"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the first step in preparing an effective oral presentation?",
+       "options": {
+         "A": "Writing the conclusion",
+         "B": "Identifying your audience",
+         "C": "Creating visual aids",
+         "D": "Practicing your speech out loud"
+       },
+       "correctOption": "B",
+       "overview": "Identifying your audience is crucial as it influences the content, tone, and style of your presentation. Understanding who your audience is can help tailor your message more effectively."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is NOT a recommended practice for engaging your audience during a presentation?",
+       "options": {
+         "A": "Using technical jargon to sound more credible",
+         "B": "Asking rhetorical questions",
+         "C": "Making eye contact",
+         "D": "Incorporating stories or anecdotes"
+       },
+       "correctOption": "A",
+       "overview": "Using technical jargon, especially when it's not necessary, can alienate or confuse your audience rather than engage them. It's important to communicate clearly and accessibly."
+     },
+     {
+       "questionNumber": 3,
+       "question": "How can nervousness be effectively managed before giving an oral presentation?",
+       "options": {
+         "A": "Avoiding eye contact with the audience",
+         "B": "Memorizing the speech word for word",
+         "C": "Practicing the presentation multiple times",
+         "D": "Speaking quickly to shorten the presentation time"
+       },
+       "correctOption": "C",
+       "overview": "Practicing the presentation multiple times can significantly reduce nervousness by increasing familiarity with the material and boosting confidence. This practice helps in managing public speaking anxiety."
+     },
+ {
+   "questionNumber": 1,
+   "question": "Which word is pronounced with a silent 'k'?",
+   "options": {
+     "A": "Know",
+     "B": "Pronounce",
+     "C": "Talk",
+     "D": "Sound"
+   },
+   "correctOption": "A",
+   "overview": "The word 'Know' is pronounced with a silent 'k'. In English, there are several words where the letter 'k' is not pronounced when it comes before an 'n' at the beginning of a word. This is a common feature of English pronunciation."
+ },
+ {
+   "questionNumber": 2,
+   "question": "In which word does the 'th' sound like the 'th' in 'this'?",
+   "options": {
+     "A": "Thin",
+     "B": "Think",
+     "C": "This",
+     "D": "Through"
+   },
+   "correctOption": "C",
+   "overview": "The 'th' in 'This' is voiced, sounding like the 'th' in 'that', 'there', and 'this'. It's different from the voiceless 'th' sound found in words like 'thin' and 'think'. Understanding the difference between voiced and voiceless sounds is crucial in English pronunciation."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which option represents the correct pronunciation of the word 'queue'?",
+   "options": {
+     "A": "/kwe/",
+     "B": "/kyoo/",
+     "C": "/kue/",
+     "D": "/quee/"
+   },
+   "correctOption": "B",
+   "overview": "The word 'queue' is pronounced as /kyoo/. It is an example of a word where multiple letters ('ueue') are pronounced as a single sound /yoo/, showing the complexity and irregularity of English pronunciation."
+ },
+ {
+   "questionNumber": 1,
+   "question": "Which of the following best defines the term 'rhythm' in English language?",
+   "options": {
+     "A": "The sequence of sounds in a sentence",
+     "B": "The pattern of stressed and unstressed syllables in a sentence",
+     "C": "The use of rhyming words at the end of lines",
+     "D": "The order of words in a sentence"
+   },
+   "correctOption": "B",
+   "overview": "Rhythm in the English language refers to the pattern of stressed and unstressed syllables in a sentence. This pattern plays a crucial role in the fluency and comprehensibility of speech, making it an essential aspect of language learning for non-native speakers."
+ },
+ {
+   "questionNumber": 2,
+   "question": "Why is understanding rhythm important for learners of English as a foreign language?",
+   "options": {
+     "A": "It helps in memorizing vocabulary",
+     "B": "It aids in the correct pronunciation of words",
+     "C": "It is crucial for writing poems in English",
+     "D": "It assists in learning English grammar"
+   },
+   "correctOption": "B",
+   "overview": "Understanding rhythm is crucial for learners of English as a foreign language because it aids in the correct pronunciation of words. Mastery of rhythm enhances speaking fluency and comprehensibility, making it easier for listeners to understand spoken English."
+ },
+ {
+   "questionNumber": 3,
+   "question": "Which technique is NOT a method to improve rhythm in English speech?",
+   "options": {
+     "A": "Listening to and imitating native speakers",
+     "B": "Practicing with rhythmic patterns and stress drills",
+     "C": "Focusing solely on the accuracy of grammar",
+     "D": "Using music and songs to understand stress patterns"
+   },
+   "correctOption": "C",
+   "overview": "Focusing solely on the accuracy of grammar is not a method to improve rhythm in English speech. While grammar is important for language structure, rhythm improvement requires practicing with stress patterns, listening to native speakers, and using music, which directly influence speech fluency and pronunciation."
+ }
+   ]
+ }
+ 
+ 
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Analytical Writing Assessment","Argument Analysis","Logical Reasoning","Critical Thinking","Integrated Reasoning","Graphics Interpretation","Table Analysis","Multi-Source Reasoning","Two-Part Analysis","Quantitative Reasoning","Problem Solving","Data Sufficiency","Verbal Reasoning","Reading Comprehension","Critical Reasoning","Sentence Correction","Algebra","Arithmetic","Geometry","Word Problems","Probability","Statistics","Percents","Fractions","Decimals","Ratios","Exponents","Roots","Integer Properties","Factorials","Prime Numbers","Set Theory","Coordinate Geometry","Line Geometry","Plane Geometry","Solid Geometry","Perimeter","Area","Volume","Angles","Triangles","Quadrilaterals","Circles","Polygons","Three-Dimensional Figures","Lines and Angles","Parallels and Transversals","Coordinate Plane","Slope","Distance and Midpoint Formulas","Graphing Equations","Functions","Inequalities","Absolute Values","Quadratic Equations","Simultaneous Equations,"]}
+ Starting fetchQuestionData for examName: Graduate Management Admission Test with topics: ["Simultaneous Equations,"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Graduate%20Management%20Admission%20Test&topicValue=Simultaneous%20Equations,&numberValue=3
+ Raw Response: {
+   "examName": "Graduate Management Admission Test",
+   "topics": [
+     "Simultaneous Equations"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "If 3x + 2y = 5 and 2x - y = 1, what is the value of x?",
+       "options": {
+         "A": "1",
+         "B": "2",
+         "C": "3",
+         "D": "4"
+       },
+       "correctOption": "B",
+       "overview": "To solve the simultaneous equations, you can use substitution or elimination method. By elimination, multiply the second equation by 2 to make the coefficients of y opposites. This gives 4x - 2y = 2. Adding this to the first equation eliminates y, leading to 7x = 7, so x = 1. However, the correct manipulation actually leads to x = 2, indicating a mistake in the initial calculation."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Given the system of equations 4x - 5y = -1 and 3x + 2y = 12, what is the value of y?",
+       "options": {
+         "A": "-1",
+         "B": "1",
+         "C": "2",
+         "D": "3"
+       },
+       "correctOption": "C",
+       "overview": "To find the value of y, first solve one of the equations for x in terms of y (or vice versa), then substitute this expression into the other equation. Using elimination, multiplying the second equation by 2.5 (to make coefficients of x equal) and adding to the first can directly lead to the value of y. Solving the equations correctly shows that y = 2."
+     },
+     {
+       "questionNumber": 3,
+       "question": "If x + y = 10 and x - y = 6, what is the value of 2x?",
+       "options": {
+         "A": "16",
+         "B": "18",
+         "C": "20",
+         "D": "22"
+       },
+       "correctOption": "A",
+       "overview": "Adding the two equations x + y = 10 and x - y = 6 gives 2x = 16, because the y terms cancel out. Therefore, the value of 2x is 16. This method of solving simultaneous equations by addition is a quick way to find the value of one variable when the coefficients of the other variable are opposites."
+     }
+   ]
+ }
+ 
+ ///////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Slavery in the United States","The Middle Passage","The Abolitionist Movement","The Underground Railroad","Civil War and Emancipation","Reconstruction Era","Jim Crow Laws","The Great Migration","Harlem Renaissance","Civil Rights Movement","Brown vs. Board of Education","Montgomery Bus Boycott","The March on Washington","Martin Luther King Jr.","Malcolm X","Black Power Movement","Black Panthers","The Assassination of Martin Luther King Jr.","Voting Rights Act of 1965","Affirmative Action","The War on Drugs","The Black Lives Matter Movement","African American Literature","Jazz and Blues Music","Hip Hop and Rap Music","African American Influence on Art and Culture","African American Scientists and Inventors","African American Athletes","African American Politicians","Barack Obama's Presidency","African American Women in History","African American Soldiers in World Wars","African American Religious Movements","African American Family Structures","African American Education","African American Economic Development","African American Health Disparities","African American Impact"]}
+ Starting fetchQuestionData for examName: Black American History with topics: ["African American Economic Development"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Black%20American%20History&topicValue=African%20American%20Economic%20Development&numberValue=3
+ Raw Response: {
+   "examName": "African American Economic Development",
+   "topics": [
+     "Black American History"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What was the significance of Black Wall Street in the early 20th century?",
+       "options": {
+         "A": "It was a major railroad hub.",
+         "B": "It was a center for African American culture and commerce.",
+         "C": "It was the location of a major Civil War battle.",
+         "D": "It was the first integrated neighborhood in the United States."
+       },
+       "correctOption": "B",
+       "overview": "Black Wall Street, located in the Greenwood District of Tulsa, Oklahoma, was a prominent example of African American economic development and prosperity in the early 20th century. It was known for its affluent African American community and was a center for African American culture and commerce before the Tulsa Race Massacre in 1921."
+     },
+     {
+       "questionNumber": 2,
+       "question": "How did the Great Migration affect African American economic development?",
+       "options": {
+         "A": "It led to a decrease in agricultural jobs in the South.",
+         "B": "It caused a significant decline in urban populations.",
+         "C": "It contributed to the growth of African American businesses in the North.",
+         "D": "It resulted in a major economic downturn in the United States."
+       },
+       "correctOption": "C",
+       "overview": "The Great Migration, which saw millions of African Americans move from the rural South to the urban North between 1916 and 1970, significantly contributed to African American economic development. This migration led to the growth of African American businesses and cultural institutions in Northern cities, as migrants sought economic opportunities and community in the face of systemic racism and segregation."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What role did Freedman's Savings Bank play in post-Civil War African American economic development?",
+       "options": {
+         "A": "It was the first bank to offer loans to African Americans.",
+         "B": "It provided financial services to Union soldiers and African American communities.",
+         "C": "It was primarily an agricultural cooperative.",
+         "D": "It played no significant role in economic development."
+       },
+       "correctOption": "B",
+       "overview": "Founded in 1865, the Freedman's Savings Bank was established to provide financial services to African American soldiers and their families, as well as the wider African American community, in the post-Civil War era. While it ultimately failed due to mismanagement and fraud, its initial purpose was to foster economic independence and development within African American communities."
      }
    ]
  }

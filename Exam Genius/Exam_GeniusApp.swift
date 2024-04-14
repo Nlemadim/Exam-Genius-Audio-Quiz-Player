@@ -12,12 +12,16 @@ import SwiftData
 struct Exam_GeniusApp: App {
     @StateObject var appState = AppState()
     @StateObject var user = User()
+    @StateObject var quizPlayerObserver = QuizPlayerObserver()
+    @StateObject var presentationManager = QuizViewPresentationManager()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(user)
                 .environmentObject(appState)
+                .environmentObject(quizPlayerObserver)
+                .environmentObject(presentationManager)
                 .preferredColorScheme(.dark)
         }
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self])

@@ -435,7 +435,7 @@ enum ButtonState {
 }
 
 #Preview {
-    PlayPauseButton(isDownloading: .constant(false), isPlaying: .constant(false), color: .themePurpleLight, playAction: {})
+    PlayPauseButton(isDownloading: .constant(false), isPlaying: .constant(false), color: Color.themePurpleLight, playAction: {})
         .preferredColorScheme(.dark)
 }
 

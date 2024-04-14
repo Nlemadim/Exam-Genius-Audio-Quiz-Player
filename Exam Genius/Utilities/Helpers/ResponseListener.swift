@@ -54,6 +54,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
             }
         
         self.userTranscript = self.selectedOption
+        
     }
     
     fileprivate func processTranscript(transcript: String) -> String {

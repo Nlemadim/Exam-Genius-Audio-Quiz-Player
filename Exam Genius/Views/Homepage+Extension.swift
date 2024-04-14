@@ -12,10 +12,13 @@ extension HomePage {
     func goToUserLibrary(_ didTap: Bool) {
         if didTap {
             selectedTab = 1
+            
+            if let package = self.selectedQuizPackage {
+                user.selectedQuizPackage = package
+                
+            }
         }
     }
-    
-    
 
     
     func downloadFullPackage(_ audioQuiz: AudioQuizPackage) async throws {
@@ -61,14 +64,14 @@ extension HomePage {
    func playSample(playlist: [String]) {
         isPlaying.toggle()
         let audioFile = playlist[0]
-        questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
+        //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
     }
     
     func playNow(_ audioQuiz: AudioQuizPackage) {
         let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
         isPlaying.toggle()
         let audioFile = playlist[0]
-        questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
+        //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
     }
     
     func updatePlayState(interactionState: InteractionState) {

@@ -8,20 +8,23 @@
 import SwiftUI
 import SwiftData
 
-struct HomePage:View {
+struct HomePage: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
+    @EnvironmentObject var presentationManager: QuizViewPresentationManager
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @StateObject var generator = ColorGenerator()
-    @StateObject var questionPlayer = QuestionPlayer()
+
     @StateObject var keyboardObserver = KeyboardObserver()
     @ObservedObject var libraryPlaylist = MyLibrary.LibraryPlaylist()
     
     @State var interactionState: InteractionState = .idle
+    @State var myLibInteractionState: InteractionState = .idle
     
     @State var selectedQuizPackage: AudioQuizPackage?
     @State var topCollectionQuizzes: [AudioQuizPackage] = []
@@ -50,10 +53,6 @@ struct HomePage:View {
     let categories = ExamCategory.allCases
     let categoryOrder: [ExamCategory] = [.topProfessionalCertification, .topColledgePicks, .history, .free]
     
-    init() {
-        loadUserPackage()
-    }
-
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack(path: $path) {
@@ -104,16 +103,11 @@ struct HomePage:View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
-            .onReceive(libraryPlaylist.$startedPlaying, perform: { startQuiz in
-                if startQuiz {
-                    self.expandSheet = true
-                    isPlaying = true
-                }
-            })
-            .onChange(of: selectedQuizPackage, { _, newValue in
-                if (newValue != nil) {
-                    if let package = self.selectedQuizPackage {
-                        user.selectedQuizPackage = package
+            .onChange(of: myLibInteractionState, { oldValue, newValue in
+                if newValue == .isNowPlaying {
+                    print("My Library: \(newValue)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.isPlaying = true
                     }
                 }
             })
@@ -123,7 +117,17 @@ struct HomePage:View {
             .onChange(of: didTapDownload, { _, newValue in
                 fetchFullPackage(newValue)
             })
-            .onChange(of: questionPlayer.interactionState, { _, newValue in
+            .onChange(of: quizPlayerObserver.playerState, { _, newValue in
+                print("Home page interaction State is \(newValue)")
+                //updatePlayState(interactionState: newValue)
+            })
+            .onChange(of: interactionState, { _, newValue in
+                if newValue == .isDonePlaying {
+                    DispatchQueue.main.async {
+                        self.isPlaying = false
+                        self.myLibInteractionState = newValue
+                    }
+                }
                 updatePlayState(interactionState: newValue)
             })
             .onChange(of: didTapPlaySample, { _, newValue in
@@ -134,7 +138,7 @@ struct HomePage:View {
             }
             .tag(0)
             
-            MyLibrary()
+            MyLibrary(interactionState: $myLibInteractionState)
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -149,40 +153,40 @@ struct HomePage:View {
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
             generator.updateDominantColor(fromImageNamed: backgroundImage)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 updateCollections()
+                loadUserPackage()
             }
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
-            BottomMiniPlayer(playlistConfig: libraryPlaylist)
+            BottomMiniPlayer()
                 .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
         }
         .preferredColorScheme(.dark)
     }
     
     func loadUserPackage() {
-        if let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName") {
-            let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName })
-            
-            self.selectedQuizPackage = matchingQuizPackage
-            
-        } else {
- 
-            self.selectedQuizPackage = nil
+        guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
+              let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
+              !matchingQuizPackage.questions.isEmpty else {
+            user.selectedQuizPackage = nil
+            return
         }
+        user.selectedQuizPackage = matchingQuizPackage
     }
     
+    
     @ViewBuilder
-    private func BottomMiniPlayer(playlistConfig: MyLibrary.LibraryPlaylist) -> some View {
-        // Implement the minimized version of the bottom sheet here
+    private func BottomMiniPlayer() -> some View {
+        
         ZStack {
             Rectangle()
                 .fill(.clear)
                 .cornerRadius(10)
                 .background(.black)
                 .overlay {
-                    MiniPlayer(libraryPlaylist: libraryPlaylist, selectedQuizPackage: self.$selectedQuizPackage, expandSheet: $expandSheet, startPlaying: $isPlaying, animation: animation)
+                    MiniPlayerV2(selectedQuizPackage: self.$selectedQuizPackage, interactionState: $interactionState, startPlaying: $isPlaying)
                         .offset(y: 3)
                 }
         }
@@ -202,10 +206,14 @@ struct HomePage:View {
     let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
     let user = User()
     let appState = AppState()
+    let observer = QuizPlayerObserver()
+    let presentMgr = QuizViewPresentationManager()
     let playListItemFromContainer = MyPlaylistItem(from: container)
     return HomePage()
         .environmentObject(user)
         .environmentObject(appState)
+        .environmentObject(observer)
+        .environmentObject(presentMgr)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
 }

@@ -12,8 +12,7 @@ import SwiftData
 struct FullScreenQuizPlayer2: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
-    @ObservedObject var quizSetter: MiniPlayer.MiniPlayerConfiguration
-    @Binding var expandSheet: Bool
+    @ObservedObject var quizSetter: MiniPlayerV2.MiniPlayerV2Configuration
     
     @State var showText: Bool = false
     @State var isMuted: Bool = false
@@ -26,13 +25,17 @@ struct FullScreenQuizPlayer2: View {
     @State var optionD: String = ""
     @State var question: String = ""
     @Binding var currentQuestionIndex: Int
-    @Binding var isNowPlaying: Bool
+    //@Binding var isNowPlaying: Bool
     @Binding var isCorrectAnswer: Bool
     @Binding var presentMicModal: Bool
-    @Binding var nextTapped: Bool
+    //@Binding var nextTapped: Bool
     @Binding var interactionState: InteractionState
+    var onViewDismiss: () -> Void?
+    var playAction: () -> Void
+    var nextAction: () -> Void
+    var recordAction: () -> Void
     
-    var animation: Namespace.ID
+    //var animation: Namespace.ID
     var body: some View {
         NavigationView {
             ZStack(alignment: .topLeading) {
@@ -111,21 +114,26 @@ struct FullScreenQuizPlayer2: View {
                         //MARK: Simulating Overview readout
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             self.interactionState = .idle
-                            print(isCorrectAnswer)
+//                            print(isCorrectAnswer)
                         }
                     }
+                    
             })
+            .onDisappear(perform: {
+                onViewDismiss()
+            })
+            
         }
     }
     
     func playAudio() {
-        isNowPlaying.toggle()
+        //isNowPlaying.toggle()
     }
     
     func goToNextQuestion() {
         guard let nextQuestions = quizSetter.configuration?.questions else { return }
         guard nextQuestions.indices.contains(currentQuestionIndex), currentQuestionIndex < nextQuestions.count - 1 else { return }
-        nextTapped.toggle()
+        //nextTapped.toggle()
         currentQuestionIndex += 1
     }
     
@@ -160,17 +168,17 @@ struct FullScreenQuizPlayer2: View {
     }
 }
 
-#Preview {
-    let user = User()
-    @Namespace var animation
-    @State var curIndex = 0
-    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP")
-    let quizSetter = MiniPlayer.MiniPlayerConfiguration()
-    quizSetter.configuration = config
-    return FullScreenQuizPlayer2(quizSetter: quizSetter, expandSheet: .constant(false), currentQuestionIndex: .constant(0),  isNowPlaying: .constant(false), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), nextTapped: .constant(false), interactionState: .constant(.idle), animation: animation)
-        .environmentObject(user)
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    let user = User()
+//    @Namespace var animation
+//    @State var curIndex = 0
+//    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP")
+//    let quizSetter = MiniPlayer.MiniPlayerConfiguration()
+//    quizSetter.configuration = config
+//    return FullScreenQuizPlayer2(quizSetter: quizSetter, expandSheet: .constant(false), currentQuestionIndex: .constant(0),  isNowPlaying: .constant(false), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), nextTapped: .constant(false), interactionState: .constant(.idle), onViewDismiss: {}, animation: animation)
+//        .environmentObject(user)
+//        .preferredColorScheme(.dark)
+//}
 
 
 //#Preview {

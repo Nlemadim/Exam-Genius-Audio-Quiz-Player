@@ -16,10 +16,10 @@ struct MyLibrary: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
-    @ObservedObject var miniPlayerConfig = MiniPlayer.MiniPlayerConfiguration()
     @StateObject var viewModel = MyLibrary.MyLibraryVM()
     @StateObject private var generator = ColorGenerator()
     @StateObject private var playlistConfig = MyLibrary.LibraryPlaylist()
@@ -28,7 +28,7 @@ struct MyLibrary: View {
     @State var downloadedAudioQuizCollection: [AudioQuizPackage] = []
     @State var configuration: QuizViewConfiguration?
     @State var audioPlaylist: [PlayerContent] = []
-    @State var interactionState: InteractionState = .idle
+    @Binding var interactionState: InteractionState
     
 //    @State private var playTapped: Bool = false
     @State private var nextTapped: Bool = false
@@ -43,6 +43,9 @@ struct MyLibrary: View {
     @State var currentQuestionIndex: Int = 0
     @State var selectedOption: String = ""
     
+    init(interactionState: Binding<InteractionState>) {
+        _interactionState = interactionState
+    }
     
     var body: some View {
         ZStack {
@@ -65,7 +68,7 @@ struct MyLibrary: View {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(Array(audioPlaylist.enumerated()), id: \.element) { index, content in
                             
-                            PlayerContentItemView(content: content, playContent: { playlistConfig.startedPlaying = true }, interactionState: $interactionState, isDownloaded: $isDownloaded)
+                            PlayerContentItemView(content: content, playContent: { startPlayer()}, interactionState: $interactionState, isDownloaded: $isDownloaded)
                                 
                             Divider().padding()
                         }
@@ -73,18 +76,28 @@ struct MyLibrary: View {
                 }
                 .onAppear {
                     updatePlaylist()
+                    //loadMockData()
                 }
                 .onChange(of: user.hasSelectedAudioQuiz) {_, _ in
                     updatePlaylist()
                 }
-                .onReceive(miniPlayerConfig.$stoppedPlaying, perform: { stop in
-                    
-                })
                
                 Spacer()
             }
         }
         .preferredColorScheme(.dark)
+    }
+    
+    func startPlayer() {
+        if self.interactionState != .isNowPlaying {
+            self.quizPlayerObserver.playerState = .startedPlayingQuiz
+            self.interactionState = .isNowPlaying
+        } else {
+            self.interactionState = .isDonePlaying
+            self.quizPlayerObserver.playerState = .idle
+        }
+        
+        print("Player Started")
     }
 }
 
@@ -92,9 +105,11 @@ struct MyLibrary: View {
 #Preview {
     let user = User()
     let appState = AppState()
-    return MyLibrary()
+    let observer = QuizPlayerObserver()
+    return MyLibrary(interactionState: .constant(.idle))
         .environmentObject(user)
         .environmentObject(appState)
+        .environmentObject(observer)
        
 }
 

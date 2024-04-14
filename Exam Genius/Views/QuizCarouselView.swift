@@ -50,6 +50,6 @@ struct QuizCarouselView: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-        .frame(height: 380)
+        .frame(height: 350)
     }
 }
