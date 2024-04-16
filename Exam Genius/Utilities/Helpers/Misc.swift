@@ -736,6 +736,51 @@ enum InteractionState {
  Raw Response: {
    "examName": "LSAT",
    "topics": [
+     "Understanding complex texts"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary purpose of including multiple viewpoints within a complex text?",
+       "options": {
+         "A": "To confuse the reader",
+         "B": "To provide a comprehensive understanding of the topic",
+         "C": "To fill space",
+         "D": "To support the main argument with one perspective"
+       },
+       "correctOption": "B",
+       "overview": "Including multiple viewpoints within a complex text is essential for providing a comprehensive understanding of the topic. It allows readers to see the issue from various perspectives, enhancing their grasp of the subject matter."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What technique is most effective for identifying the main argument in a complex text?",
+       "options": {
+         "A": "Focusing on the conclusion",
+         "B": "Looking for repeated phrases",
+         "C": "Reading the text backwards",
+         "D": "Skimming the text for keywords"
+       },
+       "correctOption": "A",
+       "overview": "Focusing on the conclusion of the text is a highly effective technique for identifying the main argument. The conclusion usually summarizes the primary point the author is trying to make, making it easier to understand the text's main argument."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is NOT a characteristic of a well-written complex text?",
+       "options": {
+         "A": "Ambiguity",
+         "B": "Clear structure",
+         "C": "Diverse perspectives",
+         "D": "Detailed evidence"
+       },
+       "correctOption": "A",
+       "overview": "Ambiguity is not a characteristic of a well-written complex text. A well-written complex text should have a clear structure, present diverse perspectives, and support its arguments with detailed evidence, all while maintaining clarity to effectively communicate its message."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "LSAT",
+   "topics": [
      "Analytical Reasoning: Game Types"
    ],
    "questions": [
@@ -774,6 +819,96 @@ enum InteractionState {
        },
        "correctOption": "C",
        "overview": "For Grouping games, the most critical skill is the ability to divide objects into different groups based on a set of specific rules. This involves understanding the rules and applying them effectively to categorize the objects as required."
+     }
+   ]
+ }
+ Raw Response: {
+   "examName": "LSAT",
+   "topics": [
+     "Logical Reasoning",
+     "Argument Evaluation"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best strengthens the argument that regular exercise reduces the risk of cardiovascular diseases?",
+       "options": {
+         "A": "A study showing that people who exercise regularly have lower rates of cardiovascular diseases compared to those who do not.",
+         "B": "Anecdotal evidence from individuals who have never exercised yet do not have cardiovascular diseases.",
+         "C": "Statistics indicating that cardiovascular diseases have been on the rise over the last decade.",
+         "D": "A report detailing the various types of cardiovascular diseases."
+       },
+       "correctOption": "A",
+       "overview": "The question tests your ability to identify evidence that strengthens an argument. Option A directly supports the argument by providing empirical evidence that links regular exercise to lower rates of cardiovascular diseases, which is a key aspect of argument evaluation in logical reasoning."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following, if true, most weakens the argument that eating chocolate daily increases the risk of diabetes?",
+       "options": {
+         "A": "A recent study found that daily consumption of dark chocolate in small amounts may actually reduce the risk of diabetes.",
+         "B": "Chocolate is known to contain antioxidants, which have various health benefits.",
+         "C": "Many people who eat chocolate daily also engage in other high-risk behaviors for diabetes.",
+         "D": "Diabetes is a complex disease influenced by multiple dietary and genetic factors."
+       },
+       "correctOption": "A",
+       "overview": "This question asks you to identify information that would weaken an argument. Option A directly contradicts the argument by suggesting that daily consumption of dark chocolate could reduce the risk of diabetes, highlighting the importance of evaluating evidence's relevance and impact on an argument's validity."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is a necessary assumption for the argument that reducing sugar intake alone is sufficient to lose weight?",
+       "options": {
+         "A": "Exercise is not an essential component of weight loss.",
+         "B": "All forms of sugar have the same impact on body weight.",
+         "C": "Reducing sugar intake will automatically lead to a calorie deficit.",
+         "D": "People who consume less sugar are more likely to engage in physical activity."
+       },
+       "correctOption": "C",
+       "overview": "The question focuses on identifying a necessary assumption underlying an argument. Option C is crucial because for the argument to hold, it must be assumed that reducing sugar intake leads to consuming fewer calories overall, which is essential for weight loss. This highlights the skill of distinguishing necessary assumptions in argument evaluation."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "LSAT",
+   "topics": [
+     "Understanding Analytical Reasoning Answer Choices"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary purpose of answer choices in Analytical Reasoning questions on the LSAT?",
+       "options": {
+         "A": "To confuse the test taker",
+         "B": "To provide plausible alternatives that test logical reasoning",
+         "C": "To offer hints about the question's difficulty level",
+         "D": "To increase the length of the test"
+       },
+       "correctOption": "B",
+       "overview": "The primary purpose of answer choices in Analytical Reasoning questions is to provide plausible alternatives that test the test taker's logical reasoning ability. Each choice is designed to assess how well you can understand and apply logical principles to complex scenarios."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is NOT a common trap in LSAT Analytical Reasoning answer choices?",
+       "options": {
+         "A": "Answers that are true but do not resolve the specific question asked",
+         "B": "Answers that exploit common logical fallacies",
+         "C": "Answers that are too simple to be true",
+         "D": "Answers that directly contradict information provided in the stimulus"
+       },
+       "correctOption": "C",
+       "overview": "While it may seem counterintuitive, answers that are 'too simple to be true' are not a common trap in LSAT Analytical Reasoning sections. The test is designed to challenge your reasoning skills, and simple answers can sometimes be correct. The other options represent common pitfalls that test takers must navigate."
+     },
+     {
+       "questionNumber": 3,
+       "question": "In the context of LSAT Analytical Reasoning, what is the best strategy for approaching answer choices?",
+       "options": {
+         "A": "Selecting the first answer that seems correct",
+         "B": "Eliminating answers that are clearly incorrect and considering the remaining choices",
+         "C": "Guessing if you are unsure after a quick review",
+         "D": "Focusing only on the most complex answer choices"
+       },
+       "correctOption": "B",
+       "overview": "The best strategy for approaching answer choices in LSAT Analytical Reasoning is to eliminate answers that are clearly incorrect and consider the remaining choices carefully. This process of elimination helps to narrow down the options and increases the likelihood of selecting the correct answer."
      }
    ]
  }

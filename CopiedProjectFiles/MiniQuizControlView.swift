@@ -12,6 +12,8 @@ struct MiniQuizControlView: View {
     var playPauseAction: () -> Void
     var nextAction: () -> Void
     var repeatAction: () -> Void
+    @Binding var interactionState: InteractionState
+    
     
     @State private var tappedPlay: Bool = false
     let imageSize: CGFloat = 18
@@ -30,7 +32,7 @@ struct MiniQuizControlView: View {
                 tappedPlay.toggle()
                 
             }) {
-                Image(systemName: tappedPlay ? "pause.fill" : "play.fill")
+                Image(systemName: interactionState == .isNowPlaying ? "pause.fill" : "play.fill")
                     .font(.title2)
             }
             
@@ -47,7 +49,7 @@ struct MiniQuizControlView: View {
 }
 
 #Preview {
-    MiniQuizControlView(recordAction: {}, playPauseAction: {}, nextAction: {}, repeatAction: {})
+    MiniQuizControlView(recordAction: {}, playPauseAction: {}, nextAction: {}, repeatAction: {}, interactionState: .constant(.idle))
         .preferredColorScheme(.dark)
 }
 
