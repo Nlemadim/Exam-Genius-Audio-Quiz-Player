@@ -208,7 +208,6 @@ struct HomePage: View {
     let appState = AppState()
     let observer = QuizPlayerObserver()
     let presentMgr = QuizViewPresentationManager()
-    let playListItemFromContainer = MyPlaylistItem(from: container)
     return HomePage()
         .environmentObject(user)
         .environmentObject(appState)

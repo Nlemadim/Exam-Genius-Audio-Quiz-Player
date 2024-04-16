@@ -36,8 +36,8 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         sharedState.$interactionState
             .receive(on: RunLoop.main)
             .sink { [weak self] state in
-                self?.handleInteractionStateChange(state)
-                print("Interaction State updated in QuestionPlayer: \(state)")
+                //self?.handleInteractionStateChange(state)
+                print("Interaction State updated in QuestionPlayer: \(String(describing: self?.interactionState))")
             }
             .store(in: &cancellables)
     }

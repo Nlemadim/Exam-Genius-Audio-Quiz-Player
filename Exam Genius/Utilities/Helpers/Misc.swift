@@ -58,6 +58,8 @@ enum InteractionState {
     case successfulTranscription
     case isDownloading
     case finishedDownloading
+    case pausedPlayback
+    case resumingPlayback
     
     var status: String {
         switch self {
@@ -91,6 +93,10 @@ enum InteractionState {
             return "Downloading"
         case .finishedDownloading:
             return "Finished Downloading"
+        case .pausedPlayback:
+            return "Paused Quiz"
+        case .resumingPlayback:
+            return "Resuming Quiz"
         }
     }
 }
@@ -292,6 +298,55 @@ enum InteractionState {
        },
        "correctOption": "C",
        "overview": "X-rays are the type of radiation most commonly used in dental radiography. They have the ability to penetrate tissues and structures, creating images that help in diagnosing a wide range of dental conditions, from cavities and gum disease to impacted teeth and jaw abnormalities."
+     }
+   ]
+ }
+ 
+ ///////
+ Raw server response: {"topics":["English Grammar and Usage","Punctuation in English","Sentence Structure","Rhetorical Skills","Strategy in English","Organization in English","Style in English","Reading Comprehension","Literal Comprehension","Inferential Comprehension","Main Idea and Details","Relationships","Integration of Knowledge and Ideas","Key Ideas and Details","Craft and Structure","Integration of Knowledge and Ideas","Vocabulary Interpretation","Mathematics","Pre-Algebra","Elementary Algebra","Intermediate Algebra","Coordinate Geometry","Plane Geometry","Trigonometry","Data Analysis","Statistics","Probability","Science Reasoning","Interpretation of Data","Scientific Investigation","Evaluation of Models","Inferences","Experimental Results","Scientific Knowledge","Understanding Complex Systems","Writing Skills","Essay Planning","Essay Writing","Argumentative Writing","Persuasive Writing","Analytical Writing","Time Management","Test-Taking Strategies","Problem-Solving Skills","Critical Thinking Skills"]}
+ Starting fetchQuestionData for examName: ACT with topics: ["Literal Comprehension"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=ACT&topicValue=Literal%20Comprehension&numberValue=3
+ Raw Response: {
+   "examName": "ACT",
+   "topics": [
+     "Literal Comprehension"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary purpose of literal comprehension?",
+       "options": {
+         "A": "To analyze the author's purpose",
+         "B": "To understand and interpret the explicit or factual information in the text",
+         "C": "To critique the stylistic choices of the author",
+         "D": "To infer meanings that are not directly stated"
+       },
+       "correctOption": "B",
+       "overview": "Literal comprehension involves understanding and interpreting the explicit or factual information presented in a text. This is the foundational level of reading comprehension, requiring readers to grasp the surface meanings of what is directly stated or clearly implied by the facts."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following best represents a question aimed at testing literal comprehension?",
+       "options": {
+         "A": "What themes can be drawn from the text?",
+         "B": "How does the author develop the main characters?",
+         "C": "What is the main idea of the first paragraph?",
+         "D": "Why does the author use metaphorical language?"
+       },
+       "correctOption": "C",
+       "overview": "A question aimed at testing literal comprehension asks for information that is directly stated or clearly implied in the text. Asking for the main idea of the first paragraph requires understanding of explicit or factual information, making option C the best representation of a literal comprehension question."
+     },
+     {
+       "questionNumber": 3,
+       "question": "In literal comprehension, the reader is expected to:",
+       "options": {
+         "A": "Interpret symbols and underlying themes",
+         "B": "Identify the author's tone and style",
+         "C": "Understand the sequence of events",
+         "D": "Analyze character development and motivations"
+       },
+       "correctOption": "C",
+       "overview": "Literal comprehension focuses on understanding the explicit or factual information in the text, such as the sequence of events. It is about grasping what is directly stated or clearly implied by the facts, without delving into deeper analysis or interpretation of themes, tone, style, or character development."
      }
    ]
  }
@@ -627,6 +682,148 @@ enum InteractionState {
      }
    ]
  }
+ 
+ ////////////LSAT
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["Analytical Reasoning","Logical Reasoning","Reading Comprehension","Writing Skills","Argument Structure","Argument Evaluation","Argument Completion","Basic Logic","Advanced Logic","Conditional Reasoning","Causal Reasoning","Comparative Reasoning","Numerical Quantifiers","Diagramming Logical Games","Linear Games","Grouping Games","Hybrid Games","Pattern Games","Mapping Games","Circular Games","Inference Making in Reading Comprehension","Main Idea and Primary Purpose in Reading Comprehension","Author's Tone and Attitude in Reading Comprehension","Detail Questions in Reading Comprehension","Inference Questions in Reading Comprehension","Logic Application in Reading Comprehension","Parallel Reasoning","Flaw Questions","Strengthen/Weaken Questions","Assumption Questions","Resolve/Explain Questions","Method of Reasoning Questions","Point at Issue/Agreement Questions","Principle Questions","Role of Statement Questions","Evaluate the Argument Questions","Cannot be True Questions","Must be True Questions","Most Strongly Supported Questions","Formal"]}
+ Starting fetchQuestionData for examName: LSAT with topics: ["Diagramming Logical Games"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=LSAT&topicValue=Diagramming%20Logical%20Games&numberValue=3
+ Raw Response: {
+   "examName": "LSAT",
+   "topics": [
+     "Diagramming Logical Games"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is an essential component of diagramming logical games?",
+       "options": {
+         "A": "Identifying the variables",
+         "B": "Choosing the right colors for the diagram",
+         "C": "Memorizing the rules before starting",
+         "D": "Skipping difficult questions"
+       },
+       "correctOption": "A",
+       "overview": "Identifying the variables is crucial in diagramming logical games as it helps in organizing the information and understanding the relationships between different elements of the game."
+     },
+     {
+       "questionNumber": 2,
+       "question": "What is the primary purpose of creating a diagram in logical games?",
+       "options": {
+         "A": "To waste time during the exam",
+         "B": "To visually represent the rules and relationships",
+         "C": "To impress the examiners",
+         "D": "To avoid answering the question"
+       },
+       "correctOption": "B",
+       "overview": "The primary purpose of creating a diagram in logical games is to visually represent the rules and relationships, making it easier to understand the game and solve the questions."
+     },
+     {
+       "questionNumber": 3,
+       "question": "Which of the following is NOT a recommended practice in diagramming logical games?",
+       "options": {
+         "A": "Using shorthand for rules",
+         "B": "Drawing multiple diagrams for different possibilities",
+         "C": "Ignoring the rules provided in the game",
+         "D": "Keeping the diagram simple and clear"
+       },
+       "correctOption": "C",
+       "overview": "Ignoring the rules provided in the game is not recommended as the rules are essential for understanding how to set up and solve the logical game."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "LSAT",
+   "topics": [
+     "Analytical Reasoning: Game Types"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following is NOT a common type of game found in the LSAT Analytical Reasoning section?",
+       "options": {
+         "A": "Sequencing",
+         "B": "Matching",
+         "C": "Grouping",
+         "D": "Quantitative Comparison"
+       },
+       "correctOption": "D",
+       "overview": "The LSAT Analytical Reasoning section typically includes games that involve sequencing, matching, and grouping. Quantitative Comparison, however, is not a common game type in this section. It is more related to assessing mathematical comparisons, which are not the focus of Analytical Reasoning questions."
+     },
+     {
+       "questionNumber": 2,
+       "question": "In a Sequencing game, what is the primary task you are asked to perform?",
+       "options": {
+         "A": "Assign each of several objects to one of various categories.",
+         "B": "Determine the logical order of events based on given clues.",
+         "C": "Match items from two lists based on a set of rules.",
+         "D": "Identify the numerical value of items based on provided information."
+       },
+       "correctOption": "B",
+       "overview": "In Sequencing games, the primary task is to determine the logical order of events or items based on the clues provided. This involves arranging the items in a sequence that satisfies all the given conditions."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What skill is most critical for solving Grouping games in the LSAT Analytical Reasoning section?",
+       "options": {
+         "A": "Ability to perform complex calculations quickly",
+         "B": "Skill in identifying patterns and sequences",
+         "C": "Proficiency in dividing objects into groups based on specific rules",
+         "D": "Expertise in quantitative comparison"
+       },
+       "correctOption": "C",
+       "overview": "For Grouping games, the most critical skill is the ability to divide objects into different groups based on a set of specific rules. This involves understanding the rules and applying them effectively to categorize the objects as required."
+     }
+   ]
+ }
+
+ 
+ Raw Response: {
+   "examName": "LSAT",
+   "topics": [
+     "Logical Reasoning: Method of Reasoning"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which of the following best describes the method of reasoning used in the argument?",
+       "options": {
+         "A": "Drawing a general conclusion from specific examples",
+         "B": "Using analogy to prove a point",
+         "C": "Applying a principle",
+         "D": "Identifying a contradiction"
+       },
+       "correctOption": "A",
+       "overview": "The method of reasoning described as 'Drawing a general conclusion from specific examples' involves observing particular instances and then formulating a broad statement that applies to similar situations. This is a common logical reasoning method where specific observations lead to a generalization."
+     },
+     {
+       "questionNumber": 2,
+       "question": "The argument's method of reasoning is most vulnerable to criticism on the grounds that it:",
+       "options": {
+         "A": "Confuses a cause with a correlation",
+         "B": "Assumes what it sets out to prove",
+         "C": "Overlooks possible alternatives",
+         "D": "Generalizes from insufficient data"
+       },
+       "correctOption": "C",
+       "overview": "Criticizing an argument for 'Overlooking possible alternatives' suggests that the argument fails to consider other plausible explanations or solutions that could undermine its conclusion. This is a common flaw in reasoning where the argument does not account for other variables that could affect the outcome."
+     },
+     {
+       "questionNumber": 3,
+       "question": "The reasoning in the argument is most analogous to which of the following?",
+       "options": {
+         "A": "A lawyer argues that their client is innocent because there is no direct evidence of guilt.",
+         "B": "A scientist claims a theory is true because all attempts to disprove it have failed.",
+         "C": "A chef asserts that a dish is delicious because everyone in a taste test liked it.",
+         "D": "A teacher believes a student is clever because the student finished all exams quickly."
+       },
+       "correctOption": "B",
+       "overview": "The reasoning 'A scientist claims a theory is true because all attempts to disprove it have failed' is analogous to arguing from a position where the absence of counter-evidence is taken as support for the claim. This method of reasoning assumes that because something has not been proven false, it must therefore be true, which is a logical fallacy known as argument from ignorance."
+     }
+   ]
+ }
+ 
  
  /////////LINUX
  Response HTTP Status code: 200
