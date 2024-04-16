@@ -65,25 +65,22 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     func speechRecognitionTask(_ task: SFSpeechRecognitionTask, didFinishRecognition recognitionResult: SFSpeechRecognitionResult) {
         // This method is called when the speech recognizer successfully recognizes speech from the audio file.
         DispatchQueue.main.async {
-           // self.interactionState = .successfulResponse
+            ///Automatically retrying recording after error transcription
+    //        if !successfully && retryCount < maxRetryCount {
+    //            DispatchQueue.main.async {
+    //                self.interactionState = .errorTranscription
+    //                self.speechRecognizer.reset()
+    //                self.startRecordingAndTranscribing()
+    //                self.retryCount += 1
+    //            }
+    //        }
+    //
+    //        if !successfully {
+    //            self.interactionState = .errorTranscription
+    //        }
         }
     }
 
-    func speechRecognitionTask(_ task: SFSpeechRecognitionTask, didFinishSuccessfully successfully: Bool) {
-        ///Automatically retrying recording after error transcription
-//        if !successfully && retryCount < maxRetryCount {
-//            DispatchQueue.main.async {
-//                self.interactionState = .errorTranscription
-//                self.speechRecognizer.reset()
-//                self.startRecordingAndTranscribing()
-//                self.retryCount += 1
-//            }
-//        }
-//        
-//        if !successfully {
-//            self.interactionState = .errorTranscription
-//        }
-    }
     
     deinit {
         cancellable?.cancel()
