@@ -111,6 +111,13 @@ struct HomePage: View {
                     }
                 }
             })
+            .onChange(of: interactionState, { oldValue, newValue in
+                if newValue == .pausedPlayback || newValue == .isDonePlaying {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.myLibInteractionState = .isDonePlaying
+                    }
+                }
+            })
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })

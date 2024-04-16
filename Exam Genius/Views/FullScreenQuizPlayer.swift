@@ -131,9 +131,6 @@ struct FullScreenQuizPlayer2: View {
     }
     
     func goToNextQuestion() {
-        guard let nextQuestions = quizSetter.configuration?.questions else { return }
-        guard nextQuestions.indices.contains(currentQuestionIndex), currentQuestionIndex < nextQuestions.count - 1 else { return }
-        //nextTapped.toggle()
         currentQuestionIndex += 1
     }
     

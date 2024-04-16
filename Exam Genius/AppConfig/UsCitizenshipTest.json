@@ -1,82 +1,82 @@
 
 
 {
-  "examName": "US Citizenship Test",
-  "topics": [
-    "US Immigration History", "The Articles of Confederation"
-  ],
-  "questions": [
-    {
-      "questionNumber": 1,
-      "question": "When did the first Europeans settle in what is now the United States?",
-      "options": {
-        "A": "1492",
-        "B": "1607",
-        "C": "1620",
-        "D": "1776"
-      },
-      "correctOption": "B",
-      "overview": "The first successful English settlement in what is now the United States was Jamestown, founded in 1607. While Christopher Columbus arrived in the Americas in 1492, and the Pilgrims landed in 1620, Jamestown is recognized as the first permanent English settlement."
-    },
-    {
-      "questionNumber": 2,
-      "question": "Which law first established restrictions on immigration to the United States?",
-      "options": {
-        "A": "The Naturalization Act of 1790",
-        "B": "The Chinese Exclusion Act of 1882",
-        "C": "The Immigration Act of 1924",
-        "D": "The Immigration and Nationality Act of 1965"
-      },
-      "correctOption": "B",
-      "overview": "The Chinese Exclusion Act of 1882 was the first significant law restricting immigration into the United States. It specifically prohibited all immigration of Chinese laborers. Prior acts, like the Naturalization Act of 1790, focused on citizenship rather than immigration itself."
-    },
-    {
-      "questionNumber": 3,
-      "question": "What significant immigration policy did the Immigration and Nationality Act of 1965 introduce?",
-      "options": {
-        "A": "It established quotas based on national origin.",
-        "B": "It made English the official language for naturalization.",
-        "C": "It abolished the national origins quota system.",
-        "D": "It introduced a lottery system for immigration."
-      },
-      "correctOption": "C",
-      "overview": "The Immigration and Nationality Act of 1965, also known as the Hart-Celler Act, abolished the national origins quota system that had structured America's immigration policy since the 1920s, replacing it with a preference system that focused on immigrants' skills and family relationships with citizens or U.S. residents."
-    },
-    {
-      "questionNumber": 4,
-      "question": "What was the main weakness of the Articles of Confederation?",
-      "options": {
-        "A": "It gave too much power to the national government.",
-        "B": "It did not provide a national currency.",
-        "C": "It did not allow for a president.",
-        "D": "It gave too little power to the national government."
-      },
-      "correctOption": "D",
-      "overview": "The Articles of Confederation established the first governmental structure unifying the 13 colonies that had fought in the American Revolution. However, this document put too little power in the central government. Congress, under the Articles, was not strong enough to enforce laws or raise taxes, making it difficult to support a national defense or fund the government."
-    },
-    {
-      "questionNumber": 5,
-      "question": "Under the Articles of Confederation, how many states needed to agree in order to pass a new law?",
-      "options": {
-        "A": "7 out of 13",
-        "B": "9 out of 13",
-        "C": "11 out of 13",
-        "D": "13 out of 13"
-      },
-      "correctOption": "B",
-      "overview": "The Articles of Confederation required a supermajority for the passage of most types of legislation. Specifically, to pass a new law, 9 out of the 13 states had to agree. This high threshold made it difficult for Congress to take action on many issues."
-    },
-    {
-      "questionNumber": 6,
-      "question": "Which of the following was a power that Congress had under the Articles of Confederation?",
-      "options": {
-        "A": "To regulate interstate commerce",
-        "B": "To levy taxes",
-        "C": "To declare war",
-        "D": "To enforce laws"
-      },
-      "correctOption": "C",
-      "overview": "Under the Articles of Confederation, Congress had the power to declare war. However, it lacked many other powers that would be considered essential for a strong central government, such as the power to levy taxes, regulate trade, or enforce laws. This limitation was a significant factor in the decision to draft the Constitution."
-    }
-  ]
+    "examName": "US Citizenship Test",
+    "topics": [
+        "US Immigration History", "The Articles of Confederation"
+    ],
+    "questions": [
+        {
+            "questionNumber": 1,
+            "question": "When did the first Europeans settle in what is now the United States?",
+            "options": {
+                "A": "1492",
+                "B": "1607",
+                "C": "1620",
+                "D": "1776"
+            },
+            "correctOption": "B",
+            "overview": "The first successful English settlement in what is now the United States was Jamestown, founded in 1607. While Christopher Columbus arrived in the Americas in 1492, and the Pilgrims landed in 1620, Jamestown is recognized as the first permanent English settlement."
+        },
+        {
+            "questionNumber": 2,
+            "question": "Which law first established restrictions on immigration to the United States?",
+            "options": {
+                "A": "The Naturalization Act of 1790",
+                "B": "The Chinese Exclusion Act of 1882",
+                "C": "The Immigration Act of 1924",
+                "D": "The Immigration and Nationality Act of 1965"
+            },
+            "correctOption": "B",
+            "overview": "The Chinese Exclusion Act of 1882 was the first significant law restricting immigration into the United States. It specifically prohibited all immigration of Chinese laborers. Prior acts, like the Naturalization Act of 1790, focused on citizenship rather than immigration itself."
+        },
+        {
+            "questionNumber": 3,
+            "question": "What significant immigration policy did the Immigration and Nationality Act of 1965 introduce?",
+            "options": {
+                "A": "It established quotas based on national origin.",
+                "B": "It made English the official language for naturalization.",
+                "C": "It abolished the national origins quota system.",
+                "D": "It introduced a lottery system for immigration."
+            },
+            "correctOption": "C",
+            "overview": "The Immigration and Nationality Act of 1965, also known as the Hart-Celler Act, abolished the national origins quota system that had structured America's immigration policy since the 1920s, replacing it with a preference system that focused on immigrants' skills and family relationships with citizens or U.S. residents."
+        },
+        {
+            "questionNumber": 4,
+            "question": "What was the main weakness of the Articles of Confederation?",
+            "options": {
+                "A": "It gave too much power to the national government.",
+                "B": "It did not provide a national currency.",
+                "C": "It did not allow for a president.",
+                "D": "It gave too little power to the national government."
+            },
+            "correctOption": "D",
+            "overview": "The Articles of Confederation established the first governmental structure unifying the 13 colonies that had fought in the American Revolution. However, this document put too little power in the central government. Congress, under the Articles, was not strong enough to enforce laws or raise taxes, making it difficult to support a national defense or fund the government."
+        },
+        {
+            "questionNumber": 5,
+            "question": "Under the Articles of Confederation, how many states needed to agree in order to pass a new law?",
+            "options": {
+                "A": "7 out of 13",
+                "B": "9 out of 13",
+                "C": "11 out of 13",
+                "D": "13 out of 13"
+            },
+            "correctOption": "B",
+            "overview": "The Articles of Confederation required a supermajority for the passage of most types of legislation. Specifically, to pass a new law, 9 out of the 13 states had to agree. This high threshold made it difficult for Congress to take action on many issues."
+        },
+        {
+            "questionNumber": 6,
+            "question": "Which of the following was a power that Congress had under the Articles of Confederation?",
+            "options": {
+                "A": "To regulate interstate commerce",
+                "B": "To levy taxes",
+                "C": "To declare war",
+                "D": "To enforce laws"
+            },
+            "correctOption": "C",
+            "overview": "Under the Articles of Confederation, Congress had the power to declare war. However, it lacked many other powers that would be considered essential for a strong central government, such as the power to levy taxes, regulate trade, or enforce laws. This limitation was a significant factor in the decision to draft the Constitution."
+        }
+    ]
 }

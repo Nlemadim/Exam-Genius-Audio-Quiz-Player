@@ -1,0 +1,81 @@
+
+{
+    "examName": "SAT Exam",
+    "topics": [
+        "Understanding of Wordiness"
+    ],
+    "questions": [
+        {
+            "questionNumber": 1,
+            "question": "Which of the following sentences is the least wordy and most effective?",
+            "options": {
+                "A": "The reason for the failure of the project was primarily because of unforeseen weather conditions.",
+                "B": "Unforeseen weather conditions were primarily the reason why the project failed.",
+                "C": "The project failed primarily because of unforeseen weather conditions.",
+                "D": "Primarily, it was unforeseen weather conditions that were the reason for the project's failure."
+            },
+            "correctOption": "C",
+            "overview": "Option C is the most direct and concise way to convey the information, making it the least wordy. It avoids unnecessary phrases like 'the reason for' and 'was because,' which are common sources of wordiness."
+        },
+        {
+            "questionNumber": 1,
+            "question": "What is the primary purpose of the SAT exam?",
+            "options": {
+                "A": "To assess students' readiness for college",
+                "B": "To evaluate teachers' effectiveness",
+                "C": "For high school graduation requirements",
+                "D": "To measure intelligence"
+            },
+            "correctOption": "A",
+            "overview": "The SAT exam is designed primarily to assess a high school student's readiness for college. Colleges often use SAT scores as a part of the admissions process."
+        },
+        {
+            "questionNumber": 2,
+            "question": "Which section is not a part of the SAT exam?",
+            "options": {
+                "A": "Mathematics",
+                "B": "Critical Reading",
+                "C": "Science",
+                "D": "Writing and Language"
+            },
+            "correctOption": "C",
+            "overview": "The SAT exam includes sections on Mathematics, Critical Reading, and Writing and Language. There is no specific Science section, although some science-related questions can be found within the other sections."
+        },
+        {
+            "questionNumber": 3,
+            "question": "What is the time duration of the SAT exam without the essay?",
+            "options": {
+                "A": "2 hours 45 minutes",
+                "B": "3 hours",
+                "C": "3 hours 45 minutes",
+                "D": "4 hours"
+            },
+            "correctOption": "B",
+            "overview": "The SAT exam lasts 3 hours without the essay section. If the essay section is included, the total time increases to 3 hours and 50 minutes."
+        }
+        {
+            "questionNumber": 2,
+            "question": "Identify the sentence that eliminates unnecessary wordiness.",
+            "options": {
+                "A": "She made adjustments to the plan in order to reduce the time that was necessary to complete it.",
+                "B": "She adjusted the plan to reduce the necessary time to complete it.",
+                "C": "In order to complete it, she made necessary adjustments to the plan to reduce the time.",
+                "D": "She adjusted the plan to reduce the completion time."
+            },
+            "correctOption": "D",
+            "overview": "Option D is the most concise choice, effectively communicating the same idea without the redundancy found in the other options. It eliminates phrases like 'in order to' and 'that was necessary,' which contribute to wordiness."
+        },
+        {
+            "questionNumber": 3,
+            "question": "Which sentence best avoids unnecessary words?",
+            "options": {
+                "A": "At this point in time, we need to make a decision as to whether or not we will proceed.",
+                "B": "We need to decide whether we will proceed or not.",
+                "C": "We need to make a decision about proceeding.",
+                "D": "Now, we must decide whether to proceed."
+            },
+            "correctOption": "D",
+            "overview": "Option D is the most straightforward and concise, avoiding the wordiness present in the other choices. Phrases like 'at this point in time' and 'as to whether or not' are unnecessarily verbose."
+        }
+    ]
+}

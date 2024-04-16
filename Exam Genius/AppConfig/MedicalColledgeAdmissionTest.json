@@ -1,335 +1,372 @@
 
 
 {
- "examName": "Medical College Admission Test",
- "topics": [
-   "Biology: Organ Systems"
- ],
- "questions": [
-   {
-     "questionNumber": 1,
-     "question": "Which organ system is primarily responsible for transporting nutrients, wastes, and gases throughout the body?",
-     "options": {
-       "A": "Circulatory System",
-       "B": "Digestive System",
-       "C": "Respiratory System",
-       "D": "Endocrine System"
-     },
-     "correctOption": "A",
-     "overview": "The circulatory system, also known as the cardiovascular system, is primarily responsible for the transport of nutrients, wastes, and gases throughout the body. This system includes the heart, blood, and blood vessels."
-   },
-   {
-     "questionNumber": 2,
-     "question": "Which organ system is responsible for removing waste products from the bloodstream?",
-     "options": {
-       "A": "Nervous System",
-       "B": "Urinary System",
-       "C": "Muscular System",
-       "D": "Skeletal System"
-     },
-     "correctOption": "B",
-     "overview": "The urinary system, also known as the renal system, is responsible for removing waste products from the bloodstream and regulating blood volume and pressure. It includes the kidneys, ureters, bladder, and urethra."
-   },
-   {
-     "questionNumber": 3,
-     "question": "Which of the following is NOT a function of the skeletal system?",
-     "options": {
-       "A": "Supporting the body",
-       "B": "Facilitating movement",
-       "C": "Producing red blood cells",
-       "D": "Regulating body temperature"
-     },
-     "correctOption": "D",
-     "overview": "The skeletal system is responsible for supporting the body, facilitating movement by providing attachment points for muscles, and producing blood cells in the bone marrow (hematopoiesis). However, regulating body temperature is primarily a function of the integumentary system (skin) and the circulatory system."
-   },
-   {
-     "questionNumber": 4,
-     "question": "Which of the following best describes the concept of natural selection?",
-     "options": {
-       "A": "Organisms with traits best suited to their environment are more likely to survive and reproduce.",
-       "B": "All species on Earth share a common ancestor.",
-       "C": "Organisms can inherit acquired characteristics.",
-       "D": "Species do not evolve over time."
-     },
-     "correctOption": "A",
-     "overview": "Natural selection is a key mechanism of evolution, proposed by Charles Darwin. It explains how organisms that are better adapted to their environment tend to survive and produce more offspring. This process leads to the accumulation of beneficial traits in the population over generations."
-   },
-   {
-     "questionNumber": 5,
-     "question": "Which of the following provides the best evidence for the theory of evolution?",
-     "options": {
-       "A": "The fossil record",
-       "B": "The law of superposition",
-       "C": "Mendelian genetics",
-       "D": "The Second Law of Thermodynamics"
-     },
-     "correctOption": "A",
-     "overview": "The fossil record provides compelling evidence for the theory of evolution. It shows a chronological accumulation of organisms' remains or traces, demonstrating how species have changed, diversified, and emerged over geological time. It supports the idea that all life on Earth shares common ancestry and has evolved through natural selection and other processes."
-   },
-   {
-     "questionNumber": 6,
-     "question": "What is the role of genetic variation in evolution?",
-     "options": {
-       "A": "It has no significant role in evolution.",
-       "B": "It decreases the survival rate of species.",
-       "C": "It provides the raw material for natural selection.",
-       "D": "It ensures that all individuals in a population are identical."
-     },
-     "correctOption": "C",
-     "overview": "Genetic variation is fundamental to the process of evolution. It provides the raw material on which natural selection acts. Without genetic variation, all individuals of a species would be essentially identical, and adaptation to changing environments would be impossible. Genetic variation allows populations to evolve over time in response to environmental changes."
-   },
-   {
-     "questionNumber": 7,
-     "question": "Which of the following best describes the role of hypotheses in scientific investigations?",
-     "options": {
-       "A": "To provide a factual basis for research",
-       "B": "To serve as testable predictions",
-       "C": "To summarize the findings of a study",
-       "D": "To prove the validity of experimental results"
-     },
-     "correctOption": "B",
-     "overview": "In scientific investigations, hypotheses serve as testable predictions that guide the research process. They are proposed explanations for a phenomenon and are tested through experimentation or observation. The role of hypotheses is central to the scientific method, as they help to frame the research question and determine the direction of the study."
-   },
-   {
-     "questionNumber": 8,
-     "question": "A researcher studying the effects of a drug on heart rate would most likely use which type of study?",
-     "options": {
-       "A": "A case study",
-       "B": "An observational study",
-       "C": "An experimental study",
-       "D": "A survey"
-     },
-     "correctOption": "C",
-     "overview": "In studying the effects of a drug on heart rate, a researcher would most likely use an experimental study. This type of study allows the researcher to control variables and directly observe the effects of the drug on heart rate. Experimental studies are crucial for establishing cause-and-effect relationships, as they can isolate the drug's impact from other factors."
-   },
-   {
-     "questionNumber": 9,
-     "question": "Critical reasoning skills are most directly involved in which of the following activities?",
-     "options": {
-       "A": "Memorizing facts and figures",
-       "B": "Understanding and evaluating arguments",
-       "C": "Following instructions to complete a task",
-       "D": "Recalling the sequence of events in a story"
-     },
-     "correctOption": "B",
-     "overview": "Critical reasoning skills are most directly involved in understanding and evaluating arguments. These skills include analyzing information, assessing the validity of arguments, and forming logical conclusions. Critical reasoning is essential for discerning the strength of evidence and the soundness of reasoning in both academic and everyday contexts."
-   },
-   {
-     "questionNumber": 10,
-     "question": "Which element is considered a halogen?",
-     "options": {
-       "A": "Oxygen",
-       "B": "Chlorine",
-       "C": "Carbon",
-       "D": "Sodium"
-     },
-     "correctOption": "B",
-     "overview": "Halogen elements are located in Group 17 of the periodic table and include fluorine, chlorine, bromine, iodine, and astatine. Chlorine is a halogen known for its disinfectant properties and its role in the production of PVC."
-   },
-   {
-     "questionNumber": 11,
-     "question": "Which of the following elements is an alkali metal?",
-     "options": {
-       "A": "Calcium",
-       "B": "Iron",
-       "C": "Potassium",
-       "D": "Copper"
-     },
-     "correctOption": "C",
-     "overview": "Alkali metals are located in Group 1 of the periodic table, excluding hydrogen. These elements, such as lithium, sodium, and potassium, are highly reactive, especially with water, and have a single electron in their outermost shell. Potassium is an alkali metal used in fertilizers and as a salt substitute."
-   },
-   {
-     "questionNumber": 12,
-     "question": "What is the electron configuration of an element in Group 2 of the periodic table?",
-     "options": {
-       "A": "ns2",
-       "B": "ns1",
-       "C": "ns2np5",
-       "D": "ns2np6"
-     },
-     "correctOption": "A",
-     "overview": "Elements in Group 2 of the periodic table are known as alkaline earth metals and include beryllium, magnesium, calcium, strontium, barium, and radium. Their electron configuration ends in ns2, indicating they have two electrons in their outermost s orbital, contributing to their chemical properties."
-   },
-   {
-     "questionNumber": 13,
-     "question": "Which organ system is primarily responsible for transporting nutrients, wastes, and gases throughout the body?",
-     "options": {
-       "A": "Digestive System",
-       "B": "Circulatory System",
-       "C": "Respiratory System",
-       "D": "Endocrine System"
-     },
-     "correctOption": "B",
-     "overview": "The Circulatory System is responsible for the transportation of nutrients, wastes, and gases to and from cells throughout the body. This system includes the heart, blood, and blood vessels."
-   },
-   {
-     "questionNumber": 14,
-     "question": "What is the primary function of the respiratory system?",
-     "options": {
-       "A": "To break down food into nutrients",
-       "B": "To control body temperature",
-       "C": "To remove waste products from the bloodstream",
-       "D": "To exchange gases with the environment"
-     },
-     "correctOption": "D",
-     "overview": "The primary function of the Respiratory System is to exchange gases with the environment, specifically to take in oxygen and expel carbon dioxide. This process mainly occurs in the lungs."
-   },
-   {
-     "questionNumber": 15,
-     "question": "Which of the following is a function of the skeletal system?",
-     "options": {
-       "A": "Regulating blood sugar levels",
-       "B": "Producing movement",
-       "C": "Supporting and protecting the body",
-       "D": "Absorbing nutrients"
-     },
-     "correctOption": "C",
-     "overview": "The Skeletal System provides structural support, protects internal organs, enables movement (in conjunction with the muscular system), stores minerals, and produces blood cells."
-   },
-   {
-     "questionNumber": 16,
-     "question": "Which of the following is NOT a monosaccharide?",
-     "options": {
-       "A": "Glucose",
-       "B": "Fructose",
-       "C": "Sucrose",
-       "D": "Galactose"
-     },
-     "correctOption": "C",
-     "overview": "Monosaccharides are the simplest form of carbohydrates and include glucose, fructose, and galactose. Sucrose, however, is a disaccharide, composed of glucose and fructose."
-   },
-   {
-     "questionNumber": 17,
-     "question": "What is the primary structure of a protein determined by?",
-     "options": {
-       "A": "Hydrogen bonding between amino acids",
-       "B": "Peptide bonds between amino acids",
-       "C": "Disulfide bridges",
-       "D": "Hydrophobic interactions"
-     },
-     "correctOption": "B",
-     "overview": "The primary structure of a protein is determined by its sequence of amino acids, which are linked together by peptide bonds. This sequence dictates the protein's final 3D shape and function."
-   },
-   {
-     "questionNumber": 18,
-     "question": "Which process describes the synthesis of ATP in the presence of oxygen?",
-     "options": {
-       "A": "Glycolysis",
-       "B": "Fermentation",
-       "C": "Oxidative phosphorylation",
-       "D": "Lactic acid fermentation"
-     },
-     "correctOption": "C",
-     "overview": "Oxidative phosphorylation is the process that synthesizes ATP using the energy released by the transfer of electrons to oxygen in mitochondria. This process is part of cellular respiration and occurs in the presence of oxygen."
-   },
-   {
-     "questionNumber": 19,
-     "question": "Which of the following processes is responsible for the synthesis of mRNA from a DNA template?",
-     "options": {
-       "A": "Translation",
-       "B": "Transcription",
-       "C": "Replication",
-       "D": "Mitosis"
-     },
-     "correctOption": "B",
-     "overview": "Transcription is the process through which mRNA is synthesized from a DNA template. This is a crucial step in gene expression, allowing the genetic information stored in DNA to be transferred to mRNA, which then travels to the ribosome for protein synthesis."
-   },
-   {
-     "questionNumber": 20,
-     "question": "What is the role of tRNA in protein synthesis?",
-     "options": {
-       "A": "It replicates DNA.",
-       "B": "It synthesizes mRNA.",
-       "C": "It carries amino acids to the ribosome.",
-       "D": "It unwinds the DNA double helix."
-     },
-     "correctOption": "C",
-     "overview": "tRNA (transfer RNA) plays a critical role in protein synthesis by carrying amino acids to the ribosome, where they are added to the growing polypeptide chain. Each tRNA is specific to one amino acid and has an anticodon that pairs with a codon on mRNA."
-   },
-   {
-     "questionNumber": 21,
-     "question": "Which of the following best describes the function of DNA polymerase?",
-     "options": {
-       "A": "It breaks down amino acids.",
-       "B": "It synthesizes new DNA strands.",
-       "C": "It transports proteins out of the cell.",
-       "D": "It assists in cell membrane synthesis."
-     },
-     "correctOption": "B",
-     "overview": "DNA polymerase is an enzyme that plays a critical role in DNA replication. It synthesizes new DNA strands by adding nucleotides to a pre-existing chain or primer. This enzyme ensures that the genetic information is accurately copied and passed on to the next generation of cells."
-   },
-   {
-     "questionNumber": 22,
-     "question": "Which of the following is the site of fertilization in humans?",
-     "options": {
-       "A": "Uterus",
-       "B": "Fallopian tube",
-       "C": "Ovary",
-       "D": "Vagina"
-     },
-     "correctOption": "B",
-     "overview": "Fertilization in humans typically occurs in the fallopian tubes, which connect the ovaries to the uterus. The fallopian tubes provide the site where the sperm meets the egg, leading to fertilization."
-   },
-   {
-     "questionNumber": 23,
-     "question": "What is the role of the placenta in fetal development?",
-     "options": {
-       "A": "Production of gametes",
-       "B": "Secretion of digestive enzymes",
-       "C": "Exchange of nutrients and wastes between mother and fetus",
-       "D": "Muscle development in the fetus"
-     },
-     "correctOption": "C",
-     "overview": "The placenta plays a crucial role in fetal development by acting as an interface for the exchange of nutrients, gases, and wastes between the mother and the fetus. It provides oxygen and nutrients to the growing fetus while removing waste products."
-   },
-   {
-     "questionNumber": 24,
-     "question": "Which hormone is primarily responsible for the development of secondary sexual characteristics in females?",
-     "options": {
-       "A": "Testosterone",
-       "B": "Insulin",
-       "C": "Estrogen",
-       "D": "Growth hormone"
-     },
-     "correctOption": "C",
-     "overview": "Estrogen is the primary hormone responsible for the development of secondary sexual characteristics in females, including the development of breasts, widening of hips, and the regulation of the menstrual cycle."
-   },
-   {
-     "questionNumber": 25,
-     "question": "Which of the following is a characteristic of SN1 reactions?",
-     "options": {
-       "A": "Inversion of configuration",
-       "B": "Rearrangement possible",
-       "C": "Bimolecular reaction",
-       "D": "Requires strong nucleophile"
-     },
-     "correctOption": "B",
-     "overview": "SN1 reactions are unimolecular nucleophilic substitution reactions that often involve a carbocation intermediate. This allows for the possibility of rearrangements to form more stable carbocations before the nucleophile attacks. Unlike SN2 reactions, SN1 reactions do not require a strong nucleophile and do not proceed with inversion of configuration."
-   },
-   {
-     "questionNumber": 26,
-     "question": "What is the major product of the hydration of 2-methylpropene?",
-     "options": {
-       "A": "2-methyl-2-propanol",
-       "B": "2-methyl-1-propanol",
-       "C": "1-methyl-1-propanol",
-       "D": "2-methylpropanal"
-     },
-     "correctOption": "A",
-     "overview": "The hydration of 2-methylpropene, an alkene, involves the addition of water (H2O) across the double bond in the presence of an acid catalyst to form an alcohol. According to Markovnikov's rule, the hydrogen atom from the water molecule will attach to the carbon with the most hydrogen atoms already present, leading to the formation of 2-methyl-2-propanol as the major product."
-   },
-   {
-     "questionNumber": 27,
-     "question": "Which of the following reagents is used to convert an alcohol into an alkyl chloride?",
-     "options": {
-       "A": "PCC",
-       "B": "Lucas reagent",
-       "C": "NaBH4",
-       "D": "KMnO4"
-     },
-     "correctOption": "B",
-     "overview": "Lucas reagent, which is a mixture of zinc chloride and hydrochloric acid, is used to convert alcohols into alkyl chlorides. This reaction is particularly useful for distinguishing between primary, secondary, and tertiary alcohols based on the rate of reaction. PCC is used for oxidizing alcohols to aldehydes or ketones, NaBH4 is a reducing agent, and KMnO4 is a strong oxidizing agent."
-   }
- ]
+    "examName": "Medical College Admission Test",
+    "topics": [
+        "Biology: Organ Systems", "Biochemistry",
+        "Amino Acids and Proteins"
+    ],
+    "questions": [
+        {
+            "questionNumber": 1,
+            "question": "Which organ system is primarily responsible for transporting nutrients, wastes, and gases throughout the body?",
+            "options": {
+                "A": "Circulatory System",
+                "B": "Digestive System",
+                "C": "Respiratory System",
+                "D": "Endocrine System"
+            },
+            "correctOption": "A",
+            "overview": "The circulatory system, also known as the cardiovascular system, is primarily responsible for the transport of nutrients, wastes, and gases throughout the body. This system includes the heart, blood, and blood vessels."
+        },
+        {
+            "questionNumber": 2,
+            "question": "Which organ system is responsible for removing waste products from the bloodstream?",
+            "options": {
+                "A": "Nervous System",
+                "B": "Urinary System",
+                "C": "Muscular System",
+                "D": "Skeletal System"
+            },
+            "correctOption": "B",
+            "overview": "The urinary system, also known as the renal system, is responsible for removing waste products from the bloodstream and regulating blood volume and pressure. It includes the kidneys, ureters, bladder, and urethra."
+        },
+        {
+            "questionNumber": 3,
+            "question": "Which of the following is NOT a function of the skeletal system?",
+            "options": {
+                "A": "Supporting the body",
+                "B": "Facilitating movement",
+                "C": "Producing red blood cells",
+                "D": "Regulating body temperature"
+            },
+            "correctOption": "D",
+            "overview": "The skeletal system is responsible for supporting the body, facilitating movement by providing attachment points for muscles, and producing blood cells in the bone marrow (hematopoiesis). However, regulating body temperature is primarily a function of the integumentary system (skin) and the circulatory system."
+        },
+        {
+            "questionNumber": 4,
+            "question": "Which of the following best describes the concept of natural selection?",
+            "options": {
+                "A": "Organisms with traits best suited to their environment are more likely to survive and reproduce.",
+                "B": "All species on Earth share a common ancestor.",
+                "C": "Organisms can inherit acquired characteristics.",
+                "D": "Species do not evolve over time."
+            },
+            "correctOption": "A",
+            "overview": "Natural selection is a key mechanism of evolution, proposed by Charles Darwin. It explains how organisms that are better adapted to their environment tend to survive and produce more offspring. This process leads to the accumulation of beneficial traits in the population over generations."
+        },
+        {
+            "questionNumber": 5,
+            "question": "Which of the following provides the best evidence for the theory of evolution?",
+            "options": {
+                "A": "The fossil record",
+                "B": "The law of superposition",
+                "C": "Mendelian genetics",
+                "D": "The Second Law of Thermodynamics"
+            },
+            "correctOption": "A",
+            "overview": "The fossil record provides compelling evidence for the theory of evolution. It shows a chronological accumulation of organisms' remains or traces, demonstrating how species have changed, diversified, and emerged over geological time. It supports the idea that all life on Earth shares common ancestry and has evolved through natural selection and other processes."
+        },
+        {
+            "questionNumber": 6,
+            "question": "What is the role of genetic variation in evolution?",
+            "options": {
+                "A": "It has no significant role in evolution.",
+                "B": "It decreases the survival rate of species.",
+                "C": "It provides the raw material for natural selection.",
+                "D": "It ensures that all individuals in a population are identical."
+            },
+            "correctOption": "C",
+            "overview": "Genetic variation is fundamental to the process of evolution. It provides the raw material on which natural selection acts. Without genetic variation, all individuals of a species would be essentially identical, and adaptation to changing environments would be impossible. Genetic variation allows populations to evolve over time in response to environmental changes."
+        },
+        {
+            "questionNumber": 7,
+            "question": "Which of the following best describes the role of hypotheses in scientific investigations?",
+            "options": {
+                "A": "To provide a factual basis for research",
+                "B": "To serve as testable predictions",
+                "C": "To summarize the findings of a study",
+                "D": "To prove the validity of experimental results"
+            },
+            "correctOption": "B",
+            "overview": "In scientific investigations, hypotheses serve as testable predictions that guide the research process. They are proposed explanations for a phenomenon and are tested through experimentation or observation. The role of hypotheses is central to the scientific method, as they help to frame the research question and determine the direction of the study."
+        },
+        {
+            "questionNumber": 8,
+            "question": "A researcher studying the effects of a drug on heart rate would most likely use which type of study?",
+            "options": {
+                "A": "A case study",
+                "B": "An observational study",
+                "C": "An experimental study",
+                "D": "A survey"
+            },
+            "correctOption": "C",
+            "overview": "In studying the effects of a drug on heart rate, a researcher would most likely use an experimental study. This type of study allows the researcher to control variables and directly observe the effects of the drug on heart rate. Experimental studies are crucial for establishing cause-and-effect relationships, as they can isolate the drug's impact from other factors."
+        },
+        {
+            "questionNumber": 9,
+            "question": "Critical reasoning skills are most directly involved in which of the following activities?",
+            "options": {
+                "A": "Memorizing facts and figures",
+                "B": "Understanding and evaluating arguments",
+                "C": "Following instructions to complete a task",
+                "D": "Recalling the sequence of events in a story"
+            },
+            "correctOption": "B",
+            "overview": "Critical reasoning skills are most directly involved in understanding and evaluating arguments. These skills include analyzing information, assessing the validity of arguments, and forming logical conclusions. Critical reasoning is essential for discerning the strength of evidence and the soundness of reasoning in both academic and everyday contexts."
+        },
+        {
+            "questionNumber": 10,
+            "question": "Which element is considered a halogen?",
+            "options": {
+                "A": "Oxygen",
+                "B": "Chlorine",
+                "C": "Carbon",
+                "D": "Sodium"
+            },
+            "correctOption": "B",
+            "overview": "Halogen elements are located in Group 17 of the periodic table and include fluorine, chlorine, bromine, iodine, and astatine. Chlorine is a halogen known for its disinfectant properties and its role in the production of PVC."
+        },
+        {
+            "questionNumber": 11,
+            "question": "Which of the following elements is an alkali metal?",
+            "options": {
+                "A": "Calcium",
+                "B": "Iron",
+                "C": "Potassium",
+                "D": "Copper"
+            },
+            "correctOption": "C",
+            "overview": "Alkali metals are located in Group 1 of the periodic table, excluding hydrogen. These elements, such as lithium, sodium, and potassium, are highly reactive, especially with water, and have a single electron in their outermost shell. Potassium is an alkali metal used in fertilizers and as a salt substitute."
+        },
+        {
+            "questionNumber": 12,
+            "question": "What is the electron configuration of an element in Group 2 of the periodic table?",
+            "options": {
+                "A": "ns2",
+                "B": "ns1",
+                "C": "ns2np5",
+                "D": "ns2np6"
+            },
+            "correctOption": "A",
+            "overview": "Elements in Group 2 of the periodic table are known as alkaline earth metals and include beryllium, magnesium, calcium, strontium, barium, and radium. Their electron configuration ends in ns2, indicating they have two electrons in their outermost s orbital, contributing to their chemical properties."
+        },
+        {
+            "questionNumber": 13,
+            "question": "Which organ system is primarily responsible for transporting nutrients, wastes, and gases throughout the body?",
+            "options": {
+                "A": "Digestive System",
+                "B": "Circulatory System",
+                "C": "Respiratory System",
+                "D": "Endocrine System"
+            },
+            "correctOption": "B",
+            "overview": "The Circulatory System is responsible for the transportation of nutrients, wastes, and gases to and from cells throughout the body. This system includes the heart, blood, and blood vessels."
+        },
+        {
+            "questionNumber": 14,
+            "question": "What is the primary function of the respiratory system?",
+            "options": {
+                "A": "To break down food into nutrients",
+                "B": "To control body temperature",
+                "C": "To remove waste products from the bloodstream",
+                "D": "To exchange gases with the environment"
+            },
+            "correctOption": "D",
+            "overview": "The primary function of the Respiratory System is to exchange gases with the environment, specifically to take in oxygen and expel carbon dioxide. This process mainly occurs in the lungs."
+        },
+        {
+            "questionNumber": 15,
+            "question": "Which of the following is a function of the skeletal system?",
+            "options": {
+                "A": "Regulating blood sugar levels",
+                "B": "Producing movement",
+                "C": "Supporting and protecting the body",
+                "D": "Absorbing nutrients"
+            },
+            "correctOption": "C",
+            "overview": "The Skeletal System provides structural support, protects internal organs, enables movement (in conjunction with the muscular system), stores minerals, and produces blood cells."
+        },
+        {
+            "questionNumber": 16,
+            "question": "Which of the following is NOT a monosaccharide?",
+            "options": {
+                "A": "Glucose",
+                "B": "Fructose",
+                "C": "Sucrose",
+                "D": "Galactose"
+            },
+            "correctOption": "C",
+            "overview": "Monosaccharides are the simplest form of carbohydrates and include glucose, fructose, and galactose. Sucrose, however, is a disaccharide, composed of glucose and fructose."
+        },
+        {
+            "questionNumber": 17,
+            "question": "What is the primary structure of a protein determined by?",
+            "options": {
+                "A": "Hydrogen bonding between amino acids",
+                "B": "Peptide bonds between amino acids",
+                "C": "Disulfide bridges",
+                "D": "Hydrophobic interactions"
+            },
+            "correctOption": "B",
+            "overview": "The primary structure of a protein is determined by its sequence of amino acids, which are linked together by peptide bonds. This sequence dictates the protein's final 3D shape and function."
+        },
+        {
+            "questionNumber": 18,
+            "question": "Which process describes the synthesis of ATP in the presence of oxygen?",
+            "options": {
+                "A": "Glycolysis",
+                "B": "Fermentation",
+                "C": "Oxidative phosphorylation",
+                "D": "Lactic acid fermentation"
+            },
+            "correctOption": "C",
+            "overview": "Oxidative phosphorylation is the process that synthesizes ATP using the energy released by the transfer of electrons to oxygen in mitochondria. This process is part of cellular respiration and occurs in the presence of oxygen."
+        },
+        {
+            "questionNumber": 19,
+            "question": "Which of the following processes is responsible for the synthesis of mRNA from a DNA template?",
+            "options": {
+                "A": "Translation",
+                "B": "Transcription",
+                "C": "Replication",
+                "D": "Mitosis"
+            },
+            "correctOption": "B",
+            "overview": "Transcription is the process through which mRNA is synthesized from a DNA template. This is a crucial step in gene expression, allowing the genetic information stored in DNA to be transferred to mRNA, which then travels to the ribosome for protein synthesis."
+        },
+        {
+            "questionNumber": 20,
+            "question": "What is the role of tRNA in protein synthesis?",
+            "options": {
+                "A": "It replicates DNA.",
+                "B": "It synthesizes mRNA.",
+                "C": "It carries amino acids to the ribosome.",
+                "D": "It unwinds the DNA double helix."
+            },
+            "correctOption": "C",
+            "overview": "tRNA (transfer RNA) plays a critical role in protein synthesis by carrying amino acids to the ribosome, where they are added to the growing polypeptide chain. Each tRNA is specific to one amino acid and has an anticodon that pairs with a codon on mRNA."
+        },
+        {
+            "questionNumber": 21,
+            "question": "Which of the following best describes the function of DNA polymerase?",
+            "options": {
+                "A": "It breaks down amino acids.",
+                "B": "It synthesizes new DNA strands.",
+                "C": "It transports proteins out of the cell.",
+                "D": "It assists in cell membrane synthesis."
+            },
+            "correctOption": "B",
+            "overview": "DNA polymerase is an enzyme that plays a critical role in DNA replication. It synthesizes new DNA strands by adding nucleotides to a pre-existing chain or primer. This enzyme ensures that the genetic information is accurately copied and passed on to the next generation of cells."
+        },
+        {
+            "questionNumber": 22,
+            "question": "Which of the following is the site of fertilization in humans?",
+            "options": {
+                "A": "Uterus",
+                "B": "Fallopian tube",
+                "C": "Ovary",
+                "D": "Vagina"
+            },
+            "correctOption": "B",
+            "overview": "Fertilization in humans typically occurs in the fallopian tubes, which connect the ovaries to the uterus. The fallopian tubes provide the site where the sperm meets the egg, leading to fertilization."
+        },
+        {
+            "questionNumber": 23,
+            "question": "What is the role of the placenta in fetal development?",
+            "options": {
+                "A": "Production of gametes",
+                "B": "Secretion of digestive enzymes",
+                "C": "Exchange of nutrients and wastes between mother and fetus",
+                "D": "Muscle development in the fetus"
+            },
+            "correctOption": "C",
+            "overview": "The placenta plays a crucial role in fetal development by acting as an interface for the exchange of nutrients, gases, and wastes between the mother and the fetus. It provides oxygen and nutrients to the growing fetus while removing waste products."
+        },
+        {
+            "questionNumber": 24,
+            "question": "Which hormone is primarily responsible for the development of secondary sexual characteristics in females?",
+            "options": {
+                "A": "Testosterone",
+                "B": "Insulin",
+                "C": "Estrogen",
+                "D": "Growth hormone"
+            },
+            "correctOption": "C",
+            "overview": "Estrogen is the primary hormone responsible for the development of secondary sexual characteristics in females, including the development of breasts, widening of hips, and the regulation of the menstrual cycle."
+        },
+        {
+            "questionNumber": 25,
+            "question": "Which of the following is a characteristic of SN1 reactions?",
+            "options": {
+                "A": "Inversion of configuration",
+                "B": "Rearrangement possible",
+                "C": "Bimolecular reaction",
+                "D": "Requires strong nucleophile"
+            },
+            "correctOption": "B",
+            "overview": "SN1 reactions are unimolecular nucleophilic substitution reactions that often involve a carbocation intermediate. This allows for the possibility of rearrangements to form more stable carbocations before the nucleophile attacks. Unlike SN2 reactions, SN1 reactions do not require a strong nucleophile and do not proceed with inversion of configuration."
+        },
+        {
+            "questionNumber": 26,
+            "question": "What is the major product of the hydration of 2-methylpropene?",
+            "options": {
+                "A": "2-methyl-2-propanol",
+                "B": "2-methyl-1-propanol",
+                "C": "1-methyl-1-propanol",
+                "D": "2-methylpropanal"
+            },
+            "correctOption": "A",
+            "overview": "The hydration of 2-methylpropene, an alkene, involves the addition of water (H2O) across the double bond in the presence of an acid catalyst to form an alcohol. According to Markovnikov's rule, the hydrogen atom from the water molecule will attach to the carbon with the most hydrogen atoms already present, leading to the formation of 2-methyl-2-propanol as the major product."
+        },
+        {
+            "questionNumber": 27,
+            "question": "Which of the following reagents is used to convert an alcohol into an alkyl chloride?",
+            "options": {
+                "A": "PCC",
+                "B": "Lucas reagent",
+                "C": "NaBH4",
+                "D": "KMnO4"
+            },
+            "correctOption": "B",
+            "overview": "Lucas reagent, which is a mixture of zinc chloride and hydrochloric acid, is used to convert alcohols into alkyl chlorides. This reaction is particularly useful for distinguishing between primary, secondary, and tertiary alcohols based on the rate of reaction. PCC is used for oxidizing alcohols to aldehydes or ketones, NaBH4 is a reducing agent, and KMnO4 is a strong oxidizing agent."
+        },
+        {
+            "questionNumber": 28,
+            "question": "Which of the following amino acids is essential in the human diet?",
+            "options": {
+                "A": "Alanine",
+                "B": "Valine",
+                "C": "Glutamine",
+                "D": "Asparagine"
+            },
+            "correctOption": "B",
+            "overview": "Essential amino acids cannot be synthesized de novo by the organism (in this case, humans), and therefore must be supplied in the diet. Valine is one of the nine essential amino acids, making it a critical component of the human diet for protein synthesis and various metabolic functions."
+        },
+        {
+            "questionNumber": 29,
+            "question": "Which level of protein structure is determined by hydrogen bonding between the backbone components of the polypeptide chain?",
+            "options": {
+                "A": "Primary structure",
+                "B": "Secondary structure",
+                "C": "Tertiary structure",
+                "D": "Quaternary structure"
+            },
+            "correctOption": "B",
+            "overview": "The secondary structure of proteins is formed by hydrogen bonds between the backbone atoms in the polypeptide chain. This level of structure includes alpha-helices and beta-sheets, which are stabilized by hydrogen bonding patterns that do not involve the side chains of the amino acids."
+        },
+        {
+            "questionNumber": 30,
+            "question": "Which of the following best describes the quaternary structure of a protein?",
+            "options": {
+                "A": "The sequence of amino acids in a protein",
+                "B": "The alpha-helices and beta-sheets that are formed by hydrogen bonding",
+                "C": "The overall 3D structure of a single polypeptide chain",
+                "D": "The assembly of multiple polypeptide subunits into a functional protein complex"
+            },
+            "correctOption": "D",
+            "overview": "The quaternary structure of a protein refers to the assembly of multiple polypeptide chains (subunits) into a larger functional complex. This level of structure is critical for the function of many proteins, including enzymes and structural proteins, allowing for intricate interactions and regulatory mechanisms."
+        }
+    ]
 }
 

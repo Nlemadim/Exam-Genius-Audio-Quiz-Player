@@ -1,47 +1,47 @@
 
 
 {
-  "examName": "Cybersecurity Analyst Exam",
-  "topics": [
-    "Wireless Network Security"
-  ],
-  "questions": [
-    {
-      "questionNumber": 1,
-      "question": "Which of the following encryption protocols is considered the most secure for wireless networks?",
-      "options": {
-        "A": "WEP",
-        "B": "WPA",
-        "C": "WPA2",
-        "D": "TKIP"
-      },
-      "correctOption": "C",
-      "overview": "WPA2 (Wi-Fi Protected Access 2) is currently considered the most secure encryption protocol for wireless networks. It provides stronger data protection and network access control than its predecessors, WEP (Wired Equivalent Privacy) and WPA (Wi-Fi Protected Access), and uses AES (Advanced Encryption Standard) which is a more secure encryption algorithm. TKIP (Temporal Key Integrity Protocol) was used with WPA for encryption but is also not as secure as AES used with WPA2."
-    },
-    {
-      "questionNumber": 2,
-      "question": "What is the primary purpose of using a VPN on a wireless network?",
-      "options": {
-        "A": "To increase the network's speed",
-        "B": "To create a secure tunnel for data transmission",
-        "C": "To replace the need for encryption",
-        "D": "To broadcast multiple SSIDs"
-      },
-      "correctOption": "B",
-      "overview": "The primary purpose of using a VPN (Virtual Private Network) on a wireless network is to create a secure tunnel for data transmission. This secure tunnel encrypts data as it travels between the client and the network, enhancing privacy and security, especially on public Wi-Fi networks. It does not inherently increase network speed, replace the need for encryption on the wireless network itself, or broadcast multiple SSIDs."
-    },
-    {
-      "questionNumber": 3,
-      "question": "Which of the following is a common security threat to wireless networks?",
-      "options": {
-        "A": "Phishing",
-        "B": "SQL Injection",
-        "C": "Evil Twin",
-        "D": "Cross-site scripting"
-      },
-      "correctOption": "C",
-      "overview": "An 'Evil Twin' attack is a common security threat specific to wireless networks. In this attack, a malicious actor sets up a fake wireless access point (AP) mimicking a legitimate one, with the intention of deceiving users into connecting to it. Once connected, the attacker can intercept the data transferred by the user, potentially gaining access to sensitive information. Phishing, SQL Injection, and Cross-site scripting are security threats too but are not specific to wireless networks."
-    }
-  ]
+    "examName": "Cybersecurity Analyst Exam",
+    "topics": [
+        "Wireless Network Security"
+    ],
+    "questions": [
+        {
+            "questionNumber": 1,
+            "question": "Which of the following encryption protocols is considered the most secure for wireless networks?",
+            "options": {
+                "A": "WEP",
+                "B": "WPA",
+                "C": "WPA2",
+                "D": "TKIP"
+            },
+            "correctOption": "C",
+            "overview": "WPA2 (Wi-Fi Protected Access 2) is currently considered the most secure encryption protocol for wireless networks. It provides stronger data protection and network access control than its predecessors, WEP (Wired Equivalent Privacy) and WPA (Wi-Fi Protected Access), and uses AES (Advanced Encryption Standard) which is a more secure encryption algorithm. TKIP (Temporal Key Integrity Protocol) was used with WPA for encryption but is also not as secure as AES used with WPA2."
+        },
+        {
+            "questionNumber": 2,
+            "question": "What is the primary purpose of using a VPN on a wireless network?",
+            "options": {
+                "A": "To increase the network's speed",
+                "B": "To create a secure tunnel for data transmission",
+                "C": "To replace the need for encryption",
+                "D": "To broadcast multiple SSIDs"
+            },
+            "correctOption": "B",
+            "overview": "The primary purpose of using a VPN (Virtual Private Network) on a wireless network is to create a secure tunnel for data transmission. This secure tunnel encrypts data as it travels between the client and the network, enhancing privacy and security, especially on public Wi-Fi networks. It does not inherently increase network speed, replace the need for encryption on the wireless network itself, or broadcast multiple SSIDs."
+        },
+        {
+            "questionNumber": 3,
+            "question": "Which of the following is a common security threat to wireless networks?",
+            "options": {
+                "A": "Phishing",
+                "B": "SQL Injection",
+                "C": "Evil Twin",
+                "D": "Cross-site scripting"
+            },
+            "correctOption": "C",
+            "overview": "An 'Evil Twin' attack is a common security threat specific to wireless networks. In this attack, a malicious actor sets up a fake wireless access point (AP) mimicking a legitimate one, with the intention of deceiving users into connecting to it. Once connected, the attacker can intercept the data transferred by the user, potentially gaining access to sensitive information. Phishing, SQL Injection, and Cross-site scripting are security threats too but are not specific to wireless networks."
+        }
+    ]
 }
 

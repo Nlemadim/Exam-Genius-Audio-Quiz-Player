@@ -54,22 +54,12 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
             }
         
         self.userTranscript = self.selectedOption
-        
+        self.interactionState = .successfulResponse
     }
     
     fileprivate func processTranscript(transcript: String) -> String {
-        var response: String = ""
-        if transcript.isEmptyOrWhiteSpace {
-            self.interactionState = .errorTranscription
-        } else {
-            self.interactionState = .isProcessing
-            let processedTranscript = WordProcessor.processWords(from: transcript)
-            self.selectedOption = processedTranscript
-            response = processedTranscript
-        }
-        
-        self.interactionState = .successfulResponse
-        return response
+        let processedTranscript = WordProcessor.processWords(from: transcript)
+        return processedTranscript
     }
     
     func speechRecognitionTask(_ task: SFSpeechRecognitionTask, didFinishRecognition recognitionResult: SFSpeechRecognitionResult) {

@@ -53,6 +53,7 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         audioPlayer?.stop()
         audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
         audioPlayer?.delegate = self
+        audioPlayer?.volume = 1.0
         audioPlayer?.prepareToPlay()
         audioPlayer?.play()
         self.interactionState = .isNowPlaying

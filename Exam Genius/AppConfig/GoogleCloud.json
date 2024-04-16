@@ -1,0 +1,45 @@
+
+{
+    "examName": "Google Cloud Certified Exam",
+    "topics": [
+        "Google Cloud Databases"
+    ],
+    "questions": [
+        {
+            "questionNumber": 1,
+            "question": "Which Google Cloud database service is fully managed and scales automatically to meet application demand?",
+            "options": {
+                "A": "Cloud SQL",
+                "B": "Cloud Spanner",
+                "C": "Firestore",
+                "D": "Bigtable"
+            },
+            "correctOption": "B",
+            "overview": "Cloud Spanner is a fully managed relational database with unlimited scale, strong consistency, and up to 99.999% availability. It is designed to scale automatically to meet the demand of your applications."
+        },
+        {
+            "questionNumber": 2,
+            "question": "What type of database is Cloud Bigtable best suited for?",
+            "options": {
+                "A": "Relational database workloads",
+                "B": "NoSQL database workloads for web applications",
+                "C": "Analytical workloads and time-series data",
+                "D": "Mobile and gaming applications"
+            },
+            "correctOption": "C",
+            "overview": "Cloud Bigtable is ideal for storing large amounts of single-keyed data with very low latency. It is especially good for analytical workloads and time-series data."
+        },
+        {
+            "questionNumber": 3,
+            "question": "Which of the following is a key feature of Firestore?",
+            "options": {
+                "A": "SQL-like queries",
+                "B": "Automatic multi-region replication",
+                "C": "Support for hierarchical data structures",
+                "D": "All of the above"
+            },
+            "correctOption": "D",
+            "overview": "Firestore is a highly scalable NoSQL database for mobile, web, and server development. It features SQL-like queries, automatic multi-region replication, and support for hierarchical data structures."
+        }
+    ]
+}

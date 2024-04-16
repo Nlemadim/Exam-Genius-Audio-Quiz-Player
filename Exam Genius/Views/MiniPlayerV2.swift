@@ -18,9 +18,7 @@ struct MiniPlayerV2: View {
     @StateObject var sharedState = SharedQuizState()
     @StateObject var responseListener = ResponseListener()
     @StateObject private var configuration: MiniPlayerV2Configuration
-    @StateObject private var questionPlayer: QuestionPlayer
     @State var currentQuestions: [Question] = []
-    
     
     @Binding var selectedQuizPackage: AudioQuizPackage?
     @State var expandSheet: Bool = false
@@ -41,7 +39,6 @@ struct MiniPlayerV2: View {
         _startPlaying = startPlaying
         
         let sharedState = SharedQuizState()
-        _questionPlayer = StateObject(wrappedValue: QuestionPlayer(sharedState: sharedState))
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
     }
 
@@ -51,9 +48,10 @@ struct MiniPlayerV2: View {
             playerDetails
             MiniQuizControlView(
                 recordAction: {},
-                playPauseAction: { playSingleQuizQuestion() },
+                playPauseAction: { startQuizAudioPlay(self.interactionState) },
                 nextAction: { /*goToNextQuestion()*/ },
-                repeatAction: {}
+                repeatAction: {},
+                interactionState: $interactionState
             )
         }
         .contentShape(Rectangle())
@@ -66,20 +64,27 @@ struct MiniPlayerV2: View {
                 interactionState: $interactionState,
                 onViewDismiss: { dismissAction()},
                 playAction: { playSingleQuizQuestion() },
-                nextAction: {},
+                nextAction: {  },
                 recordAction: {}
             )
         }
         .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
-            MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
+            MicModalView(
+                interactionState: $interactionState,
+                mainColor: generator.dominantBackgroundColor,
+                subColor: generator.dominantLightToneColor)
                 .presentationDetents([.height(100)])
         })
         .sheet(isPresented: .constant(showMiniPlayerConfirmationModal()), content: {
-            ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
+            ConfirmationModalView(
+                interactionState: $interactionState,
+                mainColor: generator.dominantBackgroundColor,
+                subColor: generator.dominantLightToneColor,
+                isCorrect: isCorrectAnswer)
                 .presentationDetents([.height(200)])
                 .onAppear {
                     //MARK: Simulating Overview readout and continuation
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         self.interactionState = .resumingPlayback
                     }
                 }
@@ -101,15 +106,13 @@ struct MiniPlayerV2: View {
             }
         }
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
-            print("AudioContentPlayer interactionState is: \(newState)")
-            startQuizAudioPlay(newState)
+            checkPlayerState(newState)
         }
         .onChange(of: responseListener.interactionState) { _, newValue in
             checkForResponse(newValue)
         }
-        .onChange(of: interactionState) {_, state in
-            checkPlayerState(state)
-            
+        .onChange(of: interactionState) { _, newState in
+            checkPlayerState(newState)
         }
         .onChange(of: selectedQuizPackage) {_, newPackage in
             if let newPackage = newPackage {
@@ -138,50 +141,6 @@ struct MiniPlayerV2: View {
             .font(.footnote)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func handleInteractionStateChange(_ state: QuizPlayerState) {
-        if state == .startedPlayingQuiz {
-            expandAction()
-            playSingleQuizQuestion()
-        }
-        
-        if state == .endedQuiz {
-            dismissAction()
-        }
-    }
-    
-    private func showMiniPlayerMicModal() -> Bool {
-        return expandSheet == false && interactionState == .isListening
-    }
-    
-    private func showMiniPlayerConfirmationModal()  -> Bool  {
-        return expandSheet == false && interactionState == .hasResponded
-    }
-    
-    func startQuizAudioPlay(_ quizState: InteractionState) {
-        if quizState == .isNowPlaying {
-            self.interactionState = .isNowPlaying
-            configuration.interactionState = self.interactionState
-            presentationManager.interactionState = self.interactionState
-            presentationManager.expandSheet = true
-            playSingleQuizQuestion()
-        } else if quizState == .isDonePlaying {
-            responseListener.recordAnswer()
-        }
-    }
-    
-    private func expandAction() {
-        self.interactionState = .isNowPlaying
-        configuration.interactionState = self.interactionState
-        presentationManager.interactionState = self.interactionState
-        presentationManager.expandSheet = true
-        playSingleQuizQuestion()
-    }
-    
-    private func dismissAction() {
-        presentationManager.interactionState = .idle
-        presentationManager.expandSheet = false
     }
 }
 
@@ -227,68 +186,23 @@ extension MiniPlayerV2 {
 
 
 extension MiniPlayerV2 {
-    func checkForResponse(_ interaction: InteractionState) {
-        self.interactionState = interaction
-        DispatchQueue.main.async {
-            //self.interactionState = newValue
-            print("QuizPlayer interaction State is: \(self.interactionState)")
-            if interaction == .successfulResponse  {
-                self.selectedOption = responseListener.userTranscript
-                print("Mini Player view has registered new selectedOption as: \(self.selectedOption)")
-                analyseResponse()
-            } else if interaction == .errorResponse {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    //Play Error SFX
-                }
+    
+    // MARK: QUIZ LOGICS
+    //MARK: STEP 1: Quiz Entry Point - Now Playing
+    func startQuizAudioPlay(_ quizState: InteractionState) {
+        if quizState == .idle {
+            self.interactionState = .isNowPlaying
+            configuration.interactionState = self.interactionState
+            presentationManager.interactionState = self.interactionState
+            presentationManager.expandSheet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+                playSingleQuizQuestion()
             }
         }
     }
     
-    func checkPlayerState(_ interaction: InteractionState) {
-        self.interactionState = interaction
-        if interaction == .isDonePlaying {
-            self.startRecordingAnswer()
-        } else if interaction == .resumingPlayback {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.proceedWithQuiz()
-            }
-        }
-    }
-    
-    func startRecordingAnswer() {
-        responseListener.recordAnswer()
-    }
-    
-//    func playQuizQuestions() {
-//        // Access the current quiz package safely
-//        guard let package = configuration.currentQuizPackage else {
-//            print("Mini Player error: No quiz package currently selected")
-//            return
-//        }
-//        
-//        print("Selected quiz package: \(package.name), with questions count: \(package.questions.count)")
-//        
-//        // Ensure there are questions available
-//        guard !package.questions.isEmpty else {
-//            print("Mini Player error: No available questions in the package")
-//            return
-//        }
-//        
-//        // Extract audio files from the questions and initiate playing
-//        let audioFiles = package.questions.map { $0.questionAudio }
-//        questionPlayer.playAudioQuestions(audioFileNames: audioFiles)
-//    }
-    
-    func proceedWithQuiz() {
-        guard currentQuestionIndex < self.currentQuestions.count else { return }
-        self.currentQuestionIndex += 1
-        self.continuePlaying()
-    }
-    
-    
-    
-    //MARK: TODO - Crash Causer To Be Fixed
-    func playSingleQuizQuestion() {
+    //MARK: STEP 1: Quiz Entry Point - Now Playing Method
+    private func playSingleQuizQuestion() {
         // Access the current quiz package safely
         guard let package = configuration.currentQuizPackage else {
             print("Mini Player error: No quiz package currently selected")
@@ -311,10 +225,56 @@ extension MiniPlayerV2 {
         
         let currentlyPlayingQuestion = self.currentQuestions[currentQuestionIndex]
         let audioFile = currentlyPlayingQuestion.questionAudio
-        audioContentPlayer.playAudioFile(audioFile)
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            audioContentPlayer.playAudioFile(audioFile)
+        }
     }
     
+    
+    //MARK: Step 2  - checks Player Interaction states
+    func checkPlayerState(_ interaction: InteractionState) {
+        self.interactionState = interaction
+        if interaction == .isDonePlaying {
+            self.startRecordingAnswer()
+        } else if interaction == .hasResponded {
+            //MARK: TODO - Conditional check for continous playback
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                self.interactionState = .resumingPlayback
+                //Alternate method: self.pauseQuiz
+            }
+        } else if interaction == .resumingPlayback {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.proceedWithQuiz()
+            }
+        }
+    }
+    
+    //MARK: Step 2 Processes  - Record Answer
+    func startRecordingAnswer() {
+        responseListener.recordAnswer()
+    }
+    
+    //MARK: Step 2 Processes - Continue Playing Logic
+    func proceedWithQuiz() {
+        // Check if the current index is less than the count of current questions
+        guard currentQuestions.indices.contains(currentQuestionIndex) else {
+            print("Index out of bounds: \(currentQuestionIndex) for questions count: \(currentQuestions.count)")
+            return
+        }
+        
+        self.currentQuestionIndex += 1
+        
+        if currentQuestions.indices.contains(currentQuestionIndex) {
+            self.continuePlaying()
+            
+        } else {
+            print("Reached end of questions. Total questions: \(currentQuestions.count)")
+            dismissAction()
+            //MARK: TODO - IMPLEMENT INTERMISSION END QUIZ
+        }
+    }
+    
+    //MARK: Step 2 Processes - Continue Playing Method
     private func continuePlaying() {
         print("Continuation Condition Met")
         
@@ -326,12 +286,27 @@ extension MiniPlayerV2 {
         }
     }
     
+    
+    //MARK: Steps 3: Analyse Response
+    func checkForResponse(_ interaction: InteractionState) {
+        DispatchQueue.main.async {
+            self.interactionState = interaction
+            if interaction == .successfulResponse  {
+                self.selectedOption = responseListener.userTranscript
+                print("Mini Player view has registered new selectedOption as: \(self.selectedOption)")
+                analyseResponse()
+            }
+        }
+    }
+    
+    //MARK: Step 3 Processes  - Analyzing Answer
     func analyseResponse() {
         let response = responseListener.userTranscript
         self.selectedOption = response
         selectOption(self.selectedOption)
     }
     
+    //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
     private func selectOption(_ option: String) {
         DispatchQueue.main.async {
             print("Saving response")
@@ -347,8 +322,7 @@ extension MiniPlayerV2 {
             
             self.isCorrectAnswer = currentQuestion.isAnsweredCorrectly
             self.interactionState = .hasResponded
-            presentConfirmationModal = true
-
+            
             print("Presenting Confirmation")
             print("User selected \(self.currentQuestions[self.currentQuestionIndex].selectedOption) option")
             print("Current question is answered: \(self.currentQuestions[self.currentQuestionIndex].isAnswered)")
@@ -357,6 +331,64 @@ extension MiniPlayerV2 {
             print(self.interactionState)
         }
     }
+    
+    
+    //MARK: Direct Click Action Methods.
+    //MARK: Show Full Screen Method
+    func expandAction() {
+        self.interactionState = .isNowPlaying
+        configuration.interactionState = self.interactionState
+        presentationManager.interactionState = self.interactionState
+        presentationManager.expandSheet = true
+        playSingleQuizQuestion()
+    }
+    //MARK: Dismiss Full Screen Method
+    func dismissAction() {
+        presentationManager.interactionState = .idle
+        presentationManager.expandSheet = false
+        self.interactionState = .idle
+    }
+    
+    
+    //MARK: SCREEN TRANSITION OBSERVERS
+    //MARK: Library/Homepage QuizStatus Observer
+    func handleInteractionStateChange(_ state: QuizPlayerState) {
+        if state == .startedPlayingQuiz {
+            expandAction()
+            startQuizAudioPlay(self.interactionState)
+        }
+        
+        if state == .endedQuiz {
+            dismissAction()
+        }
+    }
+    
+    //MARK: FullScreen Player Observer
+    func showMiniPlayerMicModal() -> Bool {
+        return expandSheet == false && interactionState == .isListening
+    }
+    
+    //MARK: FullScreen Player Observer
+    func showMiniPlayerConfirmationModal()  -> Bool  {
+        return expandSheet == false && interactionState == .hasResponded
+    }
+    
+    
+    //MARK: TODO Continuity Methods
+    func pauseQuiz(currentIndex: Int) {
+        //Save currentIndex to userdefaults
+        //change interactionState to .pausedPlayback
+        //audioContentPlayer.pauseQuiz()
+    }
+    
+    func continueFromPause() {
+        //call on userdefaults to loadup last index
+        //pass index to currentQuestionIndex
+        //call startAudioQuiz(self.interactionState)
+        
+    }
+    
+    
 }
 
 

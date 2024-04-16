@@ -1,0 +1,153 @@
+
+{
+    "examName": "Linux Professional Institute Certification",
+    "topics": [
+        "Initialization", "SSH (Secure Shell)"
+    ],
+    "questions": [
+        {
+            "questionNumber": 1,
+            "question": "What is the first process started by the Linux kernel during boot?",
+            "options": {
+                "A": "init",
+                "B": "systemd",
+                "C": "bash",
+                "D": "syslogd"
+            },
+            "correctOption": "A",
+            "overview": "The first process started by the Linux kernel during boot is 'init'. It is responsible for starting all other processes."
+        },
+        {
+            "questionNumber": 2,
+            "question": "Which of the following is responsible for system and service manager in modern Linux systems?",
+            "options": {
+                "A": "init",
+                "B": "systemd",
+                "C": "Upstart",
+                "D": "sysvinit"
+            },
+            "correctOption": "B",
+            "overview": "systemd is the system and service manager in modern Linux systems, responsible for initializing the system and managing system processes."
+        },
+        {
+            "questionNumber": 3,
+            "question": "What command can be used to list the current target units in systemd?",
+            "options": {
+                "A": "systemctl list-units",
+                "B": "systemctl list-targets",
+                "C": "systemctl --all",
+                "D": "ls /etc/systemd/system"
+            },
+            "correctOption": "B",
+            "overview": "The command 'systemctl list-targets' is used to list the current target units in systemd, providing an overview of the system state."
+        },
+        {
+            "questionNumber": 4,
+            "question": "Which command is used to install a package in Debian-based systems?",
+            "options": {
+                "A": "yum install",
+                "B": "apt-get install",
+                "C": "rpm -i",
+                "D": "zypper install"
+            },
+            "correctOption": "B",
+            "overview": "In Debian-based systems, such as Ubuntu, the 'apt-get install' command is used to install packages. It handles the downloading and installation of packages from configured repositories."
+        },
+        {
+            "questionNumber": 5,
+            "question": "Which command can be used to search for a package in RPM-based systems?",
+            "options": {
+                "A": "apt search",
+                "B": "yum search",
+                "C": "dnf search",
+                "D": "pkg search"
+            },
+            "correctOption": "B",
+            "overview": "In RPM-based systems, like CentOS and Fedora, 'yum search' is a common command to search for packages in the repositories. It allows users to find packages by name or description."
+        },
+        {
+            "questionNumber": 6,
+            "question": "What is the purpose of the 'dpkg -i' command in Linux?",
+            "options": {
+                "A": "To update all installed packages",
+                "B": "To remove a package",
+                "C": "To install a Debian package",
+                "D": "To list all installed packages"
+            },
+            "correctOption": "C",
+            "overview": "The 'dpkg -i' command is used in Debian-based Linux distributions to install Debian packages (.deb files). It is a lower-level tool compared to 'apt-get' and does not resolve dependencies automatically."
+        }
+        {
+            "questionNumber": 7,
+            "question": "Which command is used to create a GPG key pair?",
+            "options": {
+                "A": "gpg --gen-key",
+                "B": "gpg --create-key",
+                "C": "openssl genpkey",
+                "D": "ssh-keygen"
+            },
+            "correctOption": "A",
+            "overview": "The command 'gpg --gen-key' is used to create a GPG (GNU Privacy Guard) key pair, which is essential for encrypting and decrypting data to ensure its security. GPG is a widely used tool for securing communication and data storage on Linux systems."
+        },
+        {
+            "questionNumber": 8,
+            "question": "What is the purpose of the 'ssh-keygen' command?",
+            "options": {
+                "A": "To generate a GPG key pair",
+                "B": "To generate an SSH key pair",
+                "C": "To encrypt a file with a password",
+                "D": "To sign a document digitally"
+            },
+            "correctOption": "B",
+            "overview": "The 'ssh-keygen' command is used to generate a pair of SSH keys, which are used for secure shell access to remote machines without needing a password. SSH keys provide a more secure way of logging into a server with SSH than using a password alone."
+        },
+        {
+            "questionNumber": 9,
+            "question": "Which option with the 'gpg' command is used to encrypt a file?",
+            "options": {
+                "A": "--export",
+                "B": "--decrypt",
+                "C": "--encrypt",
+                "D": "--list-keys"
+            },
+            "correctOption": "C",
+            "overview": "The '--encrypt' option with the 'gpg' command is used to encrypt files. Encryption is a method of securing data by converting it into a code to prevent unauthorized access. GPG provides a robust framework for encrypting and decrypting data, ensuring its confidentiality."
+        }
+        {
+            "questionNumber": 10,
+            "question": "Which port is the default for SSH connections?",
+            "options": {
+                "A": "21",
+                "B": "22",
+                "C": "80",
+                "D": "443"
+            },
+            "correctOption": "B",
+            "overview": "SSH (Secure Shell) connections typically use port 22 by default. This port is designated for encrypted communication and is used for secure logins, file transfers, and more."
+        },
+        {
+            "questionNumber": 11,
+            "question": "Which command can be used to generate SSH keys?",
+            "options": {
+                "A": "ssh-keygen",
+                "B": "ssh-copy-id",
+                "C": "ssh-agent",
+                "D": "ssh-add"
+            },
+            "correctOption": "A",
+            "overview": "The 'ssh-keygen' command is used to generate SSH keys. It creates a public/private key pair for secure SSH authentication."
+        },
+        {
+            "questionNumber": 12,
+            "question": "What is the main advantage of using SSH keys over passwords?",
+            "options": {
+                "A": "Easier to remember",
+                "B": "No need for usernames",
+                "C": "Increased security",
+                "D": "Faster connection speeds"
+            },
+            "correctOption": "C",
+            "overview": "The main advantage of using SSH keys over passwords is increased security. SSH keys provide a more secure method of logging into a server with SSH than using a password alone. With SSH keys, a user can log into a server without having to remember or enter their password."
+        }
+    ]
+}

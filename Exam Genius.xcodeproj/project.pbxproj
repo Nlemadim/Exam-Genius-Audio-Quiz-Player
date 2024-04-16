@@ -11,6 +11,13 @@
 		0B0DC87F2BC0843C009F12A6 /* LibraryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */; };
 		0B0DC8812BC08488009F12A6 /* VUMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC8802BC08488009F12A6 /* VUMeterView.swift */; };
 		0B0DC8842BC086AB009F12A6 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC8832BC086AB009F12A6 /* HomePage.swift */; };
+		0B1FDDE22BCEE619007EB26E /* LsatExams.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDE12BCEE619007EB26E /* LsatExams.json */; };
+		0B1FDDE62BCEE69F007EB26E /* AwsExam.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDE52BCEE69F007EB26E /* AwsExam.json */; };
+		0B1FDDE82BCEE718007EB26E /* SatExams.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDE72BCEE718007EB26E /* SatExams.json */; };
+		0B1FDDEA2BCEE759007EB26E /* GoogleCloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDE92BCEE759007EB26E /* GoogleCloud.json */; };
+		0B1FDDEC2BCEE7BA007EB26E /* LinuxExam.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDEB2BCEE7BA007EB26E /* LinuxExam.json */; };
+		0B1FDDEE2BCEEA01007EB26E /* GreExam.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDED2BCEEA01007EB26E /* GreExam.json */; };
+		0B1FDDF02BCEEBB6007EB26E /* CloudSecurityProfessionalExam.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B1FDDEF2BCEEBB6007EB26E /* CloudSecurityProfessionalExam.json */; };
 		0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */; };
 		0B2A87E12BAE07B2001571DD /* QuizViewConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */; };
 		0B2A87E32BAE07C0001571DD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E22BAE07C0001571DD /* Extensions.swift */; };
@@ -26,7 +33,6 @@
 		0B42E3D42B8CFF7900DC3565 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */; };
 		0B42E3D62B8CFFB300DC3565 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42E3D52B8CFFB300DC3565 /* Config.swift */; };
 		0B4561352BC707B50040838C /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4561342BC707B50040838C /* KeyboardObserver.swift */; };
-		0B4561392BC77D1A0040838C /* MiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4561382BC77D1A0040838C /* MiniPlayer.swift */; };
 		0B45613B2BC7A5130040838C /* Homepage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B45613A2BC7A5130040838C /* Homepage+Extension.swift */; };
 		0B45613D2BC828320040838C /* QuizCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B45613C2BC828320040838C /* QuizCarouselView.swift */; };
 		0B45613F2BC828950040838C /* HorizontalQuizListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B45613E2BC828950040838C /* HorizontalQuizListView.swift */; };
@@ -117,6 +123,13 @@
 		0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItemView.swift; sourceTree = "<group>"; };
 		0B0DC8802BC08488009F12A6 /* VUMeterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUMeterView.swift; sourceTree = "<group>"; };
 		0B0DC8832BC086AB009F12A6 /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
+		0B1FDDE12BCEE619007EB26E /* LsatExams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LsatExams.json; sourceTree = "<group>"; };
+		0B1FDDE52BCEE69F007EB26E /* AwsExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AwsExam.json; sourceTree = "<group>"; };
+		0B1FDDE72BCEE718007EB26E /* SatExams.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SatExams.json; sourceTree = "<group>"; };
+		0B1FDDE92BCEE759007EB26E /* GoogleCloud.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GoogleCloud.json; sourceTree = "<group>"; };
+		0B1FDDEB2BCEE7BA007EB26E /* LinuxExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LinuxExam.json; sourceTree = "<group>"; };
+		0B1FDDED2BCEEA01007EB26E /* GreExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GreExam.json; sourceTree = "<group>"; };
+		0B1FDDEF2BCEEBB6007EB26E /* CloudSecurityProfessionalExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CloudSecurityProfessionalExam.json; sourceTree = "<group>"; };
 		0B24F8582B96E15A00CC9E9A /* SettingsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItemView.swift; sourceTree = "<group>"; };
 		0B2A87E02BAE07B2001571DD /* QuizViewConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizViewConfigurations.swift; sourceTree = "<group>"; };
 		0B2A87E22BAE07C0001571DD /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -132,7 +145,6 @@
 		0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		0B42E3D52B8CFFB300DC3565 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		0B4561342BC707B50040838C /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
-		0B4561382BC77D1A0040838C /* MiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayer.swift; sourceTree = "<group>"; };
 		0B45613A2BC7A5130040838C /* Homepage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Homepage+Extension.swift"; sourceTree = "<group>"; };
 		0B45613C2BC828320040838C /* QuizCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizCarouselView.swift; sourceTree = "<group>"; };
 		0B45613E2BC828950040838C /* HorizontalQuizListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalQuizListView.swift; sourceTree = "<group>"; };
@@ -325,7 +337,6 @@
 			children = (
 				0B4ACCDA2B89A61500377BE7 /* FullScreenQuizPlayer.swift */,
 				0B4ACCE32B89A61500377BE7 /* MiniQuizControlView.swift */,
-				0B4561382BC77D1A0040838C /* MiniPlayer.swift */,
 				0B2A87E82BAE8BF8001571DD /* MicModalView.swift */,
 				0B72143E2BCAD6610030664F /* MiniPlayerV2.swift */,
 			);
@@ -559,6 +570,13 @@
 				0BE694292BB139B0009D5344 /* UsCitizenshipTest.json */,
 				0BE6942C2BB14070009D5344 /* ActExam.json */,
 				0B4C8F2F2BB1ED800014897D /* MedicalColledgeAdmissionTest.json */,
+				0B1FDDE12BCEE619007EB26E /* LsatExams.json */,
+				0B1FDDE52BCEE69F007EB26E /* AwsExam.json */,
+				0B1FDDE72BCEE718007EB26E /* SatExams.json */,
+				0B1FDDE92BCEE759007EB26E /* GoogleCloud.json */,
+				0B1FDDEB2BCEE7BA007EB26E /* LinuxExam.json */,
+				0B1FDDED2BCEEA01007EB26E /* GreExam.json */,
+				0B1FDDEF2BCEEBB6007EB26E /* CloudSecurityProfessionalExam.json */,
 			);
 			name = QuestionsRepository;
 			sourceTree = "<group>";
@@ -684,10 +702,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B1FDDEE2BCEEA01007EB26E /* GreExam.json in Resources */,
+				0B1FDDE22BCEE619007EB26E /* LsatExams.json in Resources */,
+				0B1FDDE62BCEE69F007EB26E /* AwsExam.json in Resources */,
 				0BB9DE282B8659DC004F848A /* Assets.xcassets in Resources */,
 				0B5E0EFD2BA9B431003C5406 /* MockTopics.json in Resources */,
+				0B1FDDF02BCEEBB6007EB26E /* CloudSecurityProfessionalExam.json in Resources */,
 				0B5E0EFF2BA9B431003C5406 /* QuestionsJsonData.json in Resources */,
+				0B1FDDEC2BCEE7BA007EB26E /* LinuxExam.json in Resources */,
+				0B1FDDEA2BCEE759007EB26E /* GoogleCloud.json in Resources */,
 				0BBCBFB82B86563F00E9B7A9 /* Preview Assets.xcassets in Resources */,
+				0B1FDDE82BCEE718007EB26E /* SatExams.json in Resources */,
 				0B5E0EFE2BA9B431003C5406 /* MockQuestions.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -768,7 +793,6 @@
 				0BE279902BBDADC20006F85B /* CustomTabIcon.swift in Sources */,
 				0B5E0EF62BA9B274003C5406 /* QuizPlayerView.swift in Sources */,
 				0B2A87E72BAE09BD001571DD /* QuestionVisualizerMaker.swift in Sources */,
-				0B4561392BC77D1A0040838C /* MiniPlayer.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
 				0BCE72A12BA3642400A9E7D6 /* CurrentQuizView.swift in Sources */,
 				0BBD5AEA2B8E4B28005BD87B /* QuizBuilder.swift in Sources */,
