@@ -24,6 +24,7 @@
 		0B2A87E52BAE07DC001571DD /* PlayerControlButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E42BAE07DC001571DD /* PlayerControlButtons.swift */; };
 		0B2A87E72BAE09BD001571DD /* QuestionVisualizerMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E62BAE09BD001571DD /* QuestionVisualizerMaker.swift */; };
 		0B2A87E92BAE8BF8001571DD /* MicModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A87E82BAE8BF8001571DD /* MicModalView.swift */; };
+		0B2CFA742BCE3F5E0044F0AD /* MiniPlayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CFA732BCE3F5E0044F0AD /* MiniPlayer+Extension.swift */; };
 		0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96852B87C852001D8D7B /* Buttons.swift */; };
 		0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96872B87C85A001D8D7B /* UIExtensions.swift */; };
 		0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */; };
@@ -136,6 +137,7 @@
 		0B2A87E42BAE07DC001571DD /* PlayerControlButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerControlButtons.swift; sourceTree = "<group>"; };
 		0B2A87E62BAE09BD001571DD /* QuestionVisualizerMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionVisualizerMaker.swift; sourceTree = "<group>"; };
 		0B2A87E82BAE8BF8001571DD /* MicModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MicModalView.swift; path = ../QuizPlayer/MicModalView.swift; sourceTree = "<group>"; };
+		0B2CFA732BCE3F5E0044F0AD /* MiniPlayer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MiniPlayer+Extension.swift"; sourceTree = "<group>"; };
 		0B2E96852B87C852001D8D7B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		0B2E96872B87C85A001D8D7B /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		0B2E968B2B87D1A2001D8D7B /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 				0B4ACCE32B89A61500377BE7 /* MiniQuizControlView.swift */,
 				0B2A87E82BAE8BF8001571DD /* MicModalView.swift */,
 				0B72143E2BCAD6610030664F /* MiniPlayerV2.swift */,
+				0B2CFA732BCE3F5E0044F0AD /* MiniPlayer+Extension.swift */,
 			);
 			name = PlayerViews;
 			sourceTree = "<group>";
@@ -781,6 +784,7 @@
 				0B709EAD2BBE02E8006C5E58 /* MyLibraryVM.swift in Sources */,
 				0B4561432BC829540040838C /* BackgroundView.swift in Sources */,
 				0B709EA42BBE006B006C5E58 /* PlayerBackgroundView.swift in Sources */,
+				0B2CFA742BCE3F5E0044F0AD /* MiniPlayer+Extension.swift in Sources */,
 				0B709EAA2BBE0140006C5E58 /* PlaylistHeaderView.swift in Sources */,
 				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
 				0B45613B2BC7A5130040838C /* Homepage+Extension.swift in Sources */,
