@@ -111,13 +111,6 @@ struct HomePage: View {
                     }
                 }
             })
-            .onChange(of: interactionState, { oldValue, newValue in
-                if newValue == .pausedPlayback || newValue == .isDonePlaying {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.myLibInteractionState = .isDonePlaying
-                    }
-                }
-            })
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -127,15 +120,6 @@ struct HomePage: View {
             .onChange(of: quizPlayerObserver.playerState, { _, newValue in
                 print("Home page interaction State is \(newValue)")
                 //updatePlayState(interactionState: newValue)
-            })
-            .onChange(of: interactionState, { _, newValue in
-                if newValue == .isDonePlaying {
-                    DispatchQueue.main.async {
-                        self.isPlaying = false
-                        self.myLibInteractionState = newValue
-                    }
-                }
-                updatePlayState(interactionState: newValue)
             })
             .onChange(of: didTapPlaySample, { _, newValue in
                 playSampleQuiz(newValue)

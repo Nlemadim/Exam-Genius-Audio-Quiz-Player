@@ -76,7 +76,6 @@ struct MyLibrary: View {
                 }
                 .onAppear {
                     updatePlaylist()
-                    //loadMockData()
                 }
                 .onChange(of: user.hasSelectedAudioQuiz) {_, _ in
                     updatePlaylist()
@@ -90,11 +89,15 @@ struct MyLibrary: View {
     
     func startPlayer() {
         if self.interactionState != .isNowPlaying {
-            self.quizPlayerObserver.playerState = .startedPlayingQuiz
-            self.interactionState = .isNowPlaying
+            DispatchQueue.main.async {
+                self.quizPlayerObserver.playerState = .startedPlayingQuiz
+                self.interactionState = .isNowPlaying
+            }
         } else {
-            self.interactionState = .isDonePlaying
-            self.quizPlayerObserver.playerState = .idle
+            DispatchQueue.main.async {
+                self.interactionState = .isDonePlaying
+                self.quizPlayerObserver.playerState = .idle
+            }
         }
         
         print("Player Started")

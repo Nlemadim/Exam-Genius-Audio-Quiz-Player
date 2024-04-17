@@ -11,24 +11,55 @@ struct MicModalView: View {
     @Binding var interactionState: InteractionState
     var mainColor: Color
     var subColor: Color
+    var intermissionPlayer: IntermissionPlayer
     
     var body: some View {
         VStack(alignment: .center) {
-    
-                HStack {
-
-                    MicButtonWithProgressRing(showProgressRing: self.interactionState == .isListening ? true : false)
-                    .padding()
-                }
-                .padding(20)
-                .padding(.horizontal)
-            
+            HStack {
+                MicButtonWithProgressRing(showProgressRing: interactionState == .isListening)
+                .padding()
+            }
+            .padding(20)
+            .padding(.horizontal)
+        
             Spacer()
         }
         .frame(maxWidth: .infinity)
         .background(mainColor)
+        .onChange(of: interactionState) {_, newState in
+            switch newState {
+            case .isListening:
+                intermissionPlayer.playListeningBell()
+            case .successfulResponse:
+                intermissionPlayer.playReceivedResponseBell()
+            default:
+                break
+            }
+        }
     }
 }
+//struct MicModalView: View {
+//    @Binding var interactionState: InteractionState
+//    var mainColor: Color
+//    var subColor: Color
+//    
+//    var body: some View {
+//        VStack(alignment: .center) {
+//    
+//                HStack {
+//
+//                    MicButtonWithProgressRing(showProgressRing: self.interactionState == .isListening ? true : false)
+//                    .padding()
+//                }
+//                .padding(20)
+//                .padding(.horizontal)
+//            
+//            Spacer()
+//        }
+//        .frame(maxWidth: .infinity)
+//        .background(mainColor)
+//    }
+//}
 
 struct ConfirmationModalView: View {
     @Binding var interactionState: InteractionState
@@ -63,6 +94,7 @@ struct ConfirmationModalView: View {
 
 #Preview {
     @State var interactionState: InteractionState = .idle
-    return MicModalView(interactionState: $interactionState, mainColor: .themePurpleLight, subColor: .themePurple)
+    let intermissionPlayer = IntermissionPlayer(state: interactionState)
+    return MicModalView(interactionState: $interactionState, mainColor: .themePurpleLight, subColor: .themePurple, intermissionPlayer: intermissionPlayer)
         .preferredColorScheme(.dark)
 }

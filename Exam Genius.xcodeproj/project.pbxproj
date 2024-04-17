@@ -65,6 +65,10 @@
 		0B72143F2BCAD6610030664F /* MiniPlayerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B72143E2BCAD6610030664F /* MiniPlayerV2.swift */; };
 		0B7214412BCAE2B70030664F /* QuizViewPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7214402BCAE2B70030664F /* QuizViewPresentationManager.swift */; };
 		0B7618BB2B97CB03006C2985 /* AudioQuizResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7618BA2B97CB03006C2985 /* AudioQuizResponseModel.swift */; };
+		0B7FF9F82BD02B5A001A1E05 /* IntermissionPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */; };
+		0B7FF9FA2BD02FBB001A1E05 /* softBell1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B7FF9F92BD02FBB001A1E05 /* softBell1.wav */; };
+		0B7FF9FD2BD02FE0001A1E05 /* errorBell1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */; };
+		0B7FF9FE2BD02FE0001A1E05 /* softBell2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B7FF9FC2BD02FE0001A1E05 /* softBell2.wav */; };
 		0B8C9EEB2B9EBEA90032AA80 /* QuestionDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEA2B9EBEA90032AA80 /* QuestionDataObject.swift */; };
 		0B8C9EEF2B9EC3820032AA80 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */; };
 		0B8F214E2BBFA8C5003299C0 /* MyLibraryPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8F214D2BBFA8C5003299C0 /* MyLibraryPlaylist.swift */; };
@@ -179,6 +183,10 @@
 		0B72143E2BCAD6610030664F /* MiniPlayerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerV2.swift; sourceTree = "<group>"; };
 		0B7214402BCAE2B70030664F /* QuizViewPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewPresentationManager.swift; sourceTree = "<group>"; };
 		0B7618BA2B97CB03006C2985 /* AudioQuizResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizResponseModel.swift; sourceTree = "<group>"; };
+		0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermissionPlayer.swift; sourceTree = "<group>"; };
+		0B7FF9F92BD02FBB001A1E05 /* softBell1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = softBell1.wav; sourceTree = "<group>"; };
+		0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = errorBell1.wav; sourceTree = "<group>"; };
+		0B7FF9FC2BD02FE0001A1E05 /* softBell2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = softBell2.wav; sourceTree = "<group>"; };
 		0B8C9EEA2B9EBEA90032AA80 /* QuestionDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionDataObject.swift; sourceTree = "<group>"; };
 		0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		0B8F214D2BBFA8C5003299C0 /* MyLibraryPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLibraryPlaylist.swift; sourceTree = "<group>"; };
@@ -318,6 +326,7 @@
 				0B72143A2BCAA1C30030664F /* QuizPlayerObserver.swift */,
 				0B72143C2BCAB81E0030664F /* AudioContentPlayer.swift */,
 				0B7214402BCAE2B70030664F /* QuizViewPresentationManager.swift */,
+				0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -492,6 +501,9 @@
 		0BBCBFA12B86563D00E9B7A9 = {
 			isa = PBXGroup;
 			children = (
+				0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */,
+				0B7FF9FC2BD02FE0001A1E05 /* softBell2.wav */,
+				0B7FF9F92BD02FBB001A1E05 /* softBell1.wav */,
 				0BBCBFAC2B86563E00E9B7A9 /* Exam Genius */,
 				0BBCBFC02B86564000E9B7A9 /* Exam GeniusTests */,
 				0BBCBFCA2B86564000E9B7A9 /* Exam GeniusUITests */,
@@ -705,6 +717,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B7FF9FD2BD02FE0001A1E05 /* errorBell1.wav in Resources */,
+				0B7FF9FE2BD02FE0001A1E05 /* softBell2.wav in Resources */,
+				0B7FF9FA2BD02FBB001A1E05 /* softBell1.wav in Resources */,
 				0B1FDDEE2BCEEA01007EB26E /* GreExam.json in Resources */,
 				0B1FDDE22BCEE619007EB26E /* LsatExams.json in Resources */,
 				0B1FDDE62BCEE69F007EB26E /* AwsExam.json in Resources */,
@@ -759,6 +774,7 @@
 				0B4ACCEC2B89A61500377BE7 /* UserDefaultManager.swift in Sources */,
 				0B24F8592B96E15A00CC9E9A /* SettingsItemView.swift in Sources */,
 				0B4ACD092B89A61500377BE7 /* MiniQuizControlView.swift in Sources */,
+				0B7FF9F82BD02B5A001A1E05 /* IntermissionPlayer.swift in Sources */,
 				0B2E96862B87C852001D8D7B /* Buttons.swift in Sources */,
 				0BBD5AF42B8E8371005BD87B /* AudioQuizSearchCollectionView.swift in Sources */,
 				0B4ACD0D2B89A72300377BE7 /* Misc.swift in Sources */,

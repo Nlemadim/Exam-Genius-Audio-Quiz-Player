@@ -227,6 +227,147 @@ enum InteractionState {
  }
  
  
+ /////////
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["AP Biology: Cellular Processes","AP Biology: Evolution","AP Biology: Organ Systems","AP Biology: Genetics","AP Biology: Ecological Systems","AP Biology: Biotechnology","AP Biology: Biochemistry","AP Biology: Energy Transfer,"]}
+ Starting fetchQuestionData for examName: Advanced Placement Exams with topics: ["AP Biology: Organ Systems"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=Advanced%20Placement%20Exams&topicValue=AP%20Biology:%20Organ%20Systems&numberValue=3
+ Raw Response: {
+   "examName": "Advanced Placement Exams",
+   "topics": [
+     "AP Biology: Organ Systems"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "Which organ system is primarily responsible for transporting nutrients, wastes, and gases throughout the body?",
+       "options": {
+         "A": "Digestive System",
+         "B": "Circulatory System",
+         "C": "Respiratory System",
+         "D": "Excretory System"
+       },
+       "correctOption": "B",
+       "overview": "The circulatory system is primarily responsible for transporting nutrients, wastes, and gases throughout the body. It consists of the heart, blood, and blood vessels. This system works in conjunction with the respiratory system to transport oxygen to tissues and remove carbon dioxide."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is a function of the skeletal system?",
+       "options": {
+         "A": "Producing movement",
+         "B": "Transporting oxygen",
+         "C": "Protecting internal organs",
+         "D": "Absorbing nutrients"
+       },
+       "correctOption": "C",
+       "overview": "The skeletal system's functions include providing support, leverage, protection for internal organs, and the storage of minerals (such as calcium). Protecting internal organs is a primary function, as bones such as the skull and rib cage safeguard the brain and heart/lungs, respectively."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the main role of the respiratory system?",
+       "options": {
+         "A": "To remove waste from the bloodstream",
+         "B": "To break down food into nutrients",
+         "C": "To supply the body with oxygen and remove carbon dioxide",
+         "D": "To fight infection"
+       },
+       "correctOption": "C",
+       "overview": "The main role of the respiratory system is to supply the body with oxygen and remove carbon dioxide. This is achieved through the process of breathing: inhaling oxygen-rich air and exhaling air filled with carbon dioxide. The respiratory system includes organs such as the lungs and airways."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Advanced Placement Exams",
+   "topics": [
+     "AP Biology: Cellular Processes"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary role of the chloroplasts in plant cells?",
+       "options": {
+         "A": "Protein synthesis",
+         "B": "Cellular respiration",
+         "C": "Photosynthesis",
+         "D": "DNA replication"
+       },
+       "correctOption": "C",
+       "overview": "Chloroplasts are organelles found in plant cells and eukaryotic algae that conduct photosynthesis. They capture light energy to synthesize organic compounds such as glucose from carbon dioxide and water. This process is critical for the energy flow in the biosphere."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following processes occurs in the mitochondria?",
+       "options": {
+         "A": "Photosynthesis",
+         "B": "Protein synthesis",
+         "C": "Cellular respiration",
+         "D": "Lipid synthesis"
+       },
+       "correctOption": "C",
+       "overview": "The mitochondria, often referred to as the powerhouse of the cell, are where cellular respiration occurs. This process converts biochemical energy from nutrients into adenosine triphosphate (ATP), and releases waste products."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What is the role of ribosomes in a cell?",
+       "options": {
+         "A": "Energy production",
+         "B": "Protein synthesis",
+         "C": "Lipid metabolism",
+         "D": "Detoxification"
+       },
+       "correctOption": "B",
+       "overview": "Ribosomes are complex molecular machines found within all living cells that perform biological protein synthesis (translation). They link amino acids together in the order specified by messenger RNA (mRNA) molecules."
+     }
+   ]
+ }
+ 
+ Raw Response: {
+   "examName": "Advanced Placement Exams",
+   "topics": [
+     "Context"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "In the context of European history, what was the main impact of the Treaty of Westphalia (1648)?",
+       "options": {
+         "A": "It initiated the start of the European Union.",
+         "B": "It marked the end of religious wars in Europe.",
+         "C": "It established the principle of balance of power.",
+         "D": "It ended the Thirty Years' War and established the sovereignty of nation-states."
+       },
+       "correctOption": "D",
+       "overview": "The Treaty of Westphalia, signed in 1648, ended the Thirty Years' War in the Holy Roman Empire and the Eighty Years' War between Spain and the Dutch Republic. It was significant for establishing the sovereignty of nation-states over their territory, a principle that shaped international relations and the concept of statehood thereafter."
+     },
+     {
+       "questionNumber": 2,
+       "question": "How did the Industrial Revolution alter the context of society in the 19th century?",
+       "options": {
+         "A": "It led to the decline of agricultural societies.",
+         "B": "It caused a significant decrease in urban populations.",
+         "C": "It introduced mass production and significantly changed social structures.",
+         "D": "It diminished the importance of trade unions."
+       },
+       "correctOption": "C",
+       "overview": "The Industrial Revolution, which began in the late 18th century and continued into the 19th, fundamentally changed society by introducing mass production, leading to the growth of cities as people moved from rural areas to urban centers for work, altering family structures, and creating new social classes. It marked the transition from agrarian economies to industrialized societies."
+     },
+     {
+       "questionNumber": 3,
+       "question": "What role did the context of Cold War tensions play in the Cuban Missile Crisis of 1962?",
+       "options": {
+         "A": "It led to the immediate start of World War III.",
+         "B": "It was a peripheral factor with little influence on the crisis.",
+         "C": "It escalated the crisis to a near-nuclear conflict between the US and the USSR.",
+         "D": "It resulted in the strengthening of the United Nations."
+       },
+       "correctOption": "C",
+       "overview": "The Cuban Missile Crisis was a direct result of the Cold War tensions between the United States and the Soviet Union. The discovery of Soviet nuclear missiles in Cuba in 1962 escalated these tensions to a near-nuclear conflict, with both sides on high alert. The crisis was eventually resolved through diplomatic negotiations, but it remains one of the closest instances the world has come to a full-scale nuclear war."
+     }
+   ]
+ }
+ 
+ 
  //////////TOFEL
  Response HTTP Status code: 200
  Raw server response: {"topics":["Reading Comprehension","Understanding Main Ideas in Reading","Identifying Details in Reading","Understanding Authors' Intent in Reading","Understanding Vocabulary in Context","Reading to Find Information","Reading to Learn","Reading to Understand Rhetorical Function","Text Structure in Reading","Listening Comprehension","Understanding Main Ideas in Listening","Identifying Details in Listening","Understanding Speakers' Attitude in Listening","Understanding Vocabulary in Context in Listening","Listening to Understand Function","Speaking","Independent Speaking Tasks","Integrated Speaking Tasks","Pronunciation in Speaking","Grammar in Speaking","Vocabulary in Speaking","Fluency in Speaking","Writing","Independent Writing Tasks","Integrated Writing Tasks","Grammar in Writing","Vocabulary in Writing","Organization in Writing","Synthesis and Summary in Writing","Argumentation in Writing","Spelling and Punctuation in Writing","English Grammar Rules","Verb Tenses","Noun Usage","Pronoun Usage","Adjective and Adverb Usage","Prepositions and Conjunctions","Sentence Structure","English Vocabulary","Common English Phrases","Id"]}

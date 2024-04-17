@@ -29,6 +29,18 @@ extension CGFloat {
     }
 }
 
+
+extension UIScreen {
+    static func widthPer(percentage: Double) -> CGFloat {
+        return UIScreen.main.bounds.width * CGFloat(percentage / 100)
+    }
+
+    static func heightPer(percentage: Double) -> CGFloat {
+        return UIScreen.main.bounds.height * CGFloat(percentage / 100)
+    }
+}
+
+
 extension UIImage {
     func dominantColor() -> UIColor? {
         guard let inputImage = CIImage(image: self) else { return nil }

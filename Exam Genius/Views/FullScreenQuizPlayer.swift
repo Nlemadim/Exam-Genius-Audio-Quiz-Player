@@ -13,6 +13,7 @@ struct FullScreenQuizPlayer2: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
     @ObservedObject var quizSetter: MiniPlayerV2.MiniPlayerV2Configuration
+   
     
     @State var showText: Bool = false
     @State var isMuted: Bool = false
@@ -34,6 +35,7 @@ struct FullScreenQuizPlayer2: View {
     var playAction: () -> Void
     var nextAction: () -> Void
     var recordAction: () -> Void
+    var intermissionPlayer: IntermissionPlayer
     
     //var animation: Namespace.ID
     var body: some View {
@@ -103,7 +105,7 @@ struct FullScreenQuizPlayer2: View {
                 }
             }
             .sheet(isPresented: .constant(interactionState == .isListening), content: {
-                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
+                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, intermissionPlayer: intermissionPlayer)
                     .presentationDetents([.height(100)])
             })
             .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
