@@ -9,9 +9,9 @@ import SwiftUI
 
 struct MicModalView: View {
     @Binding var interactionState: InteractionState
+    @StateObject var intermissionPlayer = IntermissionPlayer()
     var mainColor: Color
     var subColor: Color
-    var intermissionPlayer: IntermissionPlayer
     
     var body: some View {
         VStack(alignment: .center) {
@@ -26,15 +26,11 @@ struct MicModalView: View {
         }
         .frame(maxWidth: .infinity)
         .background(mainColor)
-        .onChange(of: interactionState) {_, newState in
-            switch newState {
-            case .isListening:
-                intermissionPlayer.playListeningBell()
-            case .successfulResponse:
-                intermissionPlayer.playReceivedResponseBell()
-            default:
-                break
-            }
+        .onAppear {
+           // self.intermissionPlayer.playListeningBell()
+        }
+        .onDisappear {
+//            self.intermissionPlayer.playReceivedResponseBell()
         }
     }
 }
@@ -94,7 +90,6 @@ struct ConfirmationModalView: View {
 
 #Preview {
     @State var interactionState: InteractionState = .idle
-    let intermissionPlayer = IntermissionPlayer(state: interactionState)
-    return MicModalView(interactionState: $interactionState, mainColor: .themePurpleLight, subColor: .themePurple, intermissionPlayer: intermissionPlayer)
+    return MicModalView(interactionState: $interactionState, mainColor: .themePurpleLight, subColor: .themePurple)
         .preferredColorScheme(.dark)
 }

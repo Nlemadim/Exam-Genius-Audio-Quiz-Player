@@ -13,7 +13,6 @@ struct ContentView: View {
     @EnvironmentObject var appState: AppState
    
     var body: some View {
-        // Example usage of appState.currentState
         switch appState.currentState {
         case .firstLaunch:
             LaunchPage()

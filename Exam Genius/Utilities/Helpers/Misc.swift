@@ -225,6 +225,55 @@ enum InteractionState {
     
    ]
  }
+ ////////////USContitution
+ Response HTTP Status code: 200
+ Raw server response: {"topics":["The Preamble to the Constitution","The Articles of the Constitution","The Amendments to the Constitution","The Bill of Rights","The Constitutional Convention","The Ratification of the Constitution","The Federalist Papers","The Anti-Federalist Papers","The Supremacy Clause","The Necessary and Proper Clause","The Commerce Clause","The Full Faith and Credit Clause","The Privileges and Immunities Clause","The Due Process Clause","The Equal Protection Clause","The Establishment Clause","The Free Exercise Clause","The Free Speech Clause","The Right to Bear Arms","The Right to a Fair Trial","The Right to Privacy","The Separation of Powers","The System of Checks and Balances","The Federal System of Government","The Role of the Executive Branch","The Role of the Legislative Branch","The Role of the Judicial Branch","The Process of Amending the Constitution","The Role of the Supreme Court in Interpreting the Constitution","Landmark Supreme Court Decisions","The Constitution and Civil Liberties","The Constitution and Civil Rights"]}
+ Starting fetchQuestionData for examName: The United States Constitution with topics: ["The Role of the Judicial Branch"] and number: 3
+ Requesting URL: https://ljnsun.buildship.run/ExGenQuestionGeneration?nameValue=The%20United%20States%20Constitution&topicValue=The%20Role%20of%20the%20Judicial%20Branch&numberValue=3
+ Raw Response: {
+   "examName": "The United States Constitution",
+   "topics": [
+     "The Role of the Judicial Branch"
+   ],
+   "questions": [
+     {
+       "questionNumber": 1,
+       "question": "What is the primary function of the Judicial Branch of the United States?",
+       "options": {
+         "A": "To make laws",
+         "B": "To enforce laws",
+         "C": "To interpret laws",
+         "D": "To elect government officials"
+       },
+       "correctOption": "C",
+       "overview": "The primary function of the Judicial Branch, as established by the United States Constitution, is to interpret and apply laws to ensure they are in accordance with the Constitution. This branch is headed by the Supreme Court, which has the final say in interpreting laws."
+     },
+     {
+       "questionNumber": 2,
+       "question": "Which of the following is NOT a power of the United States Supreme Court?",
+       "options": {
+         "A": "To declare laws unconstitutional",
+         "B": "To write new federal laws",
+         "C": "To hear appeals from lower courts",
+         "D": "To resolve disputes between states"
+       },
+       "correctOption": "B",
+       "overview": "The United States Supreme Court does not have the power to write new federal laws; this power is reserved for Congress. The Supreme Court can declare laws unconstitutional, hear appeals from lower courts, and resolve disputes between states, reflecting its role in interpreting the law."
+     },
+     {
+       "questionNumber": 3,
+       "question": "How are Supreme Court Justices appointed?",
+       "options": {
+         "A": "Elected by the public",
+         "B": "Appointed by the President and confirmed by the Senate",
+         "C": "Selected by the existing justices",
+         "D": "Appointed by Congress"
+       },
+       "correctOption": "B",
+       "overview": "Supreme Court Justices are appointed by the President of the United States and must be confirmed by the Senate. This process is outlined in the United States Constitution and ensures that justices are selected through a rigorous vetting process."
+     }
+   ]
+ }
  
  
  /////////

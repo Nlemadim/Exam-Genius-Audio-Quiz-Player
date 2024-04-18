@@ -15,7 +15,7 @@ struct MiniPlayerV2: View {
     
     @StateObject private var generator = ColorGenerator()
     @StateObject private var audioContentPlayer = AudioContentPlayer()
-    @StateObject private var intermissionPlayer = IntermissionPlayer(state: .idle)
+    @StateObject private var intermissionPlayer = IntermissionPlayer()
     @StateObject var sharedState = SharedQuizState()
     @StateObject var responseListener = ResponseListener()
     @StateObject private var configuration: MiniPlayerV2Configuration
@@ -41,7 +41,7 @@ struct MiniPlayerV2: View {
         
         let sharedState = SharedQuizState()
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
-        _intermissionPlayer = StateObject(wrappedValue: IntermissionPlayer(state: interactionState.wrappedValue))
+        
     }
 
     var body: some View {
@@ -65,18 +65,16 @@ struct MiniPlayerV2: View {
                 presentMicModal: $presentMicModal,
                 interactionState: $interactionState,
                 onViewDismiss: { dismissAction()},
-                playAction: { playSingleQuizQuestion() },
-                nextAction: {  },
-                recordAction: {},
-                intermissionPlayer: intermissionPlayer
+                playAction: { /*playSingleQuizQuestion()*/ },
+                nextAction: { intermissionPlayer.playReceivedResponseBell() },
+                recordAction: { intermissionPlayer.playListeningBell() }
             )
         }
         .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
             MicModalView(
                 interactionState: $interactionState,
                 mainColor: generator.dominantBackgroundColor,
-                subColor: generator.dominantLightToneColor,
-                intermissionPlayer: intermissionPlayer)
+                subColor: generator.dominantLightToneColor)
                 .presentationDetents([.height(100)])
         })
         .sheet(isPresented: .constant(showMiniPlayerConfirmationModal()), content: {
@@ -110,19 +108,15 @@ struct MiniPlayerV2: View {
             }
         }
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
-            DispatchQueue.main.async {
-                self.interactionState = newState
-            }
+            syncInteractionState(newState)
 //            checkPlayerState(newState)
         }
         .onChange(of: responseListener.interactionState) { _, newState in
-            DispatchQueue.main.async {
-                self.interactionState = newState
-            }
+            syncInteractionState(newState)
 //            checkForResponse(newValue)
         }
         .onChange(of: interactionState) { _, newState in
-            checkPlayerState(newState)
+            interactionStateAction(newState)
         }
         .onChange(of: selectedQuizPackage) {_, newPackage in
             if let newPackage = newPackage {
@@ -199,36 +193,64 @@ extension MiniPlayerV2 {
         }
     }
     
+    func syncInteractionState(_ interactionState: InteractionState) {
+        DispatchQueue.main.async {
+            if interactionState == .isDonePlaying {
+                self.interactionState = .isListening
+                intermissionPlayer.playListeningBell()
+                
+            } else if interactionState  == .successfulTranscription {
+                self.interactionState = .successfulResponse
+                intermissionPlayer.playReceivedResponseBell()
+            }
+        }
+    }
+    
+    func interactionStateAction(_ interactionState: InteractionState) {
+        if interactionState == .isListening {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                responseListener.recordAnswer()
+            }
+        } else if interactionState == .successfulResponse {
+            analyseResponse()
+        } else if interactionState == .hasResponded {
+            //MARK: TODO - Conditional check for continous playback
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.interactionState = .resumingPlayback
+                proceedWithQuiz()
+            }
+        }
+    }
+    
     
     //MARK: Step 2  - checks Player Interaction states
     func checkPlayerState(_ interaction: InteractionState) {
         DispatchQueue.main.async {
-            intermissionPlayer.interactionState = self.interactionState
             if interaction == .isDonePlaying {
+                intermissionPlayer.playListeningBell()
+                
                 self.startRecordingAnswer()
+                
             } else if interaction  == .successfulResponse {
-                intermissionPlayer.interactionState = interaction
-                self.selectedOption = responseListener.userTranscript
-                print("Mini Player view has registered new selectedOption as: \(self.selectedOption)")
-                analyseResponse()
+                
+                self.analyseResponse()
                 
             } else if interaction == .hasResponded {
+                //intermissionPlayer.playReceivedResponseBell()
                 //MARK: TODO - Conditional check for continous playback
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     self.interactionState = .resumingPlayback
                     //Alternate method: self.pauseQuiz()
                 }
                 
             } else if interaction == .resumingPlayback  {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.proceedWithQuiz()
-                }
+                self.proceedWithQuiz()
             }
         }
     }
     //MARK: Step 2 Processes  - Record Answer
     func startRecordingAnswer() {
-        responseListener.recordAnswer()
+        self.responseListener.recordAnswer()
     }
     //MARK: Step 2 Processes - Continue Playing Logic
     func proceedWithQuiz() {
@@ -256,10 +278,9 @@ extension MiniPlayerV2 {
         let currentQuestion = self.currentQuestions[currentQuestionIndex]
         let audioFile = currentQuestion.questionAudio
         interactionState = .isNowPlaying
-        audioContentPlayer.playAudioFile(audioFile)
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            audioContentPlayer.playAudioFile(audioFile)
+        }
     }
     
     
@@ -273,7 +294,6 @@ extension MiniPlayerV2 {
             }
             
             if interaction == .successfulResponse  {
-                intermissionPlayer.interactionState = interaction
                 self.selectedOption = responseListener.userTranscript
                 print("Mini Player view has registered new selectedOption as: \(self.selectedOption)")
                 analyseResponse()

@@ -35,7 +35,6 @@ struct FullScreenQuizPlayer2: View {
     var playAction: () -> Void
     var nextAction: () -> Void
     var recordAction: () -> Void
-    var intermissionPlayer: IntermissionPlayer
     
     //var animation: Namespace.ID
     var body: some View {
@@ -105,7 +104,7 @@ struct FullScreenQuizPlayer2: View {
                 }
             }
             .sheet(isPresented: .constant(interactionState == .isListening), content: {
-                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, intermissionPlayer: intermissionPlayer)
+                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
             })
             .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
