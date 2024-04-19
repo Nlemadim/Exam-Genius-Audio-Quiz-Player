@@ -59,6 +59,10 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func playReceivedResponseBell() {
         play(soundNamed: "softBell2")
     }
+    
+    func playErrorBell() {
+        play(soundNamed: "errorBell1")
+    }
 
     // Plays a sound from the specified file name.
     func play(soundNamed soundName: String) {

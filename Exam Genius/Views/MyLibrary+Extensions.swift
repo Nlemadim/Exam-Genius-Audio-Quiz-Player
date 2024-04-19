@@ -25,18 +25,34 @@ extension MyLibrary {
             addAudioQuizToLibrary(from: audioQuiz)
         }
     }
-//    func updatePlaylist() {
-//        let filteredQuizPackages = audioQuizCollection.filter { audioQuizPackage in
-//            audioQuizPackage.questions.contains { question in
-//                !question.questionAudio.isEmptyOrWhiteSpace
-//            }
-//        }
-//        
-//        self.downloadedAudioQuizCollection = filteredQuizPackages
-//        downloadedAudioQuizCollection.forEach { audioQuiz in
-//            addAudioQuizToLibrary(from: audioQuiz)
-//        }
-//    }
+    
+    func updateUserSelection(content: PlayerContent) {
+        // Extract the title from the content
+        let title: String
+        switch content {
+        case .audioQuiz(let quiz):
+            title = quiz.title
+        case .topic(let topic):
+            title = topic.title
+        }
+
+        // Assuming downloadedQuizzes holds similar playable content
+        // Filter this collection to find the matching content
+        let selectedPackages = downloadedAudioQuizCollection.filter { quiz in
+            quiz.name == title
+        }
+        
+        // Assuming you need the first match only
+        if let selectedPackage = selectedPackages.first {
+            // Update your state or properties with this selected package
+            self.selectedQuizPackage = selectedPackage
+            user.selectedQuizPackage = selectedPackage
+        } else {
+            // Handle the case where no matching package is found in downloadedQuizzes
+            print("No matching package found in downloadedQuizzes")
+        }
+    }
+
     
     private func addAudioQuizToLibrary(from package: AudioQuizPackage?) {
         guard let package = package else { return }

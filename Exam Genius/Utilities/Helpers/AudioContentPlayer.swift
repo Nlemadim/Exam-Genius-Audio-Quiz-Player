@@ -30,6 +30,19 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Failed to set audio session category: \(error)")
         }
     }
+    
+    func playCorrectionAudio(_ audioFile: String) {
+        guard let fileURL = getDocumentDirectoryURL(for: audioFile) else {
+            print("Invalid file path")
+            return
+        }
+        
+        do {
+            try startPlayback(from: fileURL)
+        } catch {
+            print("Could not load file: \(error.localizedDescription)")
+        }
+    }
 
     func playAudioFile(_ audioFile: String) {
         guard let fileURL = getDocumentDirectoryURL(for: audioFile) else {
@@ -56,7 +69,7 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         audioPlayer?.volume = 1.0
         audioPlayer?.prepareToPlay()
         audioPlayer?.play()
-        self.interactionState = .isNowPlaying
+        self.interactionState = .nowPlayingCorrection
         isPlaying = true
     }
 
@@ -72,7 +85,9 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         DispatchQueue.main.async {
             self.isPlaying = false
             self.didFinishPlayingSuccessfully = flag
-            self.interactionState = .isDonePlaying
+            self.interactionState = .isDonePlayingCorrection
         }
     }
 }
+
+

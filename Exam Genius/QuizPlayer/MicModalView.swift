@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MicModalView: View {
     @Binding var interactionState: InteractionState
-    @StateObject var intermissionPlayer = IntermissionPlayer()
     var mainColor: Color
     var subColor: Color
     
@@ -26,36 +25,24 @@ struct MicModalView: View {
         }
         .frame(maxWidth: .infinity)
         .background(mainColor)
-        .onAppear {
-           // self.intermissionPlayer.playListeningBell()
-        }
-        .onDisappear {
-//            self.intermissionPlayer.playReceivedResponseBell()
-        }
     }
 }
-//struct MicModalView: View {
-//    @Binding var interactionState: InteractionState
-//    var mainColor: Color
-//    var subColor: Color
-//    
-//    var body: some View {
-//        VStack(alignment: .center) {
-//    
-//                HStack {
-//
-//                    MicButtonWithProgressRing(showProgressRing: self.interactionState == .isListening ? true : false)
-//                    .padding()
-//                }
-//                .padding(20)
-//                .padding(.horizontal)
-//            
-//            Spacer()
-//        }
-//        .frame(maxWidth: .infinity)
-//        .background(mainColor)
-//    }
-//}
+
+
+struct ButtonModalView: View {
+    @Binding var interactionState: InteractionState
+    var mainColor: Color
+    var subColor: Color
+    
+    var body: some View {
+        VStack(alignment: .center) {
+    
+             
+        }
+        .frame(maxWidth: .infinity)
+        .background(mainColor)
+    }
+}
 
 struct ConfirmationModalView: View {
     @Binding var interactionState: InteractionState

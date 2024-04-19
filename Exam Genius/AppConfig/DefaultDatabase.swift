@@ -129,7 +129,7 @@ struct DefaultDatabase {
             
             ExamDetails(name: "SAP Certification Exam", acronym: "SAP", category: [.technology], about: "SAP Certification Exam involves highlighting elements of enterprise resource planning (ERP), business processes, and data analysis, given SAP's role in integrating various business operations and providing data-driven solutions.", image: "SAP-Exam"),
             
-            ExamDetails(name: "Google Cloud", acronym: "Google Cloud", category: [.technology, .topCollection], about: "Focuses on testing knowledge of the cutting-edge nature of cloud computing, Google's innovative ecosystem, and the technical expertise required to achieve certification.", image: "GoogleCloud-Exam"),
+            ExamDetails(name: "Google Cloud", acronym: "Google Cloud", category: [.technology, .topCollection], about: "Focuses on testing knowledge of the cutting-edge nature of cloud computing, Google's innovative ecosystem, and the technical expertise required to achieve certification.", image: "GoogleCloud-Exam2"),
             
             ExamDetails(name: "Linux Professional Institute Certification", acronym: "LINUX", category: [.technology, .topProfessionalCertification, .topCollection], about: "Certification for Linux system administrators.", image: "LPIC-Exam"),
             
@@ -149,9 +149,15 @@ struct DefaultDatabase {
             
             ExamDetails(name: "The United States Constitution", acronym: "The U.S Constitution", category: [.cultureAndSociety, .legal], about: "Unlock the cornerstone of American democracy with the United States Constitution quiz. This examination traces the origins, amendments, and pivotal moments that have defined the Constitution’s role in American law and society. Learn about the principles, debates, and interpretations that continue to influence the governance of the United States.", image: "US-Constitution-Quiz"),
             
-            ExamDetails(name: "The Harlem Renaissance", acronym: "The Harlem Renaissance", category: [.cultureAndSociety], about: "Celebrate the Harlem Renaissance, a golden age of African American culture. This quiz highlights the explosion of creativity in the 1920s Harlem, showcasing the writers, artists, musicians, and thinkers who transformed American culture. Delve into the works and legacy of this vibrant period, and discover its lasting impact on art and society.", image: "Harlem-Ren-Quiz")
+            ExamDetails(name: "The Harlem Renaissance", acronym: "The Harlem Renaissance", category: [.cultureAndSociety], about: "Celebrate the Harlem Renaissance, a golden age of African American culture. This quiz highlights the explosion of creativity in the 1920s Harlem, showcasing the writers, artists, musicians, and thinkers who transformed American culture. Delve into the works and legacy of this vibrant period, and discover its lasting impact on art and society.", image: "Harlem-Ren-Quiz"),
             
-
+            //MARK: High School Most Popular
+            ExamDetails(name: "English, Language, Arts", acronym: "ELA", category: [.education, .topCollection], about: "", image: "ELA-Exam"),
+            
+            ExamDetails(name: "Quick Chemistry", acronym: "Chemistry", category: [.education], about: "", image: "Chemistry-Exam"),
+            
+            ExamDetails(name: "American History", acronym: "History", category: [.education, .topCollection], about: "", image: "AmericanHistory-Exam"),
+            
         ]
     }
 }

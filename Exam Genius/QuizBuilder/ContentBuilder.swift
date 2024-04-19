@@ -24,7 +24,7 @@ class ContentBuilder {
         print("Building test Content")
         try await buildTopics(examName: examName)
         try await buildQuestionsProdEnv(examName: examName)
-        await buildAudioQuestions()
+        await buildAudioQuestionsV2()
 
         return container
     }
@@ -112,11 +112,40 @@ class ContentBuilder {
                 newContainerQuestion.questionContent = questionData.question
                 newContainerQuestion.options = optionsArray
                 newContainerQuestion.correctOption = questionData.correctOption
+                newContainerQuestion.questionNote = questionData.overview
                 
                 temporaryQuestionContent.append(newContainerQuestion)
             }
         }
     }
+    
+    private func buildAudioQuestionsV2() async {
+        await withTaskGroup(of: Void.self) { group in
+            for (index, question) in temporaryQuestionContent.enumerated() {
+                group.addTask {
+                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
+                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
+                    
+                    let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
+                    let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut) ?? ""
+                    
+                    let finishedQuestion = Question(id: UUID())
+                    finishedQuestion.questionContent = question.questionContent
+                    finishedQuestion.topic = question.topic
+                    finishedQuestion.options = question.options
+                    finishedQuestion.correctOption = question.correctOption
+                    finishedQuestion.questionAudio = audioUrl
+                    finishedQuestion.questionNoteAudio = questionNoteAudioUrl
+                    
+                    // Safely append to builtQuestions
+                    self.container.questions.append(finishedQuestion)
+                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+                }
+            }
+        }
+    }
+
 
     private func buildAudioQuestions() async {
         await withTaskGroup(of: Void.self) { group in
@@ -124,8 +153,10 @@ class ContentBuilder {
                 group.addTask {
                     let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
                     let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
                     
                     let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
+                    let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut)
                    
                     let finishedQuestion = Question(id: UUID())
                     finishedQuestion.questionContent = question.questionContent
@@ -133,6 +164,7 @@ class ContentBuilder {
                     finishedQuestion.options = question.options
                     finishedQuestion.correctOption = question.correctOption
                     finishedQuestion.questionAudio = audioUrl
+                    finishedQuestion.questionNoteAudio = questionNoteAudioUrl ?? ""
                     
                     // Safely append to builtQuestions
                     self.container.questions.append(finishedQuestion)
@@ -148,6 +180,7 @@ class ContentBuilder {
                 group.addTask {
                     let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
                     let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    
                     
                     let finishedQuestion = Question(id: UUID())
                     finishedQuestion.questionContent = question.questionContent
@@ -189,6 +222,21 @@ class ContentBuilder {
                
                """
     }
+    
+    private func formatOverviewForReadout(overviewString: String) -> String {
+        let headers = ["That is Incorrect", "Incorrect", "That is the Wrong Answer", "That is not the right Answer"]
+        // Select a random header from the headers array.
+        let header = headers.randomElement() ?? "Incorrect"
+
+        return """
+        
+        \(header)
+        
+        \(overviewString)
+        
+        """
+    }
+
     
     private func downloadReadOut(readOut: String) async -> String? {
         var fileName: String? = nil

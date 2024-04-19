@@ -55,23 +55,50 @@ extension HomePage {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
             isDownloadingSample = false
-            let list = audioQuiz.questions
-            let playList = list.compactMap{$0.questionAudio}
-            playSample(playlist: playList)
+           // let list = audioQuiz.questions
+            //let playList = list.compactMap{$0.questionAudio}
+            //playSample(playlist: playList)
         }
     }
     
    func playSample(playlist: [String]) {
         isPlaying.toggle()
-        let audioFile = playlist[0]
+        //let audioFile = playlist[0]
+        //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
+    }
+
+    func resetQuiz() {
+        // Access the questions array from the selected quiz package.
+        let filteredQuestions = user.selectedQuizPackage?.questions.filter { !$0.questionAudio.isEmpty }
+        
+        // Iterate over the filtered questions
+        DispatchQueue.main.async {
+            filteredQuestions?.forEach { question  in
+                //Resetting answered questions
+                question.selectedOption = " "
+                question.isAnswered = false
+                question.isAnsweredCorrectly = false
+            }
+            
+            self.quizPlayerObserver.playerState = .idle
+        }
+    }
+
+    
+    func playNow(_ audioQuiz: AudioQuizPackage) {
+        //let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
+        isPlaying.toggle()
+        //let audioFile = playlist[0]
         //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
     }
     
-    func playNow(_ audioQuiz: AudioQuizPackage) {
-        let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
-        isPlaying.toggle()
-        let audioFile = playlist[0]
-        //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
+    func setQuizObserverAction(observer state: QuizPlayerState) {
+        switch state {
+        case .endedQuiz:
+            resetQuiz()
+        default:
+            break
+        }
     }
     
     func updatePlayState(interactionState: InteractionState) {

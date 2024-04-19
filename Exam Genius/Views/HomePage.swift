@@ -167,7 +167,6 @@ struct HomePage: View {
         user.selectedQuizPackage = matchingQuizPackage
     }
     
-    
     @ViewBuilder
     private func BottomMiniPlayer() -> some View {
         

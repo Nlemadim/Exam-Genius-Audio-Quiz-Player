@@ -366,6 +366,7 @@ struct PlaySampleButton: View {
 struct MicButtonWithProgressRing: View {
     @State private var fillAmount: CGFloat = 0.0
     @State var showProgressRing: Bool
+    @State var resetTimer: Bool = false
 
     let imageSize: CGFloat = 25 // Adjusted size
 
@@ -406,12 +407,18 @@ struct MicButtonWithProgressRing: View {
     private func startFilling() {
         fillAmount = 0.0 // Reset the fill amount
         showProgressRing = true // Show the progress ring
-        withAnimation(.linear(duration: 5)) {
-            fillAmount = 1.0 // Fill the ring over 5 seconds
+        resetTimer = true
+
+        // Animate the fill amount to gradually increase over 6 seconds
+        //MARK: TODO - USE GLOBAL LISTENING TIME TO SET MIC FILL ANIMATION
+        withAnimation(.linear(duration: 6)) {
+            fillAmount = 1.0 // Fill the ring over 6 seconds
         }
-        // Hide the progress ring after 5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+
+        // Hide the progress ring and reset other states after 6 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             self.showProgressRing = false
+            self.resetTimer = false
         }
     }
 }

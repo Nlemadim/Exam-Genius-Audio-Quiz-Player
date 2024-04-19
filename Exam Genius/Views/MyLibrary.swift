@@ -68,7 +68,17 @@ struct MyLibrary: View {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(Array(audioPlaylist.enumerated()), id: \.element) { index, content in
                             
-                            PlayerContentItemView(content: content, playContent: { startPlayer()}, interactionState: $interactionState, isDownloaded: $isDownloaded)
+                            PlayerContentItemView(
+                                content: content,
+                                playContent: {
+                                    DispatchQueue.main.async {
+                                        updateUserSelection(content: content)
+                                    }
+                                    startPlayer()
+                                },
+                                interactionState: $interactionState,
+                                isDownloaded: $isDownloaded
+                            )
                                 
                             Divider().padding()
                         }
@@ -80,6 +90,9 @@ struct MyLibrary: View {
                 .onChange(of: user.hasSelectedAudioQuiz) {_, _ in
                     updatePlaylist()
                 }
+                .onChange(of: quizPlayerObserver.playerState) { _, newState in
+                    updateQuizPlayerObserver(newState)
+                }
                
                 Spacer()
             }
@@ -87,20 +100,24 @@ struct MyLibrary: View {
         .preferredColorScheme(.dark)
     }
     
-    func startPlayer() {
-        if self.interactionState != .isNowPlaying {
-            DispatchQueue.main.async {
+    
+    
+    private func startPlayer() {
+        DispatchQueue.main.async {
+            if self.interactionState != .isNowPlaying {
                 self.quizPlayerObserver.playerState = .startedPlayingQuiz
                 self.interactionState = .isNowPlaying
-            }
-        } else {
-            DispatchQueue.main.async {
+            } else {
                 self.interactionState = .isDonePlaying
                 self.quizPlayerObserver.playerState = .idle
             }
         }
-        
-        print("Player Started")
+    }
+    
+    private func updateQuizPlayerObserver(_ playerState: QuizPlayerState) {
+        DispatchQueue.main.async {
+            self.quizPlayerObserver.playerState = playerState
+        }
     }
 }
 
