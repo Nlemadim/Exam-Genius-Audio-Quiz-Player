@@ -14,7 +14,6 @@ struct FullScreenQuizPlayer2: View {
     @StateObject private var generator = ColorGenerator()
     @ObservedObject var quizSetter: MiniPlayerV2.MiniPlayerV2Configuration
    
-    
     @State var showText: Bool = false
     @State var isMuted: Bool = false
     @State private var offsetY: CGFloat = 0
@@ -26,11 +25,12 @@ struct FullScreenQuizPlayer2: View {
     @State var optionD: String = ""
     @State var question: String = ""
     @Binding var currentQuestionIndex: Int
-    //@Binding var isNowPlaying: Bool
     @Binding var isCorrectAnswer: Bool
     @Binding var presentMicModal: Bool
-    //@Binding var nextTapped: Bool
     @Binding var interactionState: InteractionState
+    @Binding var questionTranscript: String
+    
+
     var onViewDismiss: () -> Void?
     var playAction: () -> Void
     var nextAction: () -> Void
@@ -42,10 +42,10 @@ struct FullScreenQuizPlayer2: View {
             ZStack(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 10) {
                     VStack {
-                        VStack(spacing: 0){
+                        VStack(spacing: -10){
                             Image(quizSetter.configuration?.imageUrl ??  "IconImage")
                                 .resizable()
-                                .frame(width: 280, height: 280)
+                                .frame(width: 260, height: 260)
                                 .cornerRadius(20)
                                 .padding()
                             
@@ -55,13 +55,24 @@ struct FullScreenQuizPlayer2: View {
                                 .foregroundStyle(.primary)
                                 .hAlign(.center)
                                 .padding()
+                               // .offset(y: -30)
                         }
+                       
+                        VStack {
+                            Text(quizSetter.questionTranscript)
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .kerning(0.5)
+                                .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
+                                .offset(y: -50)
+                        }
+                        .frame(maxHeight: .infinity)
+                            
                         
-                        Spacer()
                         
-                        PlayerControlButtons(isNowPlaying: .constant(interactionState == .isNowPlaying),
+                        PlayerControlButtons(isNowPlaying: .constant(playButtonIconSetter()),
                                              themeColor: generator.dominantLightToneColor,
-                                             repeatAction: { presentMicModal.toggle() },
+                                             recordAction: { recordAction() },
                                              playAction: { playAudio()},
                                              nextAction: { goToNextQuestion() }
                         )
@@ -126,6 +137,12 @@ struct FullScreenQuizPlayer2: View {
             
         }
     }
+
+    
+    func playButtonIconSetter() -> Bool {
+        return interactionState == .isNowPlaying || interactionState == .resumingPlayback
+    }
+    
     
     func playAudio() {
         //isNowPlaying.toggle()

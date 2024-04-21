@@ -19,6 +19,19 @@ struct QuizViewConfiguration: Equatable {
 
 }
 
+//struct QuestionScriptViewer: Equatable {
+//    var imageUrl: String
+//    var name: String
+//    var shortTitle: String
+//    var transcriptionView: QuestionTranscriptionView?
+//    var scriptView: QuestionScriptView?
+//    
+//    static func == (lhs: QuestionScriptViewer, rhs: QuestionScriptViewer) -> Bool {
+//        return lhs.name == rhs.name
+//    }
+//}
+
+
 struct ControlConfiguration {
     var playPauseQuiz: () -> Void
     var nextQuestion: () -> Void

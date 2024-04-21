@@ -13,6 +13,7 @@ struct MiniPlayerV2: View {
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     
+    @State var questionTranscript: String = ""
     @StateObject private var generator = ColorGenerator()
     @StateObject private var audioContentPlayer = AudioContentPlayer()
     @StateObject private var questionPlayer = QuestionPlayer()
@@ -25,7 +26,7 @@ struct MiniPlayerV2: View {
     @Binding var selectedQuizPackage: AudioQuizPackage?
     @State var expandSheet: Bool = false
     @Binding var interactionState: InteractionState
-    @Binding var startPlaying: Bool
+    @State var startPlaying: Bool = false
     
     @State var currentPlaylistItemIndex: Int = 0
     @State var currentQuestionIndex: Int = 0
@@ -38,11 +39,9 @@ struct MiniPlayerV2: View {
     init(selectedQuizPackage: Binding<AudioQuizPackage?>, interactionState: Binding<InteractionState>, startPlaying: Binding<Bool>) {
         _selectedQuizPackage = selectedQuizPackage
         _interactionState = interactionState
-        _startPlaying = startPlaying
         
         let sharedState = SharedQuizState()
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
-        
     }
 
     var body: some View {
@@ -52,7 +51,7 @@ struct MiniPlayerV2: View {
             MiniQuizControlView(
                 recordAction: {},
                 playPauseAction: { startQuizAudioPlay(self.interactionState) },
-                nextAction: { /*goToNextQuestion()*/ },
+                nextAction: { goToNextQuestion() },
                 repeatAction: {},
                 interactionState: $interactionState
             )
@@ -65,10 +64,11 @@ struct MiniPlayerV2: View {
                 isCorrectAnswer: $isCorrectAnswer,
                 presentMicModal: $presentMicModal,
                 interactionState: $interactionState,
+                questionTranscript: $questionTranscript,
                 onViewDismiss: { dismissAction()},
-                playAction: { /*playSingleQuizQuestion()*/ },
-                nextAction: { intermissionPlayer.playReceivedResponseBell() },
-                recordAction: { intermissionPlayer.playListeningBell() }
+                playAction: { startQuizAudioPlay(self.interactionState) },
+                nextAction: { goToNextQuestion() },
+                recordAction: { self.interactionState = .isListening }
             )
         }
         .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
@@ -78,20 +78,6 @@ struct MiniPlayerV2: View {
                 subColor: generator.dominantLightToneColor)
                 .presentationDetents([.height(100)])
         })
-        .sheet(isPresented: .constant(showMiniPlayerConfirmationModal()), content: {
-            ConfirmationModalView(
-                interactionState: $interactionState,
-                mainColor: generator.dominantBackgroundColor,
-                subColor: generator.dominantLightToneColor,
-                isCorrect: isCorrectAnswer)
-                .presentationDetents([.height(200)])
-                .onAppear {
-                    //MARK: Simulating Overview readout and continuation
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                        self.interactionState = .resumingPlayback
-                    }
-                }
-        })
         .onTapGesture {
             withAnimation {
                 expandAction()
@@ -99,6 +85,9 @@ struct MiniPlayerV2: View {
         }
         .onAppear {
             setupViewConfigurations()
+        }
+        .onChange(of: currentQuestionIndex) { _, _ in
+            updateQuestionScriptViewer()
         }
         .onChange(of: user.selectedQuizPackage) { _, newPackage in
             updateViewWithPackage(newPackage)
@@ -158,6 +147,12 @@ extension MiniPlayerV2 {
         }
     }
     
+    func updateQuestionScriptViewer() {
+        guard currentQuestions.indices.contains(currentQuestionIndex) else { return }
+        let question = currentQuestions[currentQuestionIndex]
+        configuration.loadQuestionScriptViewer(question: question)
+    }
+    
     func updateViewWithPackage(_ newPackage: AudioQuizPackage?) {
         if let package = newPackage {
             configuration.loadQuizConfiguration(quizPackage: package)
@@ -170,6 +165,7 @@ extension MiniPlayerV2 {
         if let package = newPackage {
             self.currentQuestions = package.questions.filter { !$0.questionAudio.isEmpty }
         }
+        updateQuestionScriptViewer()
     }
     
     //MARK: STEP 1: Quiz Entry Point - Now Playing
@@ -179,7 +175,7 @@ extension MiniPlayerV2 {
             configuration.interactionState = self.interactionState
             presentationManager.interactionState = self.interactionState
             presentationManager.expandSheet = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 playSingleQuizQuestion()
             }
         }
@@ -210,6 +206,7 @@ extension MiniPlayerV2 {
         let audioFile = currentlyPlayingQuestion.questionAudio
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             questionPlayer.playAudioFile(audioFile)
+            
         }
     }
     
@@ -217,7 +214,11 @@ extension MiniPlayerV2 {
     private func syncInteractionState(_ interactionState: InteractionState) {
         DispatchQueue.main.async {
             switch interactionState {
+            case .isNowPlaying:
+                //startPlaying Triggers the questionTranscriptView in Full screen to startTyping
+                self.startPlaying = true
             case .isDonePlaying:
+                self.startPlaying = false
                 intermissionPlayer.playListeningBell()
                 self.interactionState = .isListening
 
@@ -246,7 +247,8 @@ extension MiniPlayerV2 {
             analyseResponse()//Changes interaction to .isProcessing
             
         case .resumingPlayback:
-            proceedWithQuiz()//Changes interaction to .nowPlaying
+            self.interactionState = .idle
+           // proceedWithQuiz()//Changes interaction to .nowPlaying
             
         case .isIncorrectAnswer:
             playCorrectionAudio()
@@ -372,6 +374,25 @@ extension MiniPlayerV2 {
             print(self.interactionState)
         }
     }
+    
+    private func resetQuizAndGetScore() {
+        DispatchQueue.main.async {
+            print("Reseting Quiz and Saving Score")
+            let currentQuestion = self.currentQuestions[self.currentQuestionIndex]
+            
+            self.currentQuestions.forEach { question in
+                question.selectedOption = ""
+                question.isAnswered = false
+                question.isAnsweredCorrectly = false
+            }
+        }
+    }
+    
+    func goToNextQuestion() {
+        currentQuestionIndex += 1
+    }
+    
+    
     
     //MARK: Direct Click Action Methods.
     //MARK: Show Full Screen Method

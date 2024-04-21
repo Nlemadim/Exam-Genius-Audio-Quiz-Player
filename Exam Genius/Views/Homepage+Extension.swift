@@ -15,7 +15,7 @@ extension HomePage {
             
             if let package = self.selectedQuizPackage {
                 user.selectedQuizPackage = package
-                
+                packetStatusPrintOut()
             }
         }
     }
@@ -68,6 +68,7 @@ extension HomePage {
     }
 
     func resetQuiz() {
+        
         // Access the questions array from the selected quiz package.
         let filteredQuestions = user.selectedQuizPackage?.questions.filter { !$0.questionAudio.isEmpty }
         
@@ -81,7 +82,23 @@ extension HomePage {
             }
             
             self.quizPlayerObserver.playerState = .idle
+            packetStatusPrintOut()
         }
+    }
+    
+    func packetStatusPrintOut() {
+        print("Triggered Reset status Check...")
+       
+        let filteredQuestions = user.selectedQuizPackage?.questions.filter { !$0.questionAudio.isEmpty }
+        let answeredQuestions = filteredQuestions?.filter {!$0.selectedOption.isEmptyOrWhiteSpace}
+        let currentQuestions = filteredQuestions?.count
+        let answeredQuestionsCount = answeredQuestions?.count
+        
+        print("Reset Status")
+        print("Number of Questions: \(String(describing: filteredQuestions))")
+        print("Number of Questions answered: \(String(describing: answeredQuestions))")
+        print("Number of Questions reset: \(String(describing: filteredQuestions))")
+        
     }
 
     

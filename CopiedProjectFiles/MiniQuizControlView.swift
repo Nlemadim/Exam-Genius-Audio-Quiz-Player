@@ -20,7 +20,7 @@ struct MiniQuizControlView: View {
     var body: some View {
         HStack(spacing: 20) {
             // Repeat Button
-            Button(action: repeatAction) {
+            Button(action: recordAction) {
                 Image(systemName: "mic.circle")
                     .font(.title2)
             }
@@ -31,7 +31,7 @@ struct MiniQuizControlView: View {
                 tappedPlay.toggle()
                 
             }) {
-                Image(systemName: interactionState == .isNowPlaying ? "pause.fill" : "play.fill")
+                Image(systemName: interactionState == .isNowPlaying || interactionState == .resumingPlayback ? "pause.fill" : "play.fill")
                     .font(.title2)
             }
             

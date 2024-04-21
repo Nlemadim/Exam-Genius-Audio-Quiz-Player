@@ -101,7 +101,6 @@ struct MyLibrary: View {
     }
     
     
-    
     private func startPlayer() {
         DispatchQueue.main.async {
             if self.interactionState != .isNowPlaying {

@@ -11,7 +11,7 @@ struct PlayerControlButtons: View {
     @Binding var isNowPlaying: Bool
 
     var themeColor: Color?
-    var repeatAction: () -> Void
+    var recordAction: () -> Void
     var playAction: () -> Void
     var nextAction: () -> Void
   
@@ -25,7 +25,7 @@ struct PlayerControlButtons: View {
                     isDownloading: .constant(false),
                     imageLabel: "mic",
                     color: themeColor ?? .clear,
-                    buttonAction: { repeatAction() })
+                    buttonAction: { recordAction() })
 
                 
                 CircularPlayButton(
