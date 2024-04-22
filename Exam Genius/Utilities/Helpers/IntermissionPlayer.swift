@@ -49,6 +49,11 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Failed to set audio session category: \(error)")
         }
     }
+    
+    // Plays the bell sound indicating correct answer state.
+    func playCorrectBell() {
+        play(soundNamed: "correctBell")
+    }
 
     // Plays the bell sound indicating listening state.
     func playListeningBell() {

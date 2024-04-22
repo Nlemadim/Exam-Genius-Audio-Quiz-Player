@@ -23,6 +23,6 @@ class QuizViewPresentationManager: ObservableObject {
     }
 
     private func updateShouldShowFullScreen() {
-        shouldShowFullScreen = expandSheet && interactionState == .isNowPlaying
+        shouldShowFullScreen = expandSheet && interactionState == .isNowPlaying 
     }
 }

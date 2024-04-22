@@ -97,7 +97,7 @@ struct PlainClearButton: View {
 }
 
 struct CircularPlayButton: View {
-    @Binding var isPlaying: Bool
+    @Binding var interactionState: InteractionState
     @Binding var isDownloading: Bool
     var imageLabel: String?
     var color: Color
@@ -115,7 +115,7 @@ struct CircularPlayButton: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 
             } else {
-                Image(systemName: isPlaying  ? "pause.fill" : "play.fill")
+                Image(systemName: interactionStateHandler()  ? "pause.fill" : "play.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 22.5, height: 22.5)
@@ -131,6 +131,14 @@ struct CircularPlayButton: View {
                 .stroke(Color.white, lineWidth: 1)
         )
         .disabled(isDownloading)
+    }
+    
+    func interactionStateHandler() -> Bool {
+            if interactionState == .isNowPlaying || interactionState == .resumingPlayback || interactionState == .nowPlayingCorrection {
+                return true
+            }
+             
+        return false
     }
 }
 
@@ -326,37 +334,37 @@ struct SpinnerView: View {
 }
 
 struct PlaySampleButton: View {
-    @Binding var isDownloading: Bool
-    @Binding var isPlaying: Bool
+    @Binding var interactionState: InteractionState
+   
     var playAction: () -> Void
     
     var body: some View {
         Button(action: {
-            if !isDownloading && !isPlaying {
-                playAction()
-            }
+            
+            playAction()
+            
         }) {
-            HStack(spacing: 0) {
-                Text(isPlaying ? "Playing" : "Play Sample")
+            HStack(spacing: 4) {
+                Text(interactionState == .isNowPlaying ? "Playing Sample" : "Play Sample")
                     .font(.caption2)
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
                 
                 // Conditionally display icon based on buttonState
-                if isDownloading {
+                if interactionState == .isDownloading {
                     SpinnerView() // Your custom spinner view
                         .frame(width: 20, height: 20)
                     
-                } else if !isPlaying {
-                    Image(systemName: "play.circle.fill")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                } else {
+                } else if interactionState == .isNowPlaying {
                     Image(systemName: "pause.circle.fill")
                         .resizable()
                         .frame(width: 20, height: 20)
+                } else {
+                    Image(systemName: "play.circle.fill")
+                        .resizable()
+                        .frame(width: 20, height: 20)
                 }
-                Spacer()
+                //Spacer()
             }
             .foregroundStyle(.white)
         }
@@ -433,7 +441,8 @@ enum ButtonState {
 }
 
 #Preview {
-    CircularPlayButton(isPlaying: .constant(false), isDownloading: .constant(false), color: .teal, playAction: {})
+    CircularPlayButton(interactionState: .constant(.idle), isDownloading: .constant(false), color: .teal, playAction: {})
+
 }
 
 #Preview {
@@ -447,7 +456,7 @@ enum ButtonState {
 }
 
 #Preview {
-    PlaySampleButton(isDownloading: .constant(false), isPlaying: .constant(false), playAction: {})
+    PlaySampleButton(interactionState: .constant(.idle), playAction: {})
         .preferredColorScheme(.dark)
 }
 

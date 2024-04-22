@@ -109,7 +109,7 @@ struct QuizPlayerView: View {
                     
                     VStack {
                         
-                        NowPlayingView(currentquiz: currentQuiz(), quizPlayerObserver: quizPlayerObserver, questionCount: 25, currentQuestionIndex: 1, color: generator.dominantLightToneColor)
+                        NowPlayingView(currentquiz: currentQuiz(), quizPlayerObserver: quizPlayerObserver, questionCount: 25, currentQuestionIndex: 1, color: generator.dominantLightToneColor, interactionState: $interactionState)
                        
                     }
                     .padding()
@@ -154,6 +154,7 @@ struct NowPlayingView: View {
     var questionCount: Int
     var currentQuestionIndex: Int
     var color: Color
+    @Binding var interactionState: InteractionState
     var body: some View {
         
         HStack {
@@ -190,7 +191,7 @@ struct NowPlayingView: View {
                 
                 HStack {
                     Spacer()
-                    CircularPlayButton(isPlaying: .constant(false), isDownloading: .constant(false), color: color, playAction: {})
+                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: color, playAction: {})
                 }
                 .padding()
             }

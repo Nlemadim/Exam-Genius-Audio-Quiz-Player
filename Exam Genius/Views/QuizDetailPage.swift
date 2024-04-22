@@ -13,7 +13,6 @@ struct QuizDetailPage: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
-//    @ObservedObject private var viewModel: QuizDetailPageVM
     @StateObject private var generator = ColorGenerator()
     
     @Bindable var audioQuiz: AudioQuizPackage
@@ -55,7 +54,7 @@ struct QuizDetailPage: View {
                 
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 10) {
-                        VStack(spacing: 5) {
+                        VStack(spacing: -10) {
                             Image(audioQuiz.imageUrl)
                                 .resizable()
                                 .frame(width: 250, height: 250)
@@ -75,22 +74,17 @@ struct QuizDetailPage: View {
                         .padding(.horizontal, 40)
                         .hAlign(.center)
                         
+                        PlaySampleButton(interactionState: .constant(.idle), playAction: {})
+                            .hAlign(.center)
+                            .offset(y: -20)
+                        
                         VStack(alignment: .leading, spacing: 8.0) {
-                            
-                            Divider()
-                            
-                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0.6 : 1), label: playButtonLabel) {
-                                playSampleQuestion()
-                            }
-                            .disabled(interactionState == .isDownloading || interactionState == .isNowPlaying)
-                            
-                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0.6 : 1), label: audioQuiz.questions.isEmpty ?  downloadButtonLabel : "View In Library") {
+                    
+                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0 : 1), label: audioQuiz.questions.isEmpty ?  downloadButtonLabel : "View In Library") {
                                 downloadAudioQuiz()
                             }
                             .disabled(interactionState == .isDownloading || interactionState == .isNowPlaying)
                             
-                            PlainClearButton(color: generator.dominantBackgroundColor, label: "Customize", image: "wand.and.stars.inverse") {
-                            }
                         }
                         .padding()
                         
@@ -221,7 +215,7 @@ struct QuizDetailPage: View {
         let user = User()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "California Bar (MBE)California Bar (MBE)California Bar (MBE)", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "BarExam-Exam", category: [.legal])
+        @State var package = AudioQuizPackage(id: UUID(), name: "American History", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "AmericanHistory-Exam", category: [.legal])
    
         
         return QuizDetailPage(audioQuiz: package, didTapSample: .constant(false), didTapDownload: .constant(false), goToLibrary:  .constant(false), interactionState: .constant(.idle))

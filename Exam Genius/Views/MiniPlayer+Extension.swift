@@ -12,7 +12,7 @@ extension MiniPlayerV2 {
     class MiniPlayerV2Configuration: ObservableObject {
         @Published var configuration: QuizViewConfiguration?
         var transcriber: QuestionTranscriber?
-        @Published var questionTranscript: String = "Empty"
+        @Published var questionTranscript: String = "Get Ready!"
         @Published var currentQuizPackage: AudioQuizPackage?
         @Published var latestPerformance: PerformanceModel?
         @Published var stoppedPlaying: Bool = false

@@ -30,7 +30,6 @@ struct FullScreenQuizPlayer2: View {
     @Binding var interactionState: InteractionState
     @Binding var questionTranscript: String
     
-
     var onViewDismiss: () -> Void?
     var playAction: () -> Void
     var nextAction: () -> Void
@@ -55,25 +54,20 @@ struct FullScreenQuizPlayer2: View {
                                 .foregroundStyle(.primary)
                                 .hAlign(.center)
                                 .padding()
-                               // .offset(y: -30)
                         }
+                        .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
+                        
+                        TranscriptView(
+                            interactionState: $interactionState,
+                            questionTranscript: questionTranscript,
+                            color: generator.dominantBackgroundColor.dynamicTextColor()
+                        )
                        
-                        VStack {
-                            Text(quizSetter.questionTranscript)
-                                .font(.title2)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .kerning(0.5)
-                                .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
-                                .offset(y: -50)
-                        }
-                        .frame(maxHeight: .infinity)
-                            
                         
-                        
-                        PlayerControlButtons(isNowPlaying: .constant(playButtonIconSetter()),
+                        PlayerControlButtons(interactionState: $interactionState,
                                              themeColor: generator.dominantLightToneColor,
                                              recordAction: { recordAction() },
-                                             playAction: { playAudio()},
+                                             playAction: { playAction()},
                                              nextAction: { goToNextQuestion() }
                         )
                     }
@@ -85,7 +79,7 @@ struct FullScreenQuizPlayer2: View {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {dismiss()}, label: {
                             Image(systemName: "chevron.down.circle")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         })
                     }
                 }
@@ -93,7 +87,7 @@ struct FullScreenQuizPlayer2: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: { /*  shareAction() */}, label: {
                             Image(systemName: "text.quote")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                                 .padding(.horizontal, 20.0)
                             
                         })
@@ -113,28 +107,32 @@ struct FullScreenQuizPlayer2: View {
                 .onChange(of: quizSetter.configuration) { _, _ in
                     showContent()
                 }
+                .onChange(of: interactionState) { _, newState in
+                    DispatchQueue.main.async {
+                        self.interactionState = newState
+                    }
+                }
             }
             .sheet(isPresented: .constant(interactionState == .isListening), content: {
                 MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
             })
-            .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
-                ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
-                    .presentationDetents([.height(200)])
-                    .onAppear {
-                        //print(isCorrectAnswer)
-                        //MARK: Simulating Overview readout
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            self.interactionState = .idle
-//                            print(isCorrectAnswer)
-                        }
-                    }
-                    
-            })
+//            .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
+//                ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
+//                    .presentationDetents([.height(200)])
+//                    .onAppear {
+//                        //print(isCorrectAnswer)
+//                        //MARK: Simulating Overview readout
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                            self.interactionState = .idle
+////                            print(isCorrectAnswer)
+//                        }
+//                    }
+//                    
+//            })
             .onDisappear(perform: {
                 onViewDismiss()
             })
-            
         }
     }
 
@@ -143,10 +141,6 @@ struct FullScreenQuizPlayer2: View {
         return interactionState == .isNowPlaying || interactionState == .resumingPlayback
     }
     
-    
-    func playAudio() {
-        //isNowPlaying.toggle()
-    }
     
     func goToNextQuestion() {
         currentQuestionIndex += 1
@@ -182,6 +176,124 @@ struct FullScreenQuizPlayer2: View {
         }
     }
 }
+
+
+struct TranscriptView: View {
+    @Binding var interactionState: InteractionState
+    var questionTranscript: String
+    var color: Color
+    @State private var timer: Timer?
+    @State private var feedBackImage: String = ""
+    @State private var showImageFeedback: Bool = false
+    @State private var showTextFeedback: Bool = false
+    
+    var body: some View {
+        ZStack {
+            VStack(alignment: .center) {
+                Image(systemName: interactionStateFeedBack(interactionState))
+                    .resizable()
+                    .foregroundStyle(color)
+                    .frame(width: 80, height: 80)
+                    .padding()
+            }
+            .opacity(showImageFeedback ? 1 : 0)
+            
+            VStack {
+                Text(questionTranscript)
+                    .font(.title2)
+                    .fontWeight(.black)
+                    .multilineTextAlignment(.center)
+                    .kerning(0.3)
+                    .foregroundStyle(color)
+                    .offset(y: -50)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .onAppear {
+                        startTypingAnimation(for: questionTranscript)
+                    }
+            }
+            .frame(maxHeight: .infinity)
+            .opacity(showTextFeedback ? 1 : 0)
+            
+        }
+        .onChange(of: self.interactionState) { _, newValue in
+            DispatchQueue.main.async {
+                self.feedbackSelector(newValue)
+            }
+        }
+    }
+    
+    func feedbackSelector(_ interactionState: InteractionState)  {
+        switch interactionState {
+        case .isNowPlaying:
+            showTextFeedback = true
+            showImageFeedback = false
+            
+        case .isListening:
+            showTextFeedback = false
+            showImageFeedback = true
+            
+        case .errorResponse:
+            showTextFeedback = false
+            showImageFeedback = true
+            
+        case .isCorrectAnswer:
+            showImageFeedback = true
+            
+        case .isIncorrectAnswer:
+            showTextFeedback = true
+            showImageFeedback = false
+            
+        case .nowPlayingCorrection:
+            showTextFeedback = true
+            showImageFeedback = false
+            
+        default:
+            showTextFeedback = false
+            showImageFeedback = false
+        }
+    }
+    
+    func interactionStateFeedBack(_ interactionState: InteractionState) -> String {
+        switch interactionState {
+            
+        case .isListening:
+            return "mic.fill"
+        case .errorResponse:
+            return "ear.trianglebadge.exclamationmark"
+        case .isCorrectAnswer:
+            return "hand.thumbsup.fill"
+        case .isIncorrectAnswer:
+            return "hand.thumbsdown.fill"
+        case .resumingPlayback:
+            return "book.fill"
+        case .nowPlayingCorrection:
+            return "book.fill"
+        default:
+            return ""
+        }
+    }
+    
+    private func startTypingAnimation(for text: String) {
+        var displayedText = ""
+        var messageIndex = 0
+        timer?.invalidate()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+            if messageIndex < text.count {
+                let index = text.index(text.startIndex, offsetBy: messageIndex)
+                displayedText += String(text[index])
+                messageIndex += 1
+            } else {
+                timer.invalidate()
+            }
+        }
+    }
+}
+
+// ColorGenerator and InteractionState need to be defined as per your app context.
+
+
 
 //#Preview {
 //    let user = User()

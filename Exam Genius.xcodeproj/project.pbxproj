@@ -101,6 +101,7 @@
 		0BCE72A12BA3642400A9E7D6 /* CurrentQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCE72A02BA3642400A9E7D6 /* CurrentQuizView.swift */; };
 		0BD362162BB3C0A7006BD2B2 /* QuizPlayerViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD362152BB3C0A7006BD2B2 /* QuizPlayerViewExtensions.swift */; };
 		0BD5C8002BB7B047005FB2E4 /* PlayerTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD5C7FF2BB7B047005FB2E4 /* PlayerTitleView.swift */; };
+		0BE0217C2BD62CBD0054D6EB /* correctBell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0BE0217B2BD62CBD0054D6EB /* correctBell.wav */; };
 		0BE2798E2BBDA16D0006F85B /* MyLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE2798D2BBDA16D0006F85B /* MyLibrary.swift */; };
 		0BE279902BBDADC20006F85B /* CustomTabIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */; };
 		0BFBCAA52BB5B74A006A29C2 /* CustomLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFBCAA42BB5B74A006A29C2 /* CustomLogo.swift */; };
@@ -224,6 +225,7 @@
 		0BD1AEF52BB20F6600EBF821 /* McatTopics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = McatTopics.json; sourceTree = "<group>"; };
 		0BD362152BB3C0A7006BD2B2 /* QuizPlayerViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizPlayerViewExtensions.swift; sourceTree = "<group>"; };
 		0BD5C7FF2BB7B047005FB2E4 /* PlayerTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTitleView.swift; sourceTree = "<group>"; };
+		0BE0217B2BD62CBD0054D6EB /* correctBell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = correctBell.wav; sourceTree = "<group>"; };
 		0BE2798D2BBDA16D0006F85B /* MyLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLibrary.swift; sourceTree = "<group>"; };
 		0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabIcon.swift; sourceTree = "<group>"; };
 		0BE6941E2BB1333D009D5344 /* CybersecurityAnalystExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CybersecurityAnalystExam.json; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 		0BBCBFA12B86563D00E9B7A9 = {
 			isa = PBXGroup;
 			children = (
+				0BE0217B2BD62CBD0054D6EB /* correctBell.wav */,
 				0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */,
 				0B7FF9FC2BD02FE0001A1E05 /* softBell2.wav */,
 				0B7FF9F92BD02FBB001A1E05 /* softBell1.wav */,
@@ -717,6 +720,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BE0217C2BD62CBD0054D6EB /* correctBell.wav in Resources */,
 				0B7FF9FD2BD02FE0001A1E05 /* errorBell1.wav in Resources */,
 				0B7FF9FE2BD02FE0001A1E05 /* softBell2.wav in Resources */,
 				0B7FF9FA2BD02FBB001A1E05 /* softBell1.wav in Resources */,

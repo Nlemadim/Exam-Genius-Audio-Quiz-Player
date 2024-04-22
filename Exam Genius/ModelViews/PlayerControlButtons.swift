@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerControlButtons: View {
-    @Binding var isNowPlaying: Bool
+    @Binding var interactionState: InteractionState
 
     var themeColor: Color?
     var recordAction: () -> Void
@@ -29,7 +29,7 @@ struct PlayerControlButtons: View {
 
                 
                 CircularPlayButton(
-                    isPlaying: $isNowPlaying,
+                    interactionState: $interactionState,
                     isDownloading: .constant(false),
                     color: themeColor ?? .clear,
                     playAction: { playAction() }
@@ -52,7 +52,7 @@ struct PlayerControlButtons: View {
 }
 
 struct MiniPlayerControlButtons: View {
-    @Binding var isNowPlaying: Bool
+    @Binding var interactionState: InteractionState
 
     var themeColor: Color?
     var repeatAction: () -> Void
@@ -73,7 +73,7 @@ struct MiniPlayerControlButtons: View {
 
                 
                 CircularPlayButton(
-                    isPlaying: $isNowPlaying,
+                    interactionState: $interactionState,
                     isDownloading: .constant(false),
                     color: themeColor ?? .clear,
                     playAction: { playAction() }
@@ -96,7 +96,7 @@ struct MiniPlayerControlButtons: View {
 }
 
 #Preview {
-    MiniPlayerControlButtons(isNowPlaying: .constant(true), repeatAction: {}, playAction: {}, nextAction: {})
+    MiniPlayerControlButtons(interactionState: .constant(.idle), repeatAction: {}, playAction: {}, nextAction: {})
         .preferredColorScheme(.dark)
 }
 

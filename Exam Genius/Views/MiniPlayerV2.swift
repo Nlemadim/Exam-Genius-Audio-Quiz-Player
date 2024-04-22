@@ -50,7 +50,7 @@ struct MiniPlayerV2: View {
             playerDetails
             MiniQuizControlView(
                 recordAction: {},
-                playPauseAction: { startQuizAudioPlay(self.interactionState) },
+                playPauseAction: { intermissionPlayer.playCorrectBell()/*startQuizAudioPlay(self.interactionState)*/},
                 nextAction: { goToNextQuestion() },
                 repeatAction: {},
                 interactionState: $interactionState
@@ -64,7 +64,7 @@ struct MiniPlayerV2: View {
                 isCorrectAnswer: $isCorrectAnswer,
                 presentMicModal: $presentMicModal,
                 interactionState: $interactionState,
-                questionTranscript: $questionTranscript,
+                questionTranscript: $configuration.questionTranscript,
                 onViewDismiss: { dismissAction()},
                 playAction: { startQuizAudioPlay(self.interactionState) },
                 nextAction: { goToNextQuestion() },
@@ -114,7 +114,7 @@ struct MiniPlayerV2: View {
         }
         .onChange(of: quizPlayerObserver.playerState) {_, newValue in
             print("Mini Player Quiz-Player-Observer registered as: \(newValue)")
-            handleInteractionStateChange(newValue)
+            handleQuizObserverInteractionStateChange(newValue)
         }
     }
 
@@ -217,9 +217,12 @@ extension MiniPlayerV2 {
             case .isNowPlaying:
                 //startPlaying Triggers the questionTranscriptView in Full screen to startTyping
                 self.startPlaying = true
+                configuration.loadQuestionScriptViewer(question: self.currentQuestions[self.currentQuestionIndex])
+                
             case .isDonePlaying:
                 self.startPlaying = false
                 intermissionPlayer.playListeningBell()
+                configuration.loadQuestionScriptViewer(question: self.currentQuestions[self.currentQuestionIndex])
                 self.interactionState = .isListening
 
             case .successfulTranscription:
@@ -228,6 +231,13 @@ extension MiniPlayerV2 {
           
             case .isDonePlayingCorrection:
                 self.interactionState = .resumingPlayback
+                
+            case .isIncorrectAnswer:
+                intermissionPlayer.playErrorBell()
+                configuration.questionTranscript = self.currentQuestions[self.currentQuestionIndex].questionNote
+                
+            case .isCorrectAnswer:
+                intermissionPlayer.playCorrectBell()
                 
             default:
                 break
@@ -241,20 +251,20 @@ extension MiniPlayerV2 {
         switch interactionState {
        
         case .isListening:
-            startRecordingAnswer()
+            startRecordingAnswer() //Changes interaction to .isListening
         
         case .successfulResponse:
-            analyseResponse()//Changes interaction to .isProcessing
+            analyseResponse()//Changes interaction to .isProcessing -> isCorrectAnswer OR isIncCorrectAnswer
             
         case .resumingPlayback:
-            self.interactionState = .idle
-           // proceedWithQuiz()//Changes interaction to .nowPlaying
+            //self.interactionState = .idle
+            proceedWithQuiz()//Changes interaction to .nowPlaying
             
         case .isIncorrectAnswer:
             playCorrectionAudio()
             
         case .isCorrectAnswer:
-            setContinousPlayInteraction(learningMode: true)
+            setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
         default:
             break
@@ -292,7 +302,7 @@ extension MiniPlayerV2 {
     private func playCorrectionAudio() {
         DispatchQueue.main.async {
             let correctionAudio = currentQuestions[currentQuestionIndex].questionNoteAudio
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 audioContentPlayer.playAudioFile(correctionAudio)
             }
         }
@@ -415,14 +425,13 @@ extension MiniPlayerV2 {
     
     //MARK: SCREEN TRANSITION OBSERVERS
     //MARK: Library/Homepage QuizStatus Observer
-    func handleInteractionStateChange(_ state: QuizPlayerState) {
-        if state == .startedPlayingQuiz {
-            expandAction()
-            startQuizAudioPlay(self.interactionState)
-        }
-        
-        if state == .endedQuiz {
-            dismissAction()
+    func handleQuizObserverInteractionStateChange(_ state: QuizPlayerState) {
+        DispatchQueue.main.async {
+            self.quizPlayerObserver.playerState = state
+            if state == .startedPlayingQuiz {
+                expandAction()
+                startQuizAudioPlay(self.interactionState)
+            }
         }
     }
     //MARK: FullScreen Player Observer
