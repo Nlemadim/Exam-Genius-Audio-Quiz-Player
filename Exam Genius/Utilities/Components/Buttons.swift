@@ -419,12 +419,12 @@ struct MicButtonWithProgressRing: View {
 
         // Animate the fill amount to gradually increase over 6 seconds
         //MARK: TODO - USE GLOBAL LISTENING TIME TO SET MIC FILL ANIMATION
-        withAnimation(.linear(duration: 5)) {
+        withAnimation(.linear(duration: 8)) {
             fillAmount = 1.0 // Fill the ring over 5 seconds
         }
 
         // Hide the progress ring and reset other states after 6 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 8) {
             self.showProgressRing = false
             self.resetTimer = false
         }

@@ -57,13 +57,26 @@ struct FullScreenQuizPlayer2: View {
                         }
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         
-                        TranscriptView(
-                            interactionState: $interactionState,
-                            questionTranscript: questionTranscript,
-                            color: generator.dominantBackgroundColor.dynamicTextColor()
-                        )
-                       
+                        VStack {
+                            Text(quizSetter.questionTranscript)
+                                .font(.title2)
+                                .fontWeight(.black)
+                                .multilineTextAlignment(.center)
+                                .kerning(0.3)
+                                .offset(y: -50)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding()
+
+                        }
+                        .frame(maxHeight: .infinity)
+                        .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor()) 
                         
+//                        TranscriptView(
+//                            interactionState: $interactionState,
+//                            questionTranscript: $quizSetter.questionTranscript,
+//                            color: generator.dominantBackgroundColor.dynamicTextColor()
+//                        )
+                       
                         PlayerControlButtons(interactionState: $interactionState,
                                              themeColor: generator.dominantLightToneColor,
                                              recordAction: { recordAction() },
@@ -107,6 +120,9 @@ struct FullScreenQuizPlayer2: View {
                 .onChange(of: quizSetter.configuration) { _, _ in
                     showContent()
                 }
+                .onChange(of: questionTranscript, { _, newValue in
+                    startTypingAnimation(for: newValue)
+                })
                 .onChange(of: interactionState) { _, newState in
                     DispatchQueue.main.async {
                         self.interactionState = newState
@@ -180,7 +196,7 @@ struct FullScreenQuizPlayer2: View {
 
 struct TranscriptView: View {
     @Binding var interactionState: InteractionState
-    var questionTranscript: String
+    @Binding var questionTranscript: String
     var color: Color
     @State private var timer: Timer?
     @State private var feedBackImage: String = ""

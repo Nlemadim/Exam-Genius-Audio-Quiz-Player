@@ -16,11 +16,11 @@ struct TestView: View {
     var body: some View {
         VStack {
             Button("Start Listening") {
-                intermissionPlayer.playListeningBell()
+                intermissionPlayer.playCorrectBell()
             }
 
             Button("Mark Success") {
-                intermissionPlayer.playReceivedResponseBell()            }
+                intermissionPlayer.playWrongAnswerBell()            }
         }
     }
 }
@@ -51,6 +51,11 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     // Plays the bell sound indicating correct answer state.
+    func playWrongAnswerBell() {
+        play(soundNamed: "wrongAnswerBell")
+    }
+    
+    // Plays the bell sound indicating correct answer state.
     func playCorrectBell() {
         play(soundNamed: "correctBell")
     }
@@ -67,6 +72,11 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func playErrorBell() {
         play(soundNamed: "errorBell1")
+    }
+    
+    // Plays the bell sound indicating correct answer state.
+    func playErrorTranscriptionBell() {
+        play(soundNamed: "errorTranscriptionBell")
     }
 
     // Plays a sound from the specified file name.

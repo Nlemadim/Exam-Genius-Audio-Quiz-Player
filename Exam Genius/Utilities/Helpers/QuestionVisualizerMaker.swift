@@ -89,18 +89,18 @@ class QuestionVisualizerMaker {
 
 class QuestionTranscriber: ObservableObject {
     @Published var displayedText: String = ""
-    var question: Question
+    var question: String
     
     // A Combine publisher to provide updates for displayedText
     var displayedTextPublisher: Published<String>.Publisher { $displayedText }
 
-    init(question: Question) {
+    init(question: String) {
         self.question = question
     }
 
     func startTypingText() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.typeOutText(text: self.question.questionContent)
+            self.typeOutText(text: self.question)
         }
     }
 
@@ -109,7 +109,9 @@ class QuestionTranscriber: ObservableObject {
         let index = text.index(text.startIndex, offsetBy: currentIndex)
         _ = text.index(after: index)
         DispatchQueue.main.async {
-            self.displayedText += String(text[index])
+            withAnimation {
+                self.displayedText += String(text[index])
+            }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.typeOutText(text: text, currentIndex: currentIndex + 1)

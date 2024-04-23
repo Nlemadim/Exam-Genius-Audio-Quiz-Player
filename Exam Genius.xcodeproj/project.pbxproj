@@ -72,6 +72,8 @@
 		0B8C9EEB2B9EBEA90032AA80 /* QuestionDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEA2B9EBEA90032AA80 /* QuestionDataObject.swift */; };
 		0B8C9EEF2B9EC3820032AA80 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */; };
 		0B8F214E2BBFA8C5003299C0 /* MyLibraryPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8F214D2BBFA8C5003299C0 /* MyLibraryPlaylist.swift */; };
+		0B9783E82BD78B1300CC3EB3 /* errorTranscriptionBell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B9783E62BD78B1200CC3EB3 /* errorTranscriptionBell.wav */; };
+		0B9783E92BD78B1300CC3EB3 /* wrongAnswerBell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B9783E72BD78B1300CC3EB3 /* wrongAnswerBell.wav */; };
 		0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE012B865830004F848A /* LaunchPage.swift */; };
 		0BB9DE072B865831004F848A /* SignInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE022B865830004F848A /* SignInPage.swift */; };
 		0BB9DE192B865885004F848A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE0B2B865885004F848A /* User.swift */; };
@@ -191,6 +193,8 @@
 		0B8C9EEA2B9EBEA90032AA80 /* QuestionDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionDataObject.swift; sourceTree = "<group>"; };
 		0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		0B8F214D2BBFA8C5003299C0 /* MyLibraryPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLibraryPlaylist.swift; sourceTree = "<group>"; };
+		0B9783E62BD78B1200CC3EB3 /* errorTranscriptionBell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = errorTranscriptionBell.wav; sourceTree = "<group>"; };
+		0B9783E72BD78B1300CC3EB3 /* wrongAnswerBell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = wrongAnswerBell.wav; sourceTree = "<group>"; };
 		0BB9DE012B865830004F848A /* LaunchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchPage.swift; sourceTree = "<group>"; };
 		0BB9DE022B865830004F848A /* SignInPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInPage.swift; sourceTree = "<group>"; };
 		0BB9DE0B2B865885004F848A /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -502,6 +506,8 @@
 		0BBCBFA12B86563D00E9B7A9 = {
 			isa = PBXGroup;
 			children = (
+				0B9783E62BD78B1200CC3EB3 /* errorTranscriptionBell.wav */,
+				0B9783E72BD78B1300CC3EB3 /* wrongAnswerBell.wav */,
 				0BE0217B2BD62CBD0054D6EB /* correctBell.wav */,
 				0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */,
 				0B7FF9FC2BD02FE0001A1E05 /* softBell2.wav */,
@@ -720,6 +726,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B9783E82BD78B1300CC3EB3 /* errorTranscriptionBell.wav in Resources */,
+				0B9783E92BD78B1300CC3EB3 /* wrongAnswerBell.wav in Resources */,
 				0BE0217C2BD62CBD0054D6EB /* correctBell.wav in Resources */,
 				0B7FF9FD2BD02FE0001A1E05 /* errorBell1.wav in Resources */,
 				0B7FF9FE2BD02FE0001A1E05 /* softBell2.wav in Resources */,

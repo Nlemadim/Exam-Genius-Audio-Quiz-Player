@@ -37,8 +37,11 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             return
         }
         
+       
+        
         do {
             try startPlayback(from: fileURL)
+            
         } catch {
             print("Could not load file: \(error.localizedDescription)")
         }

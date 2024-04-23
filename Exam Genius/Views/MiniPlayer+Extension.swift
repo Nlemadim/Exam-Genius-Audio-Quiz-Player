@@ -51,7 +51,7 @@ extension MiniPlayerV2 {
         }
         
        
-        func loadQuestionScriptViewer(question: Question) {
+        func loadQuestionScriptViewer(question: String) {
             
             transcriber = QuestionTranscriber(question: question)
             
