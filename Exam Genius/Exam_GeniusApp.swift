@@ -24,6 +24,6 @@ struct Exam_GeniusApp: App {
                 .environmentObject(presentationManager)
                 .preferredColorScheme(.dark)
         }
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self])
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self])
     }
 }

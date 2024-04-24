@@ -7,11 +7,24 @@
 
 import Foundation
 
+struct Container {
+    var id: UUID
+    var topics: [Topic]
+    var questions: [Question]
+    
+    init(id: UUID) {
+        self.id = id
+        self.topics = []
+        self.questions = []
+    }
+}
+
 class ContentBuilder {
     var readOut: String = ""
     var audioUrl: String = ""
     var context: String = ""
     var container = Container(id: UUID())
+    
     var temporaryQuestionContent = [Question]()
     
     private let networkService: NetworkService // Assuming this is your networking layer
@@ -19,31 +32,13 @@ class ContentBuilder {
     init(networkService: NetworkService) {
         self.networkService = networkService
     }
-    
+
     func buildForProd(for examName: String) async throws -> Container {
         print("Building test Content")
         try await buildTopics(examName: examName)
         try await buildQuestionsProdEnv(examName: examName)
         await buildAudioQuestionsV2()
 
-        return container
-    }
-    
-    func buildQuestionContent(for examName: String) async throws -> Container {
-        print("Building test Content")
-        try await buildTopics(examName: examName)
-        try await buildQuestionsProdEnv(examName: examName)
-        await buildQuestionReadout()
-
-        return container
-    }
-    
-    func alternateBuildTestContent(for examName: String) async throws -> Container {
-        print("Building test Content")
-        try await buildTestTopics(examName: examName)
-        try await buildTestQuestions(examName: examName)
-        await buildAudioQuestions()
-        
         return container
     }
     
@@ -61,37 +56,8 @@ class ContentBuilder {
             
         }
     }
+
     
-    private func buildTestTopics(examName: String) async throws {
-        
-        let topics = try await networkService.testTopics()
-        
-        topics.forEach { topic in
-            let containerTopic = Topic(name: topic)
-            container.topics.append(containerTopic)
-        }
-    }
-    
-    private func buildTestQuestions(examName: String) async throws {
-        // Fetch the single QuestionDataObject
-        let questionDataObject = try await networkService.testQuestionData()
-        print("Content Builder Data recieved from network Service: \(questionDataObject)")
-        
-        // Iterate over the questions array within the QuestionDataObject
-        questionDataObject.questions.forEach { questionData in
-            // Map the options from the QuestionData.options struct to an array of strings
-            let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
-            
-            let newContainerQuestion = Question(id: UUID())
-            newContainerQuestion.questionContent = questionData.question
-            newContainerQuestion.options = optionsArray
-            newContainerQuestion.correctOption = questionData.correctOption
-            
-            // Assuming `contentQuestions` is an array you're appending to
-            temporaryQuestionContent.append(newContainerQuestion)
-           
-        }
-    }
     
     private func buildQuestionsProdEnv(examName: String) async throws {
         guard self.container.topics.count >= 3 else {
@@ -137,57 +103,6 @@ class ContentBuilder {
                     finishedQuestion.correctOption = question.correctOption
                     finishedQuestion.questionAudio = audioUrl
                     finishedQuestion.questionNoteAudio = questionNoteAudioUrl
-                    
-                    // Safely append to builtQuestions
-                    self.container.questions.append(finishedQuestion)
-                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
-                }
-            }
-        }
-    }
-
-
-    private func buildAudioQuestions() async {
-        await withTaskGroup(of: Void.self) { group in
-            for (index, question) in temporaryQuestionContent.enumerated() {
-                group.addTask {
-                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
-                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
-                    let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
-                    
-                    let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
-                    let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut)
-                   
-                    let finishedQuestion = Question(id: UUID())
-                    finishedQuestion.questionContent = question.questionContent
-                    finishedQuestion.topic = question.topic
-                    finishedQuestion.options = question.options
-                    finishedQuestion.correctOption = question.correctOption
-                    finishedQuestion.questionAudio = audioUrl
-                    finishedQuestion.questionNoteAudio = questionNoteAudioUrl ?? ""
-                    
-                    // Safely append to builtQuestions
-                    self.container.questions.append(finishedQuestion)
-                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
-                }
-            }
-        }
-    }
-    
-    private func buildQuestionReadout() async {
-        await withTaskGroup(of: Void.self) { group in
-            for (index, question) in temporaryQuestionContent.enumerated() {
-                group.addTask {
-                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
-                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
-                    
-                    
-                    let finishedQuestion = Question(id: UUID())
-                    finishedQuestion.questionContent = question.questionContent
-                    finishedQuestion.topic = question.topic
-                    finishedQuestion.options = question.options
-                    finishedQuestion.correctOption = question.correctOption
-                    finishedQuestion.questionNote = readOut
                     
                     // Safely append to builtQuestions
                     self.container.questions.append(finishedQuestion)
@@ -254,7 +169,7 @@ class ContentBuilder {
         
         return fileName
     }
-
+    
     
     private func saveAudioDataToFile(_ data: Data) -> String? {
         let fileManager = FileManager.default
@@ -271,153 +186,198 @@ class ContentBuilder {
         }
     }
     
-    private func saveAudioDataToFile2(_ data: Data) -> String? {
-        let fileManager = FileManager.default
-        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileName = UUID().uuidString + ".mp3"  // This is what you'll save and use later
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+    private func downloadVoiceFeedBack() {
         
-        do {
-            try data.write(to: fileURL)
-            // Return just the file name instead of the full URL
-            return fileName
-        } catch {
-            print("Error saving audio file: \(error)")
-            return nil
-        }
     }
-
-    
-    private func questionContentPrompt(examName: String, topics: [String], numberOfQuestions: Int) -> String {
-        return """
-               \(examName)
-               \(topics.joined(separator: ","))
-               \(numberOfQuestions)
-               
-               """
-    }
-    
-    private func topicsContentPrompt(examName: String, numberOfTopics: Int? = nil) -> String {
-        if let numberOfQuestions = numberOfTopics {
-            return """
-                   \(examName)
-                   \(numberOfQuestions)
-                   
-                   """
-        } else {
-            return """
-                   \(examName)
-                   """
-        }
-    }
-    
-    private var topicsRolePrompt: String {
-        return """
-            
-               You are a helpful Assistant specializing in Professional Exam STUDY Topics
-               Your Job is to help users identify relevant educational topics relevant for study in order to pass the exam.
-            
-               Given an exam name
-               Given a Number of Topics
-               GENERATE GIVEN NUMBER TOPICS
-               
-               Given ONLY an Exam
-               GENERATE TOPICS VERY EXTENSIVELY
-               
-
-               The context will usually take the form of a professional standard or non-standard exam.
-               Gleaming from context generate very relevant educational topics for study to pass this exam.
-                
-
-               Return your output as a single collection of strings separated by: ,
-            
-               Example
-               Given: ACT Exam
-               Given: 3 Topics
-            
-               OUTPUT ONLY TOPICS
-               Advanced Algebra","Coordinate Geometry","Plane Geometry"
-            
-               DO NOT RETURN ANYTHING BUT A LIST OF TOPICS RELEVANT TO PASS THIS EXAM
-            
-            """
-    }
-    
-    private var questionRolePrompt: String {
-        
-        return """
-               You are a helpful Assistant generating practice multiple-choice exam questions.
-               
-               Given an exam name;
-               Given a topic or a list of topics related to the exam;
-               Given a number of questions;
-               
-               Generate GIVEN NUMBER of professional practice exam questions
-               
-
-               Your question should efficiently test the depth of knowledge of the user as it relates to that topic.
-               Please ensure that the questions are challenging, substantial and expressive, using real life scenarios to give the question more depth, context and relevance to the exam and the knowledge it seeks to test.
-               
-               Multi Choice Options
-               - Add multi choice Answers to your Questions NOT EXCEEDING A - D (Four Options)
-               - Make the options engaging and complex without being intuitive or easy to guess. 
-               
-               Answer: 
-               - Provide the correct answer among the options: A or B or C or D
-               
-               Overview:
-               - EXTENSIVELY EDUCATE on the subject matter, Topic or Question relative to the correct answer.
-               - TEACH a User ALL they need to know about the Specific Question and Topic.
-               - Make your overview engaging, creative, expressive and professional ensuring to pass along the most important information regarding the question and or topic.
-               
-               RETURN ONLY NUMBER OF QUESTIONS REQUESTED 
-               
-               DO NOT NUMBER THE QUESTIONS
-               
-               FOR EASY PARSING PLEASE RETURN WITH SEPERATE HEADERS
-               
-               DO NOT USE ANY SPECIAL CHARACTERS BEFORE OR AFTER HEADERS
-               
-                Topic
-                Question
-                Options
-                CorrectOption
-                Overview
-               
-               EXAMPLE FORMAT
-               Topic
-               Maths
-               
-               Question
-               One plus One
-               
-               Options
-               A: 1
-               B: 7
-               C: 10
-               D: 2
-               
-               CorrectOption
-               D
-               
-               Overview
-               Because one plus one is two
-               
-               IF MULTIPLE QUESTIONS, ADD A LINE OF SPACE BETWEEN QUESTIONS
-               
-               """
-    }
-    
 }
 
-struct Container {
-    var id: UUID
-    var topics: [Topic]
-    var questions: [Question]
+
+extension ContentBuilder {
     
-    init(id: UUID) {
-        self.id = id
-        self.topics = []
-        self.questions = []
+    func buildQuestionsOnly(examName: String) async throws -> Container {
+        try await fetchAndStoreAllTopics(examName: examName)
+        let selectedTopics = selectRandomTopics(limit: 15)
+        await downloadQuestionsForTopics(selectedTopics, examName: examName)
+        return container
+    }
+    
+    private func fetchAndStoreAllTopics(examName: String) async throws {
+        let allTopics = try await networkService.fetchTopics(context: examName)
+        container.topics = allTopics.map { Topic(name: $0) }
+        print("Fetched and stored all topics")
+    }
+
+    private func selectRandomTopics(limit: Int) -> [Topic] {
+        guard container.topics.count >= limit else {
+            return container.topics
+        }
+        return container.topics.shuffled().prefix(limit).map { $0 }
+    }
+    
+    private func downloadQuestionsForTopics(_ topics: [Topic], examName: String) async {
+        await withTaskGroup(of: Void.self) { group in
+            for topic in topics {
+                group.addTask {
+                    do {
+                        let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: 3)
+                        // Processing each question data object
+                        questionDataArray.forEach { questionDataObject in
+                            let questions = questionDataObject.questions.map { questionData in
+                                Question(
+                                    id: UUID(),
+                                    topic: topic.name,
+                                    questionContent: questionData.question,
+                                    options: [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d],
+                                    correctOption: questionData.correctOption,
+                                    questionNote: questionData.overview
+                                )
+                            }
+
+                            DispatchQueue.main.async {
+                                // Append directly to the container questions
+                                self.container.questions.append(contentsOf: questions)
+                                print("Downloaded questions for topic: \(topic.name)")
+                            }
+                        }
+                    } catch {
+                        print("Failed to download questions for topic: \(topic.name), error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func downloadAllFeedbackAudio(for voiceFeedback: VoiceFeedbackContainer) async -> VoiceFeedbackContainer {
+        var updatedFeedback = voiceFeedback
+        let messagesAndPaths: [(message: String, keyPath: WritableKeyPath<VoiceFeedbackContainer, String>)] = [
+            (voiceFeedback.quizStartMessage, \VoiceFeedbackContainer.quizStartAudioUrl),
+            (voiceFeedback.quizEndingMessage, \VoiceFeedbackContainer.quizEndingAudioUrl),
+            (voiceFeedback.nextQuestion, \VoiceFeedbackContainer.nextQuestionAudioUrl),
+            (voiceFeedback.skipQuestionMessage, \VoiceFeedbackContainer.skipQuestionAudioUrl),
+            (voiceFeedback.errorTranscriptionMessage, \VoiceFeedbackContainer.errorTranscriptionAudioUrl),
+            (voiceFeedback.finalScoreMessage, \VoiceFeedbackContainer.finalScoreAudioUrl)
+        ]
+
+        await withTaskGroup(of: (WritableKeyPath<VoiceFeedbackContainer, String>, String?).self) { group in
+            for (message, keyPath) in messagesAndPaths {
+                group.addTask {
+                    let audioUrl = await self.downloadReadOut(readOut: message)
+                    return (keyPath, audioUrl)
+                }
+            }
+            for await (keyPath, audioUrl) in group {
+                if let url = audioUrl {
+                    updatedFeedback[keyPath: keyPath] = url
+                }
+            }
+        }
+
+        return updatedFeedback
+    }
+
+}
+
+
+
+extension ContentBuilder {
+    
+    func buildQuestionContent(for examName: String) async throws -> Container {
+        print("Building test Content")
+        try await buildTopics(examName: examName)
+        try await buildQuestionsProdEnv(examName: examName)
+        await buildQuestionReadout()
+
+        return container
+    }
+    
+    func alternateBuildTestContent(for examName: String) async throws -> Container {
+        print("Building test Content")
+        try await buildTestTopics(examName: examName)
+        try await buildTestQuestions(examName: examName)
+        await buildAudioQuestions()
+        
+        return container
+    }
+    
+    
+    func buildTestTopics(examName: String) async throws {
+        
+        let topics = try await networkService.testTopics()
+        
+        topics.forEach { topic in
+            let containerTopic = Topic(name: topic)
+            container.topics.append(containerTopic)
+        }
+    }
+    
+    func buildTestQuestions(examName: String) async throws {
+        // Fetch the single QuestionDataObject
+        let questionDataObject = try await networkService.testQuestionData()
+        print("Content Builder Data recieved from network Service: \(questionDataObject)")
+        
+        // Iterate over the questions array within the QuestionDataObject
+        questionDataObject.questions.forEach { questionData in
+            // Map the options from the QuestionData.options struct to an array of strings
+            let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
+            
+            let newContainerQuestion = Question(id: UUID())
+            newContainerQuestion.questionContent = questionData.question
+            newContainerQuestion.options = optionsArray
+            newContainerQuestion.correctOption = questionData.correctOption
+            
+            // Assuming `contentQuestions` is an array you're appending to
+            temporaryQuestionContent.append(newContainerQuestion)
+           
+        }
+    }
+    
+    func buildAudioQuestions() async {
+        await withTaskGroup(of: Void.self) { group in
+            for (index, question) in temporaryQuestionContent.enumerated() {
+                group.addTask {
+                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
+                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
+                    
+                    let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
+                    let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut)
+                   
+                    let finishedQuestion = Question(id: UUID())
+                    finishedQuestion.questionContent = question.questionContent
+                    finishedQuestion.topic = question.topic
+                    finishedQuestion.options = question.options
+                    finishedQuestion.correctOption = question.correctOption
+                    finishedQuestion.questionAudio = audioUrl
+                    finishedQuestion.questionNoteAudio = questionNoteAudioUrl ?? ""
+                    
+                    // Safely append to builtQuestions
+                    self.container.questions.append(finishedQuestion)
+                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+                }
+            }
+        }
+    }
+    
+    func buildQuestionReadout() async {
+        await withTaskGroup(of: Void.self) { group in
+            for (index, question) in temporaryQuestionContent.enumerated() {
+                group.addTask {
+                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
+                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    
+                    
+                    let finishedQuestion = Question(id: UUID())
+                    finishedQuestion.questionContent = question.questionContent
+                    finishedQuestion.topic = question.topic
+                    finishedQuestion.options = question.options
+                    finishedQuestion.correctOption = question.correctOption
+                    finishedQuestion.questionNote = readOut
+                    
+                    // Safely append to builtQuestions
+                    self.container.questions.append(finishedQuestion)
+                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+                }
+            }
+        }
     }
 }

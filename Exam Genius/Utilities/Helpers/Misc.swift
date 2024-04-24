@@ -62,6 +62,8 @@ enum InteractionState {
     case resumingPlayback
     case nowPlayingCorrection
     case isDonePlayingCorrection
+    case playingFeedbackMessage
+    case donePlayingFeedbackMessage
     
     var status: String {
         switch self {
@@ -101,9 +103,13 @@ enum InteractionState {
             return "Resuming Quiz"
         case .nowPlayingCorrection:
             return "Playing Correction"
-            
         case .isDonePlayingCorrection:
             return "Done Playing Correction"
+        case .playingFeedbackMessage:
+            return "Playing feedback message"
+        case .donePlayingFeedbackMessage:
+            return "Done playing feedback message"
+        
         }
     }
 }

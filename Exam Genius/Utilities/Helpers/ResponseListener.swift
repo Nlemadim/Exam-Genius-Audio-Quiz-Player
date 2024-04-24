@@ -32,7 +32,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         self.isRecordingAnswer = true
         
         // Immediately start transcribing
-        self.speechRecognizer.transcribe()
+        self.speechRecognizer.transcribe2()
         print("Transcribing started")
         
         // Schedule to stop transcribing after 5 seconds

@@ -17,6 +17,7 @@ struct HomePage: View {
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    @Query(sort: \VoiceFeedbackMessages.id) var voiceFeedbackMessages: [VoiceFeedbackMessages]
     
     @StateObject var generator = ColorGenerator()
 
@@ -86,7 +87,7 @@ struct HomePage: View {
                 }
                 .task {
                     await loadDefaultCollection()
-                    
+                    await loadVoiceFeedBackMessages()
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                 }
                 .toolbar {
@@ -176,7 +177,7 @@ struct HomePage: View {
                 .cornerRadius(10)
                 .background(.black)
                 .overlay {
-                    MiniPlayerV2(selectedQuizPackage: self.$selectedQuizPackage, interactionState: $interactionState, startPlaying: $isPlaying)
+                    MiniPlayerV2(selectedQuizPackage: self.$selectedQuizPackage, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, startPlaying: $isPlaying)
                         .offset(y: 3)
                 }
         }
@@ -204,6 +205,6 @@ struct HomePage: View {
         .environmentObject(observer)
         .environmentObject(presentMgr)
         .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self], inMemory: true)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, VoiceFeedbackMessages.self], inMemory: true)
 }
     

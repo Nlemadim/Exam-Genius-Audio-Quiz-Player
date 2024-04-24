@@ -32,6 +32,9 @@ struct TestView: View {
 
 
 class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
+    @Published var feedbackPlayerState: InteractionState = .idle
+    @Published var finishedPlayingFeedBack: Bool = false
+    
     var audioPlayer: AVAudioPlayer?
     
     override init() {
@@ -41,6 +44,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     // Configures the audio session for playback.
     private func configureAudioSession() {
+        
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.playback, mode: .default)
@@ -52,30 +56,36 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     // Plays the bell sound indicating correct answer state.
     func playWrongAnswerBell() {
+        self.finishedPlayingFeedBack = false
         play(soundNamed: "wrongAnswerBell")
     }
     
     // Plays the bell sound indicating correct answer state.
     func playCorrectBell() {
+        self.finishedPlayingFeedBack = false
         play(soundNamed: "correctBell")
     }
 
     // Plays the bell sound indicating listening state.
     func playListeningBell() {
+        self.finishedPlayingFeedBack = false
         play(soundNamed: "softBell1")
     }
 
     // Plays the bell sound indicating a successful response.
     func playReceivedResponseBell() {
+        self.finishedPlayingFeedBack = false
         play(soundNamed: "softBell2")
     }
     
     func playErrorBell() {
+        self.finishedPlayingFeedBack = false
         play(soundNamed: "errorBell1")
     }
     
     // Plays the bell sound indicating correct answer state.
     func playErrorTranscriptionBell() {
+        self.finishedPlayingFeedBack = false
         play(soundNamed: "errorTranscriptionBell")
     }
 
@@ -105,7 +115,9 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     // AVAudioPlayerDelegate method for handling playback completion.
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         DispatchQueue.main.async {
-            // Handle any cleanup or UI updates here if needed.
+            if flag {
+                self.feedbackPlayerState = .donePlayingFeedbackMessage
+            }
         }
     }
 
@@ -115,5 +127,58 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Decode error occurred: \(String(describing: error))")
         }
     }
+    
+    func playVoiceFeedBack(_ messageUrl: String) {
+        guard let fileURL = getDocumentDirectoryURL(for: messageUrl) else {
+            print("Invalid file path")
+            return
+        }
+        
+        self.finishedPlayingFeedBack = true
+        
+        do {
+            try startPlayback(from: fileURL)
+        } catch {
+            print("Could not load file: \(error.localizedDescription)")
+        }
+    }
+    
+    func playErrorVoiceFeedBack(_ messageUrl: String) {
+        guard let fileURL = getDocumentDirectoryURL(for: messageUrl) else {
+            print("Invalid file path")
+            return
+        }
+        
+        self.feedbackPlayerState = .playingFeedbackMessage
+        
+        do {
+            try startPlayback(from: fileURL)
+        } catch {
+            print("Could not load file: \(error.localizedDescription)")
+        }
+    }
+
+    private func startPlayback(from fileURL: URL) throws {
+        if AVAudioSession.sharedInstance().category != .playback {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        }
+
+        audioPlayer?.stop()
+        audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+        audioPlayer?.delegate = self
+        audioPlayer?.volume = 1.0
+        audioPlayer?.prepareToPlay()
+        audioPlayer?.play()
+    }
+
+    private func getDocumentDirectoryURL(for fileName: String) -> URL? {
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return documentsDirectory.appendingPathComponent(fileName)
+    }
 }
+
 

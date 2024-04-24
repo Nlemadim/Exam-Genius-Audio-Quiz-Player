@@ -109,29 +109,39 @@ class SpeechManager: ObservableObject {
                 self.listenForError(RecognizerError.recognizerIsUnavailable)
                 return
             }
-            
-            do {
-                let (audioEngine, recognitionRequest) = try Self.prepareEngine()
-                self.audioEngine = audioEngine
-                self.recognitionRequest = recognitionRequest
-                
-                self.task = recognizer.recognitionTask(with: recognitionRequest) { result, error in
-                    if let error = error {
-                        self.listenForError(error)
-                        return
-                    }
+
+            // Check if the recognizer supports on-device recognition
+            if recognizer.supportsOnDeviceRecognition {
+                do {
+                    let (audioEngine, recognitionRequest) = try Self.prepareEngine()
+                    // Set the recognition request to require on-device processing
+                    recognitionRequest.requiresOnDeviceRecognition = true
+                    self.audioEngine = audioEngine
+                    self.recognitionRequest = recognitionRequest
                     
-                    if let result = result, result.isFinal {
-                        self.listenForAnswer(result.bestTranscription.formattedString)
-                        audioEngine.stop()
-                        audioEngine.inputNode.removeTap(onBus: 0)
+                    self.task = recognizer.recognitionTask(with: recognitionRequest) { result, error in
+                        if let error = error {
+                            // Handle the error specifically if on-device recognition fails
+                            self.listenForError(error)
+                            return
+                        }
+                        
+                        if let result = result, result.isFinal {
+                            self.listenForAnswer(result.bestTranscription.formattedString)
+                            audioEngine.stop()
+                            audioEngine.inputNode.removeTap(onBus: 0)
+                        }
                     }
+                } catch {
+                    self.listenForError(error)
                 }
-            } catch {
-                self.listenForError(error)
+            } else {
+                // Handle the scenario where on-device recognition is not supported
+                self.listenForError(RecognizerError.recognizerIsUnavailable)
             }
         }
     }
+
 
     
     private static func prepareEngine() throws -> (AVAudioEngine, SFSpeechAudioBufferRecognitionRequest) {

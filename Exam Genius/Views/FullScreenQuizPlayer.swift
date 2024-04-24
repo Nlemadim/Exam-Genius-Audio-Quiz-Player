@@ -5,6 +5,34 @@
 //  Created by Tony Nlemadim on 1/15/24.
 //
 
+
+//                HStack(alignment: .center, spacing: 15) {
+//                    /// Exam Icon Image
+//                    Image(quizSetter.configuration?.imageUrl ?? "IconImage")
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(width: 100, height: 100)
+//                        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+//
+//                    VStack(alignment: .leading, spacing: 4) {
+//                        /// Long Name
+//                        Text(quizSetter.configuration?.name ?? "Error! No Quiz Content")
+//                            .font(.body)
+//                            .foregroundStyle(.white)
+//                            .fontWeight(.semibold)
+//                            .lineLimit(2, reservesSpace: false)
+//
+//                        Spacer().frame(height: 40)
+//
+//                        //MARK: TODO - Place Quiz Progress Bar Here
+//
+//                    }
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                }
+//                .padding(.horizontal)
+
+
 import SwiftUI
 import SwiftData
 
@@ -41,25 +69,36 @@ struct FullScreenQuizPlayer2: View {
             ZStack(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 10) {
                     VStack {
-                        VStack(spacing: -10){
+                        VStack(spacing: 10){
+                            
                             Image(quizSetter.configuration?.imageUrl ??  "IconImage")
                                 .resizable()
-                                .frame(width: 260, height: 260)
-                                .cornerRadius(20)
-                                .padding()
+                                .frame(width: 100, height: 100)
+                                .cornerRadius(10)
+                                .hAlign(.leading)
                             
                             Text((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz")
                                 .multilineTextAlignment(.center)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.primary)
-                                .hAlign(.center)
-                                .padding()
+                                .hAlign(.leading)
+                            
+                            QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.configuration?.questions.count ?? 0, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
+                               
+                            Divider()
+                            
                         }
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
+                        .padding()
+                        .frame(height: 180)
+                        //.offset(y: -30)
+                        
+                        
+                       
+                            
                         
                         VStack {
                             Text(quizSetter.questionTranscript)
-                                .font(.title2)
                                 .fontWeight(.black)
                                 .multilineTextAlignment(.center)
                                 .kerning(0.3)
@@ -69,13 +108,9 @@ struct FullScreenQuizPlayer2: View {
 
                         }
                         .frame(maxHeight: .infinity)
-                        .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor()) 
+                        .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         
-//                        TranscriptView(
-//                            interactionState: $interactionState,
-//                            questionTranscript: $quizSetter.questionTranscript,
-//                            color: generator.dominantBackgroundColor.dynamicTextColor()
-//                        )
+                        Divider()
                        
                         PlayerControlButtons(interactionState: $interactionState,
                                              themeColor: generator.dominantLightToneColor,
@@ -84,25 +119,17 @@ struct FullScreenQuizPlayer2: View {
                                              nextAction: { goToNextQuestion() }
                         )
                     }
-                    .padding()
+                    //.padding()
                     .hAlign(.center)
                     
                 }
+//                .navigationTitle((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz").foregroundStyle(.red)
+//                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {dismiss()}, label: {
                             Image(systemName: "chevron.down.circle")
                                 .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
-                        })
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: { /*  shareAction() */}, label: {
-                            Image(systemName: "text.quote")
-                                .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
-                                .padding(.horizontal, 20.0)
-                            
                         })
                     }
                 }
@@ -311,17 +338,19 @@ struct TranscriptView: View {
 
 
 
-//#Preview {
-//    let user = User()
-//    @Namespace var animation
-//    @State var curIndex = 0
-//    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP")
-//    let quizSetter = MiniPlayer.MiniPlayerConfiguration()
-//    quizSetter.configuration = config
-//    return FullScreenQuizPlayer2(quizSetter: quizSetter, expandSheet: .constant(false), currentQuestionIndex: .constant(0),  isNowPlaying: .constant(false), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), nextTapped: .constant(false), interactionState: .constant(.idle), onViewDismiss: {}, animation: animation)
-//        .environmentObject(user)
-//        .preferredColorScheme(.dark)
-//}
+#Preview {
+    let user = User()
+    @Namespace var animation
+    @State var curIndex = 0
+    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP")
+    let sharedState = SharedQuizState()
+    let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
+    quizSetter.configuration = config
+    
+    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(curIndex), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.idle), questionTranscript: .constant("Hello Transcript"), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
+        .environmentObject(user)
+        .preferredColorScheme(.dark)
+}
 
 
 //#Preview {

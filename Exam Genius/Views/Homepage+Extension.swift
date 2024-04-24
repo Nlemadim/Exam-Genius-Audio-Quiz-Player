@@ -30,13 +30,15 @@ extension HomePage {
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
         // Begin content building process
         let content = try await contentBuilder.buildForProd(for: audioQuiz.name)
-        
+        //let content = try await contentBuilder.buildQuestionsOnly(examName: audioQuiz.name)
+        print("Downloaded \(content.questions.count) Questions without audio")
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
             user.selectedQuizPackage = audioQuiz
             UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
             self.interactionState = .idle
+            print("Downloaded")
         }
     }
     
@@ -91,8 +93,8 @@ extension HomePage {
        
         let filteredQuestions = user.selectedQuizPackage?.questions.filter { !$0.questionAudio.isEmpty }
         let answeredQuestions = filteredQuestions?.filter {!$0.selectedOption.isEmptyOrWhiteSpace}
-        let currentQuestions = filteredQuestions?.count
-        let answeredQuestionsCount = answeredQuestions?.count
+//        let currentQuestions = filteredQuestions?.count
+//        let answeredQuestionsCount = answeredQuestions?.count
         
         print("Reset Status")
         print("Number of Questions: \(String(describing: filteredQuestions))")
@@ -176,4 +178,53 @@ extension HomePage {
             try! modelContext.save()
         }
     }
+    
+    func loadVoiceFeedBackMessages() async {
+        guard voiceFeedbackMessages.isEmpty else { return }
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let container = VoiceFeedbackContainer(
+            id: UUID(),
+            quizStartMessage: "Starting a new quiz now.",
+            quizEndingMessage: "Great job! This quiz is now complete.",
+            nextQuestion: "Next Question",
+            skipQuestionMessage: "Skipping this question.",
+            errorTranscriptionMessage: "Error transcribing that question, we will skip that for now and re-visit it later.",
+            finalScoreMessage: "Final score calculated.",
+            quizStartAudioUrl: "",
+            quizEndingAudioUrl: "",
+            nextQuestionAudioUrl: "",
+            skipQuestionAudioUrl: "",
+            errorTranscriptionAudioUrl: "",
+            finalScoreAudioUrl: ""
+        )
+        
+        let messageData = await contentBuilder.downloadAllFeedbackAudio(for: container)
+        let newVoiceMessages = VoiceFeedbackMessages(from: messageData)
+        print("Downloaded new voice feedback messages with id \(newVoiceMessages.id.uuidString) and testing file path start quiz is printing: \(newVoiceMessages.quizEndingAudioUrl)")
+        
+        modelContext.insert(newVoiceMessages)
+        
+        try! modelContext.save()
+        
+    }
+    
+    func getFeedBackMessages() -> FeedBackMessageUrls {
+        let userFeedbackMessages = voiceFeedbackMessages.first
+        var feedbackMessages = FeedBackMessageUrls(
+            startMessage: userFeedbackMessages?.quizStartAudioUrl ?? "",
+            nextQuestion: userFeedbackMessages?.nextQuestionAudioUrl ?? "",
+            errorMessage: userFeedbackMessages?.errorTranscriptionAudioUrl ?? "",
+            endMessage: userFeedbackMessages?.finalScoreAudioUrl ?? ""
+        )
+        
+        return feedbackMessages
+    }
 }
+
+struct FeedBackMessageUrls {
+    var startMessage: String
+    var nextQuestion: String
+    var errorMessage: String
+    var endMessage: String
+}
+

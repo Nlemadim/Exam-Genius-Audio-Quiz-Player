@@ -66,6 +66,22 @@ class Question: ObservableObject, Identifiable {
         self.questionAudio = ""
         self.questionNoteAudio = ""
     }
+    
+    init(id: UUID, topic: String, questionContent: String, options: [String], correctOption: String, questionNote: String) {
+        self.id = id
+        self.topic = topic
+        self.questionContent = questionContent
+        self.options = options
+        self.correctOption = correctOption
+        self.questionNote = questionNote
+        self.selectedOption = ""
+        self.isAnswered = false
+        self.isAnsweredCorrectly = false
+        self.numberOfPresentations = 0
+        self.questionAudio = ""
+        self.questionNoteAudio = ""
+    }
+    
 }
 
 extension Question {
