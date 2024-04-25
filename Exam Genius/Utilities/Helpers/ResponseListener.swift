@@ -32,20 +32,17 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         self.isRecordingAnswer = true
         
         // Immediately start transcribing
-        self.speechRecognizer.transcribe2()
+        self.speechRecognizer.transcribe()
         print("Transcribing started")
         
         // Schedule to stop transcribing after 5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.speechRecognizer.stopTranscribing()
             self.isRecordingAnswer = false
-            self.interactionState = .isProcessing
-            
-            
             print("Transcription stopped")
             
             self.getTranscript()
-            print("Listener published userTranscript as: \(self.userTranscript)")
+            
         }
     }
     
@@ -56,10 +53,13 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
             }
         
         self.userTranscript = self.selectedOption
-        self.interactionState = .successfulTranscription
+        print("Listener published userTranscript as: \(self.userTranscript)")
+        self.interactionState = .hasResponded
+        
     }
     
     fileprivate func processTranscript(transcript: String) -> String {
+        //self.interactionState = .isProcessing
         let processedTranscript = WordProcessor.processWords(from: transcript)
         return processedTranscript
     }

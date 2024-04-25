@@ -52,15 +52,15 @@ extension MiniPlayerV2 {
         
        
         func loadQuestionScriptViewer(question: String) {
-            
-            transcriber = QuestionTranscriber(question: question)
-            
-            // Initialize transcription to ensure it's ready to be observed.
-            transcriber?.startTypingText()
-            
-            // Bind the `displayedText` to `questionTranscript`
-            transcriber?.displayedTextPublisher.receive(on: RunLoop.main).assign(to: &$questionTranscript)
-            print(questionTranscript)
+            self.questionTranscript = question
+//            transcriber = QuestionTranscriber(question: question)
+//            
+//            // Initialize transcription to ensure it's ready to be observed.
+//            transcriber?.startTypingText()
+//            
+//            // Bind the `displayedText` to `questionTranscript`
+//            transcriber?.displayedTextPublisher.receive(on: RunLoop.main).assign(to: &$questionTranscript)
+            //print(questionTranscript)
         }
         
         

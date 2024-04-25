@@ -115,8 +115,13 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     // AVAudioPlayerDelegate method for handling playback completion.
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         DispatchQueue.main.async {
-            if flag {
+            if flag && self.finishedPlayingFeedBack == true {
                 self.feedbackPlayerState = .donePlayingFeedbackMessage
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.feedbackPlayerState = .idle
+                self.finishedPlayingFeedBack = false
             }
         }
     }
@@ -134,7 +139,9 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             return
         }
         
-        self.finishedPlayingFeedBack = true
+        DispatchQueue.main.async {
+            self.finishedPlayingFeedBack = true
+        }
         
         do {
             try startPlayback(from: fileURL)

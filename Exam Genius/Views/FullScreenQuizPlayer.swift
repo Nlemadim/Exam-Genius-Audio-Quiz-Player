@@ -84,25 +84,26 @@ struct FullScreenQuizPlayer2: View {
                                 .hAlign(.leading)
                             
                             QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.configuration?.questions.count ?? 0, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
+                                //.padding(.horizontal, 3)
                                
                             Divider()
+                               
                             
                         }
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         .padding()
-                        .frame(height: 180)
+                        .frame(width: 380, height: 180)
+                        .frame(maxWidth: 380)
+                        .padding(.horizontal, 3)
+                        .padding(.bottom, 15)
                         //.offset(y: -30)
                         
                         
-                       
-                            
-                        
-                        VStack {
+                        VStack(alignment: .center) {
                             Text(quizSetter.questionTranscript)
                                 .fontWeight(.black)
                                 .multilineTextAlignment(.center)
                                 .kerning(0.3)
-                                .offset(y: -50)
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding()
 
@@ -160,26 +161,12 @@ struct FullScreenQuizPlayer2: View {
                 MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
             })
-//            .sheet(isPresented: .constant(interactionState == .hasResponded), content: {
-//                ConfirmationModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor, isCorrect: isCorrectAnswer)
-//                    .presentationDetents([.height(200)])
-//                    .onAppear {
-//                        //print(isCorrectAnswer)
-//                        //MARK: Simulating Overview readout
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                            self.interactionState = .idle
-////                            print(isCorrectAnswer)
-//                        }
-//                    }
-//                    
-//            })
             .onDisappear(perform: {
                 onViewDismiss()
             })
         }
     }
 
-    
     func playButtonIconSetter() -> Bool {
         return interactionState == .isNowPlaying || interactionState == .resumingPlayback
     }

@@ -29,12 +29,14 @@ struct QuestionCountVisualizer: View {
                     .animation(.linear, value: index)
             }
             .frame(height: 8)
+           
 
             Text("Question \(index)/\(count)")
                 .font(.caption)
                 .foregroundStyle(fillColor)
                 .padding(.top, 2)
         }
+        .frame(maxWidth: 380)
         
     }
 }
@@ -47,6 +49,7 @@ struct TestViewer: View {
             
             QuestionCountVisualizer(index: 6, count: 43, fillColor: .teal)
                 .frame(maxWidth: .infinity)
+                
             
             Spacer()
         }

@@ -105,7 +105,8 @@ struct MiniPlayerV2: View {
             syncInteractionState(newState)
         }
         .onChange(of: intermissionPlayer.feedbackPlayerState) { _, newState in
-            guard intermissionPlayer.finishedPlayingFeedBack == true && newState == .donePlayingFeedbackMessage else { return }
+            //guard intermissionPlayer.finishedPlayingFeedBack == true && newState == .donePlayingFeedbackMessage else { return }
+            print("Finished Playing Feedback")
             syncInteractionState(newState)
         }
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
@@ -174,6 +175,9 @@ extension MiniPlayerV2 {
     func playFeedbackMessage(_ messageUrl: String?) {
         if let feedbackMessageUrl = messageUrl {
             intermissionPlayer.playVoiceFeedBack(feedbackMessageUrl)
+            DispatchQueue.main.async {
+                self.interactionState = .playingFeedbackMessage
+            }
         }
     }
     
@@ -189,40 +193,7 @@ extension MiniPlayerV2 {
         }
     }
     
-    func updateFeedbackMessage(_ interactionState: InteractionState) {
-        switch interactionState {
-        case .isNowPlaying:
-            self.interactionFeedbackMessage = transcript
-       
-        case .isListening:
-            self.interactionFeedbackMessage = "Listening"
-     
-        case .errorResponse:
-            self.interactionFeedbackMessage = "Error transcribing"
-            
-        case .idle:
-            self.interactionFeedbackMessage = "Starting a new quiz!"
-            
-        case .successfulResponse:
-            self.interactionFeedbackMessage = "\(self.currentQuestions[self.currentQuestionIndex].selectedOption)"
-            
-        case .isCorrectAnswer:
-            self.interactionFeedbackMessage = "Thats Correct!"
-            
-        case .isIncorrectAnswer:
-            self.interactionFeedbackMessage = "Incorrect!\n The correct option is \(self.currentQuestions[self.currentQuestionIndex].correctOption)"
-        
-        case .nowPlayingCorrection:
-            self.interactionFeedbackMessage = self.currentQuestions[self.currentQuestionIndex].questionNote
-            print("interactionFeedbackMessage playing correction: \(self.currentQuestions[self.currentQuestionIndex].questionNote)")
-            
-        case .donePlayingFeedbackMessage:
-            self.interactionFeedbackMessage = "Moving on..."
-            
-        default:
-            break
-        }
-    }
+    
     
     // MARK: QUIZ LOGICS
     //MARK: READY QUESTIONS
@@ -236,6 +207,7 @@ extension MiniPlayerV2 {
     //MARK: STEP 1: Quiz Entry Point - Now Playing
     func startQuizAudioPlay(_ quizState: InteractionState) {
         if quizState == .idle {
+            //intermissionPlayer.playVoiceFeedBack(feedbackMessageUrls?.startMessage ?? "")
             self.interactionState = .isNowPlaying
             configuration.interactionState = self.interactionState
             presentationManager.interactionState = self.interactionState
@@ -278,6 +250,41 @@ extension MiniPlayerV2 {
         }
     }
     
+    func updateFeedbackMessage(_ interactionState: InteractionState) {
+        switch interactionState {
+        case .isNowPlaying:
+            self.interactionFeedbackMessage = transcript
+            
+        case .errorTranscription:
+            self.interactionFeedbackMessage = "Transcription Error!"
+            
+        case .isListening:
+            self.interactionFeedbackMessage = "Waiting for your answer"
+            
+        case .playingFeedbackMessage:
+            self.interactionFeedbackMessage = "Skipping this question for now"
+            
+        case .idle:
+            self.interactionFeedbackMessage = "Starting a new quiz!"
+      
+        case .isCorrectAnswer:
+            self.interactionFeedbackMessage = "\(self.currentQuestions[self.currentQuestionIndex].selectedOption) is correct"
+            
+        case .isIncorrectAnswer:
+            self.interactionFeedbackMessage = "Incorrect!\n The correct option is \(self.currentQuestions[self.currentQuestionIndex].correctOption)"
+        
+        case .nowPlayingCorrection:
+            self.interactionFeedbackMessage = self.currentQuestions[self.currentQuestionIndex].questionNote
+            print("interactionFeedbackMessage playing correction: \(self.currentQuestions[self.currentQuestionIndex].questionNote)")
+            
+        case .donePlayingFeedbackMessage:
+            self.interactionFeedbackMessage = "Moving on..."
+            
+        default:
+            break
+        }
+    }
+    
     //MARK: Step 2  - InteractionState Sync and Update
     private func syncInteractionState(_ interactionState: InteractionState) {
         DispatchQueue.main.async {
@@ -289,17 +296,21 @@ extension MiniPlayerV2 {
             case .isDonePlaying:
                 self.startPlaying = false
                 intermissionPlayer.playListeningBell()
-                self.interactionState = .isListening
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .isListening
+                }
 
-            case .successfulTranscription:
+            case .hasResponded:
                 intermissionPlayer.playReceivedResponseBell()
                 self.interactionState = .successfulResponse
-                
+            
             case .isDonePlayingCorrection:
+                self.intermissionPlayer.playErrorTranscriptionBell()
                 self.interactionState = .resumingPlayback
-                          
-            case .resumingPlayback:
-                intermissionPlayer.playErrorTranscriptionBell()
+                
+            case .donePlayingFeedbackMessage:
+                self.intermissionPlayer.playErrorTranscriptionBell()
+                self.interactionState = .resumingPlayback
                 
             default:
                 break
@@ -327,10 +338,10 @@ extension MiniPlayerV2 {
         case .isCorrectAnswer:
             setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
-        case .errorResponse:
+        case .errorTranscription:
+            playFeedbackMessage(feedbackMessageUrls?.errorMessage)
             //MARK: TODO - Create Method to check for repeat listen settings
             //FOR Now Moving on
-            playFeedbackMessage(feedbackMessageUrls?.errorMessage)
             
         default:
             break
@@ -340,9 +351,7 @@ extension MiniPlayerV2 {
     
     //MARK: Step 2 Processes  - Record Answer
     func startRecordingAnswer() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.responseListener.recordAnswer()
-        }
+        self.responseListener.recordAnswer()
     }
     
     //MARK: Step 2 Processes - Continue Playing Logic
@@ -356,6 +365,7 @@ extension MiniPlayerV2 {
         self.currentQuestionIndex += 1
         
         if currentQuestions.indices.contains(currentQuestionIndex) {
+            
             self.continuePlaying()
             
         } else {
@@ -382,26 +392,12 @@ extension MiniPlayerV2 {
         let currentQuestion = self.currentQuestions[currentQuestionIndex]
         let audioFile = currentQuestion.questionAudio
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.interactionState = .isNowPlaying
             questionPlayer.playAudioFile(audioFile)
         }
     }
     
-    func syncCorrectionPlaybackInteractionState() {
-        DispatchQueue.main.async {
-            if self.interactionState == .isIncorrectAnswer {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.interactionState = .nowPlayingCorrection
-                    playCorrectionAudio()
-                }
-            }
-            
-            if self.interactionState == .isDonePlayingCorrection {
-                self.interactionState = .resumingPlayback
-            }
-        }
-    }
     
     private func setContinousPlayInteraction(learningMode isEnabled: Bool) {
         //MARK: TODO - Conditional check for continous playback
@@ -415,21 +411,6 @@ extension MiniPlayerV2 {
     }
         
     //MARK: Steps 3: Analyse Response
-    func checkForResponse(_ interaction: InteractionState) {
-        DispatchQueue.main.async {
-            
-            if interaction == .isListening {
-                self.interactionState = interaction
-                print("CheckForResponse Method registered interactionState as: \(interaction)")
-            }
-            
-            if interaction == .successfulResponse  {
-                self.selectedOption = responseListener.userTranscript
-                print("Mini Player view has registered new selectedOption as: \(self.selectedOption)")
-                analyseResponse()
-            }
-        }
-    }
     
     //MARK: Step 3 Processes  - Analyzing Answer
     func analyseResponse() {
@@ -440,8 +421,8 @@ extension MiniPlayerV2 {
     //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
     private func selectOption(_ option: String) {
         guard !option.isEmptyOrWhiteSpace else {
-            DispatchQueue.main.async {
-                self.interactionState = .errorResponse
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.interactionState = .errorTranscription
             }
             
             return
