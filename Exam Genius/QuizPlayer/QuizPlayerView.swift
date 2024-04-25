@@ -119,12 +119,25 @@ struct QuizPlayerView: View {
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
-                    
+                    PerformanceHistoryGraph(history: [
+                        Performance(id: UUID(), date: Date(), score: 40),
+                        Performance(id: UUID(), date: Date(), score: 80),
+                        Performance(id: UUID(), date: Date(), score: 30),
+                        Performance(id: UUID(), date: Date(), score: 90),
+                        Performance(id: UUID(), date: Date(), score: 30),
+                        Performance(id: UUID(), date: Date(), score: 20),
+                        Performance(id: UUID(), date: Date(), score: 70)
+                    ], mainColor: generator.dominantBackgroundColor.opacity(3), subColor: generator.dominantLightToneColor.opacity(3))
+                    .padding(.horizontal)
                     
                     Rectangle()
                         .fill(.black)
                         .frame(height: 100)
                 }
+            }
+            .onAppear {
+                generator.updateAllColors(fromImageNamed: audioQuiz.quizImage)
+                
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -206,6 +219,12 @@ struct NowPlayingView: View {
     }
 }
 
+
+//    .background(
+//        LinearGradient(colors: [Color.white.opacity(0), Color.white.opacity(0.1)], startPoint: .top, endPoint: .bottom)
+//    )
+//    .clipShape(RoundedRectangle(cornerRadius: 12))
+//    .shadow(color: Color.blue.opacity(0.4), radius: 10, x: 0, y: 1)
 
 //
 //extension QuizPlayerView {

@@ -83,8 +83,10 @@ struct FullScreenQuizPlayer2: View {
                                 .foregroundStyle(.primary)
                                 .hAlign(.leading)
                             
-                            QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.configuration?.questions.count ?? 0, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
-                                //.padding(.horizontal, 3)
+                            ProgressBarView(progress: self.progress, fillColor: generator.dominantBackgroundColor.dynamicTextColor())
+                            
+//                            QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.configuration?.questions.count ?? 0, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
+//                                //.padding(.horizontal, 3)
                                
                             Divider()
                                
@@ -165,6 +167,10 @@ struct FullScreenQuizPlayer2: View {
                 onViewDismiss()
             })
         }
+    }
+    
+    var progress: CGFloat {
+        return CGFloat(currentQuestionIndex) / CGFloat(quizSetter.configuration?.questions.count ?? 0)
     }
 
     func playButtonIconSetter() -> Bool {

@@ -87,7 +87,7 @@ struct HomePage: View {
                 }
                 .task {
                     await loadDefaultCollection()
-                    await loadVoiceFeedBackMessages()
+                   // await loadVoiceFeedBackMessages()
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                 }
                 .toolbar {
@@ -130,7 +130,8 @@ struct HomePage: View {
             }
             .tag(0)
             
-            MyLibrary(interactionState: $myLibInteractionState)
+//            MyLibrary(interactionState: $myLibInteractionState)
+            QuizPlayerView(audioQuiz: .constant(currentQuiz()))
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -190,6 +191,12 @@ struct HomePage: View {
         .frame(height: 70)
         .offset(y: -49)
     }
+    
+    func currentQuiz() -> DownloadedAudioQuizContainer {
+        let audioQuiz: DownloadedAudioQuizContainer = DownloadedAudioQuizContainer(name: "Quick Math", quizImage: "Math-Exam")
+        return audioQuiz
+    }
+    
 }
 
 

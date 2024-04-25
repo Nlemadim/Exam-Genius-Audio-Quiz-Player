@@ -194,7 +194,6 @@ extension MiniPlayerV2 {
     }
     
     
-    
     // MARK: QUIZ LOGICS
     //MARK: READY QUESTIONS
     func updateCurrentQuestions(_ newPackage: AudioQuizPackage?) {
@@ -302,16 +301,21 @@ extension MiniPlayerV2 {
 
             case .hasResponded:
                 intermissionPlayer.playReceivedResponseBell()
-                self.interactionState = .successfulResponse
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .successfulResponse
+                }
             
             case .isDonePlayingCorrection:
                 self.intermissionPlayer.playErrorTranscriptionBell()
-                self.interactionState = .resumingPlayback
-                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .resumingPlayback
+                }
             case .donePlayingFeedbackMessage:
                 self.intermissionPlayer.playErrorTranscriptionBell()
-                self.interactionState = .resumingPlayback
-                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .resumingPlayback
+                }
+                                
             default:
                 break
             }
@@ -336,7 +340,8 @@ extension MiniPlayerV2 {
             playCorrectionAudio()//Changes interaction to .nowPlayingCorrection
             
         case .isCorrectAnswer:
-            setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
+            proceedWithQuiz()
+            //setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
         case .errorTranscription:
             playFeedbackMessage(feedbackMessageUrls?.errorMessage)
@@ -439,10 +444,18 @@ extension MiniPlayerV2 {
             if currentQuestion.selectedOption == currentQuestion.correctOption {
                 currentQuestion.isAnsweredCorrectly = true
                 intermissionPlayer.playCorrectBell()
-                self.interactionState = .isCorrectAnswer
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.interactionState = .isCorrectAnswer
+                    
+                }
+                
             } else {
-                intermissionPlayer.playWrongAnswerBell()
-                self.interactionState = .isIncorrectAnswer
+                
+                intermissionPlayer.playErrorBell()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.interactionState = .isIncorrectAnswer
+                }
+                
                 currentQuestion.isAnsweredCorrectly = false
             }
             

@@ -54,7 +54,7 @@ struct QuizDetailPage: View {
                 
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 10) {
-                        VStack(spacing: -10) {
+                        VStack(spacing: -5) {
                             Image(audioQuiz.imageUrl)
                                 .resizable()
                                 .frame(width: 250, height: 250)
@@ -62,14 +62,16 @@ struct QuizDetailPage: View {
                                 .padding()
                             
                             Text(audioQuiz.name)
-                                .lineLimit(2, reservesSpace: true)
+                                .lineLimit(3, reservesSpace: true)
                                 .multilineTextAlignment(.center)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.primary)
+                                .frame(maxWidth: .infinity)
                                 .hAlign(.center)
-                                .padding()
+                                //.padding()
                         }
                         .frame(height: 300)
+                        .frame(maxWidth:.infinity)
                         .padding()
                         .padding(.horizontal, 40)
                         .hAlign(.center)

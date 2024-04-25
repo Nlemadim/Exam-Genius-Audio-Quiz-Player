@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
-import SwiftUI
-
 struct QuestionCountVisualizer: View {
     var index: Int
     var count: Int
@@ -54,6 +50,25 @@ struct TestViewer: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct ProgressBarView: View {
+    var progress: CGFloat
+    var fillColor: Color
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.black.opacity(0.2))
+                
+                Rectangle()
+                    .fill(fillColor)
+                    .frame(width: progress * geometry.size.width)
+            }
+            .clipShape(Capsule())
+        }
     }
 }
 
