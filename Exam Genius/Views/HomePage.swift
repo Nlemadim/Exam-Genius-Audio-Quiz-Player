@@ -131,7 +131,7 @@ struct HomePage: View {
             .tag(0)
             
 //            MyLibrary(interactionState: $myLibInteractionState)
-            QuizPlayerView(audioQuiz: .constant(currentQuiz()))
+            QuizPlayerView()
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -212,6 +212,6 @@ struct HomePage: View {
         .environmentObject(observer)
         .environmentObject(presentMgr)
         .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, VoiceFeedbackMessages.self], inMemory: true)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, VoiceFeedbackMessages.self, DownloadedAudioQuiz.self], inMemory: true)
 }
     

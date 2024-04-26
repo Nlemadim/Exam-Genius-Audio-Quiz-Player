@@ -15,22 +15,16 @@ class DownloadedAudioQuiz: Identifiable, Hashable {
     var quizImage: String
     var dateCreated: Date
     var currentIndex: Int
-    var quizStatus: AudioQuizStatus
-    var userStatus: UserStatus
-    var contents: [Question]
-    var topics: [Topic]
-    var rating: Int
+    var totalScore: Int
+    var questions: [Question]
     
     init(quizname: String, quizImage: String) {
         self.quizname = quizname
         self.quizImage = quizImage
         self.dateCreated = .now
         self.currentIndex = 0
-        self.quizStatus = .downloaded
-        self.userStatus = .onShelf
-        self.contents = []
-        self.topics = []
-        self.rating = 0
+        self.questions = []
+        self.totalScore = 0
     }
 }
 
@@ -51,16 +45,16 @@ enum AudioQuizStatus: Int, Codable, Identifiable, CaseIterable {
 }
 
 enum UserStatus: Int, Codable, Identifiable, CaseIterable {
-    case isStarted, isEnded, inPlaylist, onShelf
+    case quizStarted, quizEnded, inPlaylist, onShelf
     var id: Self {
         self
     }
     
     var descr: String {
         switch self {
-        case .isStarted:
+        case .quizStarted:
             "Quiz Started"
-        case .isEnded:
+        case .quizEnded:
             "Quiz Ended"
         case .inPlaylist:
             "Added to Playlist"

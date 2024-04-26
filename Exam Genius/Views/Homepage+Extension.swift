@@ -29,8 +29,12 @@ extension HomePage {
     
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
         // Begin content building process
-        let content = try await contentBuilder.buildForProd(for: audioQuiz.name)
-        //let content = try await contentBuilder.buildQuestionsOnly(examName: audioQuiz.name)
+        //MARK: Test Method
+        //let content = try await contentBuilder.buildForProd(for: audioQuiz.name)
+        
+        //MARK: ProductionFlow Method
+        let content = try await contentBuilder.buildQuestionsOnly(examName: audioQuiz.name)
+        
         print("Downloaded \(content.questions.count) Questions without audio")
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)

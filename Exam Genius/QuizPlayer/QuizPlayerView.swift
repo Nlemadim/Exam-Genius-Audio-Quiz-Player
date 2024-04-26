@@ -10,42 +10,31 @@ import SwiftData
 import Combine
 import AVKit
 
-
 struct QuizPlayerView: View {
-    @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    @Environment(\.dismiss) private var dismiss
+    
+    
+    @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @StateObject private var generator = ColorGenerator()
+    @StateObject private var audioContentPlayer = AudioContentPlayer()
     
     @State private var currentQuestion: Question?
     @State var interactionState: InteractionState = .idle
-    @State private var selectedQuizPackage: DownloadedAudioQuizContainer?
-    @State var configuration: QuizViewConfiguration?
-    @Binding var audioQuiz: DownloadedAudioQuizContainer
-    @State var downloadedQuiz: DownloadedAudioQuizContainer?
+    @State var audioQuiz: DownloadedAudioQuiz?
     
     @State private var expandSheet: Bool = false
     @State var isDownloading: Bool = false
     @State var isPlaying: Bool = false
     @State private var playTapped: Bool = false
-    @State private var nextTapped: Bool = false
-    @State private var repeatTapped: Bool = false
-    @State private var presentMicModal: Bool = false
-    @State var presentConfirmationModal: Bool = false
     
     @State var currentQuestionIndex: Int = 0
-    @State var selectedOption: String = ""
-    
-    @Namespace private var animation
-    
-    @State var backgroundImage: String = "Logo"
-    
-    @State private var bottomSheetOffset = -UIScreen.main.bounds.width
     
     var body: some View {
         NavigationView {
@@ -57,7 +46,7 @@ struct QuizPlayerView: View {
                     )
                 
                 VStack(alignment: .center) {
-                    Image(audioQuiz.quizImage/*selectedQuizPackage?.imageUrl ?? "Logo"*/)
+                    Image(audioQuiz?.quizImage ?? "Logo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .clipped()
@@ -68,13 +57,13 @@ struct QuizPlayerView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(spacing: 5) {
-                            Image(audioQuiz.quizImage/*selectedQuizPackage?.imageUrl ?? "Logo"*/)
+                            Image(audioQuiz?.quizImage ?? "Logo")
                                 .resizable()
                                 .frame(width: 250, height: 250)
                                 .cornerRadius(20)
                                 .padding()
                             
-                            Text(audioQuiz.name/*selectedQuizPackage?.name ?? ""*/)
+                            Text(audioQuiz?.quizname ?? "Quiz Player")
                                 .lineLimit(2, reservesSpace: true)
                                 .multilineTextAlignment(.center)
                                 .fontWeight(.bold)
@@ -90,10 +79,8 @@ struct QuizPlayerView: View {
                     }
                     .padding()
                     
-                   
-                    
                     HStack {
-                        Text("Now Playing")
+                        Text(downloadedAudioQuizCollection.isEmpty ? "Not Currently Playing" : "Now Playing")
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
                             .padding(.horizontal)
@@ -109,7 +96,10 @@ struct QuizPlayerView: View {
                     
                     VStack {
                         
-                        NowPlayingView(currentquiz: currentQuiz(), quizPlayerObserver: quizPlayerObserver, questionCount: 25, currentQuestionIndex: 1, color: generator.dominantLightToneColor, interactionState: $interactionState)
+                        NowPlayingView(currentquiz: audioQuiz, quizPlayerObserver: quizPlayerObserver, questionCount: 25, currentQuestionIndex: 1, color: generator.dominantLightToneColor, interactionState: $interactionState, playAction: {
+                            
+                            playSingleQuizQuestion()
+                        })
                        
                     }
                     .padding()
@@ -135,25 +125,111 @@ struct QuizPlayerView: View {
                         .frame(height: 100)
                 }
             }
+            .onChange(of: user.selectedQuizPackage) { _, newPackage in
+                updateViewWithPackage(newPackage)
+            }
             .onAppear {
-                generator.updateAllColors(fromImageNamed: audioQuiz.quizImage)
-                
+                generator.updateAllColors(fromImageNamed: audioQuiz?.quizImage ?? "Logo")
+                Task {
+                    try await loadNewQuiz()
+                }
+
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    
-                    HStack(spacing: -20) {
-                        Text("Voice")
-                        Button(action: { /*  shareAction() */}, label: {
-                            Image(systemName: "slider.horizontal.3")
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 20.0)
-                        })
-                    }
+                    Button(action: { /*  shareAction() */}, label: {
+                        Image(systemName: "slider.horizontal.3")
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 20.0)
+                    })
                 }
             }
         }
     }
+    
+    func updateViewWithPackage(_ newPackage: AudioQuizPackage?) {
+        if let package = newPackage, !package.questions.isEmpty {
+            Task {
+                try await loadNewUserQuiz(package)
+            }
+        }
+    }
+    
+    func loadNewUserQuiz(_ newPackage: AudioQuizPackage) async throws {
+       
+
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: newPackage.name, quizImage: newPackage.imageUrl)
+        newDownloadedQuiz.questions = newPackage.questions
+        
+        // Initialize and use the ContentBuilder to download audio for the questions
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        
+        // Assuming `downloadAudioQuestions` is asynchronous and might throw, handle with try await
+        await contentBuilder.downloadAudioQuestions(for: newDownloadedQuiz.questions)
+        
+        print("Downloaded 1 audio file for question: \(newDownloadedQuiz.questions[0].id) with audiofile path: \(newDownloadedQuiz.questions[0].questionAudio)")
+        
+        // Insert the new quiz into the model context and save it
+        //modelContext.insert(newDownloadedQuiz)
+       // try modelContext.save()
+    }
+    
+    func loadNewQuiz() async throws {
+        
+        guard !audioQuizCollection.isEmpty else { return }
+        
+        guard downloadedAudioQuizCollection.isEmpty else { return }
+        
+        guard let quizPackage = user.selectedQuizPackage, !quizPackage.questions.isEmpty else { return }
+        
+        // Prepare the new quiz package with the associated questions
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: quizPackage.name, quizImage: quizPackage.imageUrl)
+        newDownloadedQuiz.questions = quizPackage.questions
+        
+        // Initialize and use the ContentBuilder to download audio for the questions
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        
+        // Assuming `downloadAudioQuestions` is asynchronous and might throw, handle with try await
+        await contentBuilder.downloadAudioQuestions(for: newDownloadedQuiz.questions)
+        
+        print("Downloaded 1 audio file for question: \(newDownloadedQuiz.questions[0].id) with audiofile path: \(newDownloadedQuiz.questions[0].questionAudio)")
+        
+        // Insert the new quiz into the model context and save it
+        //modelContext.insert(newDownloadedQuiz)
+       // try modelContext.save()
+    }
+    
+    private func playSingleQuizQuestion() {
+        // Access the current quiz package safely
+        guard let package = self.audioQuiz else {
+           
+            return
+        }
+        
+        guard !package.questions.isEmpty else {
+            print("Mini Player error: No available questions in the package")
+            return
+        }
+        
+        let question = package.questions[self.currentQuestionIndex]
+        
+        let audioFile = question.questionAudio
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            audioContentPlayer.playAudioFile(audioFile)
+            
+        }
+    }
+    
+    func loadUserPackage() {
+        guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
+              let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
+              !matchingQuizPackage.questions.isEmpty else {
+            user.selectedQuizPackage = nil
+            return
+        }
+        user.selectedQuizPackage = matchingQuizPackage
+    }
+
     
     func currentQuiz() -> DownloadedAudioQuizContainer {
         let audioQuiz: DownloadedAudioQuizContainer = DownloadedAudioQuizContainer(name: "Quick Math", quizImage: "Math-Exam")
@@ -162,17 +238,20 @@ struct QuizPlayerView: View {
 }
 
 struct NowPlayingView: View {
-    var currentquiz: DownloadedAudioQuizContainer
+    var currentquiz: DownloadedAudioQuiz?
     var quizPlayerObserver: QuizPlayerObserver
     var questionCount: Int
     var currentQuestionIndex: Int
     var color: Color
     @Binding var interactionState: InteractionState
+    
+    var playAction: () -> Void
+    
     var body: some View {
         
         HStack {
             VStack(spacing: 4) {
-                Image(currentquiz.quizImage)
+                Image(currentquiz?.quizImage ?? "IconImage")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(10)
@@ -183,7 +262,7 @@ struct NowPlayingView: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 
-                Text(currentquiz.name.uppercased())
+                Text(currentquiz?.quizname.uppercased() ?? "Empty")
                     .font(.title3)
                     .fontWeight(.semibold)
                     
@@ -204,7 +283,7 @@ struct NowPlayingView: View {
                 
                 HStack {
                     Spacer()
-                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: color, playAction: {})
+                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: color, playAction: { playAction() })
                 }
                 .padding()
             }
@@ -217,6 +296,22 @@ struct NowPlayingView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
     }
+    
+}
+
+
+#Preview {
+    let user = User()
+    let appState = AppState()
+    let observer = QuizPlayerObserver()
+    let presentMgr = QuizViewPresentationManager()
+    return QuizPlayerView()
+        .environmentObject(user)
+        .environmentObject(appState)
+        .environmentObject(observer)
+        .preferredColorScheme(.dark)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
+  
 }
 
 
@@ -225,73 +320,3 @@ struct NowPlayingView: View {
 //    )
 //    .clipShape(RoundedRectangle(cornerRadius: 12))
 //    .shadow(color: Color.blue.opacity(0.4), radius: 10, x: 0, y: 1)
-
-//
-//extension QuizPlayerView {
-//    class QuizSetter: ObservableObject, QuizPlayerDelegate {
-//        @Published var configuration: QuizViewConfiguration?
-//        
-//        private var quizPlayer = QuizPlayer.shared
-//        private var isFinishedPlaying = false
-//        private var isNowPlaying = false
-//        
-//       init() {
-//            self.quizPlayer.delegate = self
-//        }
-//        
-//        func quizPlayerDidFinishPlaying(_ player: QuizPlayer) {
-//            self.isFinishedPlaying = true
-//        }
-//    
-//        var playPauseQuiz: (() -> Void)?
-//        var nextQuestion: (() -> Void)?
-//        var repeatQuestion: (() -> Void)?
-//        var endQuiz: (() -> Void)?
-//        
-//        func setActions(playPauseQuiz: (() -> Void)? = nil,
-//                        nextQuestion: (() -> Void)? = nil,
-//                        repeatQuestion: (() -> Void)? = nil,
-//                        endQuiz: (() -> Void)? = nil) {
-//            self.playPauseQuiz = playPauseQuiz
-//            self.nextQuestion = nextQuestion
-//            self.repeatQuestion = repeatQuestion
-//            self.endQuiz = endQuiz
-//        }
-//        
-//        func loadQuizConfiguration(quizPackage: AudioQuizPackage?) {
-//            guard let quizPackage = quizPackage else {
-//                return
-//            }
-//            
-//            let questions = QuestionVisualizerMaker.createVisualizers(from: quizPackage.questions)
-//            let newConfiguration = QuizViewConfiguration(
-//                imageUrl: quizPackage.imageUrl,
-//                name: quizPackage.name,
-//                shortTitle: quizPackage.acronym,
-//                questions: questions
-//                
-//            )
-//            
-//            self.configuration = newConfiguration
-//            print("Quiz Setter has Set Configurations")
-//        }
-//    }
-//}
-//        
-//
-//
-#Preview {
-    @State var package = DownloadedAudioQuizContainer(name: "Quick Math", quizImage: "Math-Exam")
-    let user = User()
-    let appState = AppState()
-    let observer = QuizPlayerObserver()
-    return QuizPlayerView(audioQuiz: $package)
-        .environmentObject(user)
-        .environmentObject(appState)
-        .environmentObject(observer)
-        .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self], inMemory: true)
-  
-}
-
-

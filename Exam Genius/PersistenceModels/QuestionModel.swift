@@ -125,6 +125,53 @@ extension Question {
     }
 }
 
+extension Question: DownloadableQuiz {
+    var contentReadOut: String {
+        return formatQuestionForReadOut(questionContent: questionContent, options: options, context: "New Question!")
+    }
+    var noteReadOut: String {
+        return formatOverviewForReadout(overviewString: questionNote)
+    }
+    var contentAudioURL: String {
+        get { return questionAudio }
+        set { questionAudio = newValue }
+    }
+    var noteAudioURL: String {
+        get { return questionNoteAudio }
+        set { questionNoteAudio = newValue }
+    }
+    
+    private func formatQuestionForReadOut(questionContent: String, options: [String], context: String) -> String {
+        return """
+               \(context):
+               
+               \(questionContent)
+               
+               Options:
+               
+               A: \(options[0])
+               B: \(options[1])
+               C: \(options[2])
+               D: \(options[3])
+               
+               """
+    }
+    
+    private func formatOverviewForReadout(overviewString: String) -> String {
+        let headers = ["That is Incorrect", "Incorrect", "That is the Wrong Answer", "That is not the right Answer"]
+        // Select a random header from the headers array.
+        let header = headers.randomElement() ?? "Incorrect"
+
+        return """
+        
+        \(header)
+        
+        \(overviewString)
+        
+        """
+    }
+}
+
 
 
 

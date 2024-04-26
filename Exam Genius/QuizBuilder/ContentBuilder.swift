@@ -196,7 +196,7 @@ extension ContentBuilder {
     
     func buildQuestionsOnly(examName: String) async throws -> Container {
         try await fetchAndStoreAllTopics(examName: examName)
-        let selectedTopics = selectRandomTopics(limit: 15)
+        let selectedTopics = selectRandomTopics(limit: 10)
         await downloadQuestionsForTopics(selectedTopics, examName: examName)
         return container
     }
@@ -206,7 +206,7 @@ extension ContentBuilder {
         container.topics = allTopics.map { Topic(name: $0) }
         print("Fetched and stored all topics")
     }
-
+    
     private func selectRandomTopics(limit: Int) -> [Topic] {
         guard container.topics.count >= limit else {
             return container.topics
@@ -219,7 +219,7 @@ extension ContentBuilder {
             for topic in topics {
                 group.addTask {
                     do {
-                        let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: 3)
+                        let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: 1)
                         // Processing each question data object
                         questionDataArray.forEach { questionDataObject in
                             let questions = questionDataObject.questions.map { questionData in
@@ -232,7 +232,7 @@ extension ContentBuilder {
                                     questionNote: questionData.overview
                                 )
                             }
-
+                            
                             DispatchQueue.main.async {
                                 // Append directly to the container questions
                                 self.container.questions.append(contentsOf: questions)
@@ -247,6 +247,7 @@ extension ContentBuilder {
         }
     }
     
+    
     func downloadAllFeedbackAudio(for voiceFeedback: VoiceFeedbackContainer) async -> VoiceFeedbackContainer {
         var updatedFeedback = voiceFeedback
         let messagesAndPaths: [(message: String, keyPath: WritableKeyPath<VoiceFeedbackContainer, String>)] = [
@@ -257,7 +258,7 @@ extension ContentBuilder {
             (voiceFeedback.errorTranscriptionMessage, \VoiceFeedbackContainer.errorTranscriptionAudioUrl),
             (voiceFeedback.finalScoreMessage, \VoiceFeedbackContainer.finalScoreAudioUrl)
         ]
-
+        
         await withTaskGroup(of: (WritableKeyPath<VoiceFeedbackContainer, String>, String?).self) { group in
             for (message, keyPath) in messagesAndPaths {
                 group.addTask {
@@ -271,10 +272,56 @@ extension ContentBuilder {
                 }
             }
         }
-
+        
         return updatedFeedback
     }
-
+    
+    private func buildAudioQuestionsV3(_ questions: [Question]) async {
+        await withTaskGroup(of: Void.self) { group in
+            for question in questions {
+                group.addTask {
+                    let context = "New Question!"
+                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+                    let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
+                    
+                    // Concurrent downloads for both audios
+                    async let questionAudioUrl: String = self.downloadReadOut(readOut: readOut) ?? ""
+                    async let questionNoteAudioUrl: String = self.downloadReadOut(readOut: overViewReadOut) ?? ""
+                    
+                    // Awaiting both tasks to complete
+                    question.questionAudio = await questionAudioUrl
+                    question.questionNoteAudio = await questionNoteAudioUrl
+                }
+            }
+        }
+    }
+    
+    
+    func downloadAudioQuestions(for items: [DownloadableQuiz]) async {
+        var updatedItems = [(DownloadableQuiz, String, String)]()
+        // Perform all downloads concurrently, collect results in an array
+        await withTaskGroup(of: (DownloadableQuiz, String, String).self) { group in
+            for item in items {
+                group.addTask {
+                    let contentAudio: String = await self.downloadReadOut(readOut: item.contentReadOut) ?? ""
+                    let noteAudio: String = await self.downloadReadOut(readOut: item.noteReadOut) ?? ""
+                    return (item, contentAudio, noteAudio)
+                }
+            }
+            
+            // Collect all updates safely
+            for await (item, contentAudio, noteAudio) in group {
+                updatedItems.append((item, contentAudio, noteAudio))
+            }
+        }
+        
+        // Apply the updates in a non-concurrent context
+        for (var item, contentAudio, noteAudio) in updatedItems {
+            item.contentAudioURL = contentAudio
+            item.noteAudioURL = noteAudio
+        }
+    }
+    
 }
 
 
@@ -380,4 +427,12 @@ extension ContentBuilder {
             }
         }
     }
+}
+
+
+protocol DownloadableQuiz {
+    var contentReadOut: String { get }
+    var noteReadOut: String { get }
+    var contentAudioURL: String { get set }
+    var noteAudioURL: String { get set }
 }
