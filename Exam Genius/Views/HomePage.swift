@@ -18,6 +18,7 @@ struct HomePage: View {
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     @Query(sort: \VoiceFeedbackMessages.id) var voiceFeedbackMessages: [VoiceFeedbackMessages]
+    @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @StateObject var generator = ColorGenerator()
 
@@ -87,7 +88,7 @@ struct HomePage: View {
                 }
                 .task {
                     await loadDefaultCollection()
-                   // await loadVoiceFeedBackMessages()
+                    await loadVoiceFeedBackMessages()
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                 }
                 .toolbar {
@@ -104,14 +105,6 @@ struct HomePage: View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
-            .onChange(of: myLibInteractionState, { oldValue, newValue in
-                if newValue == .isNowPlaying {
-                    print("My Library: \(newValue)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        self.isPlaying = true
-                    }
-                }
-            })
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -119,7 +112,7 @@ struct HomePage: View {
                 fetchFullPackage(newValue)
             })
             .onChange(of: quizPlayerObserver.playerState, { _, newValue in
-                print("Home page interaction State is \(newValue)")
+                
                 //updatePlayState(interactionState: newValue)
             })
             .onChange(of: didTapPlaySample, { _, newValue in
@@ -129,9 +122,8 @@ struct HomePage: View {
                 TabIcons(title: "Home", icon: "house.fill")
             }
             .tag(0)
-            
-//            MyLibrary(interactionState: $myLibInteractionState)
-            QuizPlayerView()
+
+            QuizPlayerView(audioQuizPacket: $user.selectedQuizPackage)
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -149,6 +141,7 @@ struct HomePage: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 updateCollections()
                 loadUserPackage()
+                fetchDownloadedAudioQuiz()
             }
         }
         .tint(.white).activeGlow(.white, radius: 2)
@@ -169,6 +162,17 @@ struct HomePage: View {
         user.selectedQuizPackage = matchingQuizPackage
     }
     
+    func fetchDownloadedAudioQuiz() {
+        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
+              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
+              !matchingQuizPackage.questions.isEmpty else {
+            user.downloadedQuiz = nil
+            return
+        }
+        
+        user.downloadedQuiz = matchingQuizPackage
+    }
+    
     @ViewBuilder
     private func BottomMiniPlayer() -> some View {
         
@@ -178,7 +182,7 @@ struct HomePage: View {
                 .cornerRadius(10)
                 .background(.black)
                 .overlay {
-                    MiniPlayerV2(selectedQuizPackage: self.$selectedQuizPackage, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, startPlaying: $isPlaying)
+                    MiniPlayerV2(selectedQuizPackage: $user.downloadedQuiz, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, startPlaying: $isPlaying)
                         .offset(y: 3)
                 }
         }
@@ -190,11 +194,6 @@ struct HomePage: View {
         })
         .frame(height: 70)
         .offset(y: -49)
-    }
-    
-    func currentQuiz() -> DownloadedAudioQuizContainer {
-        let audioQuiz: DownloadedAudioQuizContainer = DownloadedAudioQuizContainer(name: "Quick Math", quizImage: "Math-Exam")
-        return audioQuiz
     }
     
 }

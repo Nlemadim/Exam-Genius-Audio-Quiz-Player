@@ -13,7 +13,7 @@ extension MiniPlayerV2 {
         @Published var configuration: QuizViewConfiguration?
         var transcriber: QuestionTranscriber?
         @Published var questionTranscript: String = "Get Ready!"
-        @Published var currentQuizPackage: AudioQuizPackage?
+        @Published var currentQuizPackage: DownloadedAudioQuiz?
         @Published var latestPerformance: PerformanceModel?
         @Published var stoppedPlaying: Bool = false
         @Published var interactionState: InteractionState = .idle
@@ -26,34 +26,29 @@ extension MiniPlayerV2 {
             self.sharedState = sharedState
         }
         
-        func loadQuizConfiguration(quizPackage: AudioQuizPackage?) {
+        func loadQuizConfiguration(quizPackage: DownloadedAudioQuiz?) {
             guard let quizPackage = quizPackage else {
                 return
             }
             
-            let questions = QuestionVisualizerMaker.createVisualizers(from: quizPackage.questions)
+            let question = questionTranscript
             
             let newConfiguration = QuizViewConfiguration(
-                imageUrl: quizPackage.imageUrl,
-                name: quizPackage.name,
-                shortTitle: quizPackage.acronym,
-                questions: questions
+                imageUrl: quizPackage.quizImage,
+                name: quizPackage.quizname,
+                shortTitle: quizPackage.shortTitle,
+                question: question
             )
             
             DispatchQueue.main.async {
                 self.configuration = newConfiguration
                 self.currentQuizPackage = quizPackage
-                print("Quiz Setter has Set New Quiz package: \(self.currentQuizPackage?.name ?? "No package selected")")
-                print("Quiz Setter has Set Configurations")
-                print("Quiz Setter has Set questionTranscript as: \(self.questionTranscript)")
-                
             }
         }
         
        
         func loadQuestionScriptViewer(question: String) {
             self.questionTranscript = question
-
         }
         
         

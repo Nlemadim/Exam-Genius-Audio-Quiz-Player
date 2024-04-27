@@ -11,25 +11,13 @@ struct QuizViewConfiguration: Equatable {
     var imageUrl: String
     var name: String
     var shortTitle: String
-    var questions: [QuestionVisualizer] = []
+    var question: String
     
     static func == (lhs: QuizViewConfiguration, rhs: QuizViewConfiguration) -> Bool {
         return lhs.name == rhs.name
     }
 
 }
-
-//struct QuestionScriptViewer: Equatable {
-//    var imageUrl: String
-//    var name: String
-//    var shortTitle: String
-//    var transcriptionView: QuestionTranscriptionView?
-//    var scriptView: QuestionScriptView?
-//    
-//    static func == (lhs: QuestionScriptViewer, rhs: QuestionScriptViewer) -> Bool {
-//        return lhs.name == rhs.name
-//    }
-//}
 
 
 struct ControlConfiguration {

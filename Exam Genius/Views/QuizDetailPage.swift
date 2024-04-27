@@ -62,7 +62,7 @@ struct QuizDetailPage: View {
                                 .padding()
                             
                             Text(audioQuiz.name)
-                                .lineLimit(3, reservesSpace: true)
+                                .lineLimit(4, reservesSpace: true)
                                 .multilineTextAlignment(.center)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.primary)
@@ -73,12 +73,11 @@ struct QuizDetailPage: View {
                         .frame(height: 300)
                         .frame(maxWidth:.infinity)
                         .padding()
-                        .padding(.horizontal, 40)
                         .hAlign(.center)
                         
                         PlaySampleButton(interactionState: .constant(.idle), playAction: {})
                             .hAlign(.center)
-                            .offset(y: -20)
+                            .offset(y: -10)
                         
                         VStack(alignment: .leading, spacing: 8.0) {
                     
@@ -217,7 +216,7 @@ struct QuizDetailPage: View {
         let user = User()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
-        @State var package = AudioQuizPackage(id: UUID(), name: "American History", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "AmericanHistory-Exam", category: [.legal])
+        @State var package = AudioQuizPackage(id: UUID(), name: "The California Bar Examination American History", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "AmericanHistory-Exam", category: [.legal])
    
         
         return QuizDetailPage(audioQuiz: package, didTapSample: .constant(false), didTapDownload: .constant(false), goToLibrary:  .constant(false), interactionState: .constant(.idle))

@@ -56,72 +56,76 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     // Plays the bell sound indicating correct answer state.
     func playWrongAnswerBell() {
+        self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         play(soundNamed: "wrongAnswerBell")
     }
     
     // Plays the bell sound indicating correct answer state.
     func playCorrectBell() {
+        self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         play(soundNamed: "correctBell")
     }
 
     // Plays the bell sound indicating listening state.
     func playListeningBell() {
+        self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         play(soundNamed: "softBell1")
     }
 
     // Plays the bell sound indicating a successful response.
     func playReceivedResponseBell() {
+        self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         play(soundNamed: "softBell2")
     }
     
     func playErrorBell() {
+        self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         play(soundNamed: "errorBell1")
     }
     
     // Plays the bell sound indicating correct answer state.
     func playErrorTranscriptionBell() {
+        self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         play(soundNamed: "errorTranscriptionBell")
     }
 
     // Plays a sound from the specified file name.
     func play(soundNamed soundName: String) {
-            guard let url = Bundle.main.url(forResource: soundName, withExtension: "wav") else {
-                print("Sound file not found.")
-                return
-            }
-
-            // Ensure the audio session is correctly configured each time a sound is played
-            configureAudioSession()  // This call can be placed here to ensure the session is active and configured each time.
-
-            do {
-                audioPlayer?.stop()  // Stop any currently playing audio
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.delegate = self
-                audioPlayer?.prepareToPlay()
-                audioPlayer?.volume = 1.0
-                audioPlayer?.play()
-            } catch {
-                print("Could not load file: \(error)")
-            }
+        guard let url = Bundle.main.url(forResource: soundName, withExtension: "wav") else {
+            print("Sound file not found.")
+            return
         }
+        
+        // Ensure the audio session is correctly configured each time a sound is played
+        configureAudioSession()  // This call can be placed here to ensure the session is active and configured each time.
+        
+        do {
+            audioPlayer?.stop()  // Stop any currently playing audio
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.volume = 1.0
+            audioPlayer?.play()
+        } catch {
+            print("Could not load file: \(error)")
+        }
+    }
         
 
     // AVAudioPlayerDelegate method for handling playback completion.
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         DispatchQueue.main.async {
-            if flag && self.finishedPlayingFeedBack == true {
-                self.feedbackPlayerState = .donePlayingFeedbackMessage
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.feedbackPlayerState = .idle
-                self.finishedPlayingFeedBack = false
+            if flag  {
+                if self.finishedPlayingFeedBack {
+                    self.feedbackPlayerState = .donePlayingFeedbackMessage
+                    print(self.feedbackPlayerState)
+                }
             }
         }
     }
@@ -141,6 +145,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         
         DispatchQueue.main.async {
             self.finishedPlayingFeedBack = true
+            self.feedbackPlayerState = .playingFeedbackMessage
         }
         
         do {
@@ -155,8 +160,6 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Invalid file path")
             return
         }
-        
-        self.feedbackPlayerState = .playingFeedbackMessage
         
         do {
             try startPlayback(from: fileURL)

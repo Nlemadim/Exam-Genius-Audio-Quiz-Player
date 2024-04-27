@@ -124,11 +124,9 @@ extension HomePage {
         }
     }
     
-    func updatePlayState(interactionState: InteractionState) {
-        if interactionState == .isNowPlaying || interactionState == .isDonePlaying {
-            DispatchQueue.main.async {
-                self.interactionState = interactionState
-            }
+    func updatePlayState(interactionState: QuizPlayerState) {
+        DispatchQueue.main.async {
+            self.quizPlayerObserver.playerState = interactionState
         }
     }
     
@@ -223,6 +221,9 @@ extension HomePage {
         
         return feedbackMessages
     }
+    
+    
+   
 }
 
 struct FeedBackMessageUrls {

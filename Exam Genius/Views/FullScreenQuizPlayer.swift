@@ -83,10 +83,8 @@ struct FullScreenQuizPlayer2: View {
                                 .foregroundStyle(.primary)
                                 .hAlign(.leading)
                             
-                            ProgressBarView(progress: self.progress, fillColor: generator.dominantBackgroundColor.dynamicTextColor())
-                            
-//                            QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.configuration?.questions.count ?? 0, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
-//                                //.padding(.horizontal, 3)
+                            QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.quizQuestionCount, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
+                                //.padding(.horizontal, 3)
                                
                             Divider()
                                
@@ -142,14 +140,14 @@ struct FullScreenQuizPlayer2: View {
                     withAnimation(.easeInOut(duration: 0.35)) {
                         animateContent = true
                     }
-                    showContent()
+                   // showContent()
                 }
-                .onChange(of: currentQuestionIndex) { _, _ in
-                    showContent()
-                }
-                .onChange(of: quizSetter.configuration) { _, _ in
-                    showContent()
-                }
+//                .onChange(of: currentQuestionIndex) { _, _ in
+//                    showContent()
+//                }
+//                .onChange(of: quizSetter.configuration) { _, _ in
+//                    showContent()
+//                }
                 .onChange(of: questionTranscript, { _, newValue in
                     startTypingAnimation(for: newValue)
                 })
@@ -170,7 +168,7 @@ struct FullScreenQuizPlayer2: View {
     }
     
     var progress: CGFloat {
-        return CGFloat(currentQuestionIndex) / CGFloat(quizSetter.configuration?.questions.count ?? 0)
+        return CGFloat(currentQuestionIndex) / CGFloat(quizSetter.configuration?.question.count ?? 0)
     }
 
     func playButtonIconSetter() -> Bool {
@@ -184,16 +182,16 @@ struct FullScreenQuizPlayer2: View {
     
     func showContent() {
         // Safely unwrap configuration and ensure currentIndex is within the range of questions.
-        guard let questions = quizSetter.configuration?.questions, questions.indices.contains(currentQuestionIndex) else { return }
-        
-        let currentQuestion = questions[currentQuestionIndex]
+//        guard let questions = quizSetter.configuration?.question, questions.indices.contains(currentQuestionIndex) else { return }
+//        
+//        let currentQuestion = questions[currentQuestionIndex]
         
         // Update state with the current question and options
-        question = currentQuestion.questionContent
-        optionA = currentQuestion.optionA
-        optionB = currentQuestion.optionB
-        optionC = currentQuestion.optionC
-        optionD = currentQuestion.optionD
+//        question = currentQuestion.questionContent
+//        optionA = currentQuestion.optionA
+//        optionB = currentQuestion.optionB
+//        optionC = currentQuestion.optionC
+//        optionD = currentQuestion.optionD
     }
     
     private func startTypingAnimation(for text: String) {
@@ -327,15 +325,13 @@ struct TranscriptView: View {
     }
 }
 
-// ColorGenerator and InteractionState need to be defined as per your app context.
-
 
 
 #Preview {
     let user = User()
     @Namespace var animation
     @State var curIndex = 0
-    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP")
+    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", question: "")
     let sharedState = SharedQuizState()
     let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
     quizSetter.configuration = config

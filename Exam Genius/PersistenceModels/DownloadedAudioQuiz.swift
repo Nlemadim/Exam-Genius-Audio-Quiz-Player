@@ -12,15 +12,17 @@ import SwiftData
 @Model
 class DownloadedAudioQuiz: Identifiable, Hashable {
     @Attribute(.unique) var quizname: String
+    var shortTitle: String
     var quizImage: String
     var dateCreated: Date
     var currentIndex: Int
     var totalScore: Int
     var questions: [Question]
     
-    init(quizname: String, quizImage: String) {
+    init(quizname: String, shortTitle: String, quizImage: String) {
         self.quizname = quizname
         self.quizImage = quizImage
+        self.shortTitle = shortTitle
         self.dateCreated = .now
         self.currentIndex = 0
         self.questions = []

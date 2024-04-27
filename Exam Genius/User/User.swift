@@ -18,12 +18,14 @@ final class User: ObservableObject {
     @Published var hasSelectedAudioQuiz: Bool = false
     @Published var audioQuizPackage: AudioQuizPackage?
     @Published var audioQuizPlaylist: [DownloadedAudioQuiz]
+    @Published var downloadedAudioQuiz: DownloadedAudioQuiz?
     @Published var hasStartedQuiz: Bool = false
     
     var currentPlayPosition: Int = 0
     
-    init(audioQuizPackage: AudioQuizPackage? = nil) {
+    init(audioQuizPackage: AudioQuizPackage? = nil, downloadedAudioQuiz: DownloadedAudioQuiz? = nil) {
         self.audioQuizPackage = audioQuizPackage
+        self.downloadedAudioQuiz = downloadedAudioQuiz
         self.audioQuizPlaylist = []
     }
     
@@ -40,8 +42,17 @@ final class User: ObservableObject {
             if let packageName = selectedQuizPackage?.name {
                 UserDefaults.standard.set(packageName, forKey: "userSelectedPackageName")
             }
-            // No else part to remove the stored value
         }
     }
-
+    
+    var downloadedQuiz: DownloadedAudioQuiz? {
+        
+        didSet {
+            downloadedAudioQuiz = downloadedQuiz
+            
+            if let quizName = downloadedQuiz?.quizname {
+                UserDefaults.standard.set(quizName, forKey: "userDownloadedAudioQuizName")
+            }
+        }
+    }
 }

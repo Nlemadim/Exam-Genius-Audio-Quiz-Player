@@ -11,6 +11,7 @@ struct QuestionCountVisualizer: View {
     var index: Int
     var count: Int
     var fillColor: Color
+    let maxWidth: CGFloat = 380  // Maximum width for the visualizer
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -18,22 +19,19 @@ struct QuestionCountVisualizer: View {
                 Capsule()
                     .fill(Color.black.opacity(0.3))  // Background color for the unfilled part
                     .frame(height: 8)
-                
+
                 Capsule()
                     .fill(fillColor)  // Dynamic fill color
-                    .frame(width: CGFloat(index) / CGFloat(count) * UIScreen.main.bounds.width, height: 8)
+                    .frame(width: CGFloat(index) / CGFloat(count) * maxWidth, height: 8)
                     .animation(.linear, value: index)
             }
-            .frame(height: 8)
-           
+            .frame(width: maxWidth, height: 8)  // Ensure the ZStack does not exceed maxWidth
 
             Text("Question \(index)/\(count)")
                 .font(.caption)
                 .foregroundStyle(fillColor)
                 .padding(.top, 2)
         }
-        .frame(maxWidth: 380)
-        
     }
 }
 
@@ -46,31 +44,14 @@ struct TestViewer: View {
             QuestionCountVisualizer(index: 6, count: 43, fillColor: .teal)
                 .frame(maxWidth: .infinity)
                 
-            
+           
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
-struct ProgressBarView: View {
-    var progress: CGFloat
-    var fillColor: Color
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Rectangle()
-                    .fill(Color.black.opacity(0.2))
-                
-                Rectangle()
-                    .fill(fillColor)
-                    .frame(width: progress * geometry.size.width)
-            }
-            .clipShape(Capsule())
-        }
-    }
-}
+
 
 
 #Preview {

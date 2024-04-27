@@ -19,12 +19,12 @@ struct MiniPlayerV2: View {
     @StateObject private var audioContentPlayer = AudioContentPlayer()
     @StateObject private var questionPlayer = QuestionPlayer()
     @StateObject private var intermissionPlayer = IntermissionPlayer()
-    @StateObject var sharedState = SharedQuizState()
+
     @StateObject var responseListener = ResponseListener()
     @StateObject private var configuration: MiniPlayerV2Configuration
     @State var currentQuestions: [Question] = []
     
-    @Binding var selectedQuizPackage: AudioQuizPackage?
+    @Binding var selectedQuizPackage: DownloadedAudioQuiz?
     @Binding var feedbackMessageUrls: FeedBackMessageUrls?
     @State var expandSheet: Bool = false
     @Binding var interactionState: InteractionState
@@ -38,7 +38,7 @@ struct MiniPlayerV2: View {
     @State var isCorrectAnswer: Bool = false
     @State var presentConfirmationModal: Bool = false
     
-    init(selectedQuizPackage: Binding<AudioQuizPackage?>, feedbackMessageUrls: Binding<FeedBackMessageUrls?>, interactionState: Binding<InteractionState>, startPlaying: Binding<Bool>) {
+    init(selectedQuizPackage: Binding<DownloadedAudioQuiz?>, feedbackMessageUrls: Binding<FeedBackMessageUrls?>, interactionState: Binding<InteractionState>, startPlaying: Binding<Bool>) {
         _selectedQuizPackage = selectedQuizPackage
         _feedbackMessageUrls = feedbackMessageUrls
         _interactionState = interactionState
@@ -68,8 +68,8 @@ struct MiniPlayerV2: View {
                 presentMicModal: $presentMicModal,
                 interactionState: $interactionState,
                 questionTranscript: $interactionFeedbackMessage,
-                onViewDismiss: { dismissAction()},
-                playAction: { startQuizAudioPlay(self.interactionState) },
+                onViewDismiss: { },
+                playAction: {playSingleQuizQuestion() /*startQuizAudioPlay(self.interactionState)*/ },
                 nextAction: { goToNextQuestion() },
                 recordAction: { self.interactionState = .isListening }
             )
@@ -92,7 +92,7 @@ struct MiniPlayerV2: View {
         .onChange(of: currentQuestionIndex) { _, _ in
             updateQuestionScriptViewer()
         }
-        .onChange(of: user.selectedQuizPackage) { _, newPackage in
+        .onChange(of: user.downloadedQuiz) { _, newPackage in
             updateViewWithPackage(newPackage)
         }
         .onChange(of: configuration.currentQuizPackage) { _, newPackage in
@@ -105,8 +105,7 @@ struct MiniPlayerV2: View {
             syncInteractionState(newState)
         }
         .onChange(of: intermissionPlayer.feedbackPlayerState) { _, newState in
-            //guard intermissionPlayer.finishedPlayingFeedBack == true && newState == .donePlayingFeedbackMessage else { return }
-            print("Finished Playing Feedback")
+            print("IntermissionPlayer feedBackState is : \(newState)")
             syncInteractionState(newState)
         }
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
@@ -116,7 +115,8 @@ struct MiniPlayerV2: View {
             DispatchQueue.main.async {
                 self.interactionStateAction(newState)
                 self.updateFeedbackMessage(newState)
-                configuration.loadQuestionScriptViewer(question: self.interactionFeedbackMessage)
+//                self.configuration.sharedState.updateInteractionState(newState: newState)
+                self.configuration.loadQuestionScriptViewer(question: self.interactionFeedbackMessage)
             }
         }
         .onChange(of: selectedQuizPackage) {_, newPackage in
@@ -130,7 +130,7 @@ struct MiniPlayerV2: View {
 
     private var playerThumbnail: some View {
         GeometryReader { geometry in
-            Image(user.selectedQuizPackage?.imageUrl ?? "Logo")
+            Image(user.downloadedQuiz?.quizImage ?? "Logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: geometry.size.width, height: geometry.size.height)
@@ -140,7 +140,7 @@ struct MiniPlayerV2: View {
     }
 
     private var playerDetails: some View {
-        Text(user.selectedQuizPackage?.acronym ?? "Not Playing")
+        Text(user.downloadedQuiz?.shortTitle ?? "No Quiz Selected")
             .font(.footnote)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -154,6 +154,7 @@ extension MiniPlayerV2 {
         generator.updateAllColors(fromImageNamed: self.configuration.configuration?.imageUrl ?? "")
         if let newPackage = self.selectedQuizPackage {
             configuration.loadQuizConfiguration(quizPackage: newPackage)
+            configuration.quizQuestionCount = selectedQuizPackage?.questions.count ?? 0
         }
     }
     
@@ -187,7 +188,7 @@ extension MiniPlayerV2 {
         configuration.loadQuestionScriptViewer(question: question)
     }
     
-    func updateViewWithPackage(_ newPackage: AudioQuizPackage?) {
+    func updateViewWithPackage(_ newPackage: DownloadedAudioQuiz?) {
         if let package = newPackage {
             configuration.loadQuizConfiguration(quizPackage: package)
         }
@@ -196,11 +197,10 @@ extension MiniPlayerV2 {
     
     // MARK: QUIZ LOGICS
     //MARK: READY QUESTIONS
-    func updateCurrentQuestions(_ newPackage: AudioQuizPackage?) {
+    func updateCurrentQuestions(_ newPackage: DownloadedAudioQuiz?) {
         if let package = newPackage {
             self.currentQuestions = package.questions.filter { !$0.questionAudio.isEmpty }
         }
-        //updateQuestionScriptViewer()
     }
     
     //MARK: STEP 1: Quiz Entry Point - Now Playing
@@ -232,8 +232,8 @@ extension MiniPlayerV2 {
             return
         }
         
-        print("Selected quiz package: \(package.name), with questions count: \(package.questions.count)")
-        print("Current MiniPlayer Questions Preloading is: \(self.currentQuestions.count)")
+//        print("Selected quiz package: \(package.quizname), with questions count: \(package.questions.count)")
+//        print("Current MiniPlayer Questions Preloading is: \(self.currentQuestions.count)")
         
         // Ensure there are questions available
         
@@ -258,7 +258,7 @@ extension MiniPlayerV2 {
             self.interactionFeedbackMessage = "Transcription Error!"
             
         case .isListening:
-            self.interactionFeedbackMessage = "Waiting for your answer"
+            self.interactionFeedbackMessage = transcript
             
         case .playingFeedbackMessage:
             self.interactionFeedbackMessage = "Skipping this question for now"
@@ -344,7 +344,7 @@ extension MiniPlayerV2 {
             //setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
         case .errorTranscription:
-            playFeedbackMessage(feedbackMessageUrls?.errorMessage)
+            playFeedbackMessage(feedbackMessageUrls?.errorMessage) // Changes to .playingFeedback
             //MARK: TODO - Create Method to check for repeat listen settings
             //FOR Now Moving on
             
@@ -446,7 +446,6 @@ extension MiniPlayerV2 {
                 intermissionPlayer.playCorrectBell()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.interactionState = .isCorrectAnswer
-                    
                 }
                 
             } else {
@@ -491,6 +490,7 @@ extension MiniPlayerV2 {
     //MARK: Direct Click Action Methods.
     //MARK: Show Full Screen Method
     func expandAction() {
+        guard selectedQuizPackage != nil else { return }
         self.interactionState = .isNowPlaying
         configuration.interactionState = self.interactionState
         presentationManager.interactionState = self.interactionState
@@ -536,6 +536,7 @@ extension MiniPlayerV2 {
         //change interactionState to .pausedPlayback
         //questionPlayer.pauseQuiz()
     }
+    
     func continueFromPause() {
         //call on userdefaults to loadup last index
         //pass index to currentQuestionIndex
@@ -545,9 +546,9 @@ extension MiniPlayerV2 {
 }
 
 
-class SharedQuizState: ObservableObject {
-    @Published var interactionState: InteractionState = .idle
-    @Published var currentQuizPackage: AudioQuizPackage?
+@Observable class SharedQuizState {
+    var interactionState: InteractionState = .idle
+    //@Published var currentQuizPackage: AudioQuizPackage?
     
     //MARK: updateInteractionState(newState: InteractionState) Method used to communicate State of Play between MiniPlay thorugh MiniPlayer extension MiniPlayConfiguration class
     //Update
