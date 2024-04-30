@@ -6,33 +6,6 @@
 //
 
 
-//                HStack(alignment: .center, spacing: 15) {
-//                    /// Exam Icon Image
-//                    Image(quizSetter.configuration?.imageUrl ?? "IconImage")
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fit)
-//                        .frame(width: 100, height: 100)
-//                        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-//
-//                    VStack(alignment: .leading, spacing: 4) {
-//                        /// Long Name
-//                        Text(quizSetter.configuration?.name ?? "Error! No Quiz Content")
-//                            .font(.body)
-//                            .foregroundStyle(.white)
-//                            .fontWeight(.semibold)
-//                            .lineLimit(2, reservesSpace: false)
-//
-//                        Spacer().frame(height: 40)
-//
-//                        //MARK: TODO - Place Quiz Progress Bar Here
-//
-//                    }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                }
-//                .padding(.horizontal)
-
-
 import SwiftUI
 import SwiftData
 
@@ -45,6 +18,7 @@ struct FullScreenQuizPlayer2: View {
     @State var showText: Bool = false
     @State var isMuted: Bool = false
     @State private var offsetY: CGFloat = 0
+    @State private var quizProgress: CGFloat = 0
     @State private var animateContent: Bool = false
     @State private var timer: Timer?
     @State var optionA: String = ""
@@ -83,11 +57,7 @@ struct FullScreenQuizPlayer2: View {
                                 .foregroundStyle(.primary)
                                 .hAlign(.leading)
                             
-                            QuestionCountVisualizer(index: currentQuestionIndex + 1, count: quizSetter.quizQuestionCount, fillColor:  generator.dominantBackgroundColor.dynamicTextColor())
-                                //.padding(.horizontal, 3)
-                               
                             Divider()
-                               
                             
                         }
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
@@ -96,8 +66,10 @@ struct FullScreenQuizPlayer2: View {
                         .frame(maxWidth: 380)
                         .padding(.horizontal, 3)
                         .padding(.bottom, 15)
-                        //.offset(y: -30)
                         
+                        CustomProgressBarView(progress: $quizProgress, fillColor: .mint)
+                            .padding(.horizontal)
+                            .padding()
                         
                         VStack(alignment: .center) {
                             Text(quizSetter.questionTranscript)
@@ -120,12 +92,9 @@ struct FullScreenQuizPlayer2: View {
                                              nextAction: { goToNextQuestion() }
                         )
                     }
-                    //.padding()
                     .hAlign(.center)
                     
                 }
-//                .navigationTitle((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz").foregroundStyle(.red)
-//                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {dismiss()}, label: {
@@ -137,17 +106,10 @@ struct FullScreenQuizPlayer2: View {
                 .background(generator.dominantBackgroundColor)
                 .onAppear {
                     generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "IconImage")
-                    withAnimation(.easeInOut(duration: 0.35)) {
-                        animateContent = true
-                    }
-                   // showContent()
+//                    withAnimation(.easeInOut(duration: 0.35)) {
+//                        animateContent = true
+//                    }
                 }
-//                .onChange(of: currentQuestionIndex) { _, _ in
-//                    showContent()
-//                }
-//                .onChange(of: quizSetter.configuration) { _, _ in
-//                    showContent()
-//                }
                 .onChange(of: questionTranscript, { _, newValue in
                     startTypingAnimation(for: newValue)
                 })
@@ -161,6 +123,9 @@ struct FullScreenQuizPlayer2: View {
                 MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
             })
+            .onAppear {
+                self.quizProgress = progress
+            }
             .onDisappear(perform: {
                 onViewDismiss()
             })
@@ -168,7 +133,7 @@ struct FullScreenQuizPlayer2: View {
     }
     
     var progress: CGFloat {
-        return CGFloat(currentQuestionIndex) / CGFloat(quizSetter.configuration?.question.count ?? 0)
+        return CGFloat(currentQuestionIndex + 1) / CGFloat(quizSetter.quizQuestionCount)
     }
 
     func playButtonIconSetter() -> Bool {
@@ -180,19 +145,6 @@ struct FullScreenQuizPlayer2: View {
         currentQuestionIndex += 1
     }
     
-    func showContent() {
-        // Safely unwrap configuration and ensure currentIndex is within the range of questions.
-//        guard let questions = quizSetter.configuration?.question, questions.indices.contains(currentQuestionIndex) else { return }
-//        
-//        let currentQuestion = questions[currentQuestionIndex]
-        
-        // Update state with the current question and options
-//        question = currentQuestion.questionContent
-//        optionA = currentQuestion.optionA
-//        optionB = currentQuestion.optionB
-//        optionC = currentQuestion.optionC
-//        optionD = currentQuestion.optionD
-    }
     
     private func startTypingAnimation(for text: String) {
         var displayedText = ""

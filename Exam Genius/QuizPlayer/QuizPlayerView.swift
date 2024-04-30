@@ -19,22 +19,35 @@ struct QuizPlayerView: View {
     @StateObject private var generator = ColorGenerator()
     @StateObject private var audioContentPlayer = AudioContentPlayer()
     
+    
+    
     @State var interactionState: InteractionState = .idle
     
     @State var audioQuiz: DownloadedAudioQuiz?
     
-    @Binding var audioQuizPacket: AudioQuizPackage?
+    @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @State private var expandSheet: Bool = false
-    @State var isDownloading: Bool = false
+  
     @State var isPlaying: Bool = false
     @State private var playTapped: Bool = false
     
     @State var currentQuestionIndex: Int = 0
     
-    init(audioQuizPacket: Binding<AudioQuizPackage?>) {
-        _audioQuizPacket = audioQuizPacket
-    }
+    @State var isDownloading: Bool = false
+    
+//    @State var isDownloading: Bool = false {
+//        didSet {
+//            if let quiz = user.downloadedQuiz,
+//               !quiz.questions.contains(where: { !$0.questionAudio.isEmptyOrWhiteSpace }) {
+//                isDownloading = false
+//            }
+//        }
+//    }
+    
+    let sharedInteractionState = SharedQuizState()
+
+
     
     var body: some View {
         
@@ -47,7 +60,7 @@ struct QuizPlayerView: View {
                     )
                 
                 VStack(alignment: .center) {
-                    Image(audioQuiz?.quizImage ?? "Logo")
+                    Image(user.downloadedQuiz?.quizImage ?? "Logo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .clipped()
@@ -58,13 +71,13 @@ struct QuizPlayerView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(spacing: 5) {
-                            Image(audioQuiz?.quizImage ?? "Logo")
+                            Image(user.downloadedQuiz?.quizImage ?? "Logo")
                                 .resizable()
                                 .frame(width: 250, height: 250)
                                 .cornerRadius(20)
                                 .padding()
                             
-                            Text(audioQuiz?.quizname ?? "Quiz Player")
+                            Text(user.downloadedQuiz?.quizname ?? "Quiz Player")
                                 .lineLimit(2, reservesSpace: true)
                                 .multilineTextAlignment(.center)
                                 .fontWeight(.bold)
@@ -82,7 +95,7 @@ struct QuizPlayerView: View {
                     .padding()
                     
                     HStack {
-                        Text(self.audioQuiz == nil ? "Not Currently Playing" : "Now Playing")
+                        Text(user.downloadedQuiz == nil ? "Not Currently Playing" : "Now Playing")
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
                             .padding(.horizontal)
@@ -91,14 +104,13 @@ struct QuizPlayerView: View {
                     .padding(.horizontal)
                     
                     
-                    
                     Divider()
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
                     VStack {
                         
-                        NowPlayingView(currentquiz: audioQuiz, quizPlayerObserver: quizPlayerObserver, questionCount: audioQuiz?.questions.count ?? 0, currentQuestionIndex: currentQuestionIndex, color: generator.dominantLightToneColor, interactionState: $interactionState, playAction: {
+                        NowPlayingView(currentquiz: user.downloadedQuiz, quizPlayerObserver: quizPlayerObserver, questionCount: user.downloadedQuiz?.questions.count ?? 0, currentQuestionIndex: currentQuestionIndex, color: generator.dominantLightToneColor, interactionState: $interactionState, isDownloading: $isDownloading, playAction: {
                             
                            startPlayer()
                         })
@@ -128,23 +140,23 @@ struct QuizPlayerView: View {
                 }
             }
             .onAppear {
-                generator.updateAllColors(fromImageNamed: self.audioQuiz?.quizImage ?? "Logo")
-                print("\(self.audioQuizPacket?.name ?? "Packet is Nil")")
+                generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
+
             }
-            .onChange(of: audioQuizPacket) { _, newPackage in
-                if newPackage != nil {
-                    updateViewWithPackage()
-                } else {
-                    print("New Packet is Nil")
+            .onChange(of: user.downloadedQuiz) { _, newPackage in
+                Task {
+                    print("Updating user audio quiz with audio")
+                   await updateUserAudioQuiz(newPackage)
                 }
             }
-            .onChange(of: audioQuizPacket) {_, newPackage in
-                if let package = newPackage, !package.questions.isEmpty {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        Task {
-                            try await loadNewQuiz(audioQuizPackage: package)
-                        }
-                    }
+            .onChange(of: quizPlayerObserver.playerState) { _, newState in
+                DispatchQueue.main.async {
+                    syncQuizPlayerState(newState)
+                }
+            }
+            .onChange(of: sharedInteractionState.interactionState) { _, newState in
+                DispatchQueue.main.async {
+                    self.interactionState = newState
                 }
             }
             .toolbar {
@@ -159,6 +171,20 @@ struct QuizPlayerView: View {
         }
     }
     
+    private func syncQuizPlayerState(_ playerState: QuizPlayerState) {
+        switch playerState {
+        case .startedPlayingQuiz:
+            self.interactionState = .isNowPlaying
+        case .endedQuiz:
+            self.interactionState = .isDonePlaying
+        case .donePlaying:
+            self.interactionState = .isDonePlaying
+            
+        default:
+            break
+        }
+    }
+    
     private func startPlayer() {
         DispatchQueue.main.async {
             if self.interactionState != .isNowPlaying {
@@ -170,38 +196,43 @@ struct QuizPlayerView: View {
             }
         }
     }
-    
-    func updateViewWithPackage() {
-        if let package = self.audioQuizPacket {
-            self.loadNewUserQuiz(package)
-        }
-    }
-    
-    func loadNewUserQuiz(_ newPackage: AudioQuizPackage?) {
-        if let package = newPackage {
-            
-            let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
-            self.audioQuiz = newDownloadedQuiz
-            user.downloadedQuiz = self.audioQuiz
-            
-            modelContext.insert(newDownloadedQuiz)
-            try! modelContext.save()
-        }
-    }
-    
-    func loadNewQuiz(audioQuizPackage: AudioQuizPackage) async throws {
-        guard !audioQuizPackage.questions.isEmpty else {
-            print("No questions in Packet")
-            return
+
+    func updateUserAudioQuiz(_ audioQuiz: DownloadedAudioQuiz?) async {
+        if let audioQuiz = audioQuiz {
+            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+            //let questions = audioQuiz.questions
+            await contentBuilder.downloadAudioQuestions(for: audioQuiz.questions)
         }
         
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        
-        let questions = audioQuizPackage.questions
-        await contentBuilder.downloadAudioQuestions(for: questions)
-        
-        self.audioQuiz?.questions = questions
     }
+    
+//    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+//        
+//        guard downloadedAudioQuizCollection.isEmpty else { return }
+//        
+//        DispatchQueue.main.async {
+//            self.interactionState = .isDownloading
+//        }
+//        
+//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+//       
+//        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+//        
+//        let audioQuestions = package.questions
+//        
+//        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+//        
+//        newDownloadedQuiz.questions = audioQuestions
+//        
+//        modelContext.insert(newDownloadedQuiz)
+//        try! modelContext.save()
+//        
+//        DispatchQueue.main.async {
+//            user.downloadedQuiz = newDownloadedQuiz
+//            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+//            self.interactionState = .idle
+//        }
+//    }
     
     private func playSingleQuizQuestion() {
         // Access the current quiz package safely
@@ -223,7 +254,6 @@ struct QuizPlayerView: View {
             
         }
     }
-    
 }
 
 
@@ -253,6 +283,7 @@ struct NowPlayingView: View {
     var currentQuestionIndex: Int
     var color: Color
     @Binding var interactionState: InteractionState
+    @Binding var isDownloading: Bool
     
     var playAction: () -> Void
     
@@ -267,6 +298,14 @@ struct NowPlayingView: View {
                 
             }
             .frame(height: 150)
+            .overlay {
+                if interactionState == .isDownloading {
+                    ProgressView {
+                        Text("Downloading")
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
             
             
             VStack(alignment: .leading, spacing: 4) {
@@ -292,7 +331,7 @@ struct NowPlayingView: View {
                 
                 HStack {
                     Spacer()
-                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: color, playAction: { playAction() })
+                    CircularPlayButton(interactionState: $interactionState, isDownloading: $isDownloading, color: color, playAction: { playAction() })
                 }
                 .padding()
             }

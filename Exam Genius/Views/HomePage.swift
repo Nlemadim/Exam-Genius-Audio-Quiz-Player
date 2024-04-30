@@ -87,8 +87,8 @@ struct HomePage: View {
                     .zIndex(1)
                 }
                 .task {
-                    await loadDefaultCollection()
-                    await loadVoiceFeedBackMessages()
+//                    await loadDefaultCollection()
+//                    await loadVoiceFeedBackMessages()
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                 }
                 .toolbar {
@@ -110,11 +110,15 @@ struct HomePage: View {
             })
             .onChange(of: didTapDownload, { _, newValue in
                 fetchFullPackage(newValue)
-            })
-            .onChange(of: quizPlayerObserver.playerState, { _, newValue in
                 
-                //updatePlayState(interactionState: newValue)
             })
+            .onChange(of: downloadedAudioQuizCollection, { _, _ in
+                loadUserQuiz()
+            })
+//            .onChange(of: quizPlayerObserver.playerState, { _, newValue in
+//                
+//                //updatePlayState(interactionState: newValue)
+//            })
             .onChange(of: didTapPlaySample, { _, newValue in
                 playSampleQuiz(newValue)
             })
@@ -123,7 +127,7 @@ struct HomePage: View {
             }
             .tag(0)
 
-            QuizPlayerView(audioQuizPacket: $user.selectedQuizPackage)
+            QuizPlayerView()
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -135,14 +139,17 @@ struct HomePage: View {
                 }
                 .tag(2)
         }
+        .onChange(of: user.selectedQuizPackage, { _, audioQuiz in
+            if let audioQuiz = audioQuiz {
+                Task {
+                    await laodNewAudioQuiz(quiz: audioQuiz)
+                }
+            }
+        })
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
             generator.updateDominantColor(fromImageNamed: backgroundImage)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                updateCollections()
-                loadUserPackage()
-                fetchDownloadedAudioQuiz()
-            }
+            updateCollections()
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
@@ -171,6 +178,13 @@ struct HomePage: View {
         }
         
         user.downloadedQuiz = matchingQuizPackage
+    }
+    
+    func loadUserQuiz() {
+        guard !downloadedAudioQuizCollection.isEmpty else { return }
+        let newQuiz = downloadedAudioQuizCollection.first
+        user.downloadedQuiz = newQuiz
+        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
     }
     
     @ViewBuilder

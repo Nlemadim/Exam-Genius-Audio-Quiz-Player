@@ -15,13 +15,13 @@ extension HomePage {
             
             if let package = self.selectedQuizPackage {
                 user.selectedQuizPackage = package
-                packetStatusPrintOut()
+                
             }
         }
     }
 
     
-    func downloadFullPackage(_ audioQuiz: AudioQuizPackage) async throws {
+    private func downloadFullPackage(_ audioQuiz: AudioQuizPackage) async throws {
         guard audioQuiz.questions.isEmpty else { return }
         DispatchQueue.main.async {
             self.interactionState = .isDownloading
@@ -40,7 +40,6 @@ extension HomePage {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
             user.selectedQuizPackage = audioQuiz
-            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
             self.interactionState = .idle
             print("Downloaded")
         }
@@ -181,6 +180,29 @@ extension HomePage {
         }
     }
     
+    
+    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+        guard downloadedAudioQuizCollection.isEmpty else { return }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+       
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+        
+        let audioQuestions = package.questions
+        
+        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+        
+        newDownloadedQuiz.questions = audioQuestions
+        
+        modelContext.insert(newDownloadedQuiz)
+        try! modelContext.save()
+        
+        DispatchQueue.main.async {
+            user.downloadedQuiz = newDownloadedQuiz
+            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+        }
+    }
+    
     func loadVoiceFeedBackMessages() async {
         guard voiceFeedbackMessages.isEmpty else { return }
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
@@ -188,13 +210,13 @@ extension HomePage {
             id: UUID(),
             quizStartMessage: "Starting a new quiz now.",
             quizEndingMessage: "Great job! This quiz is now complete.",
-            nextQuestion: "Next Question",
+            correctAnswerCallout: "That's the correct Answer!",
             skipQuestionMessage: "Skipping this question.",
             errorTranscriptionMessage: "Error transcribing that question, we will skip that for now and re-visit it later.",
             finalScoreMessage: "Final score calculated.",
             quizStartAudioUrl: "",
             quizEndingAudioUrl: "",
-            nextQuestionAudioUrl: "",
+            correctAnswerCalloutUrl: "",
             skipQuestionAudioUrl: "",
             errorTranscriptionAudioUrl: "",
             finalScoreAudioUrl: ""
@@ -214,7 +236,7 @@ extension HomePage {
         let userFeedbackMessages = voiceFeedbackMessages.first
         var feedbackMessages = FeedBackMessageUrls(
             startMessage: userFeedbackMessages?.quizStartAudioUrl ?? "",
-            nextQuestion: userFeedbackMessages?.nextQuestionAudioUrl ?? "",
+            correctAnswerCallout: userFeedbackMessages?.correctAnswerCalloutUrl ?? "",
             errorMessage: userFeedbackMessages?.errorTranscriptionAudioUrl ?? "",
             endMessage: userFeedbackMessages?.finalScoreAudioUrl ?? ""
         )
@@ -228,7 +250,7 @@ extension HomePage {
 
 struct FeedBackMessageUrls {
     var startMessage: String
-    var nextQuestion: String
+    var correctAnswerCallout: String
     var errorMessage: String
     var endMessage: String
 }

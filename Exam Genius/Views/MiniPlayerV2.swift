@@ -182,6 +182,13 @@ extension MiniPlayerV2 {
         }
     }
     
+    func playEndQuizFeedbackMessage(_ messageUrl: String?) {
+        if let feedbackMessageUrl = messageUrl {
+            intermissionPlayer.playEndQuizFeedBack(feedbackMessageUrl)
+            
+        }
+    }
+    
     func updateQuestionScriptViewer() {
         guard currentQuestions.indices.contains(currentQuestionIndex) else { return }
         let question = currentQuestions[currentQuestionIndex].questionContent
@@ -315,7 +322,13 @@ extension MiniPlayerV2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .resumingPlayback
                 }
-                                
+                
+            case .endedQuiz:
+                self.intermissionPlayer.playErrorTranscriptionBell()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .endedQuiz
+                }
+                
             default:
                 break
             }
@@ -346,6 +359,10 @@ extension MiniPlayerV2 {
         case .errorTranscription:
             playFeedbackMessage(feedbackMessageUrls?.errorMessage) // Changes to .playingFeedback
             //MARK: TODO - Create Method to check for repeat listen settings
+            
+        case .endedQuiz:
+            dismissAction()
+            
             //FOR Now Moving on
             
         default:
@@ -362,21 +379,20 @@ extension MiniPlayerV2 {
     //MARK: Step 2 Processes - Continue Playing Logic
     func proceedWithQuiz() {
         // Check if the current index is less than the count of current questions
-        guard currentQuestions.indices.contains(currentQuestionIndex) else {
-            print("Index out of bounds: \(currentQuestionIndex) for questions count: \(currentQuestions.count)")
-            return
-        }
+//        guard currentQuestions.indices.contains(currentQuestionIndex) else {
+//            print("Index out of bounds: \(currentQuestionIndex) for questions count: \(currentQuestions.count)")
+//            return
+//        }
         
         self.currentQuestionIndex += 1
         
         if currentQuestions.indices.contains(currentQuestionIndex) {
-            
             self.continuePlaying()
             
         } else {
-            print("Reached end of questions. Total questions: \(currentQuestions.count)")
-            dismissAction()
-            //MARK: TODO - IMPLEMENT INTERMISSION END QUIZ
+
+            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
+            self.currentQuestionIndex = 0
         }
     }
     
@@ -402,7 +418,6 @@ extension MiniPlayerV2 {
             questionPlayer.playAudioFile(audioFile)
         }
     }
-    
     
     private func setContinousPlayInteraction(learningMode isEnabled: Bool) {
         //MARK: TODO - Conditional check for continous playback
@@ -443,18 +458,28 @@ extension MiniPlayerV2 {
             
             if currentQuestion.selectedOption == currentQuestion.correctOption {
                 currentQuestion.isAnsweredCorrectly = true
-                intermissionPlayer.playCorrectBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                
+                playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                     self.interactionState = .isCorrectAnswer
                 }
+                //intermissionPlayer.playCorrectBell()
+//                if currentQuestions.indices.contains(currentQuestionIndex + 1) {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                        self.interactionState = .isCorrectAnswer
+//                    }
+//                    
+//                } else {
+//                    
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                        self.interactionState = .endedQuiz
+//                    }
+//                }
                 
             } else {
                 
-                intermissionPlayer.playErrorBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.interactionState = .isIncorrectAnswer
-                }
-                
+                self.interactionState = .isIncorrectAnswer
+
                 currentQuestion.isAnsweredCorrectly = false
             }
             
@@ -502,9 +527,10 @@ extension MiniPlayerV2 {
     func dismissAction() {
         resetQuizAndGetScore()
         presentationManager.interactionState = .idle
+        self.interactionState = .idle
         currentQuestionIndex = 0
         quizPlayerObserver.playerState = .endedQuiz
-        self.interactionState = .idle
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             presentationManager.expandSheet = false
         }

@@ -43,6 +43,8 @@ enum WordProcessor: String {
 }
 
 enum InteractionState {
+    case startedQuiz
+    case endedQuiz
     case isNowPlaying
     case isDonePlaying
     case isListening
@@ -109,7 +111,10 @@ enum InteractionState {
             return "Playing feedback message"
         case .donePlayingFeedbackMessage:
             return "Done playing feedback message"
-        
+        case .startedQuiz:
+            return "Quiz in Progress"
+        case .endedQuiz:
+            return "Quiz Complete"
         }
     }
 }

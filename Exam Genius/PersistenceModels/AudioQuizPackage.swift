@@ -288,18 +288,6 @@ extension AudioQuizPackage {
     }
 }
 
-extension AudioQuizPackage {
-    convenience init(from content: AudioQuizContent) {
-        self.init(id: UUID())
-        
-        self.topics = content.topics.map { Topic(name: $0) }
-        
-        self.questions = content.questions.map { Question(fromResponse: $0) }
-        
-        self.performance = []
-    }
-}
-
 struct TestAudioQuizPackage {
     var id: UUID
     var name: String

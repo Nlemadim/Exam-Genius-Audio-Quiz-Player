@@ -62,49 +62,49 @@ class NetworkService {
             }
         }
 
-    func fetchQuestions(examName: String, topics: [String], number: Int) async throws -> [QuestionResponse] {
-        var questionResponses: [QuestionResponse] = []
-
-        let baseUrl = Config.questionsRequestURL
-        let session = URLSession.shared
-
-        for topic in topics {
-            var urlComponents = URLComponents(string: baseUrl)!
-            // Adjusting the query parameter keys according to the backend expectations
-            urlComponents.queryItems = [
-                URLQueryItem(name: "nameValue", value: examName),
-                URLQueryItem(name: "topicValue", value: topic),
-                URLQueryItem(name: "numberValue", value: String(number))
-            ]
-
-            guard let url = urlComponents.url else {
-                throw URLError(.badURL)
-            }
-
-            print("Requesting URL: \(url.absoluteString)") // Print the URL being requested
-
-            do {
-                let (data, response) = try await session.data(from: url)
-                
-                // Debugging: Print the raw response string
-                if let rawResponseString = String(data: data, encoding: .utf8) {
-                    print("Raw Response: \(rawResponseString)")
-                }
-
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                    throw URLError(.badServerResponse)
-                }
-                
-                let jsonResponse = try JSONDecoder().decode(QuestionResponse.self, from: data)
-                questionResponses.append(jsonResponse)
-            } catch {
-                print("Request to \(url.absoluteString) failed with error: \(error)")
-                throw error
-            }
-        }
-
-        return questionResponses
-    }
+//    func fetchQuestions(examName: String, topics: [String], number: Int) async throws -> [QuestionResponse] {
+//        var questionResponses: [QuestionResponse] = []
+//
+//        let baseUrl = Config.questionsRequestURL
+//        let session = URLSession.shared
+//
+//        for topic in topics {
+//            var urlComponents = URLComponents(string: baseUrl)!
+//            // Adjusting the query parameter keys according to the backend expectations
+//            urlComponents.queryItems = [
+//                URLQueryItem(name: "nameValue", value: examName),
+//                URLQueryItem(name: "topicValue", value: topic),
+//                URLQueryItem(name: "numberValue", value: String(number))
+//            ]
+//
+//            guard let url = urlComponents.url else {
+//                throw URLError(.badURL)
+//            }
+//
+//            print("Requesting URL: \(url.absoluteString)") // Print the URL being requested
+//
+//            do {
+//                let (data, response) = try await session.data(from: url)
+//                
+//                // Debugging: Print the raw response string
+//                if let rawResponseString = String(data: data, encoding: .utf8) {
+//                    print("Raw Response: \(rawResponseString)")
+//                }
+//
+//                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+//                    throw URLError(.badServerResponse)
+//                }
+//                
+//                let jsonResponse = try JSONDecoder().decode(QuestionResponse.self, from: data)
+//                questionResponses.append(jsonResponse)
+//            } catch {
+//                print("Request to \(url.absoluteString) failed with error: \(error)")
+//                throw error
+//            }
+//        }
+//
+//        return questionResponses
+//    }
     
     func fetchAudioData(content: String) async throws -> Data {
         print("Network Service is Fetching Audio data")

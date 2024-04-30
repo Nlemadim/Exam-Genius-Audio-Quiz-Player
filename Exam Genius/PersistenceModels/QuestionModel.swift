@@ -84,26 +84,26 @@ class Question: ObservableObject, Identifiable {
     
 }
 
-extension Question {
-    convenience init(fromResponse: QuestionResponse) {
-        let options = fromResponse.options.map { $0.option }
-        let topic = fromResponse.topic
-        self.init(
-            id: UUID(),
-            questionContent: fromResponse.question,
-            questionNote: fromResponse.overview ?? "",
-            topic: topic,
-            options: options,
-            correctOption: fromResponse.correctOption,
-            selectedOption: "",
-            isAnswered: false,
-            isAnsweredCorrectly: false,
-            numberOfPresentations: 0,
-            questionAudio: fromResponse.questionAudio ?? "",
-            questionNoteAudio: ""
-        )
-    }
-}
+//extension Question {
+//    convenience init(fromResponse: QuestionResponse) {
+//        let options = fromResponse.options.map { $0.option }
+//        let topic = fromResponse.topic
+//        self.init(
+//            id: UUID(),
+//            questionContent: fromResponse.question,
+//            questionNote: fromResponse.overview ?? "",
+//            topic: topic,
+//            options: options,
+//            correctOption: fromResponse.correctOption,
+//            selectedOption: "",
+//            isAnswered: false,
+//            isAnsweredCorrectly: false,
+//            numberOfPresentations: 0,
+//            questionAudio: fromResponse.questionAudio ?? "",
+//            questionNoteAudio: ""
+//        )
+//    }
+//}
 
 extension Question {
     convenience init(from data: QuestionData) {
@@ -171,9 +171,6 @@ extension Question: DownloadableQuiz {
         """
     }
 }
-
-
-
 
 
 enum QuestionStatus: Int, Codable, Identifiable, CaseIterable {

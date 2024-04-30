@@ -85,10 +85,10 @@ struct MyLibrary: View {
                     }
                 }
                 .onAppear {
-                    updatePlaylist()
+                   // updatePlaylist()
                 }
                 .onChange(of: user.hasSelectedAudioQuiz) {_, _ in
-                    updatePlaylist()
+                    //updatePlaylist()
                 }
                 .onChange(of: quizPlayerObserver.playerState) { _, newState in
                     updateQuizPlayerObserver(newState)

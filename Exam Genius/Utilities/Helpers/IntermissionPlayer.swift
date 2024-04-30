@@ -34,6 +34,7 @@ struct TestView: View {
 class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var feedbackPlayerState: InteractionState = .idle
     @Published var finishedPlayingFeedBack: Bool = false
+    @Published var finishedPlayingEndQuizFeedBack: Bool = false
     
     var audioPlayer: AVAudioPlayer?
     
@@ -44,6 +45,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     // Configures the audio session for playback.
     private func configureAudioSession() {
+        
         
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -58,6 +60,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func playWrongAnswerBell() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
+        self.finishedPlayingEndQuizFeedBack = false
         play(soundNamed: "wrongAnswerBell")
     }
     
@@ -65,6 +68,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func playCorrectBell() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
+        self.finishedPlayingEndQuizFeedBack = false
         play(soundNamed: "correctBell")
     }
 
@@ -72,6 +76,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func playListeningBell() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
+        self.finishedPlayingEndQuizFeedBack = false
         play(soundNamed: "softBell1")
     }
 
@@ -79,12 +84,14 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func playReceivedResponseBell() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
+        self.finishedPlayingEndQuizFeedBack = false
         play(soundNamed: "softBell2")
     }
     
     func playErrorBell() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
+        self.finishedPlayingEndQuizFeedBack = false
         play(soundNamed: "errorBell1")
     }
     
@@ -92,6 +99,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func playErrorTranscriptionBell() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
+        self.finishedPlayingEndQuizFeedBack = false
         play(soundNamed: "errorTranscriptionBell")
     }
 
@@ -124,6 +132,11 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             if flag  {
                 if self.finishedPlayingFeedBack {
                     self.feedbackPlayerState = .donePlayingFeedbackMessage
+                    print(self.feedbackPlayerState)
+                }
+                
+                if self.finishedPlayingEndQuizFeedBack {
+                    self.feedbackPlayerState = .endedQuiz
                     print(self.feedbackPlayerState)
                 }
             }
@@ -159,6 +172,24 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         guard let fileURL = getDocumentDirectoryURL(for: messageUrl) else {
             print("Invalid file path")
             return
+        }
+        
+        do {
+            try startPlayback(from: fileURL)
+        } catch {
+            print("Could not load file: \(error.localizedDescription)")
+        }
+    }
+    
+    func playEndQuizFeedBack(_ messageUrl: String) {
+        guard let fileURL = getDocumentDirectoryURL(for: messageUrl) else {
+            print("Invalid file path")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.finishedPlayingEndQuizFeedBack = true
+            
         }
         
         do {
