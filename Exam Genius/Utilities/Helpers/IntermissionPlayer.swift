@@ -35,6 +35,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var feedbackPlayerState: InteractionState = .idle
     @Published var finishedPlayingFeedBack: Bool = false
     @Published var finishedPlayingEndQuizFeedBack: Bool = false
+    @Published var finishedPlayingReview: Bool = false
     
     var audioPlayer: AVAudioPlayer?
     
@@ -61,6 +62,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         self.finishedPlayingEndQuizFeedBack = false
+        self.finishedPlayingReview = false
         play(soundNamed: "wrongAnswerBell")
     }
     
@@ -69,6 +71,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         self.finishedPlayingEndQuizFeedBack = false
+        self.finishedPlayingReview = false
         play(soundNamed: "correctBell")
     }
 
@@ -77,6 +80,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         self.finishedPlayingEndQuizFeedBack = false
+        self.finishedPlayingReview = false
         play(soundNamed: "softBell1")
     }
 
@@ -85,6 +89,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         self.finishedPlayingEndQuizFeedBack = false
+        self.finishedPlayingReview = false
         play(soundNamed: "softBell2")
     }
     
@@ -92,6 +97,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         self.finishedPlayingEndQuizFeedBack = false
+        self.finishedPlayingReview = false
         play(soundNamed: "errorBell1")
     }
     
@@ -139,6 +145,11 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
                     self.feedbackPlayerState = .endedQuiz
                     print(self.feedbackPlayerState)
                 }
+                
+                if self.finishedPlayingEndQuizFeedBack {
+                    self.feedbackPlayerState = .reviewing
+                    print(self.feedbackPlayerState)
+                }
             }
         }
     }
@@ -158,6 +169,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         
         DispatchQueue.main.async {
             self.finishedPlayingFeedBack = true
+            self.finishedPlayingReview = false
             self.feedbackPlayerState = .playingFeedbackMessage
         }
         
@@ -189,6 +201,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         
         DispatchQueue.main.async {
             self.finishedPlayingEndQuizFeedBack = true
+            self.finishedPlayingReview = false
             
         }
         
@@ -198,6 +211,24 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Could not load file: \(error.localizedDescription)")
         }
     }
+    
+    func playReviewFeedBack(_ messageUrl: String) {
+        guard let fileURL = getDocumentDirectoryURL(for: messageUrl) else {
+            print("Invalid file path")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.finishedPlayingReview = true
+        }
+        
+        do {
+            try startPlayback(from: fileURL)
+        } catch {
+            print("Could not load file: \(error.localizedDescription)")
+        }
+    }
+
 
     private func startPlayback(from fileURL: URL) throws {
         if AVAudioSession.sharedInstance().category != .playback {

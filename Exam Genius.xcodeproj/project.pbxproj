@@ -51,6 +51,11 @@
 		0B4ACD002B89A61500377BE7 /* FullScreenQuizPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4ACCDA2B89A61500377BE7 /* FullScreenQuizPlayer.swift */; };
 		0B4ACD092B89A61500377BE7 /* MiniQuizControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4ACCE32B89A61500377BE7 /* MiniQuizControlView.swift */; };
 		0B4ACD0D2B89A72300377BE7 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4ACD0C2B89A72300377BE7 /* Misc.swift */; };
+		0B5774032BE2B0F900DE2A07 /* VoqaWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5774022BE2B0F900DE2A07 /* VoqaWave.swift */; };
+		0B5774052BE2B16800DE2A07 /* VoqaWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5774042BE2B16800DE2A07 /* VoqaWaveView.swift */; };
+		0B5774072BE2B20200DE2A07 /* SupportLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5774062BE2B20200DE2A07 /* SupportLine.swift */; };
+		0B5774092BE2B27900DE2A07 /* WaveGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5774082BE2B27900DE2A07 /* WaveGeometry.swift */; };
+		0B57740B2BE2BB3A00DE2A07 /* VolumePowerSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B57740A2BE2BB3A00DE2A07 /* VolumePowerSimulator.swift */; };
 		0B5E0EF62BA9B274003C5406 /* QuizPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */; };
 		0B5E0EF82BA9B3F7003C5406 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E0EF72BA9B3F7003C5406 /* TestData.swift */; };
 		0B5E0EFD2BA9B431003C5406 /* MockTopics.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B5E0EFA2BA9B430003C5406 /* MockTopics.json */; };
@@ -178,6 +183,11 @@
 		0B4ACCE32B89A61500377BE7 /* MiniQuizControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MiniQuizControlView.swift; path = ../../CopiedProjectFiles/MiniQuizControlView.swift; sourceTree = "<group>"; };
 		0B4ACD0C2B89A72300377BE7 /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		0B4C8F2F2BB1ED800014897D /* MedicalColledgeAdmissionTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MedicalColledgeAdmissionTest.json; sourceTree = "<group>"; };
+		0B5774022BE2B0F900DE2A07 /* VoqaWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoqaWave.swift; sourceTree = "<group>"; };
+		0B5774042BE2B16800DE2A07 /* VoqaWaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoqaWaveView.swift; sourceTree = "<group>"; };
+		0B5774062BE2B20200DE2A07 /* SupportLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportLine.swift; sourceTree = "<group>"; };
+		0B5774082BE2B27900DE2A07 /* WaveGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveGeometry.swift; sourceTree = "<group>"; };
+		0B57740A2BE2BB3A00DE2A07 /* VolumePowerSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePowerSimulator.swift; sourceTree = "<group>"; };
 		0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizPlayerView.swift; sourceTree = "<group>"; };
 		0B5E0EF72BA9B3F7003C5406 /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		0B5E0EFA2BA9B430003C5406 /* MockTopics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MockTopics.json; sourceTree = "<group>"; };
@@ -314,6 +324,7 @@
 		0B2E968D2B87F183001D8D7B /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0B5774012BE2B0D800DE2A07 /* VoqaWaveForm */,
 				0B5E0EF92BA9B41B003C5406 /* MockJson */,
 				0B2E968F2B87F1AF001D8D7B /* Helpers */,
 				0B2E968E2B87F198001D8D7B /* Components */,
@@ -346,6 +357,7 @@
 				0B7214402BCAE2B70030664F /* QuizViewPresentationManager.swift */,
 				0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */,
 				0BD93EDD2BD90B30001A58D6 /* VoiceFeedbackMessages.swift */,
+				0B57740A2BE2BB3A00DE2A07 /* VolumePowerSimulator.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -411,6 +423,17 @@
 				0B493DD92BE13F460090A60C /* QuizPlayerContextMenu.swift */,
 			);
 			name = ContextMenus;
+			sourceTree = "<group>";
+		};
+		0B5774012BE2B0D800DE2A07 /* VoqaWaveForm */ = {
+			isa = PBXGroup;
+			children = (
+				0B5774022BE2B0F900DE2A07 /* VoqaWave.swift */,
+				0B5774042BE2B16800DE2A07 /* VoqaWaveView.swift */,
+				0B5774062BE2B20200DE2A07 /* SupportLine.swift */,
+				0B5774082BE2B27900DE2A07 /* WaveGeometry.swift */,
+			);
+			name = VoqaWaveForm;
 			sourceTree = "<group>";
 		};
 		0B5E0EF92BA9B41B003C5406 /* MockJson */ = {
@@ -825,9 +848,12 @@
 				0BBCBFB02B86563E00E9B7A9 /* ContentView.swift in Sources */,
 				0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */,
 				0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */,
+				0B5774092BE2B27900DE2A07 /* WaveGeometry.swift in Sources */,
+				0B5774072BE2B20200DE2A07 /* SupportLine.swift in Sources */,
 				0B709EB02BBE033B006C5E58 /* PlaylistModels.swift in Sources */,
 				0B8C9EEB2B9EBEA90032AA80 /* QuestionDataObject.swift in Sources */,
 				0BB9DE2C2B865E10004F848A /* DefaultAudioQuizCollection.swift in Sources */,
+				0B5774032BE2B0F900DE2A07 /* VoqaWave.swift in Sources */,
 				0B304AD42BAFBD720004F56F /* ResponseListener.swift in Sources */,
 				0B709EA82BBE00ED006C5E58 /* AudioQuizProgressView.swift in Sources */,
 				0B0DC8812BC08488009F12A6 /* VUMeterView.swift in Sources */,
@@ -849,6 +875,7 @@
 				0B2A87E92BAE8BF8001571DD /* MicModalView.swift in Sources */,
 				0B8F214E2BBFA8C5003299C0 /* MyLibraryPlaylist.swift in Sources */,
 				0B5E0F012BA9B6D3003C5406 /* RelevantTopicsCard.swift in Sources */,
+				0B57740B2BE2BB3A00DE2A07 /* VolumePowerSimulator.swift in Sources */,
 				0BB9DE202B865885004F848A /* TabIcons.swift in Sources */,
 				0BB9DE1D2B865885004F848A /* QuestionModel.swift in Sources */,
 				0BFBCAA52BB5B74A006A29C2 /* CustomLogo.swift in Sources */,
@@ -898,6 +925,7 @@
 				0BD93EE02BD93F55001A58D6 /* QuestionCountVisualizer.swift in Sources */,
 				0B709EA62BBE00AB006C5E58 /* AudioQuizHeaderView.swift in Sources */,
 				0BD362162BB3C0A7006BD2B2 /* QuizPlayerViewExtensions.swift in Sources */,
+				0B5774052BE2B16800DE2A07 /* VoqaWaveView.swift in Sources */,
 				0B2A87E32BAE07C0001571DD /* Extensions.swift in Sources */,
 				0B45613D2BC828320040838C /* QuizCarouselView.swift in Sources */,
 				0B2A87E52BAE07DC001571DD /* PlayerControlButtons.swift in Sources */,

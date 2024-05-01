@@ -38,10 +38,22 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         
        
-        
         do {
             try startPlayback(from: fileURL)
             
+        } catch {
+            print("Could not load file: \(error.localizedDescription)")
+        }
+    }
+    
+    func playReviewAudioFile(_ audioFile: String) {
+        guard let fileURL = getDocumentDirectoryURL(for: audioFile) else {
+            print("Invalid file path")
+            return
+        }
+        
+        do {
+            try startPlayback(from: fileURL)
         } catch {
             print("Could not load file: \(error.localizedDescription)")
         }

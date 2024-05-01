@@ -41,11 +41,11 @@ struct TestViewer: View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
             Spacer()
             
-            CustomProgressBarView(progress: .constant( CGFloat(1) / CGFloat(15)), fillColor: .teal)
-                          .padding()
-            
-//            QuestionCountVisualizer(index: 6, count: 43, fillColor: .teal)
-//                .frame(maxWidth: .infinity)
+//            CustomProgressBarView(progress: .constant( CGFloat(1) / CGFloat(15)), fillColor: .teal)
+//                          .padding()
+//            
+//            CustomProgressBarView2(progress: .constant( CGFloat(14) / CGFloat(15)), fillColor: .teal)
+//                          .padding()
                 
            
             Spacer()
@@ -53,8 +53,6 @@ struct TestViewer: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
-
 
 
 #Preview {
@@ -86,6 +84,72 @@ struct CustomProgressBarView: View {
                 .font(.caption)
                 .foregroundStyle(fillColor.dynamicTextColor())
                 .padding(.top, 2)
+        }
+    }
+}
+
+struct CustomProgressBarView2: View {
+    @Binding var progress: CGFloat  // Progress in range [0, 1]
+    var fillColor: Color
+    var questionCount: Int
+    var questionIndex: Int
+
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.black.opacity(0.3))  // Background color for the unfilled part
+                        .frame(height: 8)
+
+                    Capsule()
+                        .fill(fillColor)  // Dynamic fill color
+                        .frame(width: progress * geometry.size.width, height: 8)
+                        .animation(.easeInOut(duration: 0.5), value: progress)
+                }
+                .frame(width: geometry.size.width, height: 8)  // Ensure the ZStack does not exceed the width of GeometryReader
+
+                HStack {
+                    Text("Question:\(questionIndex)/ \(questionCount)")
+                        .font(.caption)
+                        .padding(.top, 2)
+                    
+                    Spacer()
+                    
+                    Text("Completion: \(Int(progress * 100))%")
+                        .font(.caption)
+                        .padding(.top, 2)
+                }
+                .foregroundStyle(fillColor.dynamicTextColor())
+            }
+        }
+    }
+}
+
+struct CustomProgressBarView3: View {
+    @Binding var progress: CGFloat  // Progress in range [0, 1]
+    var fillColor: Color
+
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.black.opacity(0.3))  // Background color for the unfilled part
+                        .frame(height: 8)
+
+                    Capsule()
+                        .fill(fillColor)  // Dynamic fill color
+                        .frame(width: min(progress * 4, 1) * geometry.size.width, height: 8)
+                        .animation(.easeInOut(duration: 0.5), value: progress)
+                }
+                .frame(width: geometry.size.width, height: 8)  // Ensure the ZStack does not exceed the width of GeometryReader
+
+                Text("Progress: \(Int(progress * 100))%")
+                    .font(.caption)
+                    .foregroundStyle(fillColor)
+                    .padding(.top, 2)
+            }
         }
     }
 }

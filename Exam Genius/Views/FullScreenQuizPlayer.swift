@@ -14,6 +14,7 @@ struct FullScreenQuizPlayer2: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
     @ObservedObject var quizSetter: MiniPlayerV2.MiniPlayerV2Configuration
+    var powerSimulator = VolumePowerSimulator()
    
     @State var showText: Bool = false
     @State var isMuted: Bool = false
@@ -45,19 +46,30 @@ struct FullScreenQuizPlayer2: View {
                     VStack {
                         VStack(spacing: 10){
                             
-                            Image(quizSetter.configuration?.imageUrl ??  "IconImage")
-                                .resizable()
-                                .frame(width: 100, height: 100)
-                                .cornerRadius(10)
-                                .hAlign(.leading)
+                            HStack(spacing: 4) {
+                                Image(quizSetter.configuration?.imageUrl ??  "IconImage")
+                                    .resizable()
+                                    .aspectRatio(1.0, contentMode: .fill)
+                                    .frame(width: 130, height: 100)
+                                    .cornerRadius(10)
+                                    .hAlign(.leading)
+                            }
                             
-                            Text((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz")
-                                .multilineTextAlignment(.center)
-                                .fontWeight(.bold)
+                            Text("Question:\(currentQuestionIndex)/ \(quizSetter.quizQuestionCount)")
+                                .font(.subheadline)
+                                .padding(.top, 2)
                                 .foregroundStyle(.primary)
                                 .hAlign(.leading)
+//                            Text((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz")
+//                                .multilineTextAlignment(.center)
+//                                .fontWeight(.bold)
+//                                .foregroundStyle(.primary)
+//                                .hAlign(.leading)
                             
-                            Divider()
+                            VoqaWaveView()
+                                .power(power: powerSimulator.currentPower)
+                                .frame(height: 25)
+                                .padding(.top, 2)
                             
                         }
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
@@ -67,10 +79,10 @@ struct FullScreenQuizPlayer2: View {
                         .padding(.horizontal, 3)
                         .padding(.bottom, 15)
                         
-                        CustomProgressBarView(progress: $quizProgress, fillColor: .mint)
-                            .padding(.horizontal)
-                            .padding()
+                        Divider()
+                            .activeGlow(generator.dominantLightToneColor, radius: 2)
                         
+
                         VStack(alignment: .center) {
                             Text(quizSetter.questionTranscript)
                                 .fontWeight(.black)
@@ -84,6 +96,7 @@ struct FullScreenQuizPlayer2: View {
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         
                         Divider()
+                            .activeGlow(generator.dominantLightToneColor, radius: 2)
                        
                         PlayerControlButtons(interactionState: $interactionState,
                                              themeColor: generator.dominantLightToneColor,
@@ -103,12 +116,12 @@ struct FullScreenQuizPlayer2: View {
                         })
                     }
                 }
-                .background(generator.dominantBackgroundColor)
+                .background(generator.dominantBackgroundColor.gradient)
                 .onAppear {
                     generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "IconImage")
-//                    withAnimation(.easeInOut(duration: 0.35)) {
-//                        animateContent = true
-//                    }
+                    //quizProgress = quizSetter.quizQuestionCount > 0 ? CGFloat(currentQuestionIndex + 1) / CGFloat(quizSetter.quizQuestionCount) : progress
+                    quizProgress = 30.0
+
                 }
                 .onChange(of: questionTranscript, { _, newValue in
                     startTypingAnimation(for: newValue)
@@ -116,9 +129,12 @@ struct FullScreenQuizPlayer2: View {
                 .onChange(of: interactionState) { _, newState in
                     DispatchQueue.main.async {
                         self.interactionState = newState
+                        powerSimulator.startPlayingPowerSimulator(interactionState: newState)
                     }
                 }
             }
+            .navigationTitle(Text((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz"))
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: .constant(interactionState == .isListening), content: {
                 MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
@@ -130,10 +146,11 @@ struct FullScreenQuizPlayer2: View {
                 onViewDismiss()
             })
         }
+        
     }
     
     var progress: CGFloat {
-        return CGFloat(currentQuestionIndex + 1) / CGFloat(quizSetter.quizQuestionCount)
+        return 0
     }
 
     func playButtonIconSetter() -> Bool {
@@ -283,12 +300,12 @@ struct TranscriptView: View {
     let user = User()
     @Namespace var animation
     @State var curIndex = 0
-    @State var config = QuizViewConfiguration(imageUrl: "CHFP-Exam-Pro", name: "CHFP Exam", shortTitle: "CHFP", question: "")
+    @State var config = QuizViewConfiguration(imageUrl: "ELA-Exam", name: "English, Language, Arts", shortTitle: "ELA", question: "")
     let sharedState = SharedQuizState()
     let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
     quizSetter.configuration = config
     
-    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(curIndex), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.idle), questionTranscript: .constant("Hello Transcript"), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
+    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(curIndex), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.isNowPlaying), questionTranscript: .constant("Hello Transcript"), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
         .environmentObject(user)
         .preferredColorScheme(.dark)
 }

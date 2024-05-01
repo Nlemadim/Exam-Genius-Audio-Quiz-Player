@@ -10,7 +10,6 @@ import SwiftData
 
 
 struct QuizPlayerView: View {
-    
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
@@ -26,6 +25,7 @@ struct QuizPlayerView: View {
     @State var audioQuiz: DownloadedAudioQuiz?
     
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
+    @Query(sort: \PerformanceModel.id) var performanceCollection: [PerformanceModel]
     
     @State private var expandSheet: Bool = false
   
@@ -87,7 +87,7 @@ struct QuizPlayerView: View {
                                 .frame(maxWidth: .infinity)
                                 .offset(y: -30)
                         }
-                        .frame(height: 300)
+                        .frame(height: 280)
                         .padding()
                         .padding(.horizontal, 40)
                         .hAlign(.center)
@@ -123,15 +123,18 @@ struct QuizPlayerView: View {
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
-                    PerformanceHistoryGraph(history: [
-                        Performance(id: UUID(), date: Date(), score: 40),
-                        Performance(id: UUID(), date: Date(), score: 80),
-                        Performance(id: UUID(), date: Date(), score: 30),
-                        Performance(id: UUID(), date: Date(), score: 90),
-                        Performance(id: UUID(), date: Date(), score: 30),
-                        Performance(id: UUID(), date: Date(), score: 20),
-                        Performance(id: UUID(), date: Date(), score: 70)
-                    ], mainColor: generator.dominantBackgroundColor.opacity(3), subColor: generator.dominantLightToneColor.opacity(3))
+                    PerformanceHistoryGraph(history: performanceCollection, mainColor: .teal, subColor: .themePurpleLight)
+                        .padding(.horizontal)
+                    
+//                    PerformanceHistoryGraph(history: [
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 40, numberOfQuestions: 10),
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 80, numberOfQuestions: 10),
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 30, numberOfQuestions: 10),
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 90, numberOfQuestions: 10),
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 30, numberOfQuestions: 20),
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 20, numberOfQuestions: 10),
+//                        PerformanceHistory(id: UUID(), date: Date(), score: 70, numberOfQuestions: 10)
+//                    ], mainColor: .teal, subColor: .themePurpleLight)
                     .padding(.horizontal)
                     
                     Rectangle()
@@ -265,7 +268,7 @@ struct QuizPlayerView: View {
 //    let observer = QuizPlayerObserver()
 //    let presentMgr = QuizViewPresentationManager()
 //    let audioQuiz = AudioQuizPackage(id: UUID(), name: "Quick Math", imageUrl: "Math-Exam")
-//    return QuizPlayerView(audioQuizPacket: .constant(audioQuiz))
+//    return QuizPlayerView()
 //        .environmentObject(user)
 //        .environmentObject(appState)
 //        .environmentObject(observer)

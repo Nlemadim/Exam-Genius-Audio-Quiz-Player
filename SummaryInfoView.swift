@@ -57,20 +57,18 @@ struct SummaryInfoView: View {
            .preferredColorScheme(.dark)
        }
 
-
-
     
     private func scoreLabel(withTitle title: String, iconName: String, score: String) -> some View {
-            HStack {
-                Image(systemName: iconName)
-                    .iconStyle()
-                Text(title)
-                    .labelStyle()
-                Spacer()
-                Text(score)
-                    .scoreStyle()
-            }
+        HStack {
+            Image(systemName: iconName)
+                .iconStyle()
+            Text(title)
+                .labelStyle()
+            Spacer()
+            Text(score)
+                .scoreStyle()
         }
+    }
 
     
     func calculatedScore(score: Int) -> CGFloat {

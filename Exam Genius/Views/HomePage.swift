@@ -194,11 +194,14 @@ struct HomePage: View {
             Rectangle()
                 .fill(.clear)
                 .cornerRadius(10)
-                .background(.black)
+                .background(LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black, .black]), startPoint: .top, endPoint: .bottom))
                 .overlay {
                     MiniPlayerV2(selectedQuizPackage: $user.downloadedQuiz, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, startPlaying: $isPlaying)
-                        .offset(y: 3)
+                        .padding(.bottom)
                 }
+        }
+        .onAppear {
+            generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
         }
         .overlay(alignment: .bottom, content: {
             Rectangle()
@@ -209,7 +212,6 @@ struct HomePage: View {
         .frame(height: 70)
         .offset(y: -49)
     }
-    
 }
 
 

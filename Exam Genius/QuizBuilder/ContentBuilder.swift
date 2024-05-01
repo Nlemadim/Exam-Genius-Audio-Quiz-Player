@@ -153,7 +153,7 @@ class ContentBuilder {
     }
 
     
-    private func downloadReadOut(readOut: String) async -> String? {
+    func downloadReadOut(readOut: String) async -> String? {
         var fileName: String? = nil
         do {
             let audioData = try await networkService.fetchAudioData(content: readOut)
@@ -196,7 +196,7 @@ extension ContentBuilder {
     
     func buildQuestionsOnly(examName: String) async throws -> Container {
         try await fetchAndStoreAllTopics(examName: examName)
-        let selectedTopics = selectRandomTopics(limit: 2)
+        let selectedTopics = selectRandomTopics(limit: 3)
         await downloadQuestionsForTopics(selectedTopics, examName: examName)
         return container
     }

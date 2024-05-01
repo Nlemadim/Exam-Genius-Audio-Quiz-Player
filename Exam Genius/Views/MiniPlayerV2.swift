@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 struct MiniPlayerV2: View {
+    @Environment(\.modelContext) var modelContext
     @EnvironmentObject var user: User
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
@@ -33,6 +34,7 @@ struct MiniPlayerV2: View {
     @State var currentPlaylistItemIndex: Int = 0
     @State var currentQuestionIndex: Int = 0
     @State var selectedOption: String = ""
+    @State var correctAnswerCount: Int = 0
     
     @State var presentMicModal: Bool = false
     @State var isCorrectAnswer: Bool = false
@@ -157,6 +159,42 @@ extension MiniPlayerV2 {
             configuration.quizQuestionCount = selectedQuizPackage?.questions.count ?? 0
         }
     }
+    
+    func getPercentage(correctAnswers: Int, totalQuestions: Int) -> String {
+        let scorePercentage = calculatedScore(correctAnswers: correctAnswers, totalQuestions: totalQuestions)
+        return String(format: "%.0f%%", scorePercentage)
+    }
+
+    
+    private func calculatedScore(correctAnswers: Int, totalQuestions: Int) -> CGFloat {
+        guard totalQuestions > 0 else { return 0.0 }  // Prevent division by zero
+        let score = (CGFloat(correctAnswers) / CGFloat(totalQuestions)) * 100.0
+        return score
+    }
+    
+    private func scoreReadout() -> String {
+        let scorePercentage = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
+        let compliments = ["", "Well Done", "Good Job", "Very Nice", "Excellent"] // compliments based on 0-25, 26-50, 51-75, 76-99, 100
+        let index = min(Int(scorePercentage / 25), compliments.count - 1) // Calculate index for selecting compliment
+        
+        let compliment = compliments[index] // Select compliment based on score
+        let scoreString = String(format: "%.0f%%", scorePercentage) // Format score as a percentage string
+        
+        let readOut = """
+        
+        \(compliment)!
+        
+        This quiz is now complete!!
+        
+        You Scored \(scoreString)
+        
+        
+        """
+        
+        return readOut
+    }
+
+
     
     var transcript: String {
         return """
@@ -323,6 +361,11 @@ extension MiniPlayerV2 {
                     self.interactionState = .resumingPlayback
                 }
                 
+            case .reviewing:
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .endedQuiz
+                }
+                
             case .endedQuiz:
                 self.intermissionPlayer.playErrorTranscriptionBell()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -390,10 +433,48 @@ extension MiniPlayerV2 {
             self.continuePlaying()
             
         } else {
-
-            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
+            
             self.currentQuestionIndex = 0
+            
+            Task {
+                await playQuizReview()
+            }
+            
+//            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
+            
         }
+    }
+    
+    func playQuizReview() async {
+        let reviewUrl = await fetchQuizReview(review: scoreReadout())
+        DispatchQueue.main.async {
+            audioContentPlayer.playAudioFile(reviewUrl)
+        }
+    }
+    
+    private func resetQuizAndGetScore() {
+        let score = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
+        var newPerformance: PerformanceModel = PerformanceModel(id: UUID(), date: .now, score: score, numberOfQuestions: self.currentQuestions.count)
+        modelContext.insert(newPerformance)
+        try! modelContext.save()
+        
+        DispatchQueue.main.async {
+            print("Reseting Quiz and Saving Score")
+            self.currentQuestions.forEach { question in
+                question.selectedOption = ""
+                question.isAnswered = false
+                question.isAnsweredCorrectly = false
+            }
+        }
+    }
+    
+    func fetchQuizReview(review readOut: String) async -> String {
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        //let questions = audioQuiz.questions
+        let readOutUrl = await contentBuilder.downloadReadOut(readOut: readOut) ?? ""
+        
+        return readOutUrl
+        
     }
     
     private func playCorrectionAudio() {
@@ -458,23 +539,12 @@ extension MiniPlayerV2 {
             
             if currentQuestion.selectedOption == currentQuestion.correctOption {
                 currentQuestion.isAnsweredCorrectly = true
+                self.correctAnswerCount += 1
                 
                 playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                     self.interactionState = .isCorrectAnswer
                 }
-                //intermissionPlayer.playCorrectBell()
-//                if currentQuestions.indices.contains(currentQuestionIndex + 1) {
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-//                        self.interactionState = .isCorrectAnswer
-//                    }
-//                    
-//                } else {
-//                    
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-//                        self.interactionState = .endedQuiz
-//                    }
-//                }
                 
             } else {
                 
@@ -494,17 +564,7 @@ extension MiniPlayerV2 {
         }
     }
     
-    private func resetQuizAndGetScore() {
-        DispatchQueue.main.async {
-            print("Reseting Quiz and Saving Score")
-            
-            self.currentQuestions.forEach { question in
-                question.selectedOption = ""
-                question.isAnswered = false
-                question.isAnsweredCorrectly = false
-            }
-        }
-    }
+    
     
     func goToNextQuestion() {
         currentQuestionIndex += 1

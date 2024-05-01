@@ -36,11 +36,13 @@ class PerformanceModel: Identifiable, Hashable {
     let id: UUID
     var date: Date
     var score: CGFloat
+    var numberOfQuestions: Int
     
-    init(id: UUID, date: Date, score: CGFloat) {
+    init(id: UUID, date: Date, score: CGFloat, numberOfQuestions: Int) {
         self.id = id
         self.date = date
         self.score = score
+        self.numberOfQuestions = numberOfQuestions
     }
 }
 
