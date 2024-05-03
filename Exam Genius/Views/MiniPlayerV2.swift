@@ -330,7 +330,6 @@ extension MiniPlayerV2 {
     }
     
     
-    
     func playQuizReview() async {
         let reviewUrl = await fetchQuizReview(review: scoreReadout())
         DispatchQueue.main.async {
@@ -345,12 +344,37 @@ extension MiniPlayerV2 {
         modelContext.insert(newPerformance)
         try! modelContext.save()
         
+//        Task {
+//            await updateAudioQuizQuestions()
+//        }
         DispatchQueue.main.async {
             print("Reseting Quiz and Saving Score")
             self.currentQuestions.forEach { question in
                 question.selectedOption = ""
                 question.isAnswered = false
                 question.isAnsweredCorrectly = false
+            }
+        }
+    }
+    
+    func updateAudioQuizQuestions() async {
+        var questionCount = 10
+        
+        if let audioQuiz = user.selectedQuizPackage {
+            let newQuestions = audioQuiz.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
+            var questionsToDownload = newQuestions.shuffled()
+            
+            // Ensure we do not exceed the questionCount
+            if questionsToDownload.count > questionCount {
+                questionsToDownload = Array(questionsToDownload.prefix(questionCount))
+            }
+            
+            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+            await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
+            selectedQuizPackage?.questions = questionsToDownload
+            
+            DispatchQueue.main.async {
+                user.downloadedQuiz = self.selectedQuizPackage
             }
         }
     }

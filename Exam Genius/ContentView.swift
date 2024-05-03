@@ -43,13 +43,18 @@ struct ContentView: View {
             await loadMainVoiceFeedBackMessages()
         }
         .onAppear {
-            loadUserMainQuiz()
+            fetchDownloadedMainAudioQuiz()
         }
-        .onChange(of: downloadedAudioQuizCollection) { _, _ in
-            if !downloadedAudioQuizCollection.isEmpty {
-                loadUserMainQuiz()
+        .onChange(of: user.selectedQuizPackage, { _, audioQuiz in
+            if let audioQuiz = audioQuiz {
+                Task {
+                    await downlaodNewAudioQuiz(quiz: audioQuiz)
+                }
             }
-        }
+        })
+        .onChange(of: user.downloadedQuiz, { _, _ in
+            fetchDownloadedMainAudioQuiz()
+        })
     }
     
     private func loadMainDefaultCollection() async {
@@ -95,6 +100,29 @@ struct ContentView: View {
         
     }
     
+    private func downlaodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+        //Please Modify guard statement to check that package name is not already contained in collection
+        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+       
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+        
+        let audioQuestions = package.questions
+        
+        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+        
+        newDownloadedQuiz.questions = audioQuestions
+        
+        modelContext.insert(newDownloadedQuiz)
+        try! modelContext.save()
+        
+        DispatchQueue.main.async {
+            user.downloadedQuiz = newDownloadedQuiz
+            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+        }
+    }
+    
     func loadUserMainPackage() {
         guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
               let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
@@ -106,6 +134,7 @@ struct ContentView: View {
     }
     
     func fetchDownloadedMainAudioQuiz() {
+        guard !downloadedAudioQuizCollection.isEmpty else { return }
         guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
               let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
               !matchingQuizPackage.questions.isEmpty else {
@@ -116,12 +145,12 @@ struct ContentView: View {
         user.downloadedQuiz = matchingQuizPackage
     }
     
-    func loadUserMainQuiz() {
-        guard !downloadedAudioQuizCollection.isEmpty else { return }
-        let newQuiz = downloadedAudioQuizCollection.first
-        user.downloadedQuiz = newQuiz
-        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
-    }
+//    func loadUserMainQuiz() {
+//        guard !downloadedAudioQuizCollection.isEmpty else { return }
+//        let newQuiz = downloadedAudioQuizCollection.first
+//        user.downloadedQuiz = newQuiz
+//        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
+//    }
 }
 
 #Preview {

@@ -105,6 +105,7 @@ struct HomePage: View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
+            
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -113,12 +114,8 @@ struct HomePage: View {
                 
             })
             .onChange(of: downloadedAudioQuizCollection, { _, _ in
-                loadUserQuiz()
+                //loadUserQuiz()
             })
-//            .onChange(of: quizPlayerObserver.playerState, { _, newValue in
-//                
-//                //updatePlayState(interactionState: newValue)
-//            })
             .onChange(of: didTapPlaySample, { _, newValue in
                 playSampleQuiz(newValue)
             })
@@ -133,19 +130,12 @@ struct HomePage: View {
                 }
                 .tag(1)
             
-            ExploreAudioQuizView()
+            ExplorePage(selectedTab: $selectedTab)
                 .tabItem {
                     TabIcons(title: "Browse", icon: "square.grid.2x2")
                 }
                 .tag(2)
         }
-        .onChange(of: user.selectedQuizPackage, { _, audioQuiz in
-            if let audioQuiz = audioQuiz {
-                Task {
-                    await laodNewAudioQuiz(quiz: audioQuiz)
-                }
-            }
-        })
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
             generator.updateDominantColor(fromImageNamed: backgroundImage)
@@ -168,33 +158,33 @@ struct HomePage: View {
         }
     }
     
-    func loadUserPackage() {
-        guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
-              let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
-              !matchingQuizPackage.questions.isEmpty else {
-            user.selectedQuizPackage = nil
-            return
-        }
-        user.selectedQuizPackage = matchingQuizPackage
-    }
-    
-    func fetchDownloadedAudioQuiz() {
-        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
-              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
-              !matchingQuizPackage.questions.isEmpty else {
-            user.downloadedQuiz = nil
-            return
-        }
-        
-        user.downloadedQuiz = matchingQuizPackage
-    }
-    
-    func loadUserQuiz() {
-        guard !downloadedAudioQuizCollection.isEmpty else { return }
-        let newQuiz = downloadedAudioQuizCollection.first
-        user.downloadedQuiz = newQuiz
-        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
-    }
+//    func loadUserPackage() {
+//        guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
+//              let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
+//              !matchingQuizPackage.questions.isEmpty else {
+//            user.selectedQuizPackage = nil
+//            return
+//        }
+//        user.selectedQuizPackage = matchingQuizPackage
+//    }
+//    
+//    func fetchDownloadedAudioQuiz() {
+//        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
+//              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
+//              !matchingQuizPackage.questions.isEmpty else {
+//            user.downloadedQuiz = nil
+//            return
+//        }
+//        
+//        user.downloadedQuiz = matchingQuizPackage
+//    }
+//    
+//    func loadUserQuiz() {
+//        guard !downloadedAudioQuizCollection.isEmpty else { return }
+//        let newQuiz = downloadedAudioQuizCollection.first
+//        user.downloadedQuiz = newQuiz
+//        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
+//    }
     
     @ViewBuilder
     private func BottomMiniPlayer() -> some View {

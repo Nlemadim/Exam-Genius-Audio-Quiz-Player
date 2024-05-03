@@ -17,7 +17,7 @@ struct SummaryInfoView: View {
             .padding(.bottom)
            VStack(spacing: 15) {
                scoreLabel(
-                   withTitle: "",
+                   withTitle: "Highest Score",
                    iconName: "ActivityConstants.highScoreLabelIcon",
                    score: getPercentage(score: Int(highScore))
                )

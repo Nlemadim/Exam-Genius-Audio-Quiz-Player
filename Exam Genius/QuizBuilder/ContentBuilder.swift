@@ -67,7 +67,7 @@ class ContentBuilder {
         let randomTopics = container.topics.shuffled().prefix(1)
         let questionTopics = randomTopics.map{ $0.name }
         
-        let questionDataObject = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 3)
+        let questionDataObject = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 1)
         print("Content Builder Data recieved from network Service: \(questionDataObject)")
         
         questionDataObject.forEach { questionDataObject in

@@ -17,6 +17,8 @@ struct QuizPlayerView: View {
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @StateObject private var generator = ColorGenerator()
     @StateObject private var audioContentPlayer = AudioContentPlayer()
+    @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
+    @State var userQuizName: String = "UserQuiz"
     
     
     
@@ -26,6 +28,12 @@ struct QuizPlayerView: View {
     
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     @Query(sort: \PerformanceModel.id) var performanceCollection: [PerformanceModel]
+    
+//    @Query(filter: #Predicate<DownloadedAudioQuiz> { audioQuiz in
+//        if audioQuiz.quizname.localizedStandardContains(userQuizName) {
+//            downloadedQuiz = audioQuiz
+//        }
+//    }, sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @State private var expandSheet: Bool = false
   
@@ -131,15 +139,10 @@ struct QuizPlayerView: View {
                 }
             }
             .onAppear {
+                fetchUserQuizName()
                 updateUserQuizSelection()
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
 
-            }
-            .onChange(of: user.downloadedQuiz) { _, newPackage in
-                Task {
-                    print("Updating user audio quiz with audio")
-                   await updateUserAudioQuiz(newPackage)
-                }
             }
             .onChange(of: quizPlayerObserver.playerState) { _, newState in
                 DispatchQueue.main.async {
@@ -189,6 +192,15 @@ struct QuizPlayerView: View {
         }
     }
     
+    func fetchUserQuizName() {
+        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName") else {
+            return
+        }
+        
+        self.userQuizName = userQuizName
+    }
+
+    
     private func updateUserQuizSelection() {
         guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
               let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
@@ -201,14 +213,7 @@ struct QuizPlayerView: View {
     
     }
 
-    func updateUserAudioQuiz(_ audioQuiz: DownloadedAudioQuiz?) async {
-        if let audioQuiz = audioQuiz {
-            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-            //let questions = audioQuiz.questions
-            await contentBuilder.downloadAudioQuestions(for: audioQuiz.questions)
-        }
-        
-    }
+
     
 //    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
 //        

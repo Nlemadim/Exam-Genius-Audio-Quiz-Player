@@ -108,19 +108,11 @@ extension HomePage {
 
     
     func playNow(_ audioQuiz: AudioQuizPackage) {
-        //let playlist = audioQuiz.questions.compactMap{$0.questionAudio}
         isPlaying.toggle()
-        //let audioFile = playlist[0]
-        //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
     }
     
     func setQuizObserverAction(observer state: QuizPlayerState) {
-        switch state {
-        case .endedQuiz:
-            resetQuiz()
-        default:
-            break
-        }
+        
     }
     
     func updatePlayState(interactionState: QuizPlayerState) {
@@ -180,28 +172,6 @@ extension HomePage {
         }
     }
     
-    
-    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
-        guard downloadedAudioQuizCollection.isEmpty else { return }
-        
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-       
-        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
-        
-        let audioQuestions = package.questions
-        
-        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
-        
-        newDownloadedQuiz.questions = audioQuestions
-        
-        modelContext.insert(newDownloadedQuiz)
-        try! modelContext.save()
-        
-        DispatchQueue.main.async {
-            user.downloadedQuiz = newDownloadedQuiz
-            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
-        }
-    }
     
     func loadVoiceFeedBackMessages() async {
         guard voiceFeedbackMessages.isEmpty else { return }
