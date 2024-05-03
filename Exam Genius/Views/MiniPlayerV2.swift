@@ -17,12 +17,13 @@ struct MiniPlayerV2: View {
     @State var questionTranscript: String = ""
     @State var interactionFeedbackMessage: String = ""
     @StateObject private var generator = ColorGenerator()
-    @StateObject private var audioContentPlayer = AudioContentPlayer()
-    @StateObject private var questionPlayer = QuestionPlayer()
-    @StateObject private var intermissionPlayer = IntermissionPlayer()
+    @StateObject var audioContentPlayer = AudioContentPlayer()
+    @StateObject var questionPlayer = QuestionPlayer()
+//    @StateObject private var intermissionPlayer = IntermissionPlayerV2()
+    @StateObject var intermissionPlayer = IntermissionPlayer()
 
     @StateObject var responseListener = ResponseListener()
-    @StateObject private var configuration: MiniPlayerV2Configuration
+    @StateObject var configuration: MiniPlayerV2Configuration
     @State var currentQuestions: [Question] = []
     
     @Binding var selectedQuizPackage: DownloadedAudioQuiz?
@@ -30,6 +31,7 @@ struct MiniPlayerV2: View {
     @State var expandSheet: Bool = false
     @Binding var interactionState: InteractionState
     @State var startPlaying: Bool = false
+    @State var outputPower: Float = 0.0
     
     @State var currentPlaylistItemIndex: Int = 0
     @State var currentQuestionIndex: Int = 0
@@ -70,8 +72,9 @@ struct MiniPlayerV2: View {
                 presentMicModal: $presentMicModal,
                 interactionState: $interactionState,
                 questionTranscript: $interactionFeedbackMessage,
+                powerSimulator: $outputPower,
                 onViewDismiss: { },
-                playAction: {playSingleQuizQuestion() /*startQuizAudioPlay(self.interactionState)*/ },
+                playAction: {playSingleQuizQuestion() },
                 nextAction: { goToNextQuestion() },
                 recordAction: { self.interactionState = .isListening }
             )
@@ -85,7 +88,8 @@ struct MiniPlayerV2: View {
         })
         .onTapGesture {
             withAnimation {
-                expandAction()
+                expandSheet = true
+                //expandAction()
             }
         }
         .onAppear {
@@ -164,7 +168,6 @@ extension MiniPlayerV2 {
         let scorePercentage = calculatedScore(correctAnswers: correctAnswers, totalQuestions: totalQuestions)
         return String(format: "%.0f%%", scorePercentage)
     }
-
     
     private func calculatedScore(correctAnswers: Int, totalQuestions: Int) -> CGFloat {
         guard totalQuestions > 0 else { return 0.0 }  // Prevent division by zero
@@ -172,30 +175,25 @@ extension MiniPlayerV2 {
         return score
     }
     
-    private func scoreReadout() -> String {
+    func scoreReadout() -> String {
         let scorePercentage = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
         let compliments = ["", "Well Done", "Good Job", "Very Nice", "Excellent"] // compliments based on 0-25, 26-50, 51-75, 76-99, 100
         let index = min(Int(scorePercentage / 25), compliments.count - 1) // Calculate index for selecting compliment
         
         let compliment = compliments[index] // Select compliment based on score
-        let scoreString = String(format: "%.0f%%", scorePercentage) // Format score as a percentage string
+        let scoreString = String(format: "%.0f %%", scorePercentage) // Format score as a percentage string
         
         let readOut = """
         
-        \(compliment)!
-        
-        This quiz is now complete!!
+        \(compliment)
         
         You Scored \(scoreString)
         
-        
         """
-        
+        print(readOut)
         return readOut
     }
-
-
-    
+   
     var transcript: String {
         return """
                \(currentQuestions[currentQuestionIndex].questionContent)
@@ -213,7 +211,18 @@ extension MiniPlayerV2 {
     
     func playFeedbackMessage(_ messageUrl: String?) {
         if let feedbackMessageUrl = messageUrl {
+            //intermissionPlayer.play(soundNamed: feedbackMessageUrl)
             intermissionPlayer.playVoiceFeedBack(feedbackMessageUrl)
+            DispatchQueue.main.async {
+                self.interactionState = .playingFeedbackMessage
+            }
+        }
+    }
+    
+    func playErrorFeedbackMessage(_ messageUrl: String?) {
+        if let feedbackMessageUrl = messageUrl {
+            //intermissionPlayer.play(soundNamed: feedbackMessageUrl)
+            intermissionPlayer.playErrorVoiceFeedBack(feedbackMessageUrl)
             DispatchQueue.main.async {
                 self.interactionState = .playingFeedbackMessage
             }
@@ -227,6 +236,10 @@ extension MiniPlayerV2 {
         }
     }
     
+    func playEndQuizReview() async {
+        await playQuizReview()
+    }
+    
     func updateQuestionScriptViewer() {
         guard currentQuestions.indices.contains(currentQuestionIndex) else { return }
         let question = currentQuestions[currentQuestionIndex].questionContent
@@ -238,7 +251,6 @@ extension MiniPlayerV2 {
             configuration.loadQuizConfiguration(quizPackage: package)
         }
     }
-    
     
     // MARK: QUIZ LOGICS
     //MARK: READY QUESTIONS
@@ -277,11 +289,6 @@ extension MiniPlayerV2 {
             return
         }
         
-//        print("Selected quiz package: \(package.quizname), with questions count: \(package.questions.count)")
-//        print("Current MiniPlayer Questions Preloading is: \(self.currentQuestions.count)")
-        
-        // Ensure there are questions available
-        
         let questions = package.questions
         currentQuestions = questions
         print("Current MiniPlayer Questions Postloading is: \(self.currentQuestions.count)")
@@ -294,167 +301,47 @@ extension MiniPlayerV2 {
         }
     }
     
-    func updateFeedbackMessage(_ interactionState: InteractionState) {
-        switch interactionState {
-        case .isNowPlaying:
-            self.interactionFeedbackMessage = transcript
-            
-        case .errorTranscription:
-            self.interactionFeedbackMessage = "Transcription Error!"
-            
-        case .isListening:
-            self.interactionFeedbackMessage = transcript
-            
-        case .playingFeedbackMessage:
-            self.interactionFeedbackMessage = "Skipping this question for now"
-            
-        case .idle:
-            self.interactionFeedbackMessage = "Starting a new quiz!"
-      
-        case .isCorrectAnswer:
-            self.interactionFeedbackMessage = "\(self.currentQuestions[self.currentQuestionIndex].selectedOption) is correct"
-            
-        case .isIncorrectAnswer:
-            self.interactionFeedbackMessage = "Incorrect!\n The correct option is \(self.currentQuestions[self.currentQuestionIndex].correctOption)"
-        
-        case .nowPlayingCorrection:
-            self.interactionFeedbackMessage = self.currentQuestions[self.currentQuestionIndex].questionNote
-            print("interactionFeedbackMessage playing correction: \(self.currentQuestions[self.currentQuestionIndex].questionNote)")
-            
-        case .donePlayingFeedbackMessage:
-            self.interactionFeedbackMessage = "Moving on..."
-            
-        default:
-            break
-        }
-    }
-    
+   
     //MARK: Step 2  - InteractionState Sync and Update
-    private func syncInteractionState(_ interactionState: InteractionState) {
-        DispatchQueue.main.async {
-            switch interactionState {
-            case .isNowPlaying:
-                //startPlaying Triggers the questionTranscriptView in Full screen to startTyping
-                self.startPlaying = true
-               
-            case .isDonePlaying:
-                self.startPlaying = false
-                intermissionPlayer.playListeningBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .isListening
-                }
-
-            case .hasResponded:
-                intermissionPlayer.playReceivedResponseBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .successfulResponse
-                }
-            
-            case .isDonePlayingCorrection:
-                self.intermissionPlayer.playErrorTranscriptionBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .resumingPlayback
-                }
-            case .donePlayingFeedbackMessage:
-                self.intermissionPlayer.playErrorTranscriptionBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .resumingPlayback
-                }
-                
-            case .reviewing:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .endedQuiz
-                }
-                
-            case .endedQuiz:
-                self.intermissionPlayer.playErrorTranscriptionBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .endedQuiz
-                }
-                
-            default:
-                break
-            }
-        }
-    }
-    
-    func interactionStateAction(_ interactionState: InteractionState) {
-        print("iteractionStateAction is acting on \(interactionState) state")
-        switch interactionState {
-       
-        case .isListening:
-            startRecordingAnswer() //Changes interaction to .isListening
-        
-        case .successfulResponse:
-            analyseResponse()//Changes interaction to .isProcessing -> isCorrectAnswer OR isIncCorrectAnswer Or .errorResponse
-            
-        case .resumingPlayback:
-            //self.interactionState = .idle
-           proceedWithQuiz()//Changes interaction to .nowPlaying
-            
-        case .isIncorrectAnswer:
-            playCorrectionAudio()//Changes interaction to .nowPlayingCorrection
-            
-        case .isCorrectAnswer:
-            proceedWithQuiz()
-            //setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
-            
-        case .errorTranscription:
-            playFeedbackMessage(feedbackMessageUrls?.errorMessage) // Changes to .playingFeedback
-            //MARK: TODO - Create Method to check for repeat listen settings
-            
-        case .endedQuiz:
-            dismissAction()
-            
-            //FOR Now Moving on
-            
-        default:
-            break
-       
-        }
-    }
+   
     
     //MARK: Step 2 Processes  - Record Answer
     func startRecordingAnswer() {
         self.responseListener.recordAnswer()
     }
     
+    func startRecordingAnswerV2(answer options: [String]) {
+        self.responseListener.recordAnswerV2(answer: options)
+    }
+    
     //MARK: Step 2 Processes - Continue Playing Logic
     func proceedWithQuiz() {
-        // Check if the current index is less than the count of current questions
-//        guard currentQuestions.indices.contains(currentQuestionIndex) else {
-//            print("Index out of bounds: \(currentQuestionIndex) for questions count: \(currentQuestions.count)")
-//            return
-//        }
-        
         self.currentQuestionIndex += 1
         
         if currentQuestions.indices.contains(currentQuestionIndex) {
             self.continuePlaying()
             
         } else {
-            
+            interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
+            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
             self.currentQuestionIndex = 0
-            
-            Task {
-                await playQuizReview()
-            }
-            
-//            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
             
         }
     }
+    
+    
     
     func playQuizReview() async {
         let reviewUrl = await fetchQuizReview(review: scoreReadout())
         DispatchQueue.main.async {
-            audioContentPlayer.playAudioFile(reviewUrl)
+            intermissionPlayer.playReviewFeedBack(reviewUrl)
         }
+        
     }
     
     private func resetQuizAndGetScore() {
         let score = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
-        var newPerformance: PerformanceModel = PerformanceModel(id: UUID(), date: .now, score: score, numberOfQuestions: self.currentQuestions.count)
+        let newPerformance: PerformanceModel = PerformanceModel(id: UUID(), date: .now, score: score, numberOfQuestions: self.currentQuestions.count)
         modelContext.insert(newPerformance)
         try! modelContext.save()
         
@@ -477,7 +364,7 @@ extension MiniPlayerV2 {
         
     }
     
-    private func playCorrectionAudio() {
+    func playCorrectionAudio() {
         DispatchQueue.main.async {
             self.interactionState = .nowPlayingCorrection
             let correctionAudio = currentQuestions[currentQuestionIndex].questionNoteAudio
@@ -516,12 +403,8 @@ extension MiniPlayerV2 {
     //MARK: Step 3 Processes  - Analyzing Answer
     func analyseResponse() {
         let response = responseListener.userTranscript
-        self.selectedOption = response
-        selectOption(self.selectedOption)
-    }
-    //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
-    private func selectOption(_ option: String) {
-        guard !option.isEmptyOrWhiteSpace else {
+        
+        guard !response.isEmptyOrWhiteSpace  else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.interactionState = .errorTranscription
             }
@@ -529,12 +412,25 @@ extension MiniPlayerV2 {
             return
         }
         
+        guard response != "Invalid Response" else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.interactionState = .errorResponse
+            }
+            
+            return
+        }
+        
+        self.selectedOption = response
+        selectOption(self.selectedOption)
+    }
+    
+    //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
+    private func selectOption(_ option: String) {
+
         DispatchQueue.main.async {
             print("Saving response")
             let currentQuestion = self.currentQuestions[self.currentQuestionIndex]
             currentQuestion.selectedOption = option
-            
-            //MARK: TODO - Check if answer was given before marking as true
             currentQuestion.isAnswered = true
             
             if currentQuestion.selectedOption == currentQuestion.correctOption {
@@ -549,18 +445,11 @@ extension MiniPlayerV2 {
             } else {
                 
                 self.interactionState = .isIncorrectAnswer
-
                 currentQuestion.isAnsweredCorrectly = false
             }
             
             self.isCorrectAnswer = currentQuestion.isAnsweredCorrectly
             
-            print("Presenting Confirmation")
-            print("User selected \(self.currentQuestions[self.currentQuestionIndex].selectedOption) option")
-            print("Current question is answered: \(self.currentQuestions[self.currentQuestionIndex].isAnswered)")
-            print("Question \(self.currentQuestions[self.currentQuestionIndex].id) was answered correctly?: \(self.currentQuestions[self.currentQuestionIndex].isAnsweredCorrectly)")
-            print("The correct option is: \(currentQuestion.correctOption)")
-            print(self.interactionState)
         }
     }
     

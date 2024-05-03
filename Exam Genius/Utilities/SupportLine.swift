@@ -26,7 +26,7 @@ struct SupportLine: View {
                 ])
                 
             }
-            .stroke(self.color, lineWidth: 2)
+            .stroke(self.color, lineWidth: 1)
             .opacity(0.5)
             
         }

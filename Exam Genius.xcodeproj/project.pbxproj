@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B07DEAB2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */; };
 		0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */; };
 		0B0DC87F2BC0843C009F12A6 /* LibraryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */; };
 		0B0DC8812BC08488009F12A6 /* VUMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC8802BC08488009F12A6 /* VUMeterView.swift */; };
@@ -138,6 +139,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MiniPlayerStateMgt+Extension.swift"; sourceTree = "<group>"; };
 		0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBuilder.swift; sourceTree = "<group>"; };
 		0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItemView.swift; sourceTree = "<group>"; };
 		0B0DC8802BC08488009F12A6 /* VUMeterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VUMeterView.swift; sourceTree = "<group>"; };
@@ -403,6 +405,7 @@
 				0B2A87E82BAE8BF8001571DD /* MicModalView.swift */,
 				0B72143E2BCAD6610030664F /* MiniPlayerV2.swift */,
 				0B2CFA732BCE3F5E0044F0AD /* MiniPlayer+Extension.swift */,
+				0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */,
 			);
 			name = PlayerViews;
 			sourceTree = "<group>";
@@ -914,6 +917,7 @@
 				0BB9DE1E2B865885004F848A /* AppState.swift in Sources */,
 				0B5E0EF82BA9B3F7003C5406 /* TestData.swift in Sources */,
 				0B0DC8842BC086AB009F12A6 /* HomePage.swift in Sources */,
+				0B07DEAB2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift in Sources */,
 				0B417E762BDADA9400E02D7F /* SummaryInfoView.swift in Sources */,
 				0B7214412BCAE2B70030664F /* QuizViewPresentationManager.swift in Sources */,
 				0B42E3D62B8CFFB300DC3565 /* Config.swift in Sources */,

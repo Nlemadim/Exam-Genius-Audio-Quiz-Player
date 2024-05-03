@@ -211,8 +211,8 @@ extension HomePage {
             quizStartMessage: "Starting a new quiz now.",
             quizEndingMessage: "Great job! This quiz is now complete.",
             correctAnswerCallout: "That's the correct Answer!",
-            skipQuestionMessage: "Skipping this question.",
-            errorTranscriptionMessage: "Error transcribing that question, we will skip that for now and re-visit it later.",
+            skipQuestionMessage: "Thats an invalid response. Skipping this question for now.",
+            errorTranscriptionMessage: "Error transcribing your response. Skipping this question for now",
             finalScoreMessage: "Final score calculated.",
             quizStartAudioUrl: "",
             quizEndingAudioUrl: "",
@@ -234,11 +234,12 @@ extension HomePage {
     
     func getFeedBackMessages() -> FeedBackMessageUrls {
         let userFeedbackMessages = voiceFeedbackMessages.first
-        var feedbackMessages = FeedBackMessageUrls(
+        let feedbackMessages = FeedBackMessageUrls(
             startMessage: userFeedbackMessages?.quizStartAudioUrl ?? "",
             correctAnswerCallout: userFeedbackMessages?.correctAnswerCalloutUrl ?? "",
             errorMessage: userFeedbackMessages?.errorTranscriptionAudioUrl ?? "",
-            endMessage: userFeedbackMessages?.finalScoreAudioUrl ?? ""
+            endMessage: userFeedbackMessages?.finalScoreAudioUrl ?? "",
+            skipMessage: userFeedbackMessages?.skipQuestionAudioUrl ?? ""
         )
         
         return feedbackMessages
@@ -253,5 +254,6 @@ struct FeedBackMessageUrls {
     var correctAnswerCallout: String
     var errorMessage: String
     var endMessage: String
+    var skipMessage: String
 }
 

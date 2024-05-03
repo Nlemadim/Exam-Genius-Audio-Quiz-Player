@@ -150,6 +150,7 @@ struct HomePage: View {
             UITabBar.appearance().barTintColor = UIColor.black
             generator.updateDominantColor(fromImageNamed: backgroundImage)
             updateCollections()
+            navigateToPlayer()
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
@@ -157,6 +158,14 @@ struct HomePage: View {
                 .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
         }
         .preferredColorScheme(.dark)
+    }
+    
+    private func navigateToPlayer() {
+        if downloadedAudioQuizCollection.isEmpty {
+            return
+        } else {
+            selectedTab = 1
+        }
     }
     
     func loadUserPackage() {

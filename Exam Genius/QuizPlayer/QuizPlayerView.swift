@@ -114,7 +114,6 @@ struct QuizPlayerView: View {
                             
                            startPlayer()
                         })
-                        
                     }
                     .padding()
                     .padding(.horizontal)
@@ -123,19 +122,8 @@ struct QuizPlayerView: View {
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
-                    PerformanceHistoryGraph(history: performanceCollection, mainColor: .teal, subColor: .themePurpleLight)
+                    PerformanceHistoryGraph(history: performanceCollection, mainColor: generator.dominantLightToneColor, subColor: .themePurpleLight)
                         .padding(.horizontal)
-                    
-//                    PerformanceHistoryGraph(history: [
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 40, numberOfQuestions: 10),
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 80, numberOfQuestions: 10),
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 30, numberOfQuestions: 10),
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 90, numberOfQuestions: 10),
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 30, numberOfQuestions: 20),
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 20, numberOfQuestions: 10),
-//                        PerformanceHistory(id: UUID(), date: Date(), score: 70, numberOfQuestions: 10)
-//                    ], mainColor: .teal, subColor: .themePurpleLight)
-                    .padding(.horizontal)
                     
                     Rectangle()
                         .fill(.black)
@@ -143,6 +131,7 @@ struct QuizPlayerView: View {
                 }
             }
             .onAppear {
+                updateUserQuizSelection()
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
 
             }
@@ -198,6 +187,18 @@ struct QuizPlayerView: View {
                 self.quizPlayerObserver.playerState = .idle
             }
         }
+    }
+    
+    private func updateUserQuizSelection() {
+        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
+              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
+              !matchingQuizPackage.questions.isEmpty else {
+            user.downloadedQuiz = nil
+            return
+        }
+        
+        user.downloadedQuiz = matchingQuizPackage
+    
     }
 
     func updateUserAudioQuiz(_ audioQuiz: DownloadedAudioQuiz?) async {

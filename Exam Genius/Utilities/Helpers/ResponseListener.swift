@@ -26,6 +26,10 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         startRecordingAndTranscribing()
     }
     
+    func recordAnswerV2(answer options: [String]) {
+        startRecordingAndTranscribingV2(answers: options)
+    }
+    
     fileprivate func startRecordingAndTranscribing() {
         interactionState = .isListening
         print("Starting transcription...")
@@ -61,6 +65,46 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     fileprivate func processTranscript(transcript: String) -> String {
         //self.interactionState = .isProcessing
         let processedTranscript = WordProcessor.processWords(from: transcript)
+        return processedTranscript
+    }
+    
+    
+    fileprivate func startRecordingAndTranscribingV2(answers options: [String]) {
+        interactionState = .isListening
+        print("Starting transcription...")
+        self.isRecordingAnswer = true
+        
+        // Immediately start transcribing
+        self.speechRecognizer.transcribe()
+        print("Transcribing started")
+        
+        // Schedule to stop transcribing after 5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.speechRecognizer.stopTranscribing()
+            self.isRecordingAnswer = false
+            print("Transcription stopped")
+            
+            self.getTranscriptV2(answer: options)
+            
+        }
+    }
+    
+    
+    fileprivate func getTranscriptV2(answer options: [String]) {
+        cancellable = speechRecognizer.$transcript
+            .sink { newTranscript in
+                self.selectedOption = self.processTranscriptV2(transcript: newTranscript, options: options)
+            }
+        
+        self.userTranscript = self.selectedOption
+        print("Listener published userTranscript as: \(self.userTranscript)")
+        self.interactionState = .hasResponded
+    }
+    
+    fileprivate func processTranscriptV2(transcript: String, options: [String]) -> String {
+        //self.interactionState = .isProcessing
+        let processedTranscript = WordProcessorV2.processWords(from: transcript, comparedWords: options)
+        
         return processedTranscript
     }
     

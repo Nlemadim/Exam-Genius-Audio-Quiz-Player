@@ -14,7 +14,7 @@ struct FullScreenQuizPlayer2: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
     @ObservedObject var quizSetter: MiniPlayerV2.MiniPlayerV2Configuration
-    var powerSimulator = VolumePowerSimulator()
+    
    
     @State var showText: Bool = false
     @State var isMuted: Bool = false
@@ -32,11 +32,13 @@ struct FullScreenQuizPlayer2: View {
     @Binding var presentMicModal: Bool
     @Binding var interactionState: InteractionState
     @Binding var questionTranscript: String
+    @Binding var powerSimulator: Float
     
     var onViewDismiss: () -> Void?
     var playAction: () -> Void
     var nextAction: () -> Void
     var recordAction: () -> Void
+    let randomPower = [0, 1.2, 1.7, 3, 2, 1.6, 1.8, 2.7, 2.0, 3.5, 1.4]
     
     //var animation: Namespace.ID
     var body: some View {
@@ -46,31 +48,45 @@ struct FullScreenQuizPlayer2: View {
                     VStack {
                         VStack(spacing: 10){
                             
-                            HStack(spacing: 4) {
+                            HStack {
                                 Image(quizSetter.configuration?.imageUrl ??  "IconImage")
                                     .resizable()
-                                    .aspectRatio(1.0, contentMode: .fill)
-                                    .frame(width: 130, height: 100)
+                                    .aspectRatio(contentMode: .fit)
                                     .cornerRadius(10)
-                                    .hAlign(.leading)
+                                    .frame(height: 100)
+                              
+                                VStack {
+                                    Text(quizSetter.configuration?.name ?? "")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.primary)
+                                        .padding(.top, 2)
+                                        .hAlign(.leading)
+                                    
+                                    Text("Audio Quiz")
+                                        .font(.subheadline)
+                                        .padding(.top, 2)
+                                        .foregroundStyle(.primary)
+                                        .hAlign(.leading)
+                                    
+                                    Text("Question \(currentQuestionIndex + 1) of \(quizSetter.quizQuestionCount)")
+                                        .font(.subheadline)
+                                        .padding(.top, 2)
+                                        .foregroundStyle(.primary)
+                                        .hAlign(.leading)
+                                    
+                                }
+                                .frame(height: 100)
+                                Spacer()
                             }
                             
-                            Text("Question:\(currentQuestionIndex)/ \(quizSetter.quizQuestionCount)")
-                                .font(.subheadline)
-                                .padding(.top, 2)
-                                .foregroundStyle(.primary)
-                                .hAlign(.leading)
-//                            Text((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz")
-//                                .multilineTextAlignment(.center)
-//                                .fontWeight(.bold)
-//                                .foregroundStyle(.primary)
-//                                .hAlign(.leading)
+//                            VoqaWaveViewV3(power: .constant(outputLevel()), colors: [generator.dominantBackgroundColor, generator.dominantLightToneColor], supportLineColor: .mint)
+//                                .frame(height: 25)
+//                                .padding(.top, 2)
                             
-                            VoqaWaveView()
-                                .power(power: powerSimulator.currentPower)
+                            VoqaWaveViewV2(colors: [generator.dominantBackgroundColor, generator.dominantLightToneColor], supportLineColor: .mint, interactionState: $interactionState)
                                 .frame(height: 25)
                                 .padding(.top, 2)
-                            
+                                
                         }
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         .padding()
@@ -80,23 +96,34 @@ struct FullScreenQuizPlayer2: View {
                         .padding(.bottom, 15)
                         
                         Divider()
-                            .activeGlow(generator.dominantLightToneColor, radius: 2)
+                            .activeGlow(generator.dominantLightToneColor, radius: 0.5)
                         
-
                         VStack(alignment: .center) {
-                            Text(quizSetter.questionTranscript)
-                                .fontWeight(.black)
-                                .multilineTextAlignment(.center)
-                                .kerning(0.3)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding()
+                            ZStack{
+                                Text(quizSetter.questionTranscript)
+                                    .fontWeight(.black)
+                                    .multilineTextAlignment(.center)
+                                    .minimumScaleFactor(0.5)
+                                    .kerning(0.3)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .padding()
+                                    //.opacity(quizSetter.currentScore.isEmptyOrWhiteSpace ? 1 : 0)
+                                
+//                                Text(quizSetter.currentScore)
+//                                    .fontWeight(.black)
+//                                    .multilineTextAlignment(.center)
+//                                    .kerning(0.3)
+//                                    .frame(maxWidth: .infinity, alignment: .center)
+//                                    .padding()
+//                                    .opacity(quizSetter.currentScore.isEmptyOrWhiteSpace ? 0 : 1)
+                            }
 
                         }
                         .frame(maxHeight: .infinity)
                         .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         
                         Divider()
-                            .activeGlow(generator.dominantLightToneColor, radius: 2)
+                            .activeGlow(generator.dominantLightToneColor, radius: 0.5)
                        
                         PlayerControlButtons(interactionState: $interactionState,
                                              themeColor: generator.dominantLightToneColor,
@@ -119,29 +146,17 @@ struct FullScreenQuizPlayer2: View {
                 .background(generator.dominantBackgroundColor.gradient)
                 .onAppear {
                     generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "IconImage")
-                    //quizProgress = quizSetter.quizQuestionCount > 0 ? CGFloat(currentQuestionIndex + 1) / CGFloat(quizSetter.quizQuestionCount) : progress
-                    quizProgress = 30.0
 
                 }
-                .onChange(of: questionTranscript, { _, newValue in
+                .onChange(of: quizSetter.questionTranscript, { _, newValue in
                     startTypingAnimation(for: newValue)
                 })
-                .onChange(of: interactionState) { _, newState in
-                    DispatchQueue.main.async {
-                        self.interactionState = newState
-                        powerSimulator.startPlayingPowerSimulator(interactionState: newState)
-                    }
-                }
+              
             }
-            .navigationTitle(Text((quizSetter.configuration?.shortTitle ?? "") + " Audio Quiz"))
-            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: .constant(interactionState == .isListening), content: {
                 MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
                     .presentationDetents([.height(100)])
             })
-            .onAppear {
-                self.quizProgress = progress
-            }
             .onDisappear(perform: {
                 onViewDismiss()
             })
@@ -155,6 +170,10 @@ struct FullScreenQuizPlayer2: View {
 
     func playButtonIconSetter() -> Bool {
         return interactionState == .isNowPlaying || interactionState == .resumingPlayback
+    }
+    
+    private func outputLevel() -> Double {
+        return Double(self.powerSimulator)
     }
     
     
@@ -299,13 +318,13 @@ struct TranscriptView: View {
 #Preview {
     let user = User()
     @Namespace var animation
-    @State var curIndex = 0
+    @State var curIndex = 0.9
     @State var config = QuizViewConfiguration(imageUrl: "ELA-Exam", name: "English, Language, Arts", shortTitle: "ELA", question: "")
     let sharedState = SharedQuizState()
     let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
     quizSetter.configuration = config
     
-    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(curIndex), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.isNowPlaying), questionTranscript: .constant("Hello Transcript"), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
+    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.isNowPlaying), questionTranscript: .constant("Hello Transcript"), powerSimulator: .constant(0.6), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
         .environmentObject(user)
         .preferredColorScheme(.dark)
 }

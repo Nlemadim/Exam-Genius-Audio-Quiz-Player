@@ -101,7 +101,8 @@ struct MiniPlayerControlButtons: View {
 }
 
 
-//#Preview {
-//    PlayerControlButtons(isNowPlaying: .constant(true), repeatAction: {}, playAction: {}, nextAction: {})
-//        .preferredColorScheme(.dark)
-//}
+#Preview {
+    PlayerControlButtons(interactionState: .constant(.idle), themeColor: .purple, recordAction: {}, playAction: {}, nextAction: {})
+        .preferredColorScheme(.dark)
+}
+

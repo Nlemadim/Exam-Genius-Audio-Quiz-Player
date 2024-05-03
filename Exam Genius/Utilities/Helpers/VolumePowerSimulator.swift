@@ -26,7 +26,9 @@ import SwiftUI
             guard let self = self else { return }
             if let randomValue = self.randomPower.randomElement() {
                 DispatchQueue.main.async {
-                    self.currentPower = randomValue  // Update the observed property
+                    withAnimation {
+                        self.currentPower = randomValue
+                    }
                 }
             }
         }
