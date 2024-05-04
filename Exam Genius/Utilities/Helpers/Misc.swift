@@ -116,6 +116,9 @@ enum InteractionState {
     case donePlayingFeedbackMessage
     case reviewing
     case doneReviewing
+    case playingErrorMessage
+    case donePlayingErrorMessage
+    
     
     var status: String {
         switch self {
@@ -172,7 +175,11 @@ enum InteractionState {
         case .doneReviewing:
             return "Review complete"
             
+        case .playingErrorMessage:
+            return "playing error message"
             
+        case .donePlayingErrorMessage:
+            return "Done playing error message"
         }
     }
 }

@@ -87,7 +87,7 @@ struct HomePage: View {
                     .zIndex(1)
                 }
                 .task {
-//                    await loadDefaultCollection()
+                    await loadDefaultCollection()
 //                    await loadVoiceFeedBackMessages()
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                 }
@@ -135,6 +135,12 @@ struct HomePage: View {
                     TabIcons(title: "Browse", icon: "square.grid.2x2")
                 }
                 .tag(2)
+            
+            LibraryPage()
+                .tabItem {
+                    TabIcons(title: "My Library", icon: "books.vertical.fill")
+                }
+                .tag(3)
         }
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
@@ -158,32 +164,33 @@ struct HomePage: View {
         }
     }
     
-//    func loadUserPackage() {
-//        guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
-//              let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
-//              !matchingQuizPackage.questions.isEmpty else {
-//            user.selectedQuizPackage = nil
-//            return
-//        }
-//        user.selectedQuizPackage = matchingQuizPackage
-//    }
-//    
-//    func fetchDownloadedAudioQuiz() {
-//        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
-//              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
-//              !matchingQuizPackage.questions.isEmpty else {
-//            user.downloadedQuiz = nil
-//            return
+//    private func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+//        
+//        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
+//        
+//        DispatchQueue.main.async {
+//            self.interactionState = .isDownloading
 //        }
 //        
-//        user.downloadedQuiz = matchingQuizPackage
-//    }
-//    
-//    func loadUserQuiz() {
-//        guard !downloadedAudioQuizCollection.isEmpty else { return }
-//        let newQuiz = downloadedAudioQuizCollection.first
-//        user.downloadedQuiz = newQuiz
-//        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
+//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+//       
+//        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+//        
+//        let audioQuestions = package.questions
+//        
+//        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+//        
+//        newDownloadedQuiz.questions = audioQuestions
+//        self.downloadedAudioQuiz = newDownloadedQuiz
+//        
+//        modelContext.insert(newDownloadedQuiz)
+//        try! modelContext.save()
+//        
+//        DispatchQueue.main.async {
+//            user.downloadedQuiz = self.downloadedAudioQuiz
+//            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+//            self.interactionState = .idle
+//        }
 //    }
     
     @ViewBuilder

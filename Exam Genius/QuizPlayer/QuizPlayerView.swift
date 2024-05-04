@@ -144,11 +144,19 @@ struct QuizPlayerView: View {
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
 
             }
+            .onChange(of: user.downloadedQuiz, { _, audioQuiz in
+                if let audioQuiz = audioQuiz {
+                    updateUserQuizSelection()
+                }
+            })
             .onChange(of: quizPlayerObserver.playerState) { _, newState in
                 DispatchQueue.main.async {
                     syncQuizPlayerState(newState)
                 }
             }
+            .onChange(of: downloadedAudioQuizCollection, { _, _ in
+                fetchUserQuizName()
+            })
             .onChange(of: sharedInteractionState.interactionState) { _, newState in
                 DispatchQueue.main.async {
                     self.interactionState = newState
@@ -198,6 +206,7 @@ struct QuizPlayerView: View {
         }
         
         self.userQuizName = userQuizName
+        updateUserQuizSelection()
     }
 
     
@@ -215,13 +224,37 @@ struct QuizPlayerView: View {
 
 
     
-//    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
-//        
-//        guard downloadedAudioQuizCollection.isEmpty else { return }
-//        
-//        DispatchQueue.main.async {
-//            self.interactionState = .isDownloading
-//        }
+    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+        
+        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
+        
+        DispatchQueue.main.async {
+            self.interactionState = .isDownloading
+        }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+       
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+        
+        let audioQuestions = package.questions
+        
+        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+        
+        newDownloadedQuiz.questions = audioQuestions
+        
+        modelContext.insert(newDownloadedQuiz)
+        try! modelContext.save()
+        
+        DispatchQueue.main.async {
+            user.downloadedQuiz = newDownloadedQuiz
+            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+            self.interactionState = .idle
+        }
+    }
+    
+//    private func downlaodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+//        //Please Modify guard statement to check that package name is not already contained in collection
+//        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
 //        
 //        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
 //       
@@ -239,7 +272,6 @@ struct QuizPlayerView: View {
 //        DispatchQueue.main.async {
 //            user.downloadedQuiz = newDownloadedQuiz
 //            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
-//            self.interactionState = .idle
 //        }
 //    }
     

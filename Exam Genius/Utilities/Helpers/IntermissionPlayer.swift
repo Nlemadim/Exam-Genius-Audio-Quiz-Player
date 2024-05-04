@@ -66,7 +66,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.finishedPlayingErrorMessage = false
         play(soundNamed: "softBell1")
     }
-    
+   
     // Plays the bell sound indicating a successful response.
     func playReceivedResponseBell() {
         self.feedbackPlayerState = .idle
@@ -127,7 +127,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 }
                 
                 if self.finishedPlayingEndQuizFeedBack {
-                    self.feedbackPlayerState = .reviewing
+//                    self.feedbackPlayerState = .reviewing
                     print(self.feedbackPlayerState)
                 }
                 
@@ -137,7 +137,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 }
                 
                 if self.finishedPlayingErrorMessage {
-                    self.feedbackPlayerState = .donePlayingFeedbackMessage
+                    self.feedbackPlayerState = .donePlayingErrorMessage
                 }
             }
         }
@@ -177,6 +177,8 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         
         DispatchQueue.main.async {
             self.finishedPlayingErrorMessage = true
+            self.finishedPlayingReview = false
+            self.finishedPlayingFeedBack = false
         }
         
         do {

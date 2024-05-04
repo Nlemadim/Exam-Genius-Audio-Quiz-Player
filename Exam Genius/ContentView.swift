@@ -45,13 +45,7 @@ struct ContentView: View {
         .onAppear {
             fetchDownloadedMainAudioQuiz()
         }
-        .onChange(of: user.selectedQuizPackage, { _, audioQuiz in
-            if let audioQuiz = audioQuiz {
-                Task {
-                    await downlaodNewAudioQuiz(quiz: audioQuiz)
-                }
-            }
-        })
+
         .onChange(of: user.downloadedQuiz, { _, _ in
             fetchDownloadedMainAudioQuiz()
         })
@@ -97,31 +91,8 @@ struct ContentView: View {
         modelContext.insert(newVoiceMessages)
         
         try! modelContext.save()
-        
     }
     
-    private func downlaodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
-        //Please Modify guard statement to check that package name is not already contained in collection
-        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
-        
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-       
-        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
-        
-        let audioQuestions = package.questions
-        
-        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
-        
-        newDownloadedQuiz.questions = audioQuestions
-        
-        modelContext.insert(newDownloadedQuiz)
-        try! modelContext.save()
-        
-        DispatchQueue.main.async {
-            user.downloadedQuiz = newDownloadedQuiz
-            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
-        }
-    }
     
     func loadUserMainPackage() {
         guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),

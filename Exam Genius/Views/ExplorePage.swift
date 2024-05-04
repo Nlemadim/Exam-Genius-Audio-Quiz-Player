@@ -19,6 +19,7 @@ struct ExplorePage: View {
     
     @State var interactionState: InteractionState = .idle
     @State var selectedQuizPackage: AudioQuizPackage?
+    @State var downloadedAudioQuiz: DownloadedAudioQuiz?
     @State private var searchText = ""
     @Binding var selectedTab: Int
     @State var didTapSample: Bool = false
@@ -54,9 +55,23 @@ struct ExplorePage: View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapSample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
-            .onChange(of: didTapDownload, { _, newValue in
-                fetchFullPackage(newValue)
-                
+            .onChange(of: user.selectedQuizPackage, { _, audioQuiz in
+                if let audioQuiz = audioQuiz {
+                    Task {
+                        print("Loading audio Questions")
+                        await laodNewAudioQuiz(quiz: audioQuiz)
+                    }
+                }
+            })
+            .onChange(of: didTapDownload, { _, _ in
+                if let selectePackage = self.selectedQuizPackage, !selectePackage.questions.isEmpty {
+                    user.selectedQuizPackage = self.selectedQuizPackage
+                    selectedTab = 1
+                } else {
+                    Task {
+                        await fetchFullPackage()
+                    }
+                }
             })
             .onChange(of: didTapSample, { _, newValue in
                 playSampleQuiz(newValue)
@@ -76,6 +91,35 @@ struct ExplorePage: View {
                 quiz.acronym.localizedCaseInsensitiveContains(searchText) ||
                 quiz.category.contains { $0.descr.localizedCaseInsensitiveContains(searchText) }
             }
+        }
+    }
+    
+    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
+        
+        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
+        
+        DispatchQueue.main.async {
+            self.interactionState = .isDownloading
+        }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+       
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+        
+        let audioQuestions = package.questions
+        
+        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+        
+        newDownloadedQuiz.questions = audioQuestions
+        self.downloadedAudioQuiz = newDownloadedQuiz
+        
+        modelContext.insert(newDownloadedQuiz)
+        try! modelContext.save()
+        
+        DispatchQueue.main.async {
+            user.downloadedQuiz = self.downloadedAudioQuiz
+            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+            self.interactionState = .idle
         }
     }
 }

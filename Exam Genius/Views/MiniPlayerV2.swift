@@ -121,7 +121,6 @@ struct MiniPlayerV2: View {
             DispatchQueue.main.async {
                 self.interactionStateAction(newState)
                 self.updateFeedbackMessage(newState)
-//                self.configuration.sharedState.updateInteractionState(newState: newState)
                 self.configuration.loadQuestionScriptViewer(question: self.interactionFeedbackMessage)
             }
         }
@@ -181,13 +180,20 @@ extension MiniPlayerV2 {
         let index = min(Int(scorePercentage / 25), compliments.count - 1) // Calculate index for selecting compliment
         
         let compliment = compliments[index] // Select compliment based on score
-        let scoreString = String(format: "%.0f %%", scorePercentage) // Format score as a percentage string
+        
+        let scoreString: String
+        if scorePercentage == 0.0 {
+            scoreString = "You did not get any questions correct"
+        } else {
+            scoreString = "You Scored "+(String(format: "%.0f %%", scorePercentage))
+        }
+         
         
         let readOut = """
         
         \(compliment)
         
-        You Scored \(scoreString)
+        \(scoreString)
         
         """
         print(readOut)
@@ -325,7 +331,12 @@ extension MiniPlayerV2 {
             interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
             playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
             self.currentQuestionIndex = 0
-            
+            self.interactionState = .reviewing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                Task {
+                    await playQuizReview()
+                }
+            }
         }
     }
     

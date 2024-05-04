@@ -32,13 +32,11 @@ extension ExplorePage {
         }
     }
     
-    func fetchFullPackage(_ didTapDownload: Bool) {
-        if didTapDownload {
-            if let selectedQuizPackage = self.selectedQuizPackage {
-                Task {
-                    try await downloadFullPackage(selectedQuizPackage)
-                }
-            }
+    func fetchFullPackage() async {
+        guard let selectedQuizPackage = self.selectedQuizPackage, selectedQuizPackage.questions.isEmpty else { return }
+        
+        Task {
+            try await downloadFullPackage(selectedQuizPackage)
         }
     }
     

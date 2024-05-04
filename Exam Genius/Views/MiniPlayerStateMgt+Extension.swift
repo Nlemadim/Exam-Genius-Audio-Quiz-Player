@@ -52,6 +52,7 @@ extension MiniPlayerV2 {
     
     func syncInteractionState(_ interactionState: InteractionState) {
         DispatchQueue.main.async {
+            
             switch interactionState {
                 
             case .isDonePlaying://Triggered by QuestionPlayer/
@@ -75,15 +76,14 @@ extension MiniPlayerV2 {
                 
             case .donePlayingFeedbackMessage: //Triggered by intermissionPlayer after Feedback play
                 self.intermissionPlayer.playErrorTranscriptionBell()
+
                 
-                
-            case .reviewing:
+            case .donePlayingErrorMessage:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .reviewing
+                    self.interactionState = .resumingPlayback
                 }
                 
             case .doneReviewing:
-                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .endedQuiz
                 }
@@ -124,10 +124,10 @@ extension MiniPlayerV2 {
             playErrorFeedbackMessage(feedbackMessageUrls?.errorMessage) // Changes to .playingFeedback
             //MARK: TODO - Create Method to check for repeat listen settings
             
-        case .reviewing:
-            Task {
-                await playQuizReview()
-            }
+        //case .reviewing:
+//            Task {
+//                await playQuizReview()
+//            }
             
         case .endedQuiz:
             dismissAction()
@@ -137,7 +137,4 @@ extension MiniPlayerV2 {
        
         }
     }
-    
-    
-    
 }
