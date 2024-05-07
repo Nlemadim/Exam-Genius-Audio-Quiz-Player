@@ -52,29 +52,35 @@ struct MiniPlayerV2: View {
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
     }
     
+    
     var body: some View {
         HStack(spacing: 10) {
             playerThumbnail
             playerDetails
             MiniQuizControlView(
-                recordAction: { self.interactionState = .isListening},
-                playPauseAction: { startQuizAudioPlay() },
+                recordAction: { self.interactionState = .isListening },
+                playPauseAction: { playPauseStop() },
                 nextAction: { goToNextQuestion() },
                 repeatAction: {},
                 interactionState: $interactionState
             )
         }
         .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation {
+                appearIfQuiz()
+            }
+        }
         .fullScreenCover(isPresented: $presentationManager.shouldShowFullScreen) {
             FullScreenQuizPlayer2(
                 quizSetter: configuration,
                 currentQuestionIndex: $currentQuestionIndex,
                 isCorrectAnswer: $isCorrectAnswer,
                 presentMicModal: $presentMicModal,
-                interactionState: $interactionState,
+                interactionState: $configuration.interactionState,
                 questionTranscript: $interactionFeedbackMessage,
                 powerSimulator: $outputPower,
-                onViewDismiss: { },
+                onViewDismiss: { simpleDismiss() },
                 playAction: { playPauseStop() },
                 nextAction: { goToNextQuestion() },
                 recordAction: { self.interactionState = .isListening }
@@ -87,12 +93,7 @@ struct MiniPlayerV2: View {
                 subColor: generator.dominantLightToneColor)
                 .presentationDetents([.height(100)])
         })
-        .onTapGesture {
-            withAnimation {
-                
-                expandAction()
-            }
-        }
+        
         .onAppear {
             setupViewConfigurations()
         }
@@ -146,6 +147,16 @@ struct MiniPlayerV2: View {
         }
         .frame(width: 45, height: 45)
     }
+    
+    private func simpleDismiss() {
+        presentationManager.expandSheet = false
+        expandSheet = false
+    }
+    
+    private func appearIfQuiz() {
+        presentationManager.expandSheet = true
+        expandSheet = true
+    }
 
     private var playerDetails: some View {
         Text(user.downloadedQuiz?.shortTitle ?? "No Quiz Selected")
@@ -153,7 +164,6 @@ struct MiniPlayerV2: View {
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
 }
 
 
@@ -218,7 +228,6 @@ extension MiniPlayerV2 {
                
                """
     }
-    
     
     func loadPlayerPositions() {
          let savedPos = UserDefaultsManager.currentPlayPosition()
@@ -383,7 +392,11 @@ extension MiniPlayerV2 {
         }
     }
     
-    
+    func isActivePlay() -> Bool {
+        let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
+        return activeStates.contains(self.interactionState)
+        
+    }
     
     //MARK: FullScreen Player Observer
     func showMiniPlayerMicModal() -> Bool {

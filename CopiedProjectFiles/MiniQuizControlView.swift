@@ -31,18 +31,26 @@ struct MiniQuizControlView: View {
                 tappedPlay.toggle()
                 
             }) {
-                Image(systemName: interactionState == .isNowPlaying || interactionState == .resumingPlayback ? "pause.fill" : "play.fill")
+                Image(systemName: isActivePlay() ? "pause.fill" : "play.fill")
                     .font(.title2)
             }
+            .sensoryFeedback(.start, trigger: tappedPlay)
             
             // Next Button
             Button(action: nextAction) {
                 Image(systemName: "forward.end.fill")
                     .font(.title2)
             }
+            .sensoryFeedback(.selection, trigger: tappedPlay)
         }
         .foregroundStyle(.white)
         .padding(.horizontal)
+    }
+    
+    private func isActivePlay() -> Bool {
+        let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
+        return activeStates.contains(self.interactionState)
+        
     }
     
 }

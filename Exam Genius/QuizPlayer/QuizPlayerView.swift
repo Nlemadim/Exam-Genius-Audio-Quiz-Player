@@ -174,7 +174,7 @@ struct QuizPlayerView: View {
             self.interactionState = .isDonePlaying
         case .donePlaying:
             self.interactionState = .isDonePlaying
-        case .pausedCurrentPlay
+        case .pausedCurrentPlay:
             self.interactionState = .pausedPlayback
             
         default:
@@ -186,8 +186,9 @@ struct QuizPlayerView: View {
     
         DispatchQueue.main.async {
             if self.interactionState != .isNowPlaying {
-                self.quizPlayerObserver.playerState = .startedPlayingQuiz
                 self.interactionState = .isNowPlaying
+                self.quizPlayerObserver.playerState = .startedPlayingQuiz
+               
             } else {
                 self.interactionState = .pausedPlayback
                 self.quizPlayerObserver.playerState = .pausedCurrentPlay
@@ -301,7 +302,6 @@ struct QuizPlayerView: View {
         let audioFile = question.questionAudio
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             audioContentPlayer.playAudioFile(audioFile)
-            
         }
     }
 }

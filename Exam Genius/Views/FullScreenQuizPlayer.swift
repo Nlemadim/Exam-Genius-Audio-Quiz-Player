@@ -137,7 +137,7 @@ struct FullScreenQuizPlayer2: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {dismiss()}, label: {
+                        Button(action: { dismiss() }, label: {
                             Image(systemName: "chevron.down.circle")
                                 .foregroundStyle(generator.dominantBackgroundColor.dynamicTextColor())
                         })

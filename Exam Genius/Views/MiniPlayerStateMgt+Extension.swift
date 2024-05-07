@@ -150,7 +150,7 @@ extension MiniPlayerV2 {
             switch state {
             case .startedPlayingQuiz:
                 expandAction()
-                startQuizAudioPlay()
+                self.presentationManager.interactionState = .isNowPlaying
             case .pausedCurrentPlay:
                 pauseQuiz(currentIndex: self.currentQuestionIndex)
             default:

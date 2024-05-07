@@ -11,10 +11,11 @@ import SwiftUI
 extension MiniPlayerV2 {
     //MARK: STEP 1: Quiz Entry Point - Now Playing
     func startQuizAudioPlay() {
-        configuration.interactionState = self.interactionState
-        presentationManager.interactionState = self.interactionState
+        self.interactionState = .isNowPlaying
         expandSheet = true
         presentationManager.expandSheet = true
+        presentationManager.interactionState = .isNowPlaying
+        configuration.interactionState = self.interactionState
         quizPlayerObserver.playerState = .startedPlayingQuiz
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.playSingleQuizQuestion()
@@ -104,30 +105,53 @@ extension MiniPlayerV2 {
     func playPauseStop() {
         let index = self.currentQuestionIndex
         let state = self.interactionState
-        let commonStates: [InteractionState] = [.isNowPlaying, .playingErrorMessage, .playingFeedbackMessage]
         
         if state == .idle {
-            DispatchQueue.main.async {
-                self.interactionState = .isNowPlaying
-                if isFullScreenPlayerMode {
-                    
-                    playSingleQuizQuestion()
-                    
-                } else {
-                    
-                    startQuizAudioPlay()
-                }
-            }
+            expandAction()
         }
         
-        if state == .pausedPlayback {
-            continueFromPause(state: state)
-        }
-        
-        if commonStates.contains(state) {
+        if isActivePlay() {
             pauseQuiz(currentIndex: index)
         }
+        
+        if isFullScreenPlayerMode && isActivePlay() {
+            pauseQuiz(currentIndex: index)
+        }
+        
+        if isFullScreenPlayerMode && state == .idle {
+            startQuizAudioPlay()
+        }
+        
+        
     }
+    
+//    func playPauseStop() {
+//        let index = self.currentQuestionIndex
+//        let state = self.interactionState
+//        let commonStates: [InteractionState] = [.isNowPlaying, .playingErrorMessage, .playingFeedbackMessage]
+//        
+//        if state == .idle {
+//            DispatchQueue.main.async {
+//                self.interactionState = .isNowPlaying
+//                if isFullScreenPlayerMode {
+//                    
+//                    playSingleQuizQuestion()
+//                    
+//                } else {
+//                    
+//                    startQuizAudioPlay()
+//                }
+//            }
+//        }
+//        
+//        if state == .pausedPlayback {
+//            continueFromPause(state: state)
+//        }
+//        
+//        if commonStates.contains(state) {
+//            pauseQuiz(currentIndex: index)
+//        }
+//    }
     
     //MARK: TODO Continuity Methods
     func pauseQuiz(currentIndex: Int) {
@@ -182,11 +206,11 @@ extension MiniPlayerV2 {
     //MARK: Show Full Screen Method
     func expandAction() {
         guard selectedQuizPackage != nil else { return }
-        self.interactionState = .isNowPlaying
-        configuration.interactionState = self.interactionState
-        presentationManager.interactionState = self.interactionState
-        presentationManager.expandSheet = true
-        playSingleQuizQuestion()
+        startQuizAudioPlay()
+//        self.interactionState = .isNowPlaying
+//        configuration.interactionState = self.interactionState
+//        presentationManager.expandSheet = true
+//        playSingleQuizQuestion()
     }
     
     var isFullScreenPlayerMode: Bool {
