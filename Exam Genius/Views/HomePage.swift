@@ -36,6 +36,7 @@ struct HomePage: View {
     @State var cultureAndSociety: [AudioQuizPackage] = []
     @State var path = [AudioQuizPackage]()
     @State var selectedCategory: ExamCategory?
+    @State var downloadedAudioQuiz: DownloadedAudioQuiz?
     
     @State var didTapDownload = false
     @State var expandSheet: Bool = false
@@ -87,7 +88,7 @@ struct HomePage: View {
                     .zIndex(1)
                 }
                 .task {
-                    await loadDefaultCollection()
+                   // await loadDefaultCollection()
 //                    await loadVoiceFeedBackMessages()
                     generator.updateDominantColor(fromImageNamed: backgroundImage)
                 }
@@ -111,10 +112,6 @@ struct HomePage: View {
             })
             .onChange(of: didTapDownload, { _, newValue in
                 fetchFullPackage(newValue)
-                
-            })
-            .onChange(of: downloadedAudioQuizCollection, { _, _ in
-                //loadUserQuiz()
             })
             .onChange(of: didTapPlaySample, { _, newValue in
                 playSampleQuiz(newValue)
@@ -136,7 +133,7 @@ struct HomePage: View {
                 }
                 .tag(2)
             
-            LibraryPage()
+            LibraryPage(selectedQuizPackage: $user.selectedQuizPackage)
                 .tabItem {
                     TabIcons(title: "My Library", icon: "books.vertical.fill")
                 }
@@ -191,6 +188,7 @@ struct HomePage: View {
 //            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
 //            self.interactionState = .idle
 //        }
+//        
 //    }
     
     @ViewBuilder

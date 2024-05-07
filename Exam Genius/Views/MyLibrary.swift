@@ -28,6 +28,7 @@ struct MyLibrary: View {
     @State var downloadedAudioQuizCollection: [AudioQuizPackage] = []
     @State var configuration: QuizViewConfiguration?
     @State var audioPlaylist: [PlayerContent] = []
+  
     @Binding var interactionState: InteractionState
     
 //    @State private var playTapped: Bool = false
@@ -45,6 +46,7 @@ struct MyLibrary: View {
     
     init(interactionState: Binding<InteractionState>) {
         _interactionState = interactionState
+       
     }
     
     var body: some View {

@@ -10,6 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     @EnvironmentObject var user: User
@@ -43,12 +44,10 @@ struct ContentView: View {
             await loadMainVoiceFeedBackMessages()
         }
         .onAppear {
-            fetchDownloadedMainAudioQuiz()
+//            loadUserMainPackage()
+//            fetchDownloadedMainAudioQuiz()
         }
 
-        .onChange(of: user.downloadedQuiz, { _, _ in
-            fetchDownloadedMainAudioQuiz()
-        })
     }
     
     private func loadMainDefaultCollection() async {
@@ -114,14 +113,8 @@ struct ContentView: View {
         }
         
         user.downloadedQuiz = matchingQuizPackage
+        print("Assigned User Downloaded Quiz")
     }
-    
-//    func loadUserMainQuiz() {
-//        guard !downloadedAudioQuizCollection.isEmpty else { return }
-//        let newQuiz = downloadedAudioQuizCollection.first
-//        user.downloadedQuiz = newQuiz
-//        print("loaded new user quiz: \(String(describing: user.downloadedQuiz?.quizname))")
-//    }
 }
 
 #Preview {
@@ -138,3 +131,23 @@ struct ContentView: View {
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
         
 }
+
+
+/*@Environment(\.scenePhase) var scenePhase
+ 
+ var body: some View {
+     Text("Example Text")
+         .onChange(of: scenePhase) { newPhase in
+             if newPhase == .inactive {
+                 print("Inactive")
+                 // Handle logic when the app becomes inactive (e.g., call comes in)
+             } else if newPhase == .active {
+                 print("Active")
+                 // Handle logic when the app becomes active (foreground)
+             } else if newPhase == .background {
+                 print("Background")
+                 // Handle logic when the app goes to the background
+             }
+         }
+ }
+}*/

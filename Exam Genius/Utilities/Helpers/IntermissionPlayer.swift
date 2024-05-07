@@ -38,60 +38,48 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
     
-    // Plays the bell sound indicating correct answer state.
-    func playWrongAnswerBell() {
+    func pausePlayback() {
+        audioPlayer?.pause()
+    }
+    
+    func stopAndResetPlayer() {
+        audioPlayer?.stop()
+        audioPlayer?.currentTime = 0
+    }
+    
+    private func resetPlayerStates() {
         self.feedbackPlayerState = .idle
         self.finishedPlayingFeedBack = false
         self.finishedPlayingEndQuizFeedBack = false
         self.finishedPlayingReview = false
+        self.finishedPlayingErrorMessage = false
+    }
+    // Plays the bell sound indicating correct answer state.
+    func playWrongAnswerBell() {
         play(soundNamed: "wrongAnswerBell")
     }
     
     // Plays the bell sound indicating correct answer state.
     func playCorrectBell() {
-        self.feedbackPlayerState = .idle
-        self.finishedPlayingFeedBack = false
-        self.finishedPlayingEndQuizFeedBack = false
-        self.finishedPlayingReview = false
-        self.finishedPlayingErrorMessage = false
         play(soundNamed: "correctBell")
     }
     
     // Plays the bell sound indicating listening state.
     func playListeningBell() {
-        self.feedbackPlayerState = .idle
-        self.finishedPlayingFeedBack = false
-        self.finishedPlayingEndQuizFeedBack = false
-        self.finishedPlayingReview = false
-        self.finishedPlayingErrorMessage = false
         play(soundNamed: "softBell1")
     }
-   
+    
     // Plays the bell sound indicating a successful response.
     func playReceivedResponseBell() {
-        self.feedbackPlayerState = .idle
-        self.finishedPlayingFeedBack = false
-        self.finishedPlayingEndQuizFeedBack = false
-        self.finishedPlayingReview = false
-        self.finishedPlayingErrorMessage = false
         play(soundNamed: "softBell2")
     }
     
     func playErrorBell() {
-        self.feedbackPlayerState = .idle
-        self.finishedPlayingFeedBack = false
-        self.finishedPlayingEndQuizFeedBack = false
-        self.finishedPlayingReview = false
-        self.finishedPlayingErrorMessage = false
         play(soundNamed: "errorBell1")
     }
     
     // Plays the bell sound indicating correct answer state.
     func playErrorTranscriptionBell() {
-        self.feedbackPlayerState = .idle
-        self.finishedPlayingFeedBack = false
-        self.finishedPlayingEndQuizFeedBack = false
-        self.finishedPlayingErrorMessage = false
         play(soundNamed: "errorTranscriptionBell")
     }
     
@@ -102,6 +90,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             return
         }
         
+        resetPlayerStates()
         // Ensure the audio session is correctly configured each time a sound is played
         configureAudioSession()  // This call can be placed here to ensure the session is active and configured each time.
         
@@ -127,7 +116,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 }
                 
                 if self.finishedPlayingEndQuizFeedBack {
-//                    self.feedbackPlayerState = .reviewing
+                    //                    self.feedbackPlayerState = .reviewing
                     print(self.feedbackPlayerState)
                 }
                 
@@ -259,24 +248,24 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
 //    @Published var finishedPlayingEndQuizFeedBack: Bool = false
 //    @Published var finishedPlayingReview: Bool = false
 //    @Published var currentPowerLevel: Float = 0.0  // Monitor power level
-//    
+//
 //    var audioPlayer: AVAudioPlayer?
 //    var audioEngine: AVAudioEngine = AVAudioEngine()
 //    var playerNode: AVAudioPlayerNode = AVAudioPlayerNode()
-//    
+//
 //    override init() {
 //        super.init()
 //        setupAudioEngine()
 //    }
-//    
+//
 //    private func setupAudioEngine() {
 //        audioEngine.attach(playerNode)
 //        audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: nil)
-//        
+//
 //        audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: audioEngine.mainMixerNode.outputFormat(forBus: 0)) { [weak self] buffer, _ in
 //            self?.updatePowerLevel(buffer: buffer)
 //        }
-//        
+//
 //        do {
 //            try audioEngine.start()
 //            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -285,7 +274,7 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
 //            print("Audio engine or session setup failed: \(error)")
 //        }
 //    }
-//    
+//
 //    private func updatePowerLevel(buffer: AVAudioPCMBuffer) {
 //        let channelData = buffer.floatChannelData![0]
 //        let channelDataArray = Array(UnsafeBufferPointer(start: channelData, count: Int(buffer.frameLength)))
@@ -295,13 +284,13 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
 //            self.currentPowerLevel = avgPower.isFinite ? avgPower : 0.0
 //        }
 //    }
-//    
+//
 //    func play(soundNamed soundName: String) {
 //        guard let url = Bundle.main.url(forResource: soundName, withExtension: "wav"), let file = try? AVAudioFile(forReading: url) else {
 //            print("Sound file not found.")
 //            return
 //        }
-//        
+//
 //        do {
 //            audioPlayer?.stop()
 //            audioPlayer = try AVAudioPlayer(contentsOf: url)
@@ -315,25 +304,25 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
 //            print("Error loading or playing audio: \(error)")
 //        }
 //    }
-//    
+//
 //    func playWrongAnswerBell() { play(soundNamed: "wrongAnswerBell") }
 //    func playCorrectBell() { play(soundNamed: "correctBell") }
 //    func playListeningBell() { play(soundNamed: "softBell1") }
 //    func playReceivedResponseBell() { play(soundNamed: "softBell2") }
 //    func playErrorBell() { play(soundNamed: "errorBell1") }
 //    func playErrorTranscriptionBell() { play(soundNamed: "errorTranscriptionBell") }
-//    
+//
 //    // Delegate methods to handle playback states
 //    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
 //        DispatchQueue.main.async {
 //            self.updateStateOnFinish(success: flag)
 //        }
 //    }
-//    
+//
 //    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
 //        print("Decode error occurred: \(String(describing: error))")
 //    }
-//    
+//
 //    private func updateStateOnFinish(success: Bool) {
 //        DispatchQueue.main.async {
 //            if success {

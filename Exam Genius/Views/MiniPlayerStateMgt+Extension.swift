@@ -44,10 +44,19 @@ extension MiniPlayerV2 {
             
         case.doneReviewing:
             self.interactionFeedbackMessage = scoreReadout()
+            
+        case.pausedPlayback:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                loadPlayerPositions()
+            }
  
         default:
             break
         }
+    }
+    
+    func updateConfigurationState(interactionState: InteractionState) {
+        configuration.interactionState = interactionState
     }
     
     func syncInteractionState(_ interactionState: InteractionState) {
@@ -124,17 +133,29 @@ extension MiniPlayerV2 {
             playErrorFeedbackMessage(feedbackMessageUrls?.errorMessage) // Changes to .playingFeedback
             //MARK: TODO - Create Method to check for repeat listen settings
             
-        //case .reviewing:
-//            Task {
-//                await playQuizReview()
-//            }
-            
         case .endedQuiz:
             dismissAction()
             
         default:
             break
        
+        }
+    }
+    
+    //MARK: SCREEN TRANSITION OBSERVERS
+    //MARK: QuizPlayer/Homepage+MiniPlayer QuizStatus Observer
+    func handleQuizObserverInteractionStateChange(_ state: QuizPlayerState) {
+        DispatchQueue.main.async {
+            self.quizPlayerObserver.playerState = state
+            switch state {
+            case .startedPlayingQuiz:
+                expandAction()
+                startQuizAudioPlay()
+            case .pausedCurrentPlay:
+                pauseQuiz(currentIndex: self.currentQuestionIndex)
+            default:
+                break
+            }
         }
     }
 }

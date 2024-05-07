@@ -81,7 +81,7 @@ struct QuizDetailPage: View {
                         
                         VStack(alignment: .leading, spacing: 8.0) {
                     
-                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0 : 1), label: audioQuiz.questions.isEmpty ?  downloadButtonLabel : "View In Library") {
+                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0 : 1), label: audioQuiz.questions.isEmpty ?  downloadButtonLabel : user.downloadedQuiz == nil ? "Creating audio quiz" : "Go to Player") {
                                 downloadAudioQuiz()
                             }
                             .disabled(interactionState == .isDownloading || interactionState == .isNowPlaying)

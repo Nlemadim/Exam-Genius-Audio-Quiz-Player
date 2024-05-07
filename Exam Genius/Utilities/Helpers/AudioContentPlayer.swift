@@ -31,6 +31,11 @@ class AudioContentPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
     
+    func stopAndResetPlayer() {
+        audioPlayer?.stop()
+        audioPlayer?.currentTime = 0
+    }
+    
     func playCorrectionAudio(_ audioFile: String) {
         guard let fileURL = getDocumentDirectoryURL(for: audioFile) else {
             print("Invalid file path")

@@ -86,6 +86,7 @@
 		0B940DEB2BE5256700241FA8 /* QuizPlayerDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B940DEA2BE5256700241FA8 /* QuizPlayerDetails.swift */; };
 		0B9783E82BD78B1300CC3EB3 /* errorTranscriptionBell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B9783E62BD78B1200CC3EB3 /* errorTranscriptionBell.wav */; };
 		0B9783E92BD78B1300CC3EB3 /* wrongAnswerBell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B9783E72BD78B1300CC3EB3 /* wrongAnswerBell.wav */; };
+		0BAC5FE12BE9CD7E00CFFA8E /* MiniPlayer+AudioPlay+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC5FE02BE9CD7E00CFFA8E /* MiniPlayer+AudioPlay+Extension.swift */; };
 		0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE012B865830004F848A /* LaunchPage.swift */; };
 		0BB9DE072B865831004F848A /* SignInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE022B865830004F848A /* SignInPage.swift */; };
 		0BB9DE192B865885004F848A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9DE0B2B865885004F848A /* User.swift */; };
@@ -223,6 +224,7 @@
 		0B940DEA2BE5256700241FA8 /* QuizPlayerDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizPlayerDetails.swift; sourceTree = "<group>"; };
 		0B9783E62BD78B1200CC3EB3 /* errorTranscriptionBell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = errorTranscriptionBell.wav; sourceTree = "<group>"; };
 		0B9783E72BD78B1300CC3EB3 /* wrongAnswerBell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = wrongAnswerBell.wav; sourceTree = "<group>"; };
+		0BAC5FE02BE9CD7E00CFFA8E /* MiniPlayer+AudioPlay+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MiniPlayer+AudioPlay+Extension.swift"; sourceTree = "<group>"; };
 		0BB9DE012B865830004F848A /* LaunchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchPage.swift; sourceTree = "<group>"; };
 		0BB9DE022B865830004F848A /* SignInPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInPage.swift; sourceTree = "<group>"; };
 		0BB9DE0B2B865885004F848A /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = User/User.swift; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 				0B72143E2BCAD6610030664F /* MiniPlayerV2.swift */,
 				0B2CFA732BCE3F5E0044F0AD /* MiniPlayer+Extension.swift */,
 				0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */,
+				0BAC5FE02BE9CD7E00CFFA8E /* MiniPlayer+AudioPlay+Extension.swift */,
 			);
 			name = PlayerViews;
 			sourceTree = "<group>";
@@ -884,6 +887,7 @@
 				0B4561352BC707B50040838C /* KeyboardObserver.swift in Sources */,
 				0BB9DE062B865831004F848A /* LaunchPage.swift in Sources */,
 				0B72143F2BCAD6610030664F /* MiniPlayerV2.swift in Sources */,
+				0BAC5FE12BE9CD7E00CFFA8E /* MiniPlayer+AudioPlay+Extension.swift in Sources */,
 				0BCB0A762BBBC339002DA5FD /* QuizDetailPage.swift in Sources */,
 				0BBD5AF02B8E7A09005BD87B /* ExploreAudioQuizView.swift in Sources */,
 				0B4ACCEC2B89A61500377BE7 /* UserDefaultManager.swift in Sources */,

@@ -28,6 +28,7 @@ struct QuizPlayerView: View {
     
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     @Query(sort: \PerformanceModel.id) var performanceCollection: [PerformanceModel]
+    @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
 //    @Query(filter: #Predicate<DownloadedAudioQuiz> { audioQuiz in
 //        if audioQuiz.quizname.localizedStandardContains(userQuizName) {
@@ -44,19 +45,8 @@ struct QuizPlayerView: View {
     
     @State var isDownloading: Bool = false
     
-//    @State var isDownloading: Bool = false {
-//        didSet {
-//            if let quiz = user.downloadedQuiz,
-//               !quiz.questions.contains(where: { !$0.questionAudio.isEmptyOrWhiteSpace }) {
-//                isDownloading = false
-//            }
-//        }
-//    }
-    
     let sharedInteractionState = SharedQuizState()
 
-
-    
     var body: some View {
         
         NavigationView {
@@ -84,8 +74,8 @@ struct QuizPlayerView: View {
                                 .frame(width: 250, height: 250)
                                 .cornerRadius(20)
                                 .padding()
-                            
-                            Text(user.downloadedQuiz?.quizname ?? "Quiz Player")
+                            /**  user.selectedQuizPackage?.quizImage ??   user.selectedQuizPackage?.name ??*/
+                            Text(user.downloadedQuiz?.quizname ??  "Quiz Player")
                                 .lineLimit(2, reservesSpace: true)
                                 .multilineTextAlignment(.center)
                                 .fontWeight(.bold)
@@ -103,6 +93,7 @@ struct QuizPlayerView: View {
                     .padding()
                     
                     HStack {
+                        //Text(user.selectedQuizPackage != nil ? "Loading" : self.interactionState == .isNowPlaying ? "Now Playing" : "Start Quiz")
                         Text(user.downloadedQuiz == nil ? "Not Currently Playing" : "Now Playing")
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
@@ -145,9 +136,7 @@ struct QuizPlayerView: View {
 
             }
             .onChange(of: user.downloadedQuiz, { _, audioQuiz in
-                if let audioQuiz = audioQuiz {
-                    updateUserQuizSelection()
-                }
+                updateUserQuizSelection()
             })
             .onChange(of: quizPlayerObserver.playerState) { _, newState in
                 DispatchQueue.main.async {
@@ -161,6 +150,9 @@ struct QuizPlayerView: View {
                 DispatchQueue.main.async {
                     self.interactionState = newState
                 }
+            }
+            .onChange(of: audioQuizCollection) { newCollection, oldCollection in
+                updateAudioQuizCollectionIfNeeded(newCollection: newCollection, oldCollection: oldCollection)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -182,6 +174,8 @@ struct QuizPlayerView: View {
             self.interactionState = .isDonePlaying
         case .donePlaying:
             self.interactionState = .isDonePlaying
+        case .pausedCurrentPlay
+            self.interactionState = .pausedPlayback
             
         default:
             break
@@ -189,13 +183,14 @@ struct QuizPlayerView: View {
     }
     
     private func startPlayer() {
+    
         DispatchQueue.main.async {
             if self.interactionState != .isNowPlaying {
                 self.quizPlayerObserver.playerState = .startedPlayingQuiz
                 self.interactionState = .isNowPlaying
             } else {
-                self.interactionState = .isDonePlaying
-                self.quizPlayerObserver.playerState = .idle
+                self.interactionState = .pausedPlayback
+                self.quizPlayerObserver.playerState = .pausedCurrentPlay
             }
         }
     }
@@ -221,11 +216,27 @@ struct QuizPlayerView: View {
         user.downloadedQuiz = matchingQuizPackage
     
     }
-
+    
+    private func updateAudioQuizCollectionIfNeeded(newCollection: [AudioQuizPackage], oldCollection: [AudioQuizPackage]) {
+        let newPackages = newCollection.filter { newPackage in
+            !oldCollection.contains(where: { oldPackage in oldPackage.name == newPackage.name })
+        }
+        
+        newPackages.forEach { package in
+            if !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) {
+                print("Creating New Audio Quiz")
+                
+                Task {
+                    await loadNewAudioQuiz(quiz: package)
+                
+                }
+            }
+        }
+    }
 
     
-    func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
-        
+    private func loadNewAudioQuiz(quiz package: AudioQuizPackage) async {
+        // Check if the package name already exists in the downloaded collection
         guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
         
         DispatchQueue.main.async {
@@ -233,13 +244,10 @@ struct QuizPlayerView: View {
         }
         
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-       
         let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
-        
         let audioQuestions = package.questions
         
         await contentBuilder.downloadAudioQuestions(for: audioQuestions)
-        
         newDownloadedQuiz.questions = audioQuestions
         
         modelContext.insert(newDownloadedQuiz)
@@ -251,6 +259,7 @@ struct QuizPlayerView: View {
             self.interactionState = .idle
         }
     }
+
     
 //    private func downlaodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
 //        //Please Modify guard statement to check that package name is not already contained in collection

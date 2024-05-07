@@ -22,6 +22,7 @@ class UserDefaultsManager {
         UserDefaults.standard.set(currentCount + 1, forKey: "numberOfGlobalTopics")
     }
     
+    
     static func setDefaultPointsPerQuestion() {
         let defaultPoints = 5
         if UserDefaults.standard.object(forKey: "pointsPerQuestion") == nil {
@@ -62,6 +63,11 @@ class UserDefaultsManager {
         }
     }
     
+    static func updateCurrentPosition(_ position: Int) {
+        UserDefaults.standard.set(position, forKey: "quizCurrentPosition")
+    }
+
+    
     static func enableContinousFlow() {
         UserDefaults.standard.setValue(true, forKey: "isOnContinuousFlow")
     }
@@ -88,6 +94,10 @@ class UserDefaultsManager {
     
     static func userHighScore() -> Int {
         return UserDefaults.standard.integer(forKey: "userHighScore")
+    }
+    
+    static func currentPlayPosition() -> Int {
+        return UserDefaults.standard.integer(forKey: "quizCurrentPosition")
     }
     
     static func globalTopics() -> String {

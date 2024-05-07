@@ -37,6 +37,11 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Failed to set audio session category: \(error)")
         }
     }
+    
+    func stopAndResetPlayer() {
+        audioPlayer?.stop()
+        audioPlayer?.currentTime = 0
+    }
 
     func playAudioFile(_ audioFile: String) {
         guard let fileURL = getDocumentDirectoryURL(for: audioFile) else {

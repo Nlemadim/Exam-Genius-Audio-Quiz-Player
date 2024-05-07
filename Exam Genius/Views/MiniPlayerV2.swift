@@ -10,6 +10,7 @@ import Combine
 
 struct MiniPlayerV2: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var user: User
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
@@ -50,14 +51,14 @@ struct MiniPlayerV2: View {
         let sharedState = SharedQuizState()
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
     }
-
+    
     var body: some View {
         HStack(spacing: 10) {
             playerThumbnail
             playerDetails
             MiniQuizControlView(
                 recordAction: { self.interactionState = .isListening},
-                playPauseAction: { startQuizAudioPlay(self.interactionState) },
+                playPauseAction: { startQuizAudioPlay() },
                 nextAction: { goToNextQuestion() },
                 repeatAction: {},
                 interactionState: $interactionState
@@ -74,7 +75,7 @@ struct MiniPlayerV2: View {
                 questionTranscript: $interactionFeedbackMessage,
                 powerSimulator: $outputPower,
                 onViewDismiss: { },
-                playAction: {playSingleQuizQuestion() },
+                playAction: { playPauseStop() },
                 nextAction: { goToNextQuestion() },
                 recordAction: { self.interactionState = .isListening }
             )
@@ -88,8 +89,8 @@ struct MiniPlayerV2: View {
         })
         .onTapGesture {
             withAnimation {
-                expandSheet = true
-                //expandAction()
+                
+                expandAction()
             }
         }
         .onAppear {
@@ -121,6 +122,7 @@ struct MiniPlayerV2: View {
             DispatchQueue.main.async {
                 self.interactionStateAction(newState)
                 self.updateFeedbackMessage(newState)
+                self.updateConfigurationState(interactionState: newState)
                 self.configuration.loadQuestionScriptViewer(question: self.interactionFeedbackMessage)
             }
         }
@@ -131,6 +133,7 @@ struct MiniPlayerV2: View {
             print("Mini Player Quiz-Player-Observer registered as: \(newValue)")
             handleQuizObserverInteractionStateChange(newValue)
         }
+        
     }
 
     private var playerThumbnail: some View {
@@ -150,6 +153,7 @@ struct MiniPlayerV2: View {
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
+    
 }
 
 
@@ -215,36 +219,11 @@ extension MiniPlayerV2 {
                """
     }
     
-    func playFeedbackMessage(_ messageUrl: String?) {
-        if let feedbackMessageUrl = messageUrl {
-            //intermissionPlayer.play(soundNamed: feedbackMessageUrl)
-            intermissionPlayer.playVoiceFeedBack(feedbackMessageUrl)
-            DispatchQueue.main.async {
-                self.interactionState = .playingFeedbackMessage
-            }
-        }
-    }
     
-    func playErrorFeedbackMessage(_ messageUrl: String?) {
-        if let feedbackMessageUrl = messageUrl {
-            //intermissionPlayer.play(soundNamed: feedbackMessageUrl)
-            intermissionPlayer.playErrorVoiceFeedBack(feedbackMessageUrl)
-            DispatchQueue.main.async {
-                self.interactionState = .playingFeedbackMessage
-            }
-        }
-    }
-    
-    func playEndQuizFeedbackMessage(_ messageUrl: String?) {
-        if let feedbackMessageUrl = messageUrl {
-            intermissionPlayer.playEndQuizFeedBack(feedbackMessageUrl)
-            
-        }
-    }
-    
-    func playEndQuizReview() async {
-        await playQuizReview()
-    }
+    func loadPlayerPositions() {
+         let savedPos = UserDefaultsManager.currentPlayPosition()
+         self.currentQuestionIndex = savedPos
+     }
     
     func updateQuestionScriptViewer() {
         guard currentQuestions.indices.contains(currentQuestionIndex) else { return }
@@ -266,47 +245,6 @@ extension MiniPlayerV2 {
         }
     }
     
-    //MARK: STEP 1: Quiz Entry Point - Now Playing
-    func startQuizAudioPlay(_ quizState: InteractionState) {
-        if quizState == .idle {
-            //intermissionPlayer.playVoiceFeedBack(feedbackMessageUrls?.startMessage ?? "")
-            self.interactionState = .isNowPlaying
-            configuration.interactionState = self.interactionState
-            presentationManager.interactionState = self.interactionState
-            presentationManager.expandSheet = true
-            quizPlayerObserver.playerState = .startedPlayingQuiz
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                playSingleQuizQuestion()
-            }
-        }
-    }
-    
-    
-    //MARK: STEP 1: Quiz Entry Point - Now Playing Method
-    private func playSingleQuizQuestion() {
-        // Access the current quiz package safely
-        guard let package = configuration.currentQuizPackage else {
-            print("Mini Player error: No quiz package currently selected")
-            return
-        }
-        
-        guard !package.questions.isEmpty else {
-            print("Mini Player error: No available questions in the package")
-            return
-        }
-        
-        let questions = package.questions
-        currentQuestions = questions
-        print("Current MiniPlayer Questions Postloading is: \(self.currentQuestions.count)")
-        
-        let currentlyPlayingQuestion = self.currentQuestions[currentQuestionIndex]
-        let audioFile = currentlyPlayingQuestion.questionAudio
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            questionPlayer.playAudioFile(audioFile)
-            
-        }
-    }
-    
    
     //MARK: Step 2  - InteractionState Sync and Update
    
@@ -320,34 +258,6 @@ extension MiniPlayerV2 {
         self.responseListener.recordAnswerV2(answer: options)
     }
     
-    //MARK: Step 2 Processes - Continue Playing Logic
-    func proceedWithQuiz() {
-        self.currentQuestionIndex += 1
-        
-        if currentQuestions.indices.contains(currentQuestionIndex) {
-            self.continuePlaying()
-            
-        } else {
-            interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
-            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
-            self.currentQuestionIndex = 0
-            self.interactionState = .reviewing
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                Task {
-                    await playQuizReview()
-                }
-            }
-        }
-    }
-    
-    
-    func playQuizReview() async {
-        let reviewUrl = await fetchQuizReview(review: scoreReadout())
-        DispatchQueue.main.async {
-            intermissionPlayer.playReviewFeedBack(reviewUrl)
-        }
-        
-    }
     
     private func resetQuizAndGetScore() {
         let score = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
@@ -368,8 +278,14 @@ extension MiniPlayerV2 {
         }
     }
     
+//    func prepareToUpdateAudioQuiz() async {
+//        guard let package = user.selectedQuizPackage, package.questions.count <= 100 else { return }
+//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+//        
+//    }
+    
     func updateAudioQuizQuestions() async {
-        var questionCount = 10
+        let questionCount = 10
         
         if let audioQuiz = user.selectedQuizPackage {
             let newQuestions = audioQuiz.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
@@ -399,28 +315,7 @@ extension MiniPlayerV2 {
         
     }
     
-    func playCorrectionAudio() {
-        DispatchQueue.main.async {
-            self.interactionState = .nowPlayingCorrection
-            let correctionAudio = currentQuestions[currentQuestionIndex].questionNoteAudio
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                audioContentPlayer.playAudioFile(correctionAudio)
-            }
-        }
-    }
-    
-    //MARK: Step 2 Processes - Continue Playing Method
-    private func continuePlaying() {
-        print("Continuation Condition Met")
-        
-        let currentQuestion = self.currentQuestions[currentQuestionIndex]
-        let audioFile = currentQuestion.questionAudio
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.interactionState = .isNowPlaying
-            questionPlayer.playAudioFile(audioFile)
-        }
-    }
+   
     
     private func setContinousPlayInteraction(learningMode isEnabled: Bool) {
         //MARK: TODO - Conditional check for continous playback
@@ -490,47 +385,6 @@ extension MiniPlayerV2 {
     
     
     
-    func goToNextQuestion() {
-        currentQuestionIndex += 1
-        playSingleQuizQuestion()
-    }
-    
-    
-    //MARK: Direct Click Action Methods.
-    //MARK: Show Full Screen Method
-    func expandAction() {
-        guard selectedQuizPackage != nil else { return }
-        self.interactionState = .isNowPlaying
-        configuration.interactionState = self.interactionState
-        presentationManager.interactionState = self.interactionState
-        presentationManager.expandSheet = true
-        playSingleQuizQuestion()
-    }
-    
-    //MARK: Dismiss Full Screen Method
-    func dismissAction() {
-        resetQuizAndGetScore()
-        presentationManager.interactionState = .idle
-        self.interactionState = .idle
-        currentQuestionIndex = 0
-        quizPlayerObserver.playerState = .endedQuiz
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            presentationManager.expandSheet = false
-        }
-    }
-    
-    //MARK: SCREEN TRANSITION OBSERVERS
-    //MARK: Library/Homepage QuizStatus Observer
-    func handleQuizObserverInteractionStateChange(_ state: QuizPlayerState) {
-        DispatchQueue.main.async {
-            self.quizPlayerObserver.playerState = state
-            if state == .startedPlayingQuiz {
-                expandAction()
-                startQuizAudioPlay(self.interactionState)
-            }
-        }
-    }
     //MARK: FullScreen Player Observer
     func showMiniPlayerMicModal() -> Bool {
         return expandSheet == false && interactionState == .isListening
@@ -540,19 +394,6 @@ extension MiniPlayerV2 {
         return expandSheet == false && interactionState == .hasResponded
     }
     
-    //MARK: TODO Continuity Methods
-    func pauseQuiz(currentIndex: Int) {
-        //Save currentIndex to userdefaults
-        //change interactionState to .pausedPlayback
-        //questionPlayer.pauseQuiz()
-    }
-    
-    func continueFromPause() {
-        //call on userdefaults to loadup last index
-        //pass index to currentQuestionIndex
-        //call startAudioQuiz(self.interactionState)
-        
-    }
 }
 
 

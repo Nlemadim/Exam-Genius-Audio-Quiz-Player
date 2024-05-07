@@ -29,9 +29,6 @@ final class User: ObservableObject {
         self.audioQuizPlaylist = []
     }
     
-    var currentQuiz: DownloadedAudioQuiz? {
-        !audioQuizPlaylist.isEmpty ? audioQuizPlaylist[currentPlayPosition] : nil
-    }
     
     var selectedQuizPackage: AudioQuizPackage? {
         didSet {

@@ -26,7 +26,7 @@ extension HomePage {
         DispatchQueue.main.async {
             self.interactionState = .isDownloading
         }
-    
+        
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
         // Begin content building process
         //MARK: Test Method
@@ -40,8 +40,11 @@ extension HomePage {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
             user.selectedQuizPackage = audioQuiz
-            self.interactionState = .idle
-            print("Downloaded")
+            
+            Task {
+                
+                await loadNewAudioQuiz(quiz: audioQuiz)
+            }
         }
     }
     
@@ -215,8 +218,26 @@ extension HomePage {
         return feedbackMessages
     }
     
-    
-   
+    func loadNewAudioQuiz(quiz package: AudioQuizPackage) async {
+        // Check if the package name already exists in the downloaded collection
+        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
+        
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
+        let audioQuestions = package.questions
+        
+        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
+        newDownloadedQuiz.questions = audioQuestions
+        
+        modelContext.insert(newDownloadedQuiz)
+        try! modelContext.save()
+        
+        DispatchQueue.main.async {
+            user.downloadedQuiz = newDownloadedQuiz
+            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
+            self.interactionState = .idle
+        }
+    }
 }
 
 struct FeedBackMessageUrls {

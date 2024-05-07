@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct QuizPlayerDetails: View {
+    @Environment(\.dismiss) private var dismiss
     @State var CurrentPage: String = "Summary"
     //For Smooth Page Sliding Effect
     @Namespace var animation
@@ -15,6 +16,7 @@ struct QuizPlayerDetails: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 0){
                 HeaderView()
+                    
                 
                 //MARK: Pinned Header With Content
                 LazyVStack(pinnedViews: [.sectionHeaders]) {
@@ -26,6 +28,7 @@ struct QuizPlayerDetails: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden()
         .ignoresSafeArea(.container, edges: .vertical)
         .coordinateSpace(name: "SCROLL")
         
@@ -53,6 +56,18 @@ struct QuizPlayerDetails: View {
                         ], startPoint: .top, endPoint: .bottom)
                         
                         VStack(alignment: .leading, spacing: 1) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Image(systemName: "chevron.left.circle")
+                                    .resizable()
+                                    .frame(width:25, height: 25)
+                                    .foregroundStyle(.white)
+                                    .offset(y: -60)
+                                
+                            }
+                            .zIndex(2)
+                            .allowsHitTesting(true)
                             
                             HStack(alignment: .bottom, spacing: 10) {
                                 Text("Audio Quiz")

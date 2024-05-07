@@ -14,7 +14,7 @@ struct LibraryPage: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
-    @State var selectedQuizPackage: AudioQuizPackage?
+    @Binding var selectedQuizPackage: AudioQuizPackage?
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
@@ -30,6 +30,11 @@ struct LibraryPage: View {
                 .padding()
                 .padding(.bottom, 150)
             }
+            .onAppear {
+                if let package = user.selectedQuizPackage {
+                    self.selectedQuizPackage = package
+                }
+            }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationTitle("Library")
             .navigationBarTitleDisplayMode(.large)
@@ -39,6 +44,7 @@ struct LibraryPage: View {
     
     @ViewBuilder
     func MyLibraryItems(audioQuiz: AudioQuizPackage) -> some View {
+       
         HStack(spacing: 12) {
             Image(audioQuiz.imageUrl)
                 .resizable()
@@ -64,34 +70,34 @@ struct LibraryPage: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             Button {
-                user.selectedQuizPackage = audioQuiz
-                //TODO: Go to Player Page
+                self.selectedQuizPackage = audioQuiz
+                user.selectedQuizPackage = selectedQuizPackage
                 
             } label: {
                 Image(systemName: user.selectedQuizPackage?.name == audioQuiz.name ? "star.fill" : "star")
                     .foregroundStyle(user.selectedQuizPackage?.name == audioQuiz.name ? .yellow : .white)
             }
             
-            Button {
-                //TODO: Go to detail Page
+            NavigationLink {
+                QuizPlayerDetails()
             } label: {
                 Image(systemName: "ellipsis")
-                
+                    .foregroundStyle(.white)
             }
+            
         }
-        
     }
 }
 
-
-#Preview {
-    let user = User()
-    let appState = AppState()
-    let observer = QuizPlayerObserver()
-    return LibraryPage()
-        .environmentObject(user)
-        .environmentObject(appState)
-        .environmentObject(observer)
-       
-}
+//
+//#Preview {
+//    let user = User()
+//    let appState = AppState()
+//    let observer = QuizPlayerObserver()
+//    return LibraryPage()
+//        .environmentObject(user)
+//        .environmentObject(appState)
+//        .environmentObject(observer)
+//       
+//}
 
