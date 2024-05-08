@@ -51,8 +51,7 @@ struct MiniPlayerV2: View {
         let sharedState = SharedQuizState()
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
     }
-    
-    
+        
     var body: some View {
         HStack(spacing: 10) {
             playerThumbnail
@@ -188,31 +187,102 @@ extension MiniPlayerV2 {
         return score
     }
     
+//    func scoreReadout() -> String {
+//        let scorePercentage = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
+//        let compliments = ["", "Well Done", "Good Job", "Very Nice", "Excellent"] // compliments based on 0-25, 26-50, 51-75, 76-99, 100
+//        let index = min(Int(scorePercentage / 25), compliments.count - 1) // Calculate index for selecting compliment
+//        
+//        let compliment = compliments[index] // Select compliment based on score
+//        
+//        let scoreString: String
+//        if scorePercentage == 0.0 {
+//            scoreString = "You did not get any questions correct"
+//        } else {
+//            scoreString = "You Scored "+(String(format: "%.0f %%", scorePercentage))
+//        }
+//         
+//        
+//        let readOut = """
+//        
+//        \(compliment)
+//        
+//        \(scoreString)
+//        
+//        """
+//        print(readOut)
+//        return readOut
+//    }
+    
     func scoreReadout() -> String {
+        // Calculate score percentage
         let scorePercentage = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
-        let compliments = ["", "Well Done", "Good Job", "Very Nice", "Excellent"] // compliments based on 0-25, 26-50, 51-75, 76-99, 100
-        let index = min(Int(scorePercentage / 25), compliments.count - 1) // Calculate index for selecting compliment
-        
-        let compliment = compliments[index] // Select compliment based on score
-        
-        let scoreString: String
-        if scorePercentage == 0.0 {
-            scoreString = "You did not get any questions correct"
-        } else {
-            scoreString = "You Scored "+(String(format: "%.0f %%", scorePercentage))
+
+        // Determine the score enum case based on percentage
+        let scoreEnum = self.scoreCategory(for: scorePercentage)
+
+        // Define feedback messages using a switch statement
+        let feedbackMessage: String
+        switch scoreEnum {
+        case .zero:
+            feedbackMessage = feedbackMessageUrls?.zeroScoreComment ?? "No correct answers. Try again!"
+        case .ten:
+            feedbackMessage = feedbackMessageUrls?.tenPercentScoreComment ?? "Keep trying!"
+        case .twenty:
+            feedbackMessage = feedbackMessageUrls?.twentyPercentScoreComment ?? "You can do better!"
+        case .thirty:
+            feedbackMessage = feedbackMessageUrls?.thirtyPercentScoreComment ?? "Getting there!"
+        case .forty:
+            feedbackMessage = feedbackMessageUrls?.fortyPercentScoreComment ?? "Almost half way!"
+        case .fifty:
+            feedbackMessage = feedbackMessageUrls?.fiftyPercentScoreComment ?? "Half way there!"
+        case .sixty:
+            feedbackMessage = feedbackMessageUrls?.sixtyPercentScoreComment ?? "More than half!"
+        case .seventy:
+            feedbackMessage = feedbackMessageUrls?.seventyPercentScoreComment ?? "Good job!"
+        case .eighty:
+            feedbackMessage = feedbackMessageUrls?.eightyPercentScoreComment ?? "Great work!"
+        case .ninety:
+            feedbackMessage = feedbackMessageUrls?.ninetyPercentScoreComment ?? "Excellent!"
+        case .perfect:
+            feedbackMessage = feedbackMessageUrls?.perfectScoreComment ?? "Perfect score!"
         }
-         
-        
-        let readOut = """
-        
-        \(compliment)
-        
-        \(scoreString)
-        
-        """
-        print(readOut)
-        return readOut
+
+        // Return the determined feedback message
+        return feedbackMessage
     }
+    
+    // Helper method to categorize the score
+    private func scoreCategory(for percentage: CGFloat) -> Score {
+        switch percentage {
+        case 0:
+            return .zero
+        case 1..<10:
+            return .ten
+        case 10..<20:
+            return .twenty
+        case 20..<30:
+            return .thirty
+        case 30..<40:
+            return .forty
+        case 40..<50:
+            return .fifty
+        case 50..<60:
+            return .sixty
+        case 60..<70:
+            return .seventy
+        case 70..<80:
+            return .eighty
+        case 80..<90:
+            return .ninety
+        case 90...100:
+            return .perfect
+        default:
+            return .zero // handle unexpected values
+        }
+    }
+
+  
+
    
     var transcript: String {
         return """
@@ -268,17 +338,15 @@ extension MiniPlayerV2 {
     }
     
     
-    private func resetQuizAndGetScore() {
+    func resetQuizAndGetScore() {
         let score = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
         let newPerformance: PerformanceModel = PerformanceModel(id: UUID(), date: .now, score: score, numberOfQuestions: self.currentQuestions.count)
         modelContext.insert(newPerformance)
         try! modelContext.save()
-        
-//        Task {
-//            await updateAudioQuizQuestions()
-//        }
+
         DispatchQueue.main.async {
             print("Reseting Quiz and Saving Score")
+            self.correctAnswerCount = 0
             self.currentQuestions.forEach { question in
                 question.selectedOption = ""
                 question.isAnswered = false
@@ -395,7 +463,6 @@ extension MiniPlayerV2 {
     func isActivePlay() -> Bool {
         let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
         return activeStates.contains(self.interactionState)
-        
     }
     
     //MARK: FullScreen Player Observer

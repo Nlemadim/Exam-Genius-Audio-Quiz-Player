@@ -17,13 +17,10 @@ struct QuizPlayerView: View {
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @StateObject private var generator = ColorGenerator()
     @StateObject private var audioContentPlayer = AudioContentPlayer()
+    
     @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
     @State var userQuizName: String = "UserQuiz"
-    
-    
-    
     @State var interactionState: InteractionState = .idle
-    
     @State var audioQuiz: DownloadedAudioQuiz?
     
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
@@ -37,12 +34,9 @@ struct QuizPlayerView: View {
 //    }, sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @State private var expandSheet: Bool = false
-  
     @State var isPlaying: Bool = false
     @State private var playTapped: Bool = false
-    
     @State var currentQuestionIndex: Int = 0
-    
     @State var isDownloading: Bool = false
     
     let sharedInteractionState = SharedQuizState()
@@ -121,7 +115,7 @@ struct QuizPlayerView: View {
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
-                    PerformanceHistoryGraph(history: performanceCollection, mainColor: generator.dominantLightToneColor, subColor: .themePurpleLight)
+                    PerformanceHistoryGraph(history: performanceCollection, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantDarkToneColor)
                         .padding(.horizontal)
                     
                     Rectangle()
@@ -141,6 +135,7 @@ struct QuizPlayerView: View {
             .onChange(of: quizPlayerObserver.playerState) { _, newState in
                 DispatchQueue.main.async {
                     syncQuizPlayerState(newState)
+                    print("QuizPlayer has Updated Player State")
                 }
             }
             .onChange(of: downloadedAudioQuizCollection, { _, _ in

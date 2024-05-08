@@ -79,11 +79,7 @@ struct FullScreenQuizPlayer2: View {
                                 Spacer()
                             }
                             
-//                            VoqaWaveViewV3(power: .constant(outputLevel()), colors: [generator.dominantBackgroundColor, generator.dominantLightToneColor], supportLineColor: .mint)
-//                                .frame(height: 25)
-//                                .padding(.top, 2)
-                            
-                            VoqaWaveViewV2(colors: [generator.dominantBackgroundColor, generator.dominantLightToneColor], supportLineColor: .mint, interactionState: $interactionState)
+                            VoqaWaveViewWithSwitch(colors: [generator.dominantBackgroundColor, generator.dominantLightToneColor], supportLineColor: .mint, switchOn: .constant(isActivePlay()))
                                 .frame(height: 25)
                                 .padding(.top, 2)
                                 
@@ -179,6 +175,11 @@ struct FullScreenQuizPlayer2: View {
     
     func goToNextQuestion() {
         currentQuestionIndex += 1
+    }
+    
+    private func isActivePlay() -> Bool {
+        let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
+        return activeStates.contains(self.interactionState)
     }
     
     

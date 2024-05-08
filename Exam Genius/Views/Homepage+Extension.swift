@@ -176,44 +176,65 @@ extension HomePage {
     }
     
     
-    func loadVoiceFeedBackMessages() async {
-        guard voiceFeedbackMessages.isEmpty else { return }
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        let container = VoiceFeedbackContainer(
-            id: UUID(),
-            quizStartMessage: "Starting a new quiz now.",
-            quizEndingMessage: "Great job! This quiz is now complete.",
-            correctAnswerCallout: "That's the correct Answer!",
-            skipQuestionMessage: "Thats an invalid response. Skipping this question for now.",
-            errorTranscriptionMessage: "Error transcribing your response. Skipping this question for now",
-            finalScoreMessage: "Final score calculated.",
-            quizStartAudioUrl: "",
-            quizEndingAudioUrl: "",
-            correctAnswerCalloutUrl: "",
-            skipQuestionAudioUrl: "",
-            errorTranscriptionAudioUrl: "",
-            finalScoreAudioUrl: ""
-        )
-        
-        let messageData = await contentBuilder.downloadAllFeedbackAudio(for: container)
-        let newVoiceMessages = VoiceFeedbackMessages(from: messageData)
-        print("Downloaded new voice feedback messages with id \(newVoiceMessages.id.uuidString) and testing file path start quiz is printing: \(newVoiceMessages.quizEndingAudioUrl)")
-        
-        modelContext.insert(newVoiceMessages)
-        
-        try! modelContext.save()
-        
-    }
+//    func loadVoiceFeedBackMessages() async {
+//        guard voiceFeedbackMessages.isEmpty else { return }
+//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+//        let container = VoiceFeedbackContainer(
+//            id: UUID(),
+//            quizStartMessage: "Starting a new quiz now.",
+//            quizEndingMessage: "Great job! This quiz is now complete.",
+//            correctAnswerCallout: "That's the correct Answer!",
+//            skipQuestionMessage: "Thats an invalid response. Skipping this question for now.",
+//            errorTranscriptionMessage: "Error transcribing your response. Skipping this question for now",
+//            finalScoreMessage: "Final score calculated.",
+//            quizStartAudioUrl: "",
+//            quizEndingAudioUrl: "",
+//            correctAnswerCalloutUrl: "",
+//            skipQuestionAudioUrl: "",
+//            errorTranscriptionAudioUrl: "",
+//            finalScoreAudioUrl: ""
+//        )
+//        
+//        let messageData = await contentBuilder.downloadAllFeedbackAudio(for: container)
+//        let newVoiceMessages = VoiceFeedbackMessages(from: messageData)
+//        print("Downloaded new voice feedback messages with id \(newVoiceMessages.id.uuidString) and testing file path start quiz is printing: \(newVoiceMessages.quizEndingAudioUrl)")
+//        
+//        modelContext.insert(newVoiceMessages)
+//        
+//        try! modelContext.save()
+//        
+//    }
     
     func getFeedBackMessages() -> FeedBackMessageUrls {
         let userFeedbackMessages = voiceFeedbackMessages.first
         let feedbackMessages = FeedBackMessageUrls(
-            startMessage: userFeedbackMessages?.quizStartAudioUrl ?? "",
+            quizStartMessage: userFeedbackMessages?.quizStartAudioUrl ?? "",
+            quizEndingMessage: userFeedbackMessages?.quizEndingAudioUrl ?? "",
+            nextQuestionCallout: userFeedbackMessages?.nextQuestionCalloutAudioUrl ?? "",
+            finalQuestionCallout: userFeedbackMessages?.finalQuestionCalloutAudioUrl ?? "",
+            repeatQuestionCallout: userFeedbackMessages?.repeatQuestionCalloutAudioUrl ?? "",
+            listeningCallout: userFeedbackMessages?.listeningCalloutAudioUrl ?? "",
+            waitingForResponseCallout: userFeedbackMessages?.waitingForResponseCalloutAudioUrl ?? "",
+            pausedCallout: userFeedbackMessages?.pausedCalloutAudioUrl ?? "",
             correctAnswerCallout: userFeedbackMessages?.correctAnswerCalloutUrl ?? "",
-            errorMessage: userFeedbackMessages?.errorTranscriptionAudioUrl ?? "",
-            endMessage: userFeedbackMessages?.finalScoreAudioUrl ?? "",
-            skipMessage: userFeedbackMessages?.skipQuestionAudioUrl ?? ""
-        )
+            correctAnswerLowStreakCallOut: userFeedbackMessages?.correctAnswerLowStreakCallOutAudioUrl ?? "",
+            correctAnswerMidStreakCallout: userFeedbackMessages?.correctAnswerMidStreakCalloutAudioUrl ?? "",
+            correctAnswerHighStreakCallout: userFeedbackMessages?.correctAnswerHighStreakCalloutAudioUrl ?? "",
+            inCorrectAnswerCallout: userFeedbackMessages?.inCorrectAnswerCalloutAudioUrl ?? "",
+            zeroScoreComment: userFeedbackMessages?.zeroScoreCommentAudioUrl ?? "",
+            tenPercentScoreComment: userFeedbackMessages?.tenPercentScoreCommentAudioUrl ?? "",
+            twentyPercentScoreComment: userFeedbackMessages?.twentyPercentScoreCommentAudioUrl ?? "",
+            thirtyPercentScoreComment: userFeedbackMessages?.thirtyPercentScoreCommentAudioUrl ?? "",
+            fortyPercentScoreComment: userFeedbackMessages?.fortyPercentScoreCommentAudioUrl ?? "",
+            fiftyPercentScoreComment: userFeedbackMessages?.fiftyPercentScoreCommentAudioUrl ?? "",
+            sixtyPercentScoreComment: userFeedbackMessages?.sixtyPercentScoreCommentAudioUrl ?? "",
+            seventyPercentScoreComment: userFeedbackMessages?.seventyPercentScoreCommentAudioUrl ?? "",
+            eightyPercentScoreComment: userFeedbackMessages?.eightyPercentScoreCommentAudioUrl ?? "",
+            ninetyPercentScoreComment: userFeedbackMessages?.ninetyPercentScoreCommentAudioUrl ?? "",
+            perfectScoreComment: userFeedbackMessages?.perfectScoreCommentAudioUrl ?? "",
+            errorTranscriptionCallout: userFeedbackMessages?.errorTranscriptionAudioUrl ?? "",
+            invalidResponseCallout: userFeedbackMessages?.invalidResponseCalloutAudioUrl ?? "",
+            invalidResponseUserAdvisory: userFeedbackMessages?.invalidResponseUserAdvisoryAudioUrl ?? "")
         
         return feedbackMessages
     }
@@ -240,11 +261,7 @@ extension HomePage {
     }
 }
 
-struct FeedBackMessageUrls {
-    var startMessage: String
-    var correctAnswerCallout: String
-    var errorMessage: String
-    var endMessage: String
-    var skipMessage: String
-}
+
+
+
 

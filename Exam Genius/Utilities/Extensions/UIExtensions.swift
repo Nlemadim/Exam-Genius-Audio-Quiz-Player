@@ -245,7 +245,7 @@ extension Image {
         self
             .resizable()
             .frame(width: 25, height: 20)
-            .foregroundColor(Color.orange) // Changed to foregroundColor
+            .foregroundColor(Color.mint) // Changed to foregroundColor
     }
 }
 

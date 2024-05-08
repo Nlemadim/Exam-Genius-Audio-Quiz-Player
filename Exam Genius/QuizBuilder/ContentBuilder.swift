@@ -251,12 +251,33 @@ extension ContentBuilder {
     func downloadAllFeedbackAudio(for voiceFeedback: VoiceFeedbackContainer) async -> VoiceFeedbackContainer {
         var updatedFeedback = voiceFeedback
         let messagesAndPaths: [(message: String, keyPath: WritableKeyPath<VoiceFeedbackContainer, String>)] = [
-            (voiceFeedback.quizStartMessage, \VoiceFeedbackContainer.quizStartAudioUrl),
-            (voiceFeedback.quizEndingMessage, \VoiceFeedbackContainer.quizEndingAudioUrl),
-            (voiceFeedback.correctAnswerCallout, \VoiceFeedbackContainer.correctAnswerCalloutUrl),
-            (voiceFeedback.skipQuestionMessage, \VoiceFeedbackContainer.skipQuestionAudioUrl),
-            (voiceFeedback.errorTranscriptionMessage, \VoiceFeedbackContainer.errorTranscriptionAudioUrl),
-            (voiceFeedback.finalScoreMessage, \VoiceFeedbackContainer.finalScoreAudioUrl)
+            (voiceFeedback.quizStartMessage, \VoiceFeedbackContainer.quizStartMessageAudioUrl),
+            (voiceFeedback.quizEndingMessage, \VoiceFeedbackContainer.quizEndingMessageAudioUrl),
+            (voiceFeedback.nextQuestionCalloutAudioUrl, \VoiceFeedbackContainer.nextQuestionCalloutAudioUrl),
+            (voiceFeedback.finalQuestionCallout, \VoiceFeedbackContainer.finalQuestionCalloutAudioUrl),
+            (voiceFeedback.repeatQuestionCallout, \VoiceFeedbackContainer.repeatQuestionCalloutAudioUrl),
+            (voiceFeedback.listeningCallout, \VoiceFeedbackContainer.listeningCalloutAudioUrl),
+            (voiceFeedback.waitingForResponseCallout, \VoiceFeedbackContainer.waitingForResponseCalloutAudioUrl),
+            (voiceFeedback.pausedCallout, \VoiceFeedbackContainer.pausedCalloutAudioUrl),
+            (voiceFeedback.correctAnswerCallout, \VoiceFeedbackContainer.correctAnswerCalloutAudioUrl),
+            (voiceFeedback.correctAnswerLowStreakCallOut, \VoiceFeedbackContainer.correctAnswerLowStreakCallOutAudioUrl),
+            (voiceFeedback.correctAnswerMidStreakCallout, \VoiceFeedbackContainer.correctAnswerMidStreakCalloutAudioUrl),
+            (voiceFeedback.correctAnswerHighStreakCallout, \VoiceFeedbackContainer.correctAnswerHighStreakCalloutAudioUrl),
+            (voiceFeedback.inCorrectAnswerCallout, \VoiceFeedbackContainer.inCorrectAnswerCalloutAudioUrl),
+            (voiceFeedback.zeroScoreComment, \VoiceFeedbackContainer.zeroScoreCommentAudioUrl),
+            (voiceFeedback.tenPercentScoreComment, \VoiceFeedbackContainer.tenPercentScoreCommentAudioUrl),
+            (voiceFeedback.twentyPercentScoreComment, \VoiceFeedbackContainer.twentyPercentScoreCommentAudioUrl),
+            (voiceFeedback.thirtyPercentScoreComment, \VoiceFeedbackContainer.thirtyPercentScoreCommentAudioUrl),
+            (voiceFeedback.fortyPercentScoreComment, \VoiceFeedbackContainer.fortyPercentScoreCommentAudioUrl),
+            (voiceFeedback.fiftyPercentScoreComment, \VoiceFeedbackContainer.fiftyPercentScoreCommentAudioUrl),
+            (voiceFeedback.sixtyPercentScoreComment, \VoiceFeedbackContainer.sixtyPercentScoreCommentAudioUrl),
+            (voiceFeedback.seventyPercentScoreComment, \VoiceFeedbackContainer.seventyPercentScoreCommentAudioUrl),
+            (voiceFeedback.eightyPercentScoreComment, \VoiceFeedbackContainer.eightyPercentScoreCommentAudioUrl),
+            (voiceFeedback.ninetyPercentScoreComment, \VoiceFeedbackContainer.ninetyPercentScoreCommentAudioUrl),
+            (voiceFeedback.perfectScoreComment, \VoiceFeedbackContainer.perfectScoreCommentAudioUrl),
+            (voiceFeedback.errorTranscriptionCallout, \VoiceFeedbackContainer.errorTranscriptionCalloutAudioUrl),
+            (voiceFeedback.invalidResponseCallout, \VoiceFeedbackContainer.invalidResponseCalloutAudioUrl),
+            (voiceFeedback.invalidResponseUserAdvisory, \VoiceFeedbackContainer.invalidResponseUserAdvisoryAudioUrl)
         ]
         
         await withTaskGroup(of: (WritableKeyPath<VoiceFeedbackContainer, String>, String?).self) { group in

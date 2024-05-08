@@ -68,34 +68,6 @@ import Foundation
         }
     }
     
-    func downloadAllFeedbackAudio(for voiceFeedback: VoiceFeedbackContainer) async -> VoiceFeedbackContainer {
-        var updatedFeedback = voiceFeedback
-        let messagesAndPaths: [(message: String, keyPath: WritableKeyPath<VoiceFeedbackContainer, String>)] = [
-            (voiceFeedback.quizStartMessage, \VoiceFeedbackContainer.quizStartAudioUrl),
-            (voiceFeedback.quizEndingMessage, \VoiceFeedbackContainer.quizEndingAudioUrl),
-            (voiceFeedback.correctAnswerCallout, \VoiceFeedbackContainer.correctAnswerCalloutUrl),
-            (voiceFeedback.skipQuestionMessage, \VoiceFeedbackContainer.skipQuestionAudioUrl),
-            (voiceFeedback.errorTranscriptionMessage, \VoiceFeedbackContainer.errorTranscriptionAudioUrl),
-            (voiceFeedback.finalScoreMessage, \VoiceFeedbackContainer.finalScoreAudioUrl)
-        ]
-        
-        await withTaskGroup(of: (WritableKeyPath<VoiceFeedbackContainer, String>, String?).self) { group in
-            for (message, keyPath) in messagesAndPaths {
-                group.addTask {
-                    let audioUrl = await self.downloadReadOut(readOut: message)
-                    return (keyPath, audioUrl)
-                }
-            }
-            for await (keyPath, audioUrl) in group {
-                if let url = audioUrl {
-                    updatedFeedback[keyPath: keyPath] = url
-                }
-            }
-        }
-        
-        return updatedFeedback
-    }
-    
     
     func downloadAudioQuestions(for items: [DownloadableQuiz]) async {
         var updatedItems = [(DownloadableQuiz, String, String)]()
@@ -122,7 +94,7 @@ import Foundation
         }
     }
     
-    private func downloadReadOut(readOut: String) async -> String? {
+    func downloadReadOut(readOut: String) async -> String? {
         var fileName: String? = nil
         do {
             let audioData = try await networkService.fetchAudioData(content: readOut)
@@ -153,7 +125,4 @@ import Foundation
             return nil
         }
     }
-    
-    
-    
 }

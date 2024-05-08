@@ -77,7 +77,7 @@ extension MiniPlayerV2 {
                     self.interactionState = .successfulResponse
                 }
             
-            case .isDonePlayingCorrection:
+            case .isDonePlayingCorrection: //Triggered by audioContentPlayer after Feedback play
                 self.intermissionPlayer.playErrorTranscriptionBell()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .resumingPlayback
@@ -85,14 +85,17 @@ extension MiniPlayerV2 {
                 
             case .donePlayingFeedbackMessage: //Triggered by intermissionPlayer after Feedback play
                 self.intermissionPlayer.playErrorTranscriptionBell()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .resumingPlayback
+                }
 
                 
-            case .donePlayingErrorMessage:
+            case .donePlayingErrorMessage: //Triggered by intermissionPlayer after error message play
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .resumingPlayback
                 }
                 
-            case .doneReviewing:
+            case .doneReviewing: //Triggered by intermissionPlayer after reviewing play
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .endedQuiz
                 }
@@ -120,7 +123,7 @@ extension MiniPlayerV2 {
            proceedWithQuiz()//Changes interaction to .nowPlaying
             
         case .errorResponse:
-            playErrorFeedbackMessage(feedbackMessageUrls?.skipMessage)
+            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseCallout)
             
         case .isIncorrectAnswer:
             playCorrectionAudio()//Changes interaction to .nowPlayingCorrection
@@ -129,8 +132,11 @@ extension MiniPlayerV2 {
             proceedWithQuiz()
             //setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
+        case .playingFeedbackMessage:
+            self.interactionState = interactionState
+            
         case .errorTranscription:
-            playErrorFeedbackMessage(feedbackMessageUrls?.errorMessage) // Changes to .playingFeedback
+            playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout) // Changes to .playingFeedback
             //MARK: TODO - Create Method to check for repeat listen settings
             
         case .endedQuiz:

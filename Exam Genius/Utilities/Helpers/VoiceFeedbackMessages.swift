@@ -13,86 +13,115 @@ class VoiceFeedbackMessages {
     var id: UUID
     var quizStartMessage: String
     var quizEndingMessage: String
+    var nextQuestionCallout: String
+    var finalQuestionCallout: String
+    var repeatQuestionCallout: String
+    var listeningCallout: String
+    var waitingForResponseCallout: String
+    var pausedCallout: String
     var correctAnswerCallout: String
-    var skipQuestionMessage: String
+    var correctAnswerLowStreakCallOut: String
+    var correctAnswerMidStreakCallout: String
+    var correctAnswerHighStreakCallout: String
+    var inCorrectAnswerCallout: String
+    var zeroScoreComment: String
+    var tenPercentScoreComment: String
+    var twentyPercentScoreComment: String
+    var thirtyPercentScoreComment: String
+    var fortyPercentScoreComment: String
+    var fiftyPercentScoreComment: String
+    var sixtyPercentScoreComment: String
+    var seventyPercentScoreComment: String
+    var eightyPercentScoreComment: String
+    var ninetyPercentScoreComment: String
+    var perfectScoreComment: String
     var errorTranscriptionMessage: String
-    var finalScoreMessage: String
+    var invalidResponseCallout: String
+    var invalidResponseUserAdvisory: String
+    
     var quizStartAudioUrl: String
     var quizEndingAudioUrl: String
+    var nextQuestionCalloutAudioUrl: String
+    var finalQuestionCalloutAudioUrl: String
+    var repeatQuestionCalloutAudioUrl: String
+    var listeningCalloutAudioUrl: String
+    var waitingForResponseCalloutAudioUrl: String
+    var pausedCalloutAudioUrl: String
     var correctAnswerCalloutUrl: String
-    var skipQuestionAudioUrl: String
+    var correctAnswerLowStreakCallOutAudioUrl: String
+    var correctAnswerMidStreakCalloutAudioUrl: String
+    var correctAnswerHighStreakCalloutAudioUrl: String
+    var inCorrectAnswerCalloutAudioUrl: String
+    var zeroScoreCommentAudioUrl: String
+    var tenPercentScoreCommentAudioUrl: String
+    var twentyPercentScoreCommentAudioUrl: String
+    var thirtyPercentScoreCommentAudioUrl: String
+    var fortyPercentScoreCommentAudioUrl: String
+    var fiftyPercentScoreCommentAudioUrl: String
+    var sixtyPercentScoreCommentAudioUrl: String
+    var seventyPercentScoreCommentAudioUrl: String
+    var eightyPercentScoreCommentAudioUrl: String
+    var ninetyPercentScoreCommentAudioUrl: String
+    var perfectScoreCommentAudioUrl: String
     var errorTranscriptionAudioUrl: String
-    var finalScoreAudioUrl: String
+    var invalidResponseCalloutAudioUrl: String
+    var invalidResponseUserAdvisoryAudioUrl: String
     
     init(id: UUID) {
         self.id = id
         self.quizStartMessage = ""
         self.quizEndingMessage = ""
+        self.nextQuestionCallout = ""
+        self.finalQuestionCallout = ""
+        self.repeatQuestionCallout = ""
+        self.listeningCallout = ""
+        self.waitingForResponseCallout = ""
+        self.pausedCallout = ""
         self.correctAnswerCallout = ""
-        self.skipQuestionMessage = ""
+        self.correctAnswerLowStreakCallOut = ""
+        self.correctAnswerMidStreakCallout = ""
+        self.correctAnswerHighStreakCallout = ""
+        self.inCorrectAnswerCallout = ""
+        self.zeroScoreComment = ""
+        self.tenPercentScoreComment = ""
+        self.twentyPercentScoreComment = ""
+        self.thirtyPercentScoreComment = ""
+        self.fortyPercentScoreComment = ""
+        self.fiftyPercentScoreComment = ""
+        self.sixtyPercentScoreComment = ""
+        self.seventyPercentScoreComment = ""
+        self.eightyPercentScoreComment = ""
+        self.ninetyPercentScoreComment = ""
+        self.perfectScoreComment = ""
         self.errorTranscriptionMessage = ""
-        self.finalScoreMessage = ""
+        self.invalidResponseCallout = ""
+        self.invalidResponseUserAdvisory = ""
         self.quizStartAudioUrl = ""
         self.quizEndingAudioUrl = ""
+        self.nextQuestionCalloutAudioUrl = ""
+        self.finalQuestionCalloutAudioUrl = ""
+        self.repeatQuestionCalloutAudioUrl = ""
+        self.listeningCalloutAudioUrl = ""
+        self.waitingForResponseCalloutAudioUrl = ""
+        self.pausedCalloutAudioUrl = ""
         self.correctAnswerCalloutUrl = ""
-        self.skipQuestionAudioUrl = ""
+        self.correctAnswerLowStreakCallOutAudioUrl = ""
+        self.correctAnswerMidStreakCalloutAudioUrl = ""
+        self.correctAnswerHighStreakCalloutAudioUrl = ""
+        self.inCorrectAnswerCalloutAudioUrl = ""
+        self.zeroScoreCommentAudioUrl = ""
+        self.tenPercentScoreCommentAudioUrl = ""
+        self.twentyPercentScoreCommentAudioUrl = ""
+        self.thirtyPercentScoreCommentAudioUrl = ""
+        self.fortyPercentScoreCommentAudioUrl = ""
+        self.fiftyPercentScoreCommentAudioUrl = ""
+        self.sixtyPercentScoreCommentAudioUrl = ""
+        self.seventyPercentScoreCommentAudioUrl = ""
+        self.eightyPercentScoreCommentAudioUrl = ""
+        self.ninetyPercentScoreCommentAudioUrl = ""
+        self.perfectScoreCommentAudioUrl = ""
         self.errorTranscriptionAudioUrl = ""
-        self.finalScoreAudioUrl = ""
-    }
-    
-    init(id: UUID, quizStartMessage: String, quizEndingMessage: String, correctAnswerCallout: String, skipQuestionMessage: String, errorTranscriptionMessage: String, finalScoreMessage: String, quizStartAudioUrl: String, quizEndingAudioUrl: String, correctAnswerCalloutUrl: String, skipQuestionAudioUrl: String, errorTranscriptionAudioUrl: String, finalScoreAudioUrl: String) {
-        self.id = id
-        self.quizStartMessage = quizStartMessage
-        self.quizEndingMessage = quizEndingMessage
-        self.correctAnswerCallout = correctAnswerCallout
-        self.skipQuestionMessage = skipQuestionMessage
-        self.errorTranscriptionMessage = errorTranscriptionMessage
-        self.finalScoreMessage = finalScoreMessage
-        self.quizStartAudioUrl = quizStartAudioUrl
-        self.quizEndingAudioUrl = quizEndingAudioUrl
-        self.correctAnswerCalloutUrl = correctAnswerCalloutUrl
-        self.skipQuestionAudioUrl = skipQuestionAudioUrl
-        self.errorTranscriptionAudioUrl = errorTranscriptionAudioUrl
-        self.finalScoreAudioUrl = finalScoreAudioUrl
-    }
-}
-
-
-struct VoiceFeedbackContainer {
-    let id: UUID
-    var quizStartMessage: String
-    var quizEndingMessage: String
-    var correctAnswerCallout: String
-    var skipQuestionMessage: String
-    var errorTranscriptionMessage: String
-    var finalScoreMessage: String
-
-    var quizStartAudioUrl: String
-    var quizEndingAudioUrl: String
-    var correctAnswerCalloutUrl: String
-    var skipQuestionAudioUrl: String
-    var errorTranscriptionAudioUrl: String
-    var finalScoreAudioUrl: String
-}
-
-
-// Extension for VoiceFeedbackMessages
-extension VoiceFeedbackMessages {
-    convenience init(from container: VoiceFeedbackContainer) {
-        self.init(
-            id: container.id,
-            quizStartMessage: container.quizStartMessage,
-            quizEndingMessage: container.quizEndingMessage,
-            correctAnswerCallout: container.correctAnswerCallout,
-            skipQuestionMessage: container.skipQuestionMessage,
-            errorTranscriptionMessage: container.errorTranscriptionMessage,
-            finalScoreMessage: container.finalScoreMessage,
-            quizStartAudioUrl: container.quizStartAudioUrl,
-            quizEndingAudioUrl: container.quizEndingAudioUrl,
-            correctAnswerCalloutUrl: container.correctAnswerCalloutUrl,
-            skipQuestionAudioUrl: container.skipQuestionAudioUrl,
-            errorTranscriptionAudioUrl: container.errorTranscriptionAudioUrl,
-            finalScoreAudioUrl: container.finalScoreAudioUrl
-        )
+        self.invalidResponseCalloutAudioUrl = ""
+        self.invalidResponseUserAdvisoryAudioUrl = ""
     }
 }

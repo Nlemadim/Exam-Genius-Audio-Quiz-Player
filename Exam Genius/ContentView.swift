@@ -15,6 +15,7 @@ struct ContentView: View {
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    let quizDataManager = QuizDataManager()
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     @Query(sort: \VoiceFeedbackMessages.id) var voiceFeedbackMessages: [VoiceFeedbackMessages]
@@ -44,10 +45,10 @@ struct ContentView: View {
             await loadMainVoiceFeedBackMessages()
         }
         .onAppear {
-//            loadUserMainPackage()
-//            fetchDownloadedMainAudioQuiz()
+            //            loadUserMainPackage()
+            //            fetchDownloadedMainAudioQuiz()
         }
-
+        
     }
     
     private func loadMainDefaultCollection() async {
@@ -66,26 +67,9 @@ struct ContentView: View {
     
     private func loadMainVoiceFeedBackMessages() async {
         guard voiceFeedbackMessages.isEmpty else { return }
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        let container = VoiceFeedbackContainer(
-            id: UUID(),
-            quizStartMessage: "Starting a new quiz now.",
-            quizEndingMessage: "Great job! This quiz is now complete.",
-            correctAnswerCallout: "That's the correct Answer!",
-            skipQuestionMessage: "Thats an invalid response. Skipping this question for now.",
-            errorTranscriptionMessage: "Error transcribing your response. Skipping this question for now.",
-            finalScoreMessage: "Calculating you final score...",
-            quizStartAudioUrl: "",
-            quizEndingAudioUrl: "",
-            correctAnswerCalloutUrl: "",
-            skipQuestionAudioUrl: "",
-            errorTranscriptionAudioUrl: "",
-            finalScoreAudioUrl: ""
-        )
         
-        let messageData = await contentBuilder.downloadAllFeedbackAudio(for: container)
+        let messageData = await quizDataManager.downloadAllFeedbackAudio()
         let newVoiceMessages = VoiceFeedbackMessages(from: messageData)
-        print("Downloaded new voice feedback messages with id \(newVoiceMessages.id.uuidString) and testing file path start quiz is printing: \(newVoiceMessages.quizEndingAudioUrl)")
         
         modelContext.insert(newVoiceMessages)
         
@@ -129,25 +113,25 @@ struct ContentView: View {
         .environmentObject(presentMgr)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
-        
+    
 }
 
 
 /*@Environment(\.scenePhase) var scenePhase
  
  var body: some View {
-     Text("Example Text")
-         .onChange(of: scenePhase) { newPhase in
-             if newPhase == .inactive {
-                 print("Inactive")
-                 // Handle logic when the app becomes inactive (e.g., call comes in)
-             } else if newPhase == .active {
-                 print("Active")
-                 // Handle logic when the app becomes active (foreground)
-             } else if newPhase == .background {
-                 print("Background")
-                 // Handle logic when the app goes to the background
-             }
-         }
+ Text("Example Text")
+ .onChange(of: scenePhase) { newPhase in
+ if newPhase == .inactive {
+ print("Inactive")
+ // Handle logic when the app becomes inactive (e.g., call comes in)
+ } else if newPhase == .active {
+ print("Active")
+ // Handle logic when the app becomes active (foreground)
+ } else if newPhase == .background {
+ print("Background")
+ // Handle logic when the app goes to the background
  }
-}*/
+ }
+ }
+ }*/

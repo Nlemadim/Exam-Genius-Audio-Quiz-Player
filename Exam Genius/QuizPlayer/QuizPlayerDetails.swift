@@ -9,28 +9,38 @@ import SwiftUI
 
 struct QuizPlayerDetails: View {
     @Environment(\.dismiss) private var dismiss
-    @State var CurrentPage: String = "Summary"
+    @State var currentPage: String = "Summary"
     //For Smooth Page Sliding Effect
     @Namespace var animation
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 0){
-                HeaderView()
-                    
-                
-                //MARK: Pinned Header With Content
-                LazyVStack(pinnedViews: [.sectionHeaders]) {
-                    Section {
+        NavigationView {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 0){
+                    HeaderView()
                         
-                    } header: {
-                        PinnedHeaderView()
+                    
+                    //MARK: Pinned Header With Content
+                    LazyVStack(pinnedViews: [.sectionHeaders]) {
+                        Section {
+                            if currentPage == "Summary" {
+                                SummaryInfoView(highScore: 3, numberOfTestsTaken: 10)
+                                    .padding()
+                            }
+                            
+                            
+                        } header: {
+                            PinnedHeaderView()
+                        }
                     }
                 }
             }
+//            .ignoresSafeArea(.all)
+            .ignoresSafeArea(.container, edges: .vertical)
+            .coordinateSpace(name: "SCROLL")
+            
         }
-        .navigationBarBackButtonHidden()
-        .ignoresSafeArea(.container, edges: .vertical)
-        .coordinateSpace(name: "SCROLL")
+        
+        
         
     }
     
@@ -56,19 +66,6 @@ struct QuizPlayerDetails: View {
                         ], startPoint: .top, endPoint: .bottom)
                         
                         VStack(alignment: .leading, spacing: 1) {
-                            Button {
-                                dismiss()
-                            } label: {
-                                Image(systemName: "chevron.left.circle")
-                                    .resizable()
-                                    .frame(width:25, height: 25)
-                                    .foregroundStyle(.white)
-                                    .offset(y: -60)
-                                
-                            }
-                            .zIndex(2)
-                            .allowsHitTesting(true)
-                            
                             HStack(alignment: .bottom, spacing: 10) {
                                 Text("Audio Quiz")
                                     .font(.callout)
@@ -84,7 +81,7 @@ struct QuizPlayerDetails: View {
                             
                             Label {
                                 
-                                Text("Question 6 of 53")
+                                Text("Activity Summary")
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.white.opacity(0.7))
                                 
@@ -118,10 +115,10 @@ struct QuizPlayerDetails: View {
                         Text(page)
                             .font(.callout)
                             .fontWeight(.semibold)
-                            .foregroundStyle(CurrentPage == page ? .white : .gray)
+                            .foregroundStyle(currentPage == page ? .white : .gray)
                         
                         ZStack {
-                            if CurrentPage == page {
+                            if currentPage == page {
                                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                                     .fill(.white)
                                     .matchedGeometryEffect(id: "TAB", in: animation)
@@ -136,7 +133,7 @@ struct QuizPlayerDetails: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         withAnimation(.easeInOut) {
-                            CurrentPage = page
+                            currentPage = page
                         }
                     }
                 }

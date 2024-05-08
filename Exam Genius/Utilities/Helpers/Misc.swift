@@ -184,6 +184,24 @@ enum InteractionState {
     }
 }
 
+enum Score {
+    case zero
+    case ten
+    case twenty
+    case thirty
+    case forty
+    case fifty
+    case sixty
+    case seventy
+    case eighty
+    case ninety
+    case perfect
+}
+
+
+
+
+
 
 
 

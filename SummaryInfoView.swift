@@ -12,61 +12,54 @@ struct SummaryInfoView: View {
     var numberOfTestsTaken: Int
     
     var body: some View {
-        HeaderView(title: "Summary")
-            //.padding(.horizontal)
-            .padding(.bottom)
+//        HeaderView(title: "Summary")
+//            //.padding(.horizontal)
+//            .padding(.bottom)
            VStack(spacing: 15) {
                scoreLabel(
-                   withTitle: "Highest Score",
-                   iconName: "ActivityConstants.highScoreLabelIcon",
+                   withTitle: "High Score",
+                   iconName: "trophy",
                    score: getPercentage(score: Int(highScore))
-               )
-               
-               scoreLabel(
-                   withTitle: "Lowest Score",
-                   iconName: "ActivityConstants.attemptsLabelIcon",
-                   score: "\(numberOfTestsTaken)"
                )
 
                scoreLabel(
-                   withTitle: "ActivityConstants.attemptsLabel",
-                   iconName: "ActivityConstants.attemptsLabelIcon",
-                   score: "\(numberOfTestsTaken)"
-               )
-               
-               scoreLabel(
-                   withTitle: "Total Number of Topics",
-                   iconName: "ActivityConstants.attemptsLabelIcon",
+                   withTitle: "Quizzes",
+                   iconName: "doc.questionmark",
                    score: "\(numberOfTestsTaken)"
                )
                
                scoreLabel(
                    withTitle: "Total Number of Questions",
-                   iconName: "ActivityConstants.attemptsLabelIcon",
+                   iconName: "questionmark.circle",
                    score: "\(numberOfTestsTaken)"
                )
                
                scoreLabel(
-                   withTitle: "Total Questions Answered",
-                   iconName:" ActivityConstants.attemptsLabelIcon",
+                   withTitle: "Answered Correctly",
+                   iconName: "checkmark.circle",
+                   score: "\(numberOfTestsTaken)"
+               )
+               
+               scoreLabel(
+                   withTitle: "Answered Wrong",
+                   iconName: "xmark.circle",
                    score: "\(numberOfTestsTaken)"
                )
                
            }
-           .cornerRadius(15)
-           .preferredColorScheme(.dark)
        }
 
     
     private func scoreLabel(withTitle title: String, iconName: String, score: String) -> some View {
         HStack {
             Image(systemName: iconName)
-                .iconStyle()
+                .foregroundStyle(.mint)
+               
             Text(title)
-                .labelStyle()
+                .font(.subheadline)
             Spacer()
             Text(score)
-                .scoreStyle()
+                .font(.subheadline)
         }
     }
 
@@ -98,4 +91,5 @@ struct HeaderView: View {
 
 #Preview {
     SummaryInfoView(highScore: 3, numberOfTestsTaken: 10)
+        .preferredColorScheme(.dark)
 }

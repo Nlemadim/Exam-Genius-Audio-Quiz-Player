@@ -48,14 +48,19 @@ extension MiniPlayerV2 {
     }
     
     func goToNextQuestion() {
+        self.intermissionPlayer.stopAndResetPlayer()
+        self.audioContentPlayer.stopAndResetPlayer()
+        self.questionPlayer.stopAndResetPlayer()
         currentQuestionIndex += 1
-        playSingleQuizQuestion()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            playSingleQuizQuestion()
+        }
     }
     
-    func playQuizReview() async {
-        let reviewUrl = await fetchQuizReview(review: scoreReadout())
+    func playQuizReview() {
+        //let reviewUrl = await fetchQuizReview(review: scoreReadout())
         DispatchQueue.main.async {
-            intermissionPlayer.playReviewFeedBack(reviewUrl)
+            intermissionPlayer.playReviewFeedBack(scoreReadout())
         }
     }
     
@@ -91,13 +96,12 @@ extension MiniPlayerV2 {
             
         } else {
             interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
-            playEndQuizFeedbackMessage(feedbackMessageUrls?.endMessage)
+            
+            playEndQuizFeedbackMessage(feedbackMessageUrls?.quizEndingMessage)
             self.currentQuestionIndex = 0
             self.interactionState = .reviewing
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                Task {
-                    await playQuizReview()
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                playQuizReview()
             }
         }
     }
@@ -124,34 +128,6 @@ extension MiniPlayerV2 {
         
         
     }
-    
-//    func playPauseStop() {
-//        let index = self.currentQuestionIndex
-//        let state = self.interactionState
-//        let commonStates: [InteractionState] = [.isNowPlaying, .playingErrorMessage, .playingFeedbackMessage]
-//        
-//        if state == .idle {
-//            DispatchQueue.main.async {
-//                self.interactionState = .isNowPlaying
-//                if isFullScreenPlayerMode {
-//                    
-//                    playSingleQuizQuestion()
-//                    
-//                } else {
-//                    
-//                    startQuizAudioPlay()
-//                }
-//            }
-//        }
-//        
-//        if state == .pausedPlayback {
-//            continueFromPause(state: state)
-//        }
-//        
-//        if commonStates.contains(state) {
-//            pauseQuiz(currentIndex: index)
-//        }
-//    }
     
     //MARK: TODO Continuity Methods
     func pauseQuiz(currentIndex: Int) {
@@ -207,10 +183,7 @@ extension MiniPlayerV2 {
     func expandAction() {
         guard selectedQuizPackage != nil else { return }
         startQuizAudioPlay()
-//        self.interactionState = .isNowPlaying
-//        configuration.interactionState = self.interactionState
-//        presentationManager.expandSheet = true
-//        playSingleQuizQuestion()
+
     }
     
     var isFullScreenPlayerMode: Bool {
@@ -223,14 +196,17 @@ extension MiniPlayerV2 {
     
     //MARK: Dismiss Full Screen Method
     func dismissAction() {
-        presentationManager.interactionState = .idle
+        resetQuizAndGetScore()
         self.interactionState = .idle
+        configuration.interactionState = self.interactionState
         currentQuestionIndex = 0
-        quizPlayerObserver.playerState = .endedQuiz
-        
+        UserDefaultsManager.updateCurrentPosition(currentQuestionIndex)
+       
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            presentationManager.expandSheet = false
-            expandSheet = false
+            self.quizPlayerObserver.playerState = .endedQuiz
+            self.presentationManager.expandSheet = false
+            self.presentationManager.interactionState = .idle
+            self.expandSheet = false
         }
     }
     
