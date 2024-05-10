@@ -22,7 +22,6 @@ class UserDefaultsManager {
         UserDefaults.standard.set(currentCount + 1, forKey: "numberOfGlobalTopics")
     }
     
-    
     static func setDefaultPointsPerQuestion() {
         let defaultPoints = 5
         if UserDefaults.standard.object(forKey: "pointsPerQuestion") == nil {
@@ -50,7 +49,6 @@ class UserDefaultsManager {
         UserDefaults.standard.set(currentCount + 1, forKey: "numberOfTopicsCovered")
     }
     
-    
     static func incrementTotalQuestionsAnswered() {
         let currentCount = UserDefaults.standard.integer(forKey: "totalQuestionsAnswered")
         UserDefaults.standard.set(currentCount + 1, forKey: "totalQuestionsAnswered")
@@ -66,10 +64,21 @@ class UserDefaultsManager {
     static func updateCurrentPosition(_ position: Int) {
         UserDefaults.standard.set(position, forKey: "quizCurrentPosition")
     }
-
+    
+    static func updateCurrentScoreStreak(correctAnswerCount: Int) {
+        UserDefaults.standard.set(correctAnswerCount, forKey: "currentScoreStreak")
+    }
+    
+    static func updateCurrentQuizStatus(inProgress: Bool) {
+        UserDefaults.standard.set(inProgress, forKey: "quizInProgress")
+    }
     
     static func enableContinousFlow() {
         UserDefaults.standard.setValue(true, forKey: "isOnContinuousFlow")
+    }
+    
+    static func updateRecievedInvalidResponseAdvisory() {
+        UserDefaults.standard.setValue(true, forKey: "hasRecievedInvalidResponseAdvisory")
     }
     
     static func userName() -> String {
@@ -78,6 +87,10 @@ class UserDefaultsManager {
     
     static func isStudyModeEnabled() -> Bool {
         return UserDefaults.standard.bool(forKey: "isStudyMode")
+    }
+    
+    static func hasRecievedInvalidResponseAdvisory() -> Bool {
+        return UserDefaults.standard.bool(forKey: "hasRecievedInvalidResponseAdvisory")
     }
     
     static func isOnContinuousFlow() -> Bool {
@@ -98,6 +111,14 @@ class UserDefaultsManager {
     
     static func currentPlayPosition() -> Int {
         return UserDefaults.standard.integer(forKey: "quizCurrentPosition")
+    }
+    
+    static func currentScoreStreak() -> Int {
+        return UserDefaults.standard.integer(forKey: "currentScoreStreak")
+    }
+    
+    static func quizInProgress() -> Bool {
+        return UserDefaults.standard.bool(forKey: "quizInProgress")
     }
     
     static func globalTopics() -> String {

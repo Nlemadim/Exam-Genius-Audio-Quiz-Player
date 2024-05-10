@@ -211,19 +211,20 @@ struct BuildButton: View {
 }
 
 struct DownloadAudioQuizButton: View {
-    var buildProcesses: () -> Void
+    var buttonAction: () -> Void
     @State var shouldDisplay: Bool = false
-    @State var buttonText: String = "Download Audio Quiz"
-    @Binding var isDownloading: Bool
+    @State var buttonText: String?
+    @State var color: Color?
+   
     
     var body: some View {
         ZStack {
             
-            Button(buttonText) {
-                buildProcesses()
+            Button(buttonText ?? "Start New Quiz") {
+                buttonAction()
             }
-            .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: isDownloading, activeBackgroundColor: .teal.opacity(0.6)))
-            .disabled(isDownloading)
+            .buttonStyle(CapsuleStrokeButtonStyle(isDisabled: false, activeBackgroundColor: color ?? .mint))
+           
             
         }
     }
@@ -522,12 +523,7 @@ struct OptionButton: View {
 
 
 #Preview {
-    DownloadAudioQuizButton(buildProcesses: {}, isDownloading: .constant(true))
-        .preferredColorScheme(.dark)
-}
-
-#Preview {
-    DownloadAudioQuizButton(buildProcesses: {}, isDownloading: .constant(false))
+    DownloadAudioQuizButton(buttonAction: {})
         .preferredColorScheme(.dark)
 }
 

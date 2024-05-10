@@ -16,7 +16,7 @@ class DownloadedAudioQuiz: Identifiable, Hashable {
     var quizImage: String
     var dateCreated: Date
     var currentIndex: Int
-    var totalScore: Int
+    var quizzesCompleted: Int
     var questions: [Question]
     
     init(quizname: String, shortTitle: String, quizImage: String) {
@@ -26,7 +26,7 @@ class DownloadedAudioQuiz: Identifiable, Hashable {
         self.dateCreated = .now
         self.currentIndex = 0
         self.questions = []
-        self.totalScore = 0
+        self.quizzesCompleted = 0
     }
 }
 

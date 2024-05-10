@@ -17,7 +17,9 @@ struct HomePage: View {
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
+    
     @Query(sort: \VoiceFeedbackMessages.id) var voiceFeedbackMessages: [VoiceFeedbackMessages]
+    
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @StateObject var generator = ColorGenerator()

@@ -18,11 +18,6 @@ struct QuizPlayerView: View {
     @StateObject private var generator = ColorGenerator()
     @StateObject private var audioContentPlayer = AudioContentPlayer()
     
-    @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
-    @State var userQuizName: String = "UserQuiz"
-    @State var interactionState: InteractionState = .idle
-    @State var audioQuiz: DownloadedAudioQuiz?
-    
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     @Query(sort: \PerformanceModel.id) var performanceCollection: [PerformanceModel]
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
@@ -33,11 +28,17 @@ struct QuizPlayerView: View {
 //        }
 //    }, sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
+    @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
+    @State var interactionState: InteractionState = .idle
+    @State var audioQuiz: DownloadedAudioQuiz?
+    
     @State private var expandSheet: Bool = false
     @State var isPlaying: Bool = false
     @State private var playTapped: Bool = false
     @State var currentQuestionIndex: Int = 0
     @State var isDownloading: Bool = false
+    @State var isUsingMic: Bool = false
+    @State var selectedVoice: String = "Holly"
     
     let sharedInteractionState = SharedQuizState()
 
@@ -87,25 +88,29 @@ struct QuizPlayerView: View {
                     .padding()
                     
                     HStack {
-                        //Text(user.selectedQuizPackage != nil ? "Loading" : self.interactionState == .isNowPlaying ? "Now Playing" : "Start Quiz")
-                        Text(user.downloadedQuiz == nil ? "Not Currently Playing" : "Now Playing")
-                            .fontWeight(.bold)
-                            .foregroundStyle(.primary)
+                        Text(quizPlayerObserver.playerState.status)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .padding(2)
                             .padding(.horizontal)
+                            .padding([.leading, .trailing], 5)
+                            
                         Spacer()
                     }
                     .padding(.horizontal)
-                    
                     
                     Divider()
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
                     VStack {
-                        
-                        NowPlayingView(currentquiz: user.downloadedQuiz, quizPlayerObserver: quizPlayerObserver, questionCount: user.downloadedQuiz?.questions.count ?? 0, currentQuestionIndex: currentQuestionIndex, color: generator.dominantLightToneColor, interactionState: $interactionState, isDownloading: $isDownloading, playAction: {
-                            
-                           startPlayer()
+            
+                        NowPlayingView(currentquiz: user.downloadedQuiz, quizPlayerObserver: quizPlayerObserver, generator: generator, questionCount: user.downloadedQuiz?.questions.count ?? 0, currentQuestionIndex: currentQuestionIndex, color: generator.dominantLightToneColor, interactionState: $interactionState, isDownloading: $isDownloading, playAction: {
+                            if self.quizPlayerObserver.playerState == .endedQuiz || quizPlayerObserver.playerState == .idle {
+                                startPlayer()
+                            } else {
+                                self.quizPlayerObserver.playerState = .restartQuiz
+                            }
                         })
                     }
                     .padding()
@@ -115,7 +120,7 @@ struct QuizPlayerView: View {
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
-                    PerformanceHistoryGraph(history: performanceCollection, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantDarkToneColor)
+                    PerformanceHistoryGraph(history: performanceCollection, mainColor: generator.enhancedDominantColor, subColor: generator.enhancedDominantColor)
                         .padding(.horizontal)
                     
                     Rectangle()
@@ -129,7 +134,7 @@ struct QuizPlayerView: View {
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
 
             }
-            .onChange(of: user.downloadedQuiz, { _, audioQuiz in
+            .onChange(of: user.downloadedQuiz, { _, _ in
                 updateUserQuizSelection()
             })
             .onChange(of: quizPlayerObserver.playerState) { _, newState in
@@ -151,11 +156,47 @@ struct QuizPlayerView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { /*  shareAction() */}, label: {
+                    Menu {
+                        
+                        //Quiz Settings
+                        Picker("Quiz Settings", selection: $selectedVoice) {
+                            Text("Timed Quiz")
+                            Text("Study Mode")
+                            Text("Casual Quiz")
+                        }
+                        .pickerStyle(.menu)
+                        
+                        //Voice Settings
+                        Picker("Voice Selection", selection: $selectedVoice) {
+                            Text("Holly")
+                            Text("Shade")
+                            Text("Finn")
+                            Text("Randonmize")
+                        }
+                        .pickerStyle(.menu)
+                        
+                        //Number of Question Selection
+                        Picker("Number of Questions", selection: $selectedVoice) {
+                            Text("10")
+                            Text("15")
+                            Text("25")
+                            Text("25 - 50")
+                        }
+                        .pickerStyle(.menu)
+                        
+                        //Mic Use on/off
+                        Picker("Handsfree", selection: $selectedVoice) {
+                            Text("Microphone - On")
+                            Text("Off")
+                        }
+                        .pickerStyle(.menu)
+                        
+                        
+                    } label: {
                         Image(systemName: "slider.horizontal.3")
                             .foregroundStyle(.white)
                             .padding(.horizontal, 20.0)
-                    })
+                    }
                 }
             }
         }
@@ -180,13 +221,21 @@ struct QuizPlayerView: View {
     private func startPlayer() {
     
         DispatchQueue.main.async {
-            if self.interactionState != .isNowPlaying {
-                self.interactionState = .isNowPlaying
-                self.quizPlayerObserver.playerState = .startedPlayingQuiz
-               
-            } else {
-                self.interactionState = .pausedPlayback
+            self.interactionState = .isNowPlaying
+            self.quizPlayerObserver.playerState = .startedPlayingQuiz
+            
+        }
+    }
+    
+    private func playPause() {
+        DispatchQueue.main.async {
+            if self.quizPlayerObserver.playerState == .startedPlayingQuiz {
                 self.quizPlayerObserver.playerState = .pausedCurrentPlay
+               
+            }
+            
+            if self.quizPlayerObserver.playerState == .pausedCurrentPlay {
+                self.quizPlayerObserver.playerState = .startedPlayingQuiz
             }
         }
     }
@@ -196,7 +245,6 @@ struct QuizPlayerView: View {
             return
         }
         
-        self.userQuizName = userQuizName
         updateUserQuizSelection()
     }
 
@@ -324,6 +372,7 @@ struct QuizPlayerView: View {
 struct NowPlayingView: View {
     var currentquiz: DownloadedAudioQuiz?
     var quizPlayerObserver: QuizPlayerObserver
+    var generator: ColorGenerator
     var questionCount: Int
     var currentQuestionIndex: Int
     var color: Color
@@ -370,15 +419,14 @@ struct NowPlayingView: View {
                         .font(.footnote)
                 }
                 
-                Text("Question: \(currentQuestionIndex)/ \(questionCount)")
+                Text("Completed Quizzes: \(currentquiz?.quizzesCompleted ?? 0)")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 
-                HStack {
-                    Spacer()
-                    CircularPlayButton(interactionState: $interactionState, isDownloading: $isDownloading, color: color, playAction: { playAction() })
-                }
-                .padding()
+                
+                DownloadAudioQuizButton(buttonAction: { playAction() }, buttonText: buttonText(), color: color)
+                    .padding(.top, 10)
+
             }
             .padding(.top, 5)
             .frame(height: 150)
@@ -390,7 +438,34 @@ struct NowPlayingView: View {
         
     }
     
+    private func buttonText() -> String {
+        if self.interactionState == .startedQuiz {
+            return "End Quiz"
+        } else if self.interactionState == .pausedPlayback {
+            return "Paused"
+        } else {
+            return "Start Quiz"
+        }
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //    .background(
 //        LinearGradient(colors: [Color.white.opacity(0), Color.white.opacity(0.1)], startPoint: .top, endPoint: .bottom)
 //    )

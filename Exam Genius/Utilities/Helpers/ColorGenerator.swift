@@ -10,10 +10,11 @@ import SwiftUI
 
 class ColorGenerator: ObservableObject {
     @Published var dominantBackgroundColor: Color = .black // Default color
-    @Published var sharpContrastColor: Color = .white // Default color for sharp contrast
+    @Published var sharpContrastColor: Color = .teal // Default color for sharp contrast
     @Published var dominantDarkToneColor: Color = .black.opacity(0.6) // Default for dominant dark tone
     @Published var dominantLightToneColor: Color = Color.themePurple
     @Published var secondaryColor: Color = .red
+    @Published var enhancedDominantColor: Color = .mint
     
     func updateDominantColor(fromImageNamed imageName: String) {
         DispatchQueue.global(qos: .userInitiated).async {
@@ -59,6 +60,17 @@ class ColorGenerator: ObservableObject {
         }
     }
     
+    func updateEnhancedDominantColor(fromImageNamed imageName: String) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let image = UIImage(named: imageName),
+                  let enhancedColor = image.enhancedDominantColor() else { return }
+            
+            DispatchQueue.main.async {
+                self.enhancedDominantColor = Color(enhancedColor)
+            }
+        }
+    }
+    
     func updateAllColors(fromImageNamed imageName: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let image = UIImage(named: imageName) else { return }
@@ -68,6 +80,7 @@ class ColorGenerator: ObservableObject {
             let darkToneColor = image.dominantDarkTone()
             let lightToneColor = image.dominantLightTone()
             let secondaryColor = image.secondaryColor()
+            let enhancedColor = image.enhancedDominantColor()
             
             DispatchQueue.main.async {
                 if let dominantColor = dominantColor {
@@ -83,7 +96,10 @@ class ColorGenerator: ObservableObject {
                     self.dominantLightToneColor = Color(lightToneColor)
                 }
                 if let secondaryColor = secondaryColor {
-                    self.dominantLightToneColor = Color(secondaryColor)
+                    self.secondaryColor = Color(secondaryColor)
+                }
+                if let enhancedColor = enhancedColor {
+                    self.enhancedDominantColor = Color(enhancedColor)
                 }
             }
         }

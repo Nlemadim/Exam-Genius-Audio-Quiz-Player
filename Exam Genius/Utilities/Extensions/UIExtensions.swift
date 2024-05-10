@@ -54,6 +54,24 @@ extension UIImage {
         return UIColor(red: CGFloat(bitmap[0]) / 255, green: CGFloat(bitmap[1]) / 255, blue: CGFloat(bitmap[2]) / 255, alpha: 1)
     }
     
+    func enhancedDominantColor() -> UIColor? {
+        guard let dominantColor = self.dominantColor() else { return nil }
+        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+        dominantColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let components: [CGFloat] = [red, green, blue, alpha]
+        if let cgColor = CGColor(colorSpace: colorSpace, components: components),
+           let hsbColor = UIColor(cgColor: cgColor).hsbColor() {
+            
+            let enhancedSaturation = min(hsbColor.saturation * 1.3, 1.0)  // Increase saturation by 30%, cap at 100%
+            let enhancedBrightness = min(hsbColor.brightness * 1.2, 1.0)  // Increase brightness by 20%, cap at 100%
+            return UIColor(hue: hsbColor.hue, saturation: enhancedSaturation, brightness: enhancedBrightness, alpha: alpha)
+        }
+
+        return nil
+    }
+    
     func sharpContrastColor() -> UIColor? {
         guard let dominantColor = self.dominantColor() else { return nil }
         var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0

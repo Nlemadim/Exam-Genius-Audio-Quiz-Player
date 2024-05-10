@@ -42,7 +42,6 @@ extension QuizDataManager {
             (voiceFeedback.invalidResponseUserAdvisory, \VoiceFeedbackContainer.invalidResponseUserAdvisoryAudioUrl)
         ]
 
-
             var failedDownloads: [(message: String, keyPath: WritableKeyPath<VoiceFeedbackContainer, String>)] = []
 
             // First, try to download all audio files concurrently

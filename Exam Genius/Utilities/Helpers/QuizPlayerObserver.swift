@@ -15,6 +15,7 @@ class QuizPlayerObserver: ObservableObject {
 
 enum QuizPlayerState {
     case startedPlayingQuiz
+    case restartQuiz
     case pausedCurrentPlay
     case startedPlayingTopic
     case startedPlayingAd
@@ -44,6 +45,8 @@ enum QuizPlayerState {
             return "Awaiting Response"
         case .pausedCurrentPlay:
             return "Paused"
+        case .restartQuiz:
+            return "Restarting"
         }
     }
 }

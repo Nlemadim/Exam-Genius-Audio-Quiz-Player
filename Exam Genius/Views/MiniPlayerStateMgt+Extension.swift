@@ -46,10 +46,8 @@ extension MiniPlayerV2 {
             self.interactionFeedbackMessage = scoreReadout()
             
         case.pausedPlayback:
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                loadPlayerPositions()
-            }
- 
+            self.interactionFeedbackMessage = "Resume?"
+            
         default:
             break
         }
@@ -123,7 +121,11 @@ extension MiniPlayerV2 {
            proceedWithQuiz()//Changes interaction to .nowPlaying
             
         case .errorResponse:
-            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseCallout)
+            if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
+                playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+            } else {
+                playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseCallout)
+            }
             
         case .isIncorrectAnswer:
             playCorrectionAudio()//Changes interaction to .nowPlayingCorrection
@@ -136,7 +138,13 @@ extension MiniPlayerV2 {
             self.interactionState = interactionState
             
         case .errorTranscription:
-            playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout) // Changes to .playingFeedback
+            
+            if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
+                playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+            } else {
+                playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout)
+            }
+             // Changes to .playingFeedback
             //MARK: TODO - Create Method to check for repeat listen settings
             
         case .endedQuiz:
@@ -155,10 +163,12 @@ extension MiniPlayerV2 {
             self.quizPlayerObserver.playerState = state
             switch state {
             case .startedPlayingQuiz:
-                expandAction()
+                self.expandAction()
                 self.presentationManager.interactionState = .isNowPlaying
-            case .pausedCurrentPlay:
-                pauseQuiz(currentIndex: self.currentQuestionIndex)
+            case .restartQuiz:
+                self.resetQuizAndGetScore()
+                //self.updateAudioQuizQuestions()
+                
             default:
                 break
             }

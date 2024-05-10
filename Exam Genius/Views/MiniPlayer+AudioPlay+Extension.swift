@@ -89,6 +89,7 @@ extension MiniPlayerV2 {
     
     //MARK: Step 2 Processes - Continue Playing Logic
     func proceedWithQuiz() {
+
         self.currentQuestionIndex += 1
         
         if currentQuestions.indices.contains(currentQuestionIndex) {
@@ -106,7 +107,21 @@ extension MiniPlayerV2 {
         }
     }
     
+    func playMode() {
+        if self.quizPlayerObserver.playerState == .pausedCurrentPlay {
+            resumeQuiz()
+        }
+        
+        if self.quizPlayerObserver.playerState == .startedPlayingQuiz {
+            playPauseStop()
+        }
+    }
+    
+    
+    
+    
     func playPauseStop() {
+        stopAllAudio()
         let index = self.currentQuestionIndex
         let state = self.interactionState
         
@@ -122,26 +137,37 @@ extension MiniPlayerV2 {
             pauseQuiz(currentIndex: index)
         }
         
-        if isFullScreenPlayerMode && state == .idle {
+        if !isFullScreenPlayerMode && state == .idle {
             startQuizAudioPlay()
         }
-        
-        
+    }
+    
+    func resumeQuiz() {
+        DispatchQueue.main.async {
+            loadPlayerPositions()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                playSingleQuizQuestion()
+            }
+        }
     }
     
     //MARK: TODO Continuity Methods
     func pauseQuiz(currentIndex: Int) {
+        stopAllAudio()
         DispatchQueue.main.async {
             UserDefaultsManager.updateCurrentPosition(currentIndex)
-            self.intermissionPlayer.stopAndResetPlayer()
-            self.audioContentPlayer.stopAndResetPlayer()
-            self.questionPlayer.stopAndResetPlayer()
+            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: self.correctAnswerCount)
             self.interactionState = .pausedPlayback
         }
     }
     
+    func stopAllAudio() {
+        self.intermissionPlayer.stopAndResetPlayer()
+        self.audioContentPlayer.stopAndResetPlayer()
+        self.questionPlayer.stopAndResetPlayer()
+    }
+    
     func continueFromPause(state: InteractionState) {
-        loadPlayerPositions()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             playSingleQuizQuestion()
         }
@@ -167,6 +193,8 @@ extension MiniPlayerV2 {
         }
     }
     
+    
+    
     func playEndQuizFeedbackMessage(_ messageUrl: String?) {
         if let feedbackMessageUrl = messageUrl {
             intermissionPlayer.playEndQuizFeedBack(feedbackMessageUrl)
@@ -174,16 +202,16 @@ extension MiniPlayerV2 {
         }
     }
     
-    func playEndQuizReview() async {
-        await playQuizReview()
+    func playEndQuizReview() {
+        playQuizReview()
     }
     
     //MARK: Direct Click Action Methods.
     //MARK: Show Full Screen Method
     func expandAction() {
         guard selectedQuizPackage != nil else { return }
+        UserDefaultsManager.updateCurrentQuizStatus(inProgress: true)
         startQuizAudioPlay()
-
     }
     
     var isFullScreenPlayerMode: Bool {
@@ -201,6 +229,7 @@ extension MiniPlayerV2 {
         configuration.interactionState = self.interactionState
         currentQuestionIndex = 0
         UserDefaultsManager.updateCurrentPosition(currentQuestionIndex)
+        UserDefaultsManager.updateCurrentQuizStatus(inProgress: false)
        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.quizPlayerObserver.playerState = .endedQuiz
@@ -209,5 +238,4 @@ extension MiniPlayerV2 {
             self.expandSheet = false
         }
     }
-    
 }

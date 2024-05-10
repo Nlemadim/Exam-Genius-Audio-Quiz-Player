@@ -58,7 +58,7 @@ struct MiniPlayerV2: View {
             playerDetails
             MiniQuizControlView(
                 recordAction: { self.interactionState = .isListening },
-                playPauseAction: { playPauseStop() },
+                playPauseAction: { playMode() },
                 nextAction: { goToNextQuestion() },
                 repeatAction: {},
                 interactionState: $interactionState
@@ -67,7 +67,7 @@ struct MiniPlayerV2: View {
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation {
-                appearIfQuiz()
+                showFullScreen()
             }
         }
         .fullScreenCover(isPresented: $presentationManager.shouldShowFullScreen) {
@@ -80,7 +80,7 @@ struct MiniPlayerV2: View {
                 questionTranscript: $interactionFeedbackMessage,
                 powerSimulator: $outputPower,
                 onViewDismiss: { simpleDismiss() },
-                playAction: { playPauseStop() },
+                playAction: { playMode() /*playPauseStop()*/ },
                 nextAction: { goToNextQuestion() },
                 recordAction: { self.interactionState = .isListening }
             )
@@ -95,6 +95,7 @@ struct MiniPlayerV2: View {
         
         .onAppear {
             setupViewConfigurations()
+            loadCurrentQuizStatus()
         }
         .onChange(of: currentQuestionIndex) { _, _ in
             updateQuestionScriptViewer()
@@ -152,9 +153,13 @@ struct MiniPlayerV2: View {
         expandSheet = false
     }
     
-    private func appearIfQuiz() {
-        presentationManager.expandSheet = true
+    private func showFullScreen() {
+        guard self.quizPlayerObserver.playerState == .startedPlayingQuiz || self.quizPlayerObserver.playerState == .pausedCurrentPlay else { return }
+        
         expandSheet = true
+        presentationManager.expandSheet = true
+        presentationManager.interactionState = .isNowPlaying
+        
     }
 
     private var playerDetails: some View {
@@ -162,6 +167,18 @@ struct MiniPlayerV2: View {
             .font(.footnote)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private func loadCurrentQuizStatus() {
+        let isInProgress = UserDefaultsManager.quizInProgress()
+        print("OnAppear quiz is in progress: \(isInProgress)")
+        let currentStreak = UserDefaultsManager.currentScoreStreak()
+        if isInProgress {
+            self.quizPlayerObserver.playerState = .pausedCurrentPlay
+            self.interactionState = .pausedPlayback
+            loadPlayerPositions()
+            self.correctAnswerCount = currentStreak
+        }
     }
 }
 
@@ -186,32 +203,6 @@ extension MiniPlayerV2 {
         let score = (CGFloat(correctAnswers) / CGFloat(totalQuestions)) * 100.0
         return score
     }
-    
-//    func scoreReadout() -> String {
-//        let scorePercentage = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
-//        let compliments = ["", "Well Done", "Good Job", "Very Nice", "Excellent"] // compliments based on 0-25, 26-50, 51-75, 76-99, 100
-//        let index = min(Int(scorePercentage / 25), compliments.count - 1) // Calculate index for selecting compliment
-//        
-//        let compliment = compliments[index] // Select compliment based on score
-//        
-//        let scoreString: String
-//        if scorePercentage == 0.0 {
-//            scoreString = "You did not get any questions correct"
-//        } else {
-//            scoreString = "You Scored "+(String(format: "%.0f %%", scorePercentage))
-//        }
-//         
-//        
-//        let readOut = """
-//        
-//        \(compliment)
-//        
-//        \(scoreString)
-//        
-//        """
-//        print(readOut)
-//        return readOut
-//    }
     
     func scoreReadout() -> String {
         // Calculate score percentage
@@ -280,9 +271,6 @@ extension MiniPlayerV2 {
             return .zero // handle unexpected values
         }
     }
-
-  
-
    
     var transcript: String {
         return """
@@ -301,6 +289,7 @@ extension MiniPlayerV2 {
     
     func loadPlayerPositions() {
          let savedPos = UserDefaultsManager.currentPlayPosition()
+        print("OnAppear, current play position: \(savedPos)")
          self.currentQuestionIndex = savedPos
      }
     
@@ -347,6 +336,10 @@ extension MiniPlayerV2 {
         DispatchQueue.main.async {
             print("Reseting Quiz and Saving Score")
             self.correctAnswerCount = 0
+            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
+            UserDefaultsManager.updateCurrentPosition(0)
+            UserDefaultsManager.incrementNumberOfQuizSessions()
+            self.selectedQuizPackage?.quizzesCompleted += 1
             self.currentQuestions.forEach { question in
                 question.selectedOption = ""
                 question.isAnswered = false
@@ -355,14 +348,18 @@ extension MiniPlayerV2 {
         }
     }
     
+    
+    
 //    func prepareToUpdateAudioQuiz() async {
 //        guard let package = user.selectedQuizPackage, package.questions.count <= 100 else { return }
 //        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
 //        
 //    }
     
+    
+    //MARK: TODO - Integrate Method For Continous Play Implementation
     func updateAudioQuizQuestions() async {
-        let questionCount = 10
+        let questionCount = UserDefaultsManager.numberOfTestQuestions()
         
         if let audioQuiz = user.selectedQuizPackage {
             let newQuestions = audioQuiz.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
@@ -383,6 +380,7 @@ extension MiniPlayerV2 {
         }
     }
     
+    //Mark: Redundant Method
     func fetchQuizReview(review readOut: String) async -> String {
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
         //let questions = audioQuiz.questions
@@ -392,7 +390,6 @@ extension MiniPlayerV2 {
         
     }
     
-   
     
     private func setContinousPlayInteraction(learningMode isEnabled: Bool) {
         //MARK: TODO - Conditional check for continous playback
@@ -429,6 +426,7 @@ extension MiniPlayerV2 {
         
         self.selectedOption = response
         selectOption(self.selectedOption)
+        UserDefaultsManager.incrementTotalQuestionsAnswered()
     }
     
     //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
@@ -443,6 +441,7 @@ extension MiniPlayerV2 {
             if currentQuestion.selectedOption == currentQuestion.correctOption {
                 currentQuestion.isAnsweredCorrectly = true
                 self.correctAnswerCount += 1
+                
                 
                 playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
@@ -473,6 +472,8 @@ extension MiniPlayerV2 {
     func showMiniPlayerConfirmationModal()  -> Bool  {
         return expandSheet == false && interactionState == .hasResponded
     }
+    
+    
     
 }
 
