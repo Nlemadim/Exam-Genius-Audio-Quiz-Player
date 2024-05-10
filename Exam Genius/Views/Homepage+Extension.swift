@@ -15,11 +15,9 @@ extension HomePage {
             
             if let package = self.selectedQuizPackage {
                 user.selectedQuizPackage = package
-                
             }
         }
     }
-
     
     private func downloadFullPackage(_ audioQuiz: AudioQuizPackage) async throws {
         guard audioQuiz.questions.isEmpty else { return }
