@@ -38,6 +38,7 @@ extension HomePage {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
             user.selectedQuizPackage = audioQuiz
+            print("Prepare to download audio questions")
             
             Task {
                 
@@ -238,8 +239,13 @@ extension HomePage {
     }
     
     func loadNewAudioQuiz(quiz package: AudioQuizPackage) async {
+       
         // Check if the package name already exists in the downloaded collection
         guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
+        
+        DispatchQueue.main.async {
+            print("Creating New Audio Quiz")
+        }
         
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
         let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)

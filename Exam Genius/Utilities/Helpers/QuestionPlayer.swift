@@ -40,7 +40,7 @@ class QuestionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func stopAndResetPlayer() {
         audioPlayer?.stop()
-        audioPlayer?.currentTime = 0
+        
     }
 
     func playAudioFile(_ audioFile: String) {

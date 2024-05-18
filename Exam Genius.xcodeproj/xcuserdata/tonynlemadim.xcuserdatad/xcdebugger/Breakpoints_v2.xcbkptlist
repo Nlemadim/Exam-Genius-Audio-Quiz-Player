@@ -44,36 +44,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "253"
             endingLineNumber = "253">
-            <Locations>
-               <Location
-                  uuid = "F9BB5726-0140-40EA-BBBF-0AA57D5D5B5B - 954ba068bf97fa84"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 @Swift.MainActor @Sendable () -&gt; () in Exam_Genius.AudioQuizDetailView.playSampleQuiz(Exam_Genius.AudioQuizPackage) async throws -&gt; ()"
-                  moduleName = "Exam Genius"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "157"
-                  endingLineNumber = "157">
-               </Location>
-               <Location
-                  uuid = "F9BB5726-0140-40EA-BBBF-0AA57D5D5B5B - b529db1800b5fa15"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Exam_Genius.TopicContent) -&gt; Exam_Genius.Topic in closure #2 @Swift.MainActor @Sendable () -&gt; () in Exam_Genius.AudioQuizDetailView.playSampleQuiz(Exam_Genius.AudioQuizPackage) async throws -&gt; ()"
-                  moduleName = "Exam Genius"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tonynlemadim/Documents/Exam-Genius-Audio-Quiz-Player/Exam%20Genius/QuizBuilder/AudioQuizDetailView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "157"
-                  endingLineNumber = "157">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

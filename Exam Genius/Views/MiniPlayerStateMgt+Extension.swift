@@ -25,10 +25,10 @@ extension MiniPlayerV2 {
             self.interactionFeedbackMessage = transcript
             
         case .idle:
-            self.interactionFeedbackMessage = "Starting a new quiz!"
+            self.interactionFeedbackMessage = "Start"
       
         case .isCorrectAnswer:
-            self.interactionFeedbackMessage = "\(self.currentQuestions[self.currentQuestionIndex].selectedOption) is correct"
+            self.interactionFeedbackMessage = "\(self.selectedOption) is correct"
             
         case .isIncorrectAnswer:
             self.interactionFeedbackMessage = "Incorrect!\n The correct option is \(self.currentQuestions[self.currentQuestionIndex].correctOption)"
@@ -55,6 +55,8 @@ extension MiniPlayerV2 {
     
     func updateConfigurationState(interactionState: InteractionState) {
         configuration.interactionState = interactionState
+        let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
+        configuration.isSpeaking = activeStates.contains(interactionState)
     }
     
     func syncInteractionState(_ interactionState: InteractionState) {
@@ -87,7 +89,6 @@ extension MiniPlayerV2 {
                     self.interactionState = .resumingPlayback
                 }
 
-                
             case .donePlayingErrorMessage: //Triggered by intermissionPlayer after error message play
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .resumingPlayback
@@ -96,6 +97,7 @@ extension MiniPlayerV2 {
             case .doneReviewing: //Triggered by intermissionPlayer after reviewing play
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .endedQuiz
+                    dismissAction()
                 }
                 
             default:
@@ -123,6 +125,7 @@ extension MiniPlayerV2 {
         case .errorResponse:
             if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
                 playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+                UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
             } else {
                 playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseCallout)
             }
@@ -130,8 +133,8 @@ extension MiniPlayerV2 {
         case .isIncorrectAnswer:
             playCorrectionAudio()//Changes interaction to .nowPlayingCorrection
             
-        case .isCorrectAnswer:
-            proceedWithQuiz()
+//        case .isCorrectAnswer:
+//            proceedWithQuiz()
             //setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
         case .playingFeedbackMessage:
@@ -141,6 +144,7 @@ extension MiniPlayerV2 {
             
             if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
                 playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+                UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
             } else {
                 playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout)
             }
@@ -156,22 +160,79 @@ extension MiniPlayerV2 {
         }
     }
     
+//    func miniPlayerStateAction(_ playerState: MiniPlayerState) {
+//        switch playerState {
+//        case .minimized:
+//            expandSheet = false
+//            presentationManager.expandSheet = false
+//            
+//        case .expanded:
+//            expandSheet = true
+//            presentationManager.expandSheet = true
+//            
+//        case .isActive:
+//            DispatchQueue.main.async {
+//                enterActiveState()
+//            }
+//            
+//        case .isInActive:
+//            DispatchQueue.main.async {
+//                enterInActiveState()
+//            }
+//        }
+//    }
+    
     //MARK: SCREEN TRANSITION OBSERVERS
     //MARK: QuizPlayer/Homepage+MiniPlayer QuizStatus Observer
     func handleQuizObserverInteractionStateChange(_ state: QuizPlayerState) {
         DispatchQueue.main.async {
             self.quizPlayerObserver.playerState = state
             switch state {
-            case .startedPlayingQuiz:
-                self.expandAction()
-                self.presentationManager.interactionState = .isNowPlaying
+//            case .startedPlayingQuiz:
+//                self.expandAction()
+//                self.presentationManager.interactionState = .isNowPlaying
             case .restartQuiz:
                 self.resetQuizAndGetScore()
-                //self.updateAudioQuizQuestions()
+//                //self.updateAudioQuizQuestions()
+//            case .pausedCurrentPlay:
+//                self.enterInActiveState()
                 
             default:
                 break
             }
         }
+    }
+    
+    func switchActiveState() {
+        if self.miniPlayerState == .isActive {
+            self.miniPlayerState = .isInActive
+        }
+        
+        if self.miniPlayerState == .isInActive {
+            self.miniPlayerState = .isActive
+        }
+    }
+    
+    func enterInActiveState() {
+        stopAllAudio()
+        self.quizPlayerObserver.playerState = .pausedCurrentPlay
+        UserDefaultsManager.updateCurrentPosition(self.currentQuestionIndex)
+        UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: self.correctAnswerCount)
+        self.interactionState = .pausedPlayback
+        
+    }
+    
+    func enterActiveState() {
+        guard selectedQuizPackage != nil else { return }
+        let currentPos = UserDefaultsManager.currentPlayPosition()
+        self.currentQuestionIndex = currentPos
+        UserDefaultsManager.updateCurrentQuizStatus(inProgress: true)
+        
+        expandSheet = true
+        presentationManager.expandSheet = true
+        self.interactionState = .isNowPlaying
+        presentationManager.interactionState = .isNowPlaying
+        configuration.interactionState = self.interactionState
+        startQuizAudioPlay()
     }
 }

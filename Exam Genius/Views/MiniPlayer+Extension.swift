@@ -19,6 +19,7 @@ extension MiniPlayerV2 {
         @Published var interactionState: InteractionState = .idle
         @Published var quizQuestionCount: Int = 0
         @Published var lastestScore: String = ""
+        @Published var isSpeaking: Bool = false
         
         private var sharedState: SharedQuizState
         
@@ -50,6 +51,11 @@ extension MiniPlayerV2 {
        
         func loadQuestionScriptViewer(question: String) {
             self.questionTranscript = question
+        }
+        
+        private func isActivePlay() -> Bool {
+            let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
+            return activeStates.contains(self.interactionState)
         }
         
         

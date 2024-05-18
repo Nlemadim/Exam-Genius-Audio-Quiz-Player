@@ -19,7 +19,7 @@ struct QuizPlayerView: View {
     @StateObject private var audioContentPlayer = AudioContentPlayer()
     
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
-    @Query(sort: \PerformanceModel.id) var performanceCollection: [PerformanceModel]
+    @Query(sort: \PerformanceModel.quizName) var performanceCollection: [PerformanceModel]
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
 //    @Query(filter: #Predicate<DownloadedAudioQuiz> { audioQuiz in
@@ -31,6 +31,7 @@ struct QuizPlayerView: View {
     @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
     @State var interactionState: InteractionState = .idle
     @State var audioQuiz: DownloadedAudioQuiz?
+    @State var currentPerformance: [PerformanceModel] = []
     
     @State private var expandSheet: Bool = false
     @State var isPlaying: Bool = false
@@ -146,6 +147,9 @@ struct QuizPlayerView: View {
             .onChange(of: downloadedAudioQuizCollection, { _, _ in
                 fetchUserQuizName()
             })
+//            .onChange(of: performanceCollection, { _, _ in
+//                loadUserPerformanceHistory()
+//            })
             .onChange(of: sharedInteractionState.interactionState) { _, newState in
                 DispatchQueue.main.async {
                     self.interactionState = newState
@@ -260,6 +264,12 @@ struct QuizPlayerView: View {
         user.downloadedQuiz = matchingQuizPackage
     
     }
+    
+//    private func loadUserPerformanceHistory() {
+//        guard user.downloadedQuiz != nil else { return }
+//        
+//        self.currentPerformance = performanceCollection.filter { $0.quizName == user.downloadedQuiz?.quizname }
+//    }
     
     private func updateAudioQuizCollectionIfNeeded(newCollection: [AudioQuizPackage], oldCollection: [AudioQuizPackage]) {
         let newPackages = newCollection.filter { newPackage in

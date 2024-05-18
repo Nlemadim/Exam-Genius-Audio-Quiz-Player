@@ -123,8 +123,8 @@ struct CircularPlayButton: View {
         }
         .frame(width: 50, height: 50)
         .background(color)
-        .foregroundColor(.white)
-        .activeGlow(.white, radius: 1)
+        .foregroundColor(color.dynamicTextColor())
+        .activeGlow(color.dynamicTextColor(), radius: 1)
         .cornerRadius(25)
         .overlay(
            Circle()
@@ -169,8 +169,8 @@ struct CircularButton: View {
         }
         .frame(width: 50, height: 50)
         .background(color)
-        .foregroundColor(.white)
-        .activeGlow(.white, radius: 1)
+        .foregroundColor(color.dynamicTextColor())
+        .activeGlow(color.dynamicTextColor(), radius: 1)
         .cornerRadius(25)
         .overlay(
            Circle()

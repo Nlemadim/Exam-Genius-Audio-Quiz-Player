@@ -11,19 +11,31 @@ import SwiftUI
 extension MiniPlayerV2 {
     //MARK: STEP 1: Quiz Entry Point - Now Playing
     func startQuizAudioPlay() {
-        self.interactionState = .isNowPlaying
-        expandSheet = true
-        presentationManager.expandSheet = true
-        presentationManager.interactionState = .isNowPlaying
-        configuration.interactionState = self.interactionState
         quizPlayerObserver.playerState = .startedPlayingQuiz
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.playSingleQuizQuestion()
         }
     }
     
+    private func playQuestionAtIndex(index: Int) {
+        guard currentQuestions.indices.contains(index) else {
+            print("Error. Index out of range: Question Count\(self.currentQuestions.count) - CurrentIndex: \(self.currentQuestionIndex)")
+            return
+        }
+        
+        let currentlyPlayingQuestion = self.currentQuestions[index]
+        
+        let audioFile = currentlyPlayingQuestion.questionAudio
+        guard !audioFile.isEmptyOrWhiteSpace else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            questionPlayer.playAudioFile(audioFile)
+            self.interactionState = .isNowPlaying
+            self.presentationManager.interactionState = .isNowPlaying
+        }
+    }
+    
     //MARK: STEP 1: Quiz Entry Point - Now Playing Method
-    private func playSingleQuizQuestion() {
+    func playSingleQuizQuestion() {
         // Access the current quiz package safely
         guard let package = configuration.currentQuizPackage else {
             print("Mini Player error: No quiz package currently selected")
@@ -39,19 +51,32 @@ extension MiniPlayerV2 {
         currentQuestions = questions
         print("Current MiniPlayer Questions Postloading is: \(self.currentQuestions.count)")
         
-        let currentlyPlayingQuestion = self.currentQuestions[currentQuestionIndex]
+        guard currentQuestions.indices.contains(self.currentQuestionIndex) else {
+            print("Error. Index out of range: Question Count\(self.currentQuestions.count) - CurrentIndex: \(self.currentQuestionIndex)")
+            return
+        }
+        
+        let currentlyPlayingQuestion = self.currentQuestions[self.currentQuestionIndex]
+        
         let audioFile = currentlyPlayingQuestion.questionAudio
+        guard !audioFile.isEmptyOrWhiteSpace else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             questionPlayer.playAudioFile(audioFile)
-            
+            self.interactionState = .isNowPlaying
+            self.presentationManager.interactionState = .isNowPlaying
         }
     }
     
     func goToNextQuestion() {
-        self.intermissionPlayer.stopAndResetPlayer()
-        self.audioContentPlayer.stopAndResetPlayer()
-        self.questionPlayer.stopAndResetPlayer()
+        guard currentQuestions.indices.contains(self.currentQuestionIndex) else { return }
+        
+//        self.intermissionPlayer.stopAndResetPlayer()
+//        self.audioContentPlayer.stopAndResetPlayer()
+//        self.questionPlayer.stopAndResetPlayer()
+
         currentQuestionIndex += 1
+        
+        print("Question Count\(self.currentQuestions.count) / CurrentIndex: \(self.currentQuestionIndex)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             playSingleQuizQuestion()
         }
@@ -78,7 +103,7 @@ extension MiniPlayerV2 {
     private func continuePlaying() {
         print("Continuation Condition Met")
         
-        let currentQuestion = self.currentQuestions[currentQuestionIndex]
+        let currentQuestion = self.currentQuestions[self.currentQuestionIndex]
         let audioFile = currentQuestion.questionAudio
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -88,83 +113,85 @@ extension MiniPlayerV2 {
     }
     
     //MARK: Step 2 Processes - Continue Playing Logic
+//    func proceedWithQuiz() {
+//        //Refactor conditional statement
+//        if currentQuestions.indices.contains(currentQuestionIndex) {
+//            //goToNextQuestion()
+//            
+//            DispatchQueue.main.async {
+//                print("proceedWithQuiz func proceeding... CurrentIndex at: \(self.currentQuestionIndex)")
+//                self.currentQuestionIndex += 1
+//                print("proceedWithQuiz func has moved Local index to: \(self.currentQuestionIndex)")
+//                self.playQuestionAtIndex(index:  self.currentQuestionIndex)
+//            }
+//
+//            //self.continuePlaying()
+//            
+//        } else {
+//            DispatchQueue.main.async {
+//                self.interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
+//            }
+//                playEndQuizFeedbackMessage(feedbackMessageUrls?.quizEndingMessage)
+//                //self.currentQuestionIndex = 0
+//                self.interactionState = .reviewing
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                    playQuizReview()
+//                }
+//        }
+//    }
+    
     func proceedWithQuiz() {
-
-        self.currentQuestionIndex += 1
-        
-        if currentQuestions.indices.contains(currentQuestionIndex) {
-            self.continuePlaying()
-            
-        } else {
-            interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
-            
+        // Add a guard statement to check if the currentQuestionIndex is less than or equal to the count of currentQuestions - 1
+        print("\(currentQuestionIndex)")
+        print("\(currentQuestions.count)")
+        guard currentQuestionIndex + 1 <= currentQuestions.count - 1 else {
+            DispatchQueue.main.async {
+                self.interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
+            }
             playEndQuizFeedbackMessage(feedbackMessageUrls?.quizEndingMessage)
-            self.currentQuestionIndex = 0
+            //self.currentQuestionIndex = 0
             self.interactionState = .reviewing
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 playQuizReview()
             }
+            return
         }
-    }
-    
-    func playMode() {
-        if self.quizPlayerObserver.playerState == .pausedCurrentPlay {
-            resumeQuiz()
-        }
-        
-        if self.quizPlayerObserver.playerState == .startedPlayingQuiz {
-            playPauseStop()
-        }
-    }
-    
-    
-    
-    
-    func playPauseStop() {
-        stopAllAudio()
-        let index = self.currentQuestionIndex
-        let state = self.interactionState
-        
-        if state == .idle {
-            expandAction()
-        }
-        
-        if isActivePlay() {
-            pauseQuiz(currentIndex: index)
-        }
-        
-        if isFullScreenPlayerMode && isActivePlay() {
-            pauseQuiz(currentIndex: index)
-        }
-        
-        if !isFullScreenPlayerMode && state == .idle {
-            startQuizAudioPlay()
-        }
-    }
-    
-    func resumeQuiz() {
+
+        // If the guard condition is met, proceed with the quiz
         DispatchQueue.main.async {
-            loadPlayerPositions()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                playSingleQuizQuestion()
-            }
+            print("proceedWithQuiz func proceeding... CurrentIndex at: \(self.currentQuestionIndex)")
+            self.currentQuestionIndex += 1
+            print("proceedWithQuiz func has moved Local index to: \(self.currentQuestionIndex)")
+            self.playQuestionAtIndex(index:  self.currentQuestionIndex)
         }
     }
+
+    
     
     //MARK: TODO Continuity Methods
     func pauseQuiz(currentIndex: Int) {
-        stopAllAudio()
         DispatchQueue.main.async {
-            UserDefaultsManager.updateCurrentPosition(currentIndex)
-            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: self.correctAnswerCount)
-            self.interactionState = .pausedPlayback
+            stopAllAudio()
+//            UserDefaultsManager.updateCurrentPosition(currentIndex)
+//            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: self.correctAnswerCount)
+//            self.interactionState = .pausedPlayback
+//            self.quizPlayerObserver.playerState = .pausedCurrentPlay
         }
+    }
+    
+    func debugReset() {
+//        UserDefaultsManager.updateCurrentPosition(0)
+//        UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
+//        UserDefaultsManager.updateCurrentQuizStatus(inProgress: false)
     }
     
     func stopAllAudio() {
         self.intermissionPlayer.stopAndResetPlayer()
         self.audioContentPlayer.stopAndResetPlayer()
         self.questionPlayer.stopAndResetPlayer()
+        self.startPlaying = false
+        self.configuration.isSpeaking = false
+        self.interactionState = .idle
     }
     
     func continueFromPause(state: InteractionState) {
@@ -193,12 +220,9 @@ extension MiniPlayerV2 {
         }
     }
     
-    
-    
     func playEndQuizFeedbackMessage(_ messageUrl: String?) {
         if let feedbackMessageUrl = messageUrl {
             intermissionPlayer.playEndQuizFeedBack(feedbackMessageUrl)
-            
         }
     }
     
@@ -210,8 +234,24 @@ extension MiniPlayerV2 {
     //MARK: Show Full Screen Method
     func expandAction() {
         guard selectedQuizPackage != nil else { return }
-        UserDefaultsManager.updateCurrentQuizStatus(inProgress: true)
+//        let currentPos = UserDefaultsManager.currentPlayPosition()
+//        self.configuration.currentQuestionIndex = currentPos
+        //UserDefaultsManager.updateCurrentQuizStatus(inProgress: true)
+        
+        expandSheet = true
+        presentationManager.expandSheet = true
+        
+        configuration.interactionState = self.interactionState
         startQuizAudioPlay()
+        
+    }
+    
+    func startOrContinue() {
+        if interactionState == .pausedPlayback {
+            expandAction()
+        } else {
+            startQuizAudioPlay()
+        }
     }
     
     var isFullScreenPlayerMode: Bool {
@@ -228,11 +268,12 @@ extension MiniPlayerV2 {
         self.interactionState = .idle
         configuration.interactionState = self.interactionState
         currentQuestionIndex = 0
-        UserDefaultsManager.updateCurrentPosition(currentQuestionIndex)
+        
         UserDefaultsManager.updateCurrentQuizStatus(inProgress: false)
        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.quizPlayerObserver.playerState = .endedQuiz
+            UserDefaultsManager.updateCurrentPosition(0)
             self.presentationManager.expandSheet = false
             self.presentationManager.interactionState = .idle
             self.expandSheet = false

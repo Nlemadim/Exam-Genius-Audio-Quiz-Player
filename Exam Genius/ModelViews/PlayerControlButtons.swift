@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlayerControlButtons: View {
     @Binding var interactionState: InteractionState
+    @Binding var questionsComplete: Bool
 
     var themeColor: Color?
     var recordAction: () -> Void
@@ -39,7 +40,7 @@ struct PlayerControlButtons: View {
                 CircularButton(
                     isPlaying: .constant(false),
                     isDownloading: .constant(false),
-                    imageLabel: "forward.end.fill",
+                    imageLabel: questionsComplete ? "stop.fill" : "forward.end.fill",
                     color: themeColor ?? .clear,
                     buttonAction: { nextAction() })
                 
@@ -102,7 +103,7 @@ struct MiniPlayerControlButtons: View {
 
 
 #Preview {
-    PlayerControlButtons(interactionState: .constant(.idle), themeColor: .purple, recordAction: {}, playAction: {}, nextAction: {})
+    PlayerControlButtons(interactionState: .constant(.idle), questionsComplete: .constant(false), themeColor: .purple, recordAction: {}, playAction: {}, nextAction: {})
         .preferredColorScheme(.dark)
 }
 

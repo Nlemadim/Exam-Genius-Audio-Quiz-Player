@@ -44,7 +44,6 @@ class IntermissionPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func stopAndResetPlayer() {
         audioPlayer?.stop()
-        audioPlayer?.currentTime = 0
     }
     
     private func resetPlayerStates() {

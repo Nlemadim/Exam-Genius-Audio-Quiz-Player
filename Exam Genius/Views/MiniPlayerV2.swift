@@ -33,6 +33,7 @@ struct MiniPlayerV2: View {
     @Binding var interactionState: InteractionState
     @State var startPlaying: Bool = false
     @State var outputPower: Float = 0.0
+    @State var miniPlayerState: MiniPlayerState = .minimized
     
     @State var currentPlaylistItemIndex: Int = 0
     @State var currentQuestionIndex: Int = 0
@@ -58,7 +59,7 @@ struct MiniPlayerV2: View {
             playerDetails
             MiniQuizControlView(
                 recordAction: { self.interactionState = .isListening },
-                playPauseAction: { playMode() },
+                playPauseAction: { playAction() },
                 nextAction: { goToNextQuestion() },
                 repeatAction: {},
                 interactionState: $interactionState
@@ -67,22 +68,23 @@ struct MiniPlayerV2: View {
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation {
-                showFullScreen()
+                expandSheet.toggle()
             }
         }
-        .fullScreenCover(isPresented: $presentationManager.shouldShowFullScreen) {
+        .fullScreenCover(isPresented: $expandSheet/*.constant(expandSheet == true)*/) {
             FullScreenQuizPlayer2(
                 quizSetter: configuration,
-                currentQuestionIndex: $currentQuestionIndex,
+                currentQuestionIndex: .constant(currentQuestionIndex),
                 isCorrectAnswer: $isCorrectAnswer,
                 presentMicModal: $presentMicModal,
                 interactionState: $configuration.interactionState,
                 questionTranscript: $interactionFeedbackMessage,
                 powerSimulator: $outputPower,
-                onViewDismiss: { simpleDismiss() },
-                playAction: { playMode() /*playPauseStop()*/ },
+                expandSheet: $expandSheet,
+                onViewDismiss: { /*expandSheet = false*/ },
+                playAction: { playAction() /*playPauseStop()*/ },
                 nextAction: { goToNextQuestion() },
-                recordAction: { self.interactionState = .isListening }
+                recordAction: {  }
             )
         }
         .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
@@ -90,15 +92,16 @@ struct MiniPlayerV2: View {
                 interactionState: $interactionState,
                 mainColor: generator.dominantBackgroundColor,
                 subColor: generator.dominantLightToneColor)
-                .presentationDetents([.height(100)])
+                .presentationDetents([.height(110)])
         })
-        
         .onAppear {
             setupViewConfigurations()
-            loadCurrentQuizStatus()
+            //debugReset()
+            print("MiniPlayer Local index is at: \(self.currentQuestionIndex)")
         }
-        .onChange(of: currentQuestionIndex) { _, _ in
+        .onChange(of: currentQuestionIndex) { _, newValue in
             updateQuestionScriptViewer()
+            print("MiniPlayer Local index is at: \(self.currentQuestionIndex)")
         }
         .onChange(of: user.downloadedQuiz) { _, newPackage in
             updateViewWithPackage(newPackage)
@@ -134,7 +137,14 @@ struct MiniPlayerV2: View {
             print("Mini Player Quiz-Player-Observer registered as: \(newValue)")
             handleQuizObserverInteractionStateChange(newValue)
         }
-        
+    }
+    
+    private func playAction() {
+        if self.interactionState == .idle || self.interactionState == .pausedPlayback {
+            startOrContinue()
+        } else {
+            pauseQuiz(currentIndex: self.currentQuestionIndex)
+        }
     }
 
     private var playerThumbnail: some View {
@@ -153,13 +163,8 @@ struct MiniPlayerV2: View {
         expandSheet = false
     }
     
-    private func showFullScreen() {
-        guard self.quizPlayerObserver.playerState == .startedPlayingQuiz || self.quizPlayerObserver.playerState == .pausedCurrentPlay else { return }
-        
-        expandSheet = true
-        presentationManager.expandSheet = true
-        presentationManager.interactionState = .isNowPlaying
-        
+    func showFullScreen() -> Bool {
+        return expandSheet == true &&  presentationManager.expandSheet == true
     }
 
     private var playerDetails: some View {
@@ -169,17 +174,30 @@ struct MiniPlayerV2: View {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private func loadCurrentQuizStatus() {
-        let isInProgress = UserDefaultsManager.quizInProgress()
-        print("OnAppear quiz is in progress: \(isInProgress)")
-        let currentStreak = UserDefaultsManager.currentScoreStreak()
-        if isInProgress {
-            self.quizPlayerObserver.playerState = .pausedCurrentPlay
-            self.interactionState = .pausedPlayback
-            loadPlayerPositions()
-            self.correctAnswerCount = currentStreak
-        }
-    }
+//    private func updatePublishedQuestionIndex(value: Int) {
+//        guard currentQuestions.indices.contains(value) else { return }
+//        DispatchQueue.main.async {
+//            if value == 0 {
+//                configuration.currentQuestionIndex =  1
+//                print("Updated config index to : \(configuration.currentQuestionIndex)")
+//            } else {
+//                configuration.currentQuestionIndex = value + 1
+//                print("Updated config index to : \(configuration.currentQuestionIndex)")
+//            }
+//        }
+//    }
+    
+//    private func loadCurrentQuizStatus() {
+//        let isInProgress = UserDefaultsManager.quizInProgress()
+//        print("OnAppear quiz is in progress: \(isInProgress)")
+//        let currentStreak = UserDefaultsManager.currentScoreStreak()
+//        if isInProgress {
+//            self.quizPlayerObserver.playerState = .pausedCurrentPlay
+//            self.interactionState = .pausedPlayback
+//            loadPlayerPositions()
+//            self.correctAnswerCount = currentStreak
+//        }
+//    }
 }
 
 
@@ -217,23 +235,23 @@ extension MiniPlayerV2 {
         case .zero:
             feedbackMessage = feedbackMessageUrls?.zeroScoreComment ?? "No correct answers. Try again!"
         case .ten:
-            feedbackMessage = feedbackMessageUrls?.tenPercentScoreComment ?? "Keep trying!"
+            feedbackMessage = feedbackMessageUrls?.tenPercentScoreComment ?? "You scored 10% Keep trying!"
         case .twenty:
-            feedbackMessage = feedbackMessageUrls?.twentyPercentScoreComment ?? "You can do better!"
+            feedbackMessage = feedbackMessageUrls?.twentyPercentScoreComment ?? "20% You can do better!"
         case .thirty:
-            feedbackMessage = feedbackMessageUrls?.thirtyPercentScoreComment ?? "Getting there!"
+            feedbackMessage = feedbackMessageUrls?.thirtyPercentScoreComment ?? "You scored 30% Getting there!"
         case .forty:
-            feedbackMessage = feedbackMessageUrls?.fortyPercentScoreComment ?? "Almost half way!"
+            feedbackMessage = feedbackMessageUrls?.fortyPercentScoreComment ?? "You scored 40% Almost half way!"
         case .fifty:
-            feedbackMessage = feedbackMessageUrls?.fiftyPercentScoreComment ?? "Half way there!"
+            feedbackMessage = feedbackMessageUrls?.fiftyPercentScoreComment ?? "50% Half way there!"
         case .sixty:
-            feedbackMessage = feedbackMessageUrls?.sixtyPercentScoreComment ?? "More than half!"
+            feedbackMessage = feedbackMessageUrls?.sixtyPercentScoreComment ?? "60% Better than average!"
         case .seventy:
-            feedbackMessage = feedbackMessageUrls?.seventyPercentScoreComment ?? "Good job!"
+            feedbackMessage = feedbackMessageUrls?.seventyPercentScoreComment ?? "You scored 70% Good job!"
         case .eighty:
-            feedbackMessage = feedbackMessageUrls?.eightyPercentScoreComment ?? "Great work!"
+            feedbackMessage = feedbackMessageUrls?.eightyPercentScoreComment ?? "You scored 80% Great work!"
         case .ninety:
-            feedbackMessage = feedbackMessageUrls?.ninetyPercentScoreComment ?? "Excellent!"
+            feedbackMessage = feedbackMessageUrls?.ninetyPercentScoreComment ?? "You scored 90% Excellent!"
         case .perfect:
             feedbackMessage = feedbackMessageUrls?.perfectScoreComment ?? "Perfect score!"
         }
@@ -272,6 +290,8 @@ extension MiniPlayerV2 {
         }
     }
    
+    //error point
+    
     var transcript: String {
         return """
                \(currentQuestions[currentQuestionIndex].questionContent)
@@ -288,10 +308,10 @@ extension MiniPlayerV2 {
     }
     
     func loadPlayerPositions() {
-         let savedPos = UserDefaultsManager.currentPlayPosition()
+        let savedPos = UserDefaultsManager.currentPlayPosition()
         print("OnAppear, current play position: \(savedPos)")
-         self.currentQuestionIndex = savedPos
-     }
+        self.currentQuestionIndex = savedPos
+    }
     
     func updateQuestionScriptViewer() {
         guard currentQuestions.indices.contains(currentQuestionIndex) else { return }
@@ -313,7 +333,6 @@ extension MiniPlayerV2 {
         }
     }
     
-   
     //MARK: Step 2  - InteractionState Sync and Update
    
     
@@ -329,16 +348,16 @@ extension MiniPlayerV2 {
     
     func resetQuizAndGetScore() {
         let score = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
-        let newPerformance: PerformanceModel = PerformanceModel(id: UUID(), date: .now, score: score, numberOfQuestions: self.currentQuestions.count)
+        let newPerformance: PerformanceModel = PerformanceModel(id: UUID(), quizName: selectedQuizPackage?.quizname ?? "new Quiz", date: .now, score: score, numberOfQuestions: self.currentQuestions.count)
         modelContext.insert(newPerformance)
         try! modelContext.save()
 
         DispatchQueue.main.async {
             print("Reseting Quiz and Saving Score")
             self.correctAnswerCount = 0
-            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
-            UserDefaultsManager.updateCurrentPosition(0)
-            UserDefaultsManager.incrementNumberOfQuizSessions()
+//            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
+//            UserDefaultsManager.updateCurrentPosition(0)
+//            UserDefaultsManager.incrementNumberOfQuizSessions()
             self.selectedQuizPackage?.quizzesCompleted += 1
             self.currentQuestions.forEach { question in
                 question.selectedOption = ""
@@ -441,11 +460,11 @@ extension MiniPlayerV2 {
             if currentQuestion.selectedOption == currentQuestion.correctOption {
                 currentQuestion.isAnsweredCorrectly = true
                 self.correctAnswerCount += 1
-                
+                self.interactionState = .isCorrectAnswer
                 
                 playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    self.interactionState = .isCorrectAnswer
+                    self.interactionState = .resumingPlayback
                 }
                 
             } else {
@@ -455,7 +474,6 @@ extension MiniPlayerV2 {
             }
             
             self.isCorrectAnswer = currentQuestion.isAnsweredCorrectly
-            
         }
     }
     
@@ -472,11 +490,7 @@ extension MiniPlayerV2 {
     func showMiniPlayerConfirmationModal()  -> Bool  {
         return expandSheet == false && interactionState == .hasResponded
     }
-    
-    
-    
 }
-
 
 @Observable class SharedQuizState {
     var interactionState: InteractionState = .idle
@@ -489,4 +503,12 @@ extension MiniPlayerV2 {
         self.interactionState = newState
     }
 }
+
+enum MiniPlayerState {
+    case minimized
+    case expanded
+    case isActive
+    case isInActive
+}
+
 
