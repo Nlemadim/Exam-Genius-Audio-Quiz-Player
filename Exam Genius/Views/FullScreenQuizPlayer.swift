@@ -164,9 +164,11 @@ struct FullScreenQuizPlayer2: View {
                     print("FullScreen Player Local index is at: \(self.currentQuestionIndex)")
                 }
             }
-            .sheet(isPresented: .constant(interactionState == .isListening), content: {
-                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
-                    .presentationDetents([.height(100)])
+            .sheet(isPresented: .constant(presentResponseModal()), content: {
+                ResponseModalPresenter(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
+                    .presentationDetents([.height(140)])
+//                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
+//                    .presentationDetents([.height(100)])
             })
             .onDisappear(perform: {
                 onViewDismiss()
@@ -177,6 +179,10 @@ struct FullScreenQuizPlayer2: View {
     
     var progress: CGFloat {
         return 0
+    }
+    
+    func presentResponseModal() -> Bool {
+        interactionState == .isListening || interactionState == .awaitingResponse ? true : false
     }
 
     func playButtonIconSetter() -> Bool {
@@ -359,7 +365,7 @@ struct TranscriptView: View {
     let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
     quizSetter.configuration = config
     
-    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.isNowPlaying), questionTranscript: .constant("Hello Transcript"), powerSimulator: .constant(0.6),  expandSheet: .constant(false), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
+    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.awaitingResponse), questionTranscript: .constant("Hello Transcript"), powerSimulator: .constant(0.6),  expandSheet: .constant(false), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
         .environmentObject(user)
         .preferredColorScheme(.dark)
     

@@ -29,21 +29,6 @@ struct MicModalView: View {
 }
 
 
-struct ButtonModalView: View {
-    @Binding var interactionState: InteractionState
-    var mainColor: Color
-    var subColor: Color
-    
-    var body: some View {
-        VStack(alignment: .center) {
-    
-             
-        }
-        .frame(maxWidth: .infinity)
-        .background(mainColor)
-    }
-}
-
 struct ConfirmationModalView: View {
     @Binding var interactionState: InteractionState
     var mainColor: Color

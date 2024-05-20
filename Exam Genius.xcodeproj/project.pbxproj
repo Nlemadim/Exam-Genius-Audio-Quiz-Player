@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B072AAF2BFB954F00BD2890 /* OptionButtonsModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B072AAE2BFB954F00BD2890 /* OptionButtonsModalView.swift */; };
+		0B072AB12BFBC8D800BD2890 /* ResponseModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B072AB02BFBC8D800BD2890 /* ResponseModalPresenter.swift */; };
 		0B07DEAB2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */; };
 		0B08AC042B9EBD2000DE6DF3 /* ContentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */; };
 		0B0DC87F2BC0843C009F12A6 /* LibraryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */; };
@@ -146,6 +148,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B072AAE2BFB954F00BD2890 /* OptionButtonsModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionButtonsModalView.swift; sourceTree = "<group>"; };
+		0B072AB02BFBC8D800BD2890 /* ResponseModalPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModalPresenter.swift; sourceTree = "<group>"; };
 		0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MiniPlayerStateMgt+Extension.swift"; sourceTree = "<group>"; };
 		0B08AC032B9EBD2000DE6DF3 /* ContentBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBuilder.swift; sourceTree = "<group>"; };
 		0B0DC87E2BC0843C009F12A6 /* LibraryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItemView.swift; sourceTree = "<group>"; };
@@ -425,6 +429,8 @@
 				0B07DEAA2BE4839300605AAE /* MiniPlayerStateMgt+Extension.swift */,
 				0BAC5FE02BE9CD7E00CFFA8E /* MiniPlayer+AudioPlay+Extension.swift */,
 				0B571CA62BF708A700E5BE50 /* OptionButtonsModal.swift */,
+				0B072AAE2BFB954F00BD2890 /* OptionButtonsModalView.swift */,
+				0B072AB02BFBC8D800BD2890 /* ResponseModalPresenter.swift */,
 			);
 			name = PlayerViews;
 			sourceTree = "<group>";
@@ -931,6 +937,7 @@
 				0B75880B2BE56DF300C837F6 /* ExplorePage.swift in Sources */,
 				0B2CFA742BCE3F5E0044F0AD /* MiniPlayer+Extension.swift in Sources */,
 				0B709EAA2BBE0140006C5E58 /* PlaylistHeaderView.swift in Sources */,
+				0B072AAF2BFB954F00BD2890 /* OptionButtonsModalView.swift in Sources */,
 				0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */,
 				0B45613B2BC7A5130040838C /* Homepage+Extension.swift in Sources */,
 				0B72143D2BCAB81E0030664F /* AudioContentPlayer.swift in Sources */,
@@ -944,6 +951,7 @@
 				0B5E0EF62BA9B274003C5406 /* QuizPlayerView.swift in Sources */,
 				0B2A87E72BAE09BD001571DD /* QuestionVisualizerMaker.swift in Sources */,
 				0BB9DE212B865885004F848A /* AudioQuizCollectionView.swift in Sources */,
+				0B072AB12BFBC8D800BD2890 /* ResponseModalPresenter.swift in Sources */,
 				0B493DDA2BE13F460090A60C /* QuizPlayerContextMenu.swift in Sources */,
 				0BCE72A12BA3642400A9E7D6 /* CurrentQuizView.swift in Sources */,
 				0B940DEB2BE5256700241FA8 /* QuizPlayerDetails.swift in Sources */,
