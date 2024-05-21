@@ -30,7 +30,6 @@ struct FullScreenQuizPlayer2: View {
     @Binding var presentMicModal: Bool
     @Binding var interactionState: InteractionState
     @Binding var questionTranscript: String
-    @Binding var powerSimulator: Float
     @Binding var expandSheet: Bool
     
     var onViewDismiss: () -> Void?
@@ -188,11 +187,6 @@ struct FullScreenQuizPlayer2: View {
     func playButtonIconSetter() -> Bool {
         return interactionState == .isNowPlaying || interactionState == .resumingPlayback
     }
-    
-    private func outputLevel() -> Double {
-        return Double(self.powerSimulator)
-    }
-    
     
     private func goToNextQuestion() {
         guard currentQuestionIndex + 1 <= quizSetter.quizQuestionCount - 1 else {
@@ -365,7 +359,7 @@ struct TranscriptView: View {
     let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
     quizSetter.configuration = config
     
-    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.awaitingResponse), questionTranscript: .constant("Hello Transcript"), powerSimulator: .constant(0.6),  expandSheet: .constant(false), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
+    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.awaitingResponse), questionTranscript: .constant("Hello Transcript"), expandSheet: .constant(false), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
         .environmentObject(user)
         .preferredColorScheme(.dark)
     

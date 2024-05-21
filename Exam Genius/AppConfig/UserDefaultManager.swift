@@ -8,6 +8,17 @@
 import Foundation
 
 class UserDefaultsManager {
+    static func activateHandsfree(activate: Bool) {
+        UserDefaults.standard.set(activate, forKey: "isHandfreeEnabled")
+    }
+    
+    static func setQuizVoice(voice: String) {
+        UserDefaults.standard.set(voice, forKey: "selectedVoice")
+    }
+    
+    static func setQuizMode(mode: String) {
+        UserDefaults.standard.set(mode, forKey: "quizMode")
+    }
     
     //TODO: Set at app launch
     static func setDefaultNumberOfTestQuestions() {
@@ -85,8 +96,20 @@ class UserDefaultsManager {
         return UserDefaults.standard.string(forKey: "userName") ?? ""
     }
     
+    static func selectedVoice() -> String {
+        return UserDefaults.standard.string(forKey: "selectedVoice") ?? ""
+    }
+    
+    static func quizMode() -> String {
+        return UserDefaults.standard.string(forKey: "quizMode") ?? ""
+    }
+    
     static func isStudyModeEnabled() -> Bool {
         return UserDefaults.standard.bool(forKey: "isStudyMode")
+    }
+    
+    static func isHandfreeEnabled() -> Bool {
+        return UserDefaults.standard.bool(forKey: "isHandfreeEnabled")
     }
     
     static func hasRecievedInvalidResponseAdvisory() -> Bool {

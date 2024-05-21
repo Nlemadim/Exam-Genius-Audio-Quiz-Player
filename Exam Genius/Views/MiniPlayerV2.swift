@@ -79,7 +79,6 @@ struct MiniPlayerV2: View {
                 presentMicModal: $presentMicModal,
                 interactionState: $configuration.interactionState,
                 questionTranscript: $interactionFeedbackMessage,
-                powerSimulator: $outputPower,
                 expandSheet: $expandSheet,
                 onViewDismiss: { /*expandSheet = false*/ },
                 playAction: { playAction() /*playPauseStop()*/ },
@@ -88,7 +87,7 @@ struct MiniPlayerV2: View {
             )
         }
         .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
-            MicModalView(
+            ResponseModalPresenter(
                 interactionState: $interactionState,
                 mainColor: generator.dominantBackgroundColor,
                 subColor: generator.dominantLightToneColor)

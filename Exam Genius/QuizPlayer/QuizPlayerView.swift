@@ -160,47 +160,52 @@ struct QuizPlayerView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        
-                        //Quiz Settings
-                        Picker("Quiz Settings", selection: $selectedVoice) {
-                            Text("Timed Quiz")
-                            Text("Study Mode")
-                            Text("Casual Quiz")
-                        }
-                        .pickerStyle(.menu)
-                        
-                        //Voice Settings
-                        Picker("Voice Selection", selection: $selectedVoice) {
-                            Text("Holly")
-                            Text("Shade")
-                            Text("Finn")
-                            Text("Randonmize")
-                        }
-                        .pickerStyle(.menu)
-                        
-                        //Number of Question Selection
-                        Picker("Number of Questions", selection: $selectedVoice) {
-                            Text("10")
-                            Text("15")
-                            Text("25")
-                            Text("25 - 50")
-                        }
-                        .pickerStyle(.menu)
-                        
-                        //Mic Use on/off
-                        Picker("Handsfree", selection: $selectedVoice) {
-                            Text("Microphone - On")
-                            Text("Off")
-                        }
-                        .pickerStyle(.menu)
-                        
-                        
-                    } label: {
-                        Image(systemName: "slider.horizontal.3")
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 20.0)
-                    }
+                    SettingsMenuView()
+                    //QuizPlayerSettingsMenu()
+//                    Menu {
+//                        
+//                        //Quiz Settings
+//                        Picker("Quiz Settings", selection: $selectedVoice) {
+//                           
+//                            HStack{
+//                                Text("Study Mode")
+//                                Image(systemName: "clock.fill")
+//                            }
+//                            Text("Casual Quiz")
+//                        }
+//                        .pickerStyle(.menu)
+//                        
+//                        //Voice Settings
+//                        Picker("Voice Selection", selection: $selectedVoice) {
+//                            Text("Holly")
+//                            Text("Shade")
+//                            Text("Finn")
+//                            Text("Randonmize")
+//                        }
+//                        .pickerStyle(.menu)
+//                        
+//                        //Number of Question Selection
+//                        Picker("Number of Questions", selection: $selectedVoice) {
+//                            Text("10")
+//                            Text("15")
+//                            Text("25")
+//                            Text("25 - 50")
+//                        }
+//                        .pickerStyle(.menu)
+//                        
+//                        //Mic Use on/off
+//                        Picker("Handsfree", selection: $selectedVoice) {
+//                            Text("Microphone - On")
+//                            Text("Off")
+//                        }
+//                        .pickerStyle(.menu)
+//                        
+//                        
+//                    } label: {
+//                        Image(systemName: "slider.horizontal.3")
+//                            .foregroundStyle(.white)
+//                            .padding(.horizontal, 20.0)
+//                    }
                 }
             }
         }
@@ -362,20 +367,20 @@ struct QuizPlayerView: View {
 
 
 
-//#Preview {
-//    let user = User()
-//    let appState = AppState()
-//    let observer = QuizPlayerObserver()
-//    let presentMgr = QuizViewPresentationManager()
-//    let audioQuiz = AudioQuizPackage(id: UUID(), name: "Quick Math", imageUrl: "Math-Exam")
-//    return QuizPlayerView()
-//        .environmentObject(user)
-//        .environmentObject(appState)
-//        .environmentObject(observer)
-//        .preferredColorScheme(.dark)
-//        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
-//    
-//}
+#Preview {
+    let user = User()
+    let appState = AppState()
+    let observer = QuizPlayerObserver()
+    let presentMgr = QuizViewPresentationManager()
+    let audioQuiz = AudioQuizPackage(id: UUID(), name: "Quick Math", imageUrl: "Math-Exam")
+    return QuizPlayerView()
+        .environmentObject(user)
+        .environmentObject(appState)
+        .environmentObject(observer)
+        .preferredColorScheme(.dark)
+        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
+    
+}
 
 
 
