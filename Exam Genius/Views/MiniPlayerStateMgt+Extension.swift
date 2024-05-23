@@ -59,6 +59,17 @@ extension MiniPlayerV2 {
         configuration.isSpeaking = activeStates.contains(interactionState)
     }
     
+    func selectResponseOption() {
+        let isHandsfreeEnabled = UserDefaultsManager.isHandfreeEnabled()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if isHandsfreeEnabled  {
+                self.interactionState = .isListening
+            } else {
+                self.interactionState = .awaitingResponse
+            }
+        }
+    }
+    
     func syncInteractionState(_ interactionState: InteractionState) {
         DispatchQueue.main.async {
             
@@ -67,11 +78,17 @@ extension MiniPlayerV2 {
             case .isDonePlaying://Triggered by QuestionPlayer/
                 self.startPlaying = false
                 intermissionPlayer.playListeningBell()
+                
+                //Mark New Method
+               // selectResponseOption()
+                
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .isListening
+                    selectResponseOption()
+                    self.interactionState = .awaitingResponse
                 }
 
-            case .hasResponded: //Triggered by response Listener after recording answer
+            case .hasResponded: //Triggered by response Listener & Options Button after recording or selecting answer
                 intermissionPlayer.playReceivedResponseBell()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .successfulResponse
@@ -116,7 +133,8 @@ extension MiniPlayerV2 {
             //startRecordingAnswerV2(answer: currentQuestions[currentQuestionIndex].options)
         
         case .successfulResponse:
-            analyseResponse()//Changes interaction to .isProcessing -> isCorrectAnswer OR isIncCorrectAnswer Or .errorResponse
+            validateResponse()
+            //analyseResponse()//Changes interaction to .isProcessing -> isCorrectAnswer OR isIncCorrectAnswer Or .errorResponse
             
         case .resumingPlayback:
             //self.interactionState = .idle
@@ -135,7 +153,7 @@ extension MiniPlayerV2 {
             
 //        case .isCorrectAnswer:
 //            proceedWithQuiz()
-            //setContinousPlayInteraction(learningMode: true) // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
+             // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
             
         case .playingFeedbackMessage:
             self.interactionState = interactionState
@@ -157,6 +175,20 @@ extension MiniPlayerV2 {
         default:
             break
        
+        }
+    }
+    
+    //Mark Modify method to check quiz Mode. Read answer, proceed to next question or stop
+    private func processQuizFlow() {
+        let isContinousPlayback = UserDefaultsManager.isContinousPlayEnabled()
+        //MARK: TODO - Conditional check for continous playback
+        if isContinousPlayback {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.interactionState = .resumingPlayback
+            }
+        } else {
+            stopAllAudio()
+            self.interactionState = .pausedPlayback
         }
     }
     

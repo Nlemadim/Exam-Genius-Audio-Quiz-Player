@@ -13,35 +13,49 @@ struct QuizPlayerDetails: View {
     //For Smooth Page Sliding Effect
     @Namespace var animation
     var body: some View {
-        NavigationView {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 0){
-                    HeaderView()
-                        
-                    
-                    //MARK: Pinned Header With Content
-                    LazyVStack(pinnedViews: [.sectionHeaders]) {
-                        Section {
-                            if currentPage == "Summary" {
-                                SummaryInfoView(highScore: 3, numberOfTestsTaken: 10)
-                                    .padding()
-                            }
+        
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack {
+                HeaderView()
+                
+                
+                //MARK: Pinned Header With Content
+                LazyVStack(pinnedViews: [.sectionHeaders]) {
+                    Section {
+                        if currentPage == "Summary" {
+                            SummaryInfoView(highScore: 3, numberOfTestsTaken: 10)
+                                .padding()
                             
-                            
-                        } header: {
-                            PinnedHeaderView()
                         }
+                        
+                    } header: {
+                        PinnedHeaderView()
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-//            .ignoresSafeArea(.all)
-            .ignoresSafeArea(.container, edges: .vertical)
-            .coordinateSpace(name: "SCROLL")
-            
         }
+        .navigationBarBackButtonHidden(true)
+        .ignoresSafeArea(.container, edges: .vertical)
+        .coordinateSpace(name: "SCROLL")
         
-        
-        
+        customBackButton
+            .frame(alignment: .bottom)
+            .padding()
+
+    }
+    
+    // Custom back button
+    private var customBackButton: some View {
+        Button(action: {
+            dismiss()
+        }) {
+            HStack {
+                Image(systemName: "x.circle")
+                Text("Dismiss")
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
     }
     
     @ViewBuilder
@@ -57,7 +71,7 @@ struct QuizPlayerDetails: View {
                 .frame(width: size.width, height: height, alignment: .top)
                 .overlay(content: {
                     ZStack(alignment: .bottom) {
-                        
+                       
                         //Dimming out text Content
                         LinearGradient(colors: [
                             .clear,

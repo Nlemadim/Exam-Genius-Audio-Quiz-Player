@@ -8,30 +8,30 @@
 import SwiftUI
 
 struct SummaryInfoView: View {
+    @State var userHighScore = UserDefaultsManager.userHighScore()
+    @State var quizzesCompleted = UserDefaultsManager.numberOfQuizSessions()
+    @State var totalAnsweredQuestions = UserDefaultsManager.numberOfQuizSessions()
     var highScore: CGFloat
     var numberOfTestsTaken: Int
     
     var body: some View {
-//        HeaderView(title: "Summary")
-//            //.padding(.horizontal)
-//            .padding(.bottom)
            VStack(spacing: 15) {
                scoreLabel(
                    withTitle: "High Score",
                    iconName: "trophy",
-                   score: getPercentage(score: Int(highScore))
+                   score: getPercentage(score: Int(userHighScore))
                )
 
                scoreLabel(
                    withTitle: "Quizzes",
                    iconName: "doc.questionmark",
-                   score: "\(numberOfTestsTaken)"
+                   score: "\(quizzesCompleted)"
                )
                
                scoreLabel(
                    withTitle: "Total Number of Questions",
                    iconName: "questionmark.circle",
-                   score: "\(numberOfTestsTaken)"
+                   score: "∞"
                )
                
                scoreLabel(

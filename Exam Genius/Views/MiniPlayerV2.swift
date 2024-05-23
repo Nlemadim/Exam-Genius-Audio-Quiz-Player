@@ -32,7 +32,7 @@ struct MiniPlayerV2: View {
     @State var expandSheet: Bool = false
     @Binding var interactionState: InteractionState
     @State var startPlaying: Bool = false
-    @State var outputPower: Float = 0.0
+    @State var selectedOptionButton: String? = nil
     @State var miniPlayerState: MiniPlayerState = .minimized
     
     @State var currentPlaylistItemIndex: Int = 0
@@ -48,6 +48,7 @@ struct MiniPlayerV2: View {
         _selectedQuizPackage = selectedQuizPackage
         _feedbackMessageUrls = feedbackMessageUrls
         _interactionState = interactionState
+        
         
         let sharedState = SharedQuizState()
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
@@ -75,7 +76,7 @@ struct MiniPlayerV2: View {
             FullScreenQuizPlayer2(
                 quizSetter: configuration,
                 currentQuestionIndex: .constant(currentQuestionIndex),
-                isCorrectAnswer: $isCorrectAnswer,
+                selectedOptionButton: $selectedOptionButton,
                 presentMicModal: $presentMicModal,
                 interactionState: $configuration.interactionState,
                 questionTranscript: $interactionFeedbackMessage,
@@ -87,11 +88,8 @@ struct MiniPlayerV2: View {
             )
         }
         .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
-            ResponseModalPresenter(
-                interactionState: $interactionState,
-                mainColor: generator.dominantBackgroundColor,
-                subColor: generator.dominantLightToneColor)
-                .presentationDetents([.height(110)])
+            ResponseModalPresenter(interactionState: $interactionState, selectedOption: $selectedOptionButton, mainColor: generator.dominantBackgroundColor, subColor: generator.enhancedDominantColor)
+                .presentationDetents([.height(140)])
         })
         .onAppear {
             setupViewConfigurations()
@@ -120,6 +118,9 @@ struct MiniPlayerV2: View {
         }
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
             syncInteractionState(newState)
+        }
+        .onChange(of: selectedOptionButton) { _, newOptionSelection in
+            registerSelectedOptionButton(newOptionSelection)
         }
         .onChange(of: interactionState) { _, newState in
             DispatchQueue.main.async {
@@ -171,6 +172,15 @@ struct MiniPlayerV2: View {
             .font(.footnote)
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private func registerSelectedOptionButton(_ selectedButtonOption: String?) {
+        guard selectedButtonOption != nil else { return }
+        DispatchQueue.main.async {
+            if let selectedButtonOption {
+                self.interactionState = .successfulResponse
+            }
+        }
     }
     
 //    private func updatePublishedQuestionIndex(value: Int) {
@@ -408,19 +418,41 @@ extension MiniPlayerV2 {
         
     }
     
-    
-    private func setContinousPlayInteraction(learningMode isEnabled: Bool) {
-        //MARK: TODO - Conditional check for continous playback
-        if isEnabled {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.interactionState = .resumingPlayback
+    //MARK: Step 3 Processes - Analyzing Response
+    func validateResponse() {
+        let response = self.selectedOptionButton ?? responseListener.userTranscript
+
+        guard !response.isEmptyOrWhiteSpace else {
+            if self.selectedOptionButton == nil {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.interactionState = .errorTranscription
+                }
             }
-        } else {
-            self.interactionState = .pausedPlayback
+            return
         }
+
+        guard response != "Invalid Response" else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.interactionState = .errorResponse
+            }
+            return
+        }
+
+        self.selectedOption = response
+        selectOption(self.selectedOption)
+        UserDefaultsManager.incrementTotalQuestionsAnswered()
     }
+
+    
+    
         
     //MARK: Steps 3: Analyse Response
+    private func analyseButtonResponse() {
+        guard !selectedOption.isEmptyOrWhiteSpace else { return }
+        selectOption(self.selectedOption)
+        UserDefaultsManager.incrementTotalQuestionsAnswered()
+        
+    }
     
     //MARK: Step 3 Processes  - Analyzing Answer
     func analyseResponse() {

@@ -8,9 +8,9 @@
 import Foundation
 
 class UserDefaultsManager {
-    static func activateHandsfree(activate: Bool) {
-        UserDefaults.standard.set(activate, forKey: "isHandfreeEnabled")
-    }
+//    static func activateHandsfree(activate: Bool) {
+//        UserDefaults.standard.set(activate, forKey: "isHandfreeEnabled")
+//    }
     
     static func setQuizVoice(voice: String) {
         UserDefaults.standard.set(voice, forKey: "selectedVoice")
@@ -21,11 +21,8 @@ class UserDefaultsManager {
     }
     
     //TODO: Set at app launch
-    static func setDefaultNumberOfTestQuestions() {
-        let defaultQuestions = 10
-        if UserDefaults.standard.object(forKey: "numberOfTestQuestions") == nil {
-            UserDefaults.standard.set(defaultQuestions, forKey: "numberOfTestQuestions")
-        }
+    static func setDefaultNumberOfTestQuestions(_ numberOfQuestions: Int) {
+        UserDefaults.standard.set(numberOfQuestions, forKey: "numberOfTestQuestions")
     }
     
     static func updateNumberOfGlobalGlobalTopics() {
@@ -72,6 +69,18 @@ class UserDefaultsManager {
         }
     }
     
+    static func enableContinousPlay(_ continousPlay: Bool) {
+        UserDefaults.standard.setValue(continousPlay, forKey: "continousPlayEnabled")
+    }
+    
+    static func enableHandsfree(_ micOn: Bool) {
+        UserDefaults.standard.setValue(micOn, forKey: "isHandfreeEnabled")
+    }
+    
+    static func enableQandA(_ isQandA: Bool) {
+        UserDefaults.standard.setValue(isQandA, forKey: "isQandAEnabled")
+    }
+    
     static func updateCurrentPosition(_ position: Int) {
         UserDefaults.standard.set(position, forKey: "quizCurrentPosition")
     }
@@ -112,12 +121,16 @@ class UserDefaultsManager {
         return UserDefaults.standard.bool(forKey: "isHandfreeEnabled")
     }
     
+    static func isQandAEnabled() -> Bool {
+        return UserDefaults.standard.bool(forKey: "isQandAEnabled")
+    }
+    
     static func hasRecievedInvalidResponseAdvisory() -> Bool {
         return UserDefaults.standard.bool(forKey: "hasRecievedInvalidResponseAdvisory")
     }
     
-    static func isOnContinuousFlow() -> Bool {
-        return UserDefaults.standard.bool(forKey: "isOnContinuousFlow")
+    static func isContinousPlayEnabled() -> Bool {
+        return UserDefaults.standard.bool(forKey: "continousPlayEnabled")
     }
     
     static func isTimerEnabled() -> Bool {

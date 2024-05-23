@@ -118,8 +118,6 @@ struct CircularOptionButton: View {
                     }.onEnded { value in
                         self.press.toggle()
                     }
-                    
-                
                 )
         )
     }

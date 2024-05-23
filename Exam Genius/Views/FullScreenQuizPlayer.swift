@@ -26,7 +26,7 @@ struct FullScreenQuizPlayer2: View {
     @State var optionD: String = ""
     @State var question: String = ""
     @Binding var currentQuestionIndex: Int
-    @Binding var isCorrectAnswer: Bool
+    @Binding var selectedOptionButton: String?
     @Binding var presentMicModal: Bool
     @Binding var interactionState: InteractionState
     @Binding var questionTranscript: String
@@ -72,14 +72,7 @@ struct FullScreenQuizPlayer2: View {
                                             .padding(.top, 2)
                                             .foregroundStyle(.primary)
                                             .hAlign(.leading)
-                                            .opacity(questionsComplete ? 0 : 1)
-                                        
-                                        Text("Quiz Complete")
-                                            .font(.subheadline)
-                                            .padding(.top, 2)
-                                            .foregroundStyle(.primary)
-                                            .hAlign(.leading)
-                                            .opacity(questionsComplete ? 1 : 0)
+
                                     }
                                 }
                                 .frame(height: 100)
@@ -156,16 +149,14 @@ struct FullScreenQuizPlayer2: View {
                 .background(generator.dominantBackgroundColor.gradient)
                 .onAppear {
                     generator.updateAllColors(fromImageNamed: quizSetter.configuration?.imageUrl ?? "IconImage")
-                    print("FullScreen Player Local index is at: \(self.currentQuestionIndex)")
                 }
                 .onChange(of: currentQuestionIndex) { _, _ in
                     checkQuizCompletion()
-                    print("FullScreen Player Local index is at: \(self.currentQuestionIndex)")
                 }
             }
             .sheet(isPresented: .constant(presentResponseModal()), content: {
-                ResponseModalPresenter(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
-                    .presentationDetents([.height(140)])
+                ResponseModalPresenter(interactionState: $interactionState, selectedOption: $selectedOptionButton, mainColor: generator.dominantBackgroundColor, subColor: generator.enhancedDominantColor)
+                    .presentationDetents([.height(150)])
 //                MicModalView(interactionState: $interactionState, mainColor: generator.dominantBackgroundColor, subColor: generator.dominantLightToneColor)
 //                    .presentationDetents([.height(100)])
             })
@@ -359,7 +350,7 @@ struct TranscriptView: View {
     let quizSetter = MiniPlayerV2.MiniPlayerV2Configuration(sharedState: sharedState)
     quizSetter.configuration = config
     
-    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), isCorrectAnswer: .constant(false), presentMicModal: .constant(false), interactionState: .constant(.awaitingResponse), questionTranscript: .constant("Hello Transcript"), expandSheet: .constant(false), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
+    return FullScreenQuizPlayer2(quizSetter: quizSetter, currentQuestionIndex: .constant(Int(curIndex)), selectedOptionButton: .constant(""), presentMicModal: .constant(false), interactionState: .constant(.awaitingResponse), questionTranscript: .constant("Hello Transcript"), expandSheet: .constant(false), onViewDismiss: {}, playAction: {}, nextAction: {}, recordAction: {})
         .environmentObject(user)
         .preferredColorScheme(.dark)
     

@@ -224,9 +224,10 @@ extension View {
     
     func lightBackgroundStyle() -> some View {
         self.background(
-            Circle()
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Material.ultraThin)
                 .environment(\.colorScheme, .light)
+                .padding()
         )
     }
 }

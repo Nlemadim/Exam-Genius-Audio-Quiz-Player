@@ -32,6 +32,7 @@ struct QuizPlayerView: View {
     @State var interactionState: InteractionState = .idle
     @State var audioQuiz: DownloadedAudioQuiz?
     @State var currentPerformance: [PerformanceModel] = []
+    @Binding var showSettings: Bool
     
     @State private var expandSheet: Bool = false
     @State var isPlaying: Bool = false
@@ -71,15 +72,24 @@ struct QuizPlayerView: View {
                                 .cornerRadius(20)
                                 .padding()
                             /**  user.selectedQuizPackage?.quizImage ??   user.selectedQuizPackage?.name ??*/
-                            Text(user.downloadedQuiz?.quizname ??  "Quiz Player")
-                                .lineLimit(2, reservesSpace: true)
-                                .multilineTextAlignment(.center)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.primary)
-                                .padding()
-                                .hAlign(.center)
-                                .frame(maxWidth: .infinity)
-                                .offset(y: -30)
+                            VStack(spacing: 0) {
+      
+                                Text(user.downloadedQuiz?.quizname ??  "Quiz Player")
+                                    .lineLimit(2, reservesSpace: true)
+                                    .multilineTextAlignment(.center)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.primary)
+                                    //.padding()
+                                    .hAlign(.center)
+                                    .frame(maxWidth: .infinity)
+                                    //.offset(y: -30)
+                                
+                                NavigationLink(destination: QuizPlayerDetails()) {
+                                    Image(systemName: "checklist.unchecked")
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal)
+                                }
+                            }
                         }
                         .frame(height: 280)
                         .padding()
@@ -88,24 +98,24 @@ struct QuizPlayerView: View {
                     }
                     .padding()
                     
-                    HStack {
-                        Text(quizPlayerObserver.playerState.status)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .padding(2)
-                            .padding(.horizontal)
-                            .padding([.leading, .trailing], 5)
-                            
-                        Spacer()
-                    }
-                    .padding(.horizontal)
+//                    HStack {
+//                        Text(quizPlayerObserver.playerState.status)
+//                            .font(.subheadline)
+//                            .fontWeight(.semibold)
+//                            .padding(2)
+//                            .padding(.horizontal)
+//                            .padding([.leading, .trailing], 5)
+//                            
+//                        Spacer()
+//                    }
+//                    .padding(.horizontal)
                     
                     Divider()
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
                     VStack {
-            
+                        
                         NowPlayingView(currentquiz: user.downloadedQuiz, quizPlayerObserver: quizPlayerObserver, generator: generator, questionCount: user.downloadedQuiz?.questions.count ?? 0, currentQuestionIndex: currentQuestionIndex, color: generator.dominantLightToneColor, interactionState: $interactionState, isDownloading: $isDownloading, playAction: {
                             if self.quizPlayerObserver.playerState == .endedQuiz || quizPlayerObserver.playerState == .idle {
                                 startPlayer()
@@ -147,9 +157,6 @@ struct QuizPlayerView: View {
             .onChange(of: downloadedAudioQuizCollection, { _, _ in
                 fetchUserQuizName()
             })
-//            .onChange(of: performanceCollection, { _, _ in
-//                loadUserPerformanceHistory()
-//            })
             .onChange(of: sharedInteractionState.interactionState) { _, newState in
                 DispatchQueue.main.async {
                     self.interactionState = newState
@@ -160,52 +167,20 @@ struct QuizPlayerView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    SettingsMenuView()
-                    //QuizPlayerSettingsMenu()
-//                    Menu {
-//                        
-//                        //Quiz Settings
-//                        Picker("Quiz Settings", selection: $selectedVoice) {
-//                           
-//                            HStack{
-//                                Text("Study Mode")
-//                                Image(systemName: "clock.fill")
-//                            }
-//                            Text("Casual Quiz")
-//                        }
-//                        .pickerStyle(.menu)
-//                        
-//                        //Voice Settings
-//                        Picker("Voice Selection", selection: $selectedVoice) {
-//                            Text("Holly")
-//                            Text("Shade")
-//                            Text("Finn")
-//                            Text("Randonmize")
-//                        }
-//                        .pickerStyle(.menu)
-//                        
-//                        //Number of Question Selection
-//                        Picker("Number of Questions", selection: $selectedVoice) {
-//                            Text("10")
-//                            Text("15")
-//                            Text("25")
-//                            Text("25 - 50")
-//                        }
-//                        .pickerStyle(.menu)
-//                        
-//                        //Mic Use on/off
-//                        Picker("Handsfree", selection: $selectedVoice) {
-//                            Text("Microphone - On")
-//                            Text("Off")
-//                        }
-//                        .pickerStyle(.menu)
-//                        
-//                        
-//                    } label: {
-//                        Image(systemName: "slider.horizontal.3")
-//                            .foregroundStyle(.white)
-//                            .padding(.horizontal, 20.0)
-//                    }
+                    NavigationLink(destination: QuizPlayerSettingsMenu(showSettings: $showSettings)) {
+                        Image(systemName: "slider.horizontal.3")
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 20.0)
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    VStack {
+                        Text("Now Playing")
+                            .font(.title3)
+                            .padding(.horizontal)
+                            .primaryTextStyleForeground()
+                    }
                 }
             }
         }
@@ -367,21 +342,21 @@ struct QuizPlayerView: View {
 
 
 
-#Preview {
-    let user = User()
-    let appState = AppState()
-    let observer = QuizPlayerObserver()
-    let presentMgr = QuizViewPresentationManager()
-    let audioQuiz = AudioQuizPackage(id: UUID(), name: "Quick Math", imageUrl: "Math-Exam")
-    return QuizPlayerView()
-        .environmentObject(user)
-        .environmentObject(appState)
-        .environmentObject(observer)
-        .preferredColorScheme(.dark)
-        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
-    
-}
-
+//#Preview {
+//    let user = User()
+//    let appState = AppState()
+//    let observer = QuizPlayerObserver()
+//    let presentMgr = QuizViewPresentationManager()
+//    let audioQuiz = AudioQuizPackage(id: UUID(), name: "Quick Math", imageUrl: "Math-Exam")
+//    return QuizPlayerView()
+//        .environmentObject(user)
+//        .environmentObject(appState)
+//        .environmentObject(observer)
+//        .preferredColorScheme(.dark)
+//        .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
+//    
+//}
+//
 
 
 struct NowPlayingView: View {

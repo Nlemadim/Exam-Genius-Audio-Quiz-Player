@@ -216,9 +216,9 @@
 		0B5E0EFB2BA9B431003C5406 /* MockQuestions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MockQuestions.json; sourceTree = "<group>"; };
 		0B5E0EFC2BA9B431003C5406 /* QuestionsJsonData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = QuestionsJsonData.json; sourceTree = "<group>"; };
 		0B5E0F002BA9B6D3003C5406 /* RelevantTopicsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelevantTopicsCard.swift; sourceTree = "<group>"; };
-		0B60B9112BFC0B220091F132 /* NumberOfQuestionsStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberOfQuestionsStepper.swift; sourceTree = "<group>"; };
+		0B60B9112BFC0B220091F132 /* NumberOfQuestionsStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NumberOfQuestionsStepper.swift; path = ../ModelViews/NumberOfQuestionsStepper.swift; sourceTree = "<group>"; };
 		0B60B9132BFC0C420091F132 /* HandsfreeToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandsfreeToggle.swift; sourceTree = "<group>"; };
-		0B60B9152BFC0CB40091F132 /* QuizPlayerSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizPlayerSettingsMenu.swift; sourceTree = "<group>"; };
+		0B60B9152BFC0CB40091F132 /* QuizPlayerSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = QuizPlayerSettingsMenu.swift; path = ../ModelViews/QuizPlayerSettingsMenu.swift; sourceTree = "<group>"; };
 		0B709EA32BBE006B006C5E58 /* PlayerBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackgroundView.swift; sourceTree = "<group>"; };
 		0B709EA52BBE00AB006C5E58 /* AudioQuizHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizHeaderView.swift; sourceTree = "<group>"; };
 		0B709EA72BBE00ED006C5E58 /* AudioQuizProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizProgressView.swift; sourceTree = "<group>"; };
@@ -350,9 +350,7 @@
 			children = (
 				0B072ABA2BFC084900BD2890 /* QuizModeToggle.swift */,
 				0B072ABC2BFC097B00BD2890 /* VoiceSelectionToggle.swift */,
-				0B60B9112BFC0B220091F132 /* NumberOfQuestionsStepper.swift */,
 				0B60B9132BFC0C420091F132 /* HandsfreeToggle.swift */,
-				0B60B9152BFC0CB40091F132 /* QuizPlayerSettingsMenu.swift */,
 			);
 			name = QuizPlayerMenu;
 			sourceTree = "<group>";
@@ -455,6 +453,8 @@
 			isa = PBXGroup;
 			children = (
 				0B5E0EF52BA9B274003C5406 /* QuizPlayerView.swift */,
+				0B60B9152BFC0CB40091F132 /* QuizPlayerSettingsMenu.swift */,
+				0B60B9112BFC0B220091F132 /* NumberOfQuestionsStepper.swift */,
 				0B8C9EEE2B9EC3820032AA80 /* QuizView.swift */,
 				0BD362152BB3C0A7006BD2B2 /* QuizPlayerViewExtensions.swift */,
 				0B940DEA2BE5256700241FA8 /* QuizPlayerDetails.swift */,

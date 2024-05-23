@@ -42,6 +42,7 @@ struct HomePage: View {
     
     @State var didTapDownload = false
     @State var expandSheet: Bool = false
+    @State var showSettings: Bool = false
     @State var isDownloading: Bool = false
     @State var didTapPlaySample: Bool = false
     @State var isDownloadingSample: Bool = false
@@ -108,7 +109,10 @@ struct HomePage: View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
-            
+            .sheet(isPresented: $showSettings) {
+                QuizPlayerSettingsMenu(showSettings: $showSettings)
+                    .presentationDetents([.large])
+            }
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -123,7 +127,7 @@ struct HomePage: View {
             }
             .tag(0)
 
-            QuizPlayerView()
+            QuizPlayerView(showSettings: $showSettings)
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -150,7 +154,7 @@ struct HomePage: View {
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
             BottomMiniPlayer()
-                .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
+                .opacity(keyboardObserver.isKeyboardVisible || showSettings == true ? 0 : 1)
         }
         .preferredColorScheme(.dark)
     }

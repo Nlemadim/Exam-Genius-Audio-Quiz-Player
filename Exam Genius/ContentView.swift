@@ -34,7 +34,7 @@ struct ContentView: View {
                 HomePage()
                 
             case .audioQuizSelected:
-                QuizPlayerView()
+                HomePage()
                 
             case .none:
                 LaunchPage()
@@ -48,7 +48,6 @@ struct ContentView: View {
             //            loadUserMainPackage()
             //            fetchDownloadedMainAudioQuiz()
         }
-        
     }
     
     private func loadMainDefaultCollection() async {
@@ -75,7 +74,6 @@ struct ContentView: View {
         
         try! modelContext.save()
     }
-    
     
     func loadUserMainPackage() {
         guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),

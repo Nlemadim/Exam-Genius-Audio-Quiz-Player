@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MicModalView: View {
     @Binding var interactionState: InteractionState
+    @State private var timerCountdown: Int = 5
+    @State private var isTimerActive: Bool = true
     var mainColor: Color
     var subColor: Color
     
@@ -20,11 +22,32 @@ struct MicModalView: View {
             }
             .padding(20)
             .padding(.horizontal)
+            
+           Text("Listening... \(timerCountdown)")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(mainColor.dynamicTextColor())
         
             Spacer()
         }
+        .onAppear {
+            startCountdown()
+        }
         .frame(maxWidth: .infinity)
         .background(mainColor)
+    }
+    
+    private func startCountdown() {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            withAnimation(.linear(duration: 1)) {
+                if self.timerCountdown > 0 {
+                    self.timerCountdown -= 1
+                } else {
+                    timer.invalidate()
+                    self.isTimerActive = false
+                }
+            }
+        }
     }
 }
 

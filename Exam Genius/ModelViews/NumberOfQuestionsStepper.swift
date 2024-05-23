@@ -12,13 +12,12 @@ struct NumberOfQuestionsStepper: View {
 
     var body: some View {
         VStack {
-            Text("Number of Questions")
-                .font(.headline)
             Stepper(value: $numberOfQuestions, in: 10...50, step: 5) {
                 Text("\(numberOfQuestions) Questions")
+                    .font(.subheadline)
             }
             .onChange(of: numberOfQuestions) {_, newValue in
-                //UserDefaultsManager.setNumberOfQuestions(newValue)
+                UserDefaultsManager.setDefaultNumberOfTestQuestions(newValue)
             }
         }
     }
