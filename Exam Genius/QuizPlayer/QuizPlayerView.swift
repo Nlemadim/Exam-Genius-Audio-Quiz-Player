@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-
 struct QuizPlayerView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var user: User
@@ -21,12 +20,6 @@ struct QuizPlayerView: View {
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     @Query(sort: \PerformanceModel.quizName) var performanceCollection: [PerformanceModel]
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
-    
-//    @Query(filter: #Predicate<DownloadedAudioQuiz> { audioQuiz in
-//        if audioQuiz.quizname.localizedStandardContains(userQuizName) {
-//            downloadedQuiz = audioQuiz
-//        }
-//    }, sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
     @State var interactionState: InteractionState = .idle
@@ -71,10 +64,10 @@ struct QuizPlayerView: View {
                                 .frame(width: 250, height: 250)
                                 .cornerRadius(20)
                                 .padding()
-                            /**  user.selectedQuizPackage?.quizImage ??   user.selectedQuizPackage?.name ??*/
+                            
                             VStack(spacing: 0) {
       
-                                Text(user.downloadedQuiz?.quizname ??  "Quiz Player")
+                                Text(user.downloadedQuiz?.quizname ??  "VOQA")
                                     .lineLimit(2, reservesSpace: true)
                                     .multilineTextAlignment(.center)
                                     .fontWeight(.bold)
@@ -82,13 +75,6 @@ struct QuizPlayerView: View {
                                     //.padding()
                                     .hAlign(.center)
                                     .frame(maxWidth: .infinity)
-                                    //.offset(y: -30)
-                                
-                                NavigationLink(destination: QuizPlayerDetails()) {
-                                    Image(systemName: "checklist.unchecked")
-                                        .foregroundStyle(.white)
-                                        .padding(.horizontal)
-                                }
                             }
                         }
                         .frame(height: 280)
@@ -97,18 +83,6 @@ struct QuizPlayerView: View {
                         .hAlign(.center)
                     }
                     .padding()
-                    
-//                    HStack {
-//                        Text(quizPlayerObserver.playerState.status)
-//                            .font(.subheadline)
-//                            .fontWeight(.semibold)
-//                            .padding(2)
-//                            .padding(.horizontal)
-//                            .padding([.leading, .trailing], 5)
-//                            
-//                        Spacer()
-//                    }
-//                    .padding(.horizontal)
                     
                     Divider()
                         .foregroundStyle(generator.dominantLightToneColor)
@@ -131,8 +105,11 @@ struct QuizPlayerView: View {
                         .foregroundStyle(generator.dominantLightToneColor)
                         .activeGlow(generator.dominantLightToneColor, radius: 1)
                     
-                    PerformanceHistoryGraph(history: performanceCollection, mainColor: generator.enhancedDominantColor, subColor: generator.enhancedDominantColor)
+                    PerformanceHistoryGraph(history: currentPerformance, mainColor: generator.enhancedDominantColor, subColor: generator.enhancedDominantColor)
                         .padding(.horizontal)
+                    
+                    
+                    //SummaryInfoView()
                     
                     Rectangle()
                         .fill(.black)
@@ -140,8 +117,8 @@ struct QuizPlayerView: View {
                 }
             }
             .onAppear {
-                fetchUserQuizName()
                 updateUserQuizSelection()
+                filterPerformanceCollection()
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
 
             }
@@ -154,9 +131,6 @@ struct QuizPlayerView: View {
                     print("QuizPlayer has Updated Player State")
                 }
             }
-            .onChange(of: downloadedAudioQuizCollection, { _, _ in
-                fetchUserQuizName()
-            })
             .onChange(of: sharedInteractionState.interactionState) { _, newState in
                 DispatchQueue.main.async {
                     self.interactionState = newState
@@ -175,16 +149,30 @@ struct QuizPlayerView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    VStack {
-                        Text("Now Playing")
-                            .font(.title3)
-                            .padding(.horizontal)
-                            .primaryTextStyleForeground()
-                    }
+                    Text("VOQA")
+                        .font(.title)
+                        .fontWeight(.black)
+                        .kerning(-0.5)
+                        .primaryTextStyleForeground()
                 }
             }
         }
     }
+    
+    private func filterPerformanceCollection() {
+        let quizName = UserDefaultsManager.quizName()
+        
+        // Filter the performanceCollection based on user's downloaded quiz name
+        let filteredPerformance = performanceCollection.filter { $0.quizName == quizName }
+        
+        // Sort the filtered collection by date in descending order
+        let sortedPerformance = filteredPerformance.sorted { $0.date > $1.date }
+        
+        // Limit the results to the seven most recent entries
+        currentPerformance = Array(sortedPerformance.prefix(7))
+        print("Loaded \(currentPerformance.count) performance records")
+    }
+
     
     private func syncQuizPlayerState(_ playerState: QuizPlayerState) {
         switch playerState {
@@ -224,13 +212,7 @@ struct QuizPlayerView: View {
         }
     }
     
-    func fetchUserQuizName() {
-        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName") else {
-            return
-        }
-        
-        updateUserQuizSelection()
-    }
+   
 
     
     private func updateUserQuizSelection() {
@@ -392,15 +374,15 @@ struct NowPlayingView: View {
             }
             
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 
-                Text(currentquiz?.quizname.uppercased() ?? "Empty")
-                    .font(.title3)
+                Text(currentquiz?.quizname.uppercased() ?? "VOQA")
+                    .font(.body)
                     .fontWeight(.semibold)
                 
                 
                 HStack(spacing: 12) {
-                    Text("Audio Quiz")
+                    Text(quizPlayerObserver.playerState.status)
                         .foregroundStyle(.secondary)
                         .font(.footnote)
                     
@@ -413,10 +395,15 @@ struct NowPlayingView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 
-                
-                DownloadAudioQuizButton(buttonAction: { playAction() }, buttonText: buttonText(), color: color)
-                    .padding(.top, 10)
-
+                HStack {
+                    
+                    VUMeterView(interactionState: .constant(.isNowPlaying))
+                    
+                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: generator.dominantBackgroundColor, playAction: {})
+                            .hAlign(.trailing)
+                            //.offset(y: 20)
+                }
+ 
             }
             .padding(.top, 5)
             .frame(height: 150)

@@ -164,7 +164,7 @@ struct CircularButton: View {
                 Image(systemName: imageLabel ?? "")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 22.5, height: 22.5)
+                    .frame(width: 25, height: 25)
             }
         }
         .frame(width: 50, height: 50)

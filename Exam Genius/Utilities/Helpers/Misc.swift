@@ -91,81 +91,120 @@ enum WordProcessorV2: String {
 }
 
 enum InteractionState {
-    case startedQuiz
-    case endedQuiz
-    case isNowPlaying
-    case isDonePlaying
-    case isListening
-    case isProcessing
-    case errorResponse
-    case awaitingResponse
-    case hasResponded
     case idle
-    case successfulResponse
-    case isCorrectAnswer
-    case isIncorrectAnswer
-    case errorTranscription
-    case successfulTranscription
-    case isDownloading
-    case finishedDownloading
+    
+    case startedQuiz
+    case isNowPlaying
     case pausedPlayback
     case resumingPlayback
+    case isDonePlaying
+    case endedQuiz
+    
+    case quizStartCountDown
+    case countingDownResponseTimer
+    
+    case isListening
+    case awaitingResponse
+    
+    case isProcessing
+    
+    case hasResponded
+    case noResponse
+    
+    case errorResponse
+    case successfulResponse
+    
+    case errorTranscription
+    case successfulTranscription
+    
+    case isCorrectAnswer
+    case isIncorrectAnswer
+    
+    case isDownloading
+    case finishedDownloading
+    
     case nowPlayingCorrection
     case isDonePlayingCorrection
+    
     case playingFeedbackMessage
     case donePlayingFeedbackMessage
+    
     case reviewing
     case doneReviewing
+    
     case playingErrorMessage
     case donePlayingErrorMessage
     
     
     var status: String {
         switch self {
+            
         case .isNowPlaying:
             return "Now Playing"
+            
         case .isListening:
             return "Listening"
+            
         case .errorResponse:
             return "Error Response"
+            
         case .hasResponded:
             return "Recieved Response"
+            
         case .idle:
             return "Ready"
+            
         case .isProcessing:
             return "Processing"
+            
         case .awaitingResponse:
-            return "Awaiting Response"
+            return "Select an option"
+            
         case .successfulResponse:
             return "Successfully Response"
+            
         case .isDonePlaying:
             return "Finished Playing"
+            
         case .isCorrectAnswer:
             return "Answer is correct"
+            
         case .isIncorrectAnswer:
             return "Answer is incorrect"
+            
         case .errorTranscription:
             return "Error Transcribing Response"
+            
         case .successfulTranscription:
             return "Response Transcribed"
+            
         case .isDownloading:
             return "Downloading"
+            
         case .finishedDownloading:
             return "Finished Downloading"
+            
         case .pausedPlayback:
             return "Paused Quiz"
+            
         case .resumingPlayback:
             return "Resuming Quiz"
+            
         case .nowPlayingCorrection:
             return "Playing Correction"
+            
         case .isDonePlayingCorrection:
             return "Done Playing Correction"
+            
         case .playingFeedbackMessage:
             return "Playing feedback message"
+            
         case .donePlayingFeedbackMessage:
             return "Done playing feedback message"
+            
         case .startedQuiz:
             return "Quiz in Progress"
+            
         case .endedQuiz:
             return "Quiz Complete"
             
@@ -180,6 +219,15 @@ enum InteractionState {
             
         case .donePlayingErrorMessage:
             return "Done playing error message"
+            
+        case .countingDownResponseTimer:
+            return "Choose your answer"
+            
+        case .noResponse:
+            return "No Response"
+            
+        case .quizStartCountDown:
+            return "Get Ready"
         }
     }
 }

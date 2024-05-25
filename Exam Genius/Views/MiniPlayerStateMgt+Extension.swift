@@ -53,22 +53,6 @@ extension MiniPlayerV2 {
         }
     }
     
-    func updateConfigurationState(interactionState: InteractionState) {
-        configuration.interactionState = interactionState
-        let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
-        configuration.isSpeaking = activeStates.contains(interactionState)
-    }
-    
-    func selectResponseOption() {
-        let isHandsfreeEnabled = UserDefaultsManager.isHandfreeEnabled()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if isHandsfreeEnabled  {
-                self.interactionState = .isListening
-            } else {
-                self.interactionState = .awaitingResponse
-            }
-        }
-    }
     
     func syncInteractionState(_ interactionState: InteractionState) {
         DispatchQueue.main.async {
@@ -78,14 +62,9 @@ extension MiniPlayerV2 {
             case .isDonePlaying://Triggered by QuestionPlayer/
                 self.startPlaying = false
                 intermissionPlayer.playListeningBell()
-                
-                //Mark New Method
-               // selectResponseOption()
-                
-                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    selectResponseOption()
-                    self.interactionState = .awaitingResponse
+                    prepareResponseInterface()
+                    //executeResponseSequence()
                 }
 
             case .hasResponded: //Triggered by response Listener & Options Button after recording or selecting answer
@@ -123,7 +102,6 @@ extension MiniPlayerV2 {
         }
     }
     
-    
     func interactionStateAction(_ interactionState: InteractionState) {
         print("iteractionStateAction is acting on \(interactionState) state")
         switch interactionState {
@@ -133,7 +111,7 @@ extension MiniPlayerV2 {
             //startRecordingAnswerV2(answer: currentQuestions[currentQuestionIndex].options)
         
         case .successfulResponse:
-            validateResponse()
+            executeSuccessfulResponseSequence()
             //analyseResponse()//Changes interaction to .isProcessing -> isCorrectAnswer OR isIncCorrectAnswer Or .errorResponse
             
         case .resumingPlayback:
@@ -141,33 +119,16 @@ extension MiniPlayerV2 {
            proceedWithQuiz()//Changes interaction to .nowPlaying
             
         case .errorResponse:
-            if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
-                playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
-                UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
-            } else {
-                playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseCallout)
-            }
+            executeErrorResponseSequence()
             
         case .isIncorrectAnswer:
-            playCorrectionAudio()//Changes interaction to .nowPlayingCorrection
-            
-//        case .isCorrectAnswer:
-//            proceedWithQuiz()
-             // Changes to resumingPlayback OR pausedPlayback based on User LearningMode Settings
+            executeIncorrectAnswerSequence()//Changes interaction to .nowPlayingCorrection or .resuming
             
         case .playingFeedbackMessage:
             self.interactionState = interactionState
             
         case .errorTranscription:
-            
-            if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
-                playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
-                UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
-            } else {
-                playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout)
-            }
-             // Changes to .playingFeedback
-            //MARK: TODO - Create Method to check for repeat listen settings
+            executeErrorTranscriptionSequence()
             
         case .endedQuiz:
             dismissAction()
@@ -176,6 +137,12 @@ extension MiniPlayerV2 {
             break
        
         }
+    }
+    
+    func updateConfigurationState(interactionState: InteractionState) {
+        configuration.interactionState = interactionState
+        let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
+        configuration.isSpeaking = activeStates.contains(interactionState)
     }
     
     //Mark Modify method to check quiz Mode. Read answer, proceed to next question or stop
@@ -189,6 +156,42 @@ extension MiniPlayerV2 {
         } else {
             stopAllAudio()
             self.interactionState = .pausedPlayback
+        }
+    }
+    
+    private func prepareResponseInterface() {
+        self.globalTimer.interactionState = .countingDownResponseTimer
+    }
+    
+    private func executeResponseSequence() {
+        selectResponsePresenter()
+        let isHandsfreeEnabled = UserDefaultsManager.isHandfreeEnabled()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if isHandsfreeEnabled  {
+                self.interactionState = .isListening
+            } else {
+                self.interactionState = .awaitingResponse
+            }
+        }
+    }
+    
+    func selectResponsePresenter() {
+        if expandSheet == false {
+            self.presentMiniModal = true
+        } else {
+            self.presentMiniModal = false
+        }
+    }
+    
+    func presentResponseInterface(_ interactionState: InteractionState) {
+        if interactionState == .countingDownResponseTimer {
+            executeResponseSequence()
+        }
+    }
+    
+    private func prepareForResponse() {
+        DispatchQueue.main.async {
+            self.interactionState = .countingDownResponseTimer 
         }
     }
     

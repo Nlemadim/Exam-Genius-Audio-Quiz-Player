@@ -10,6 +10,7 @@ import SwiftUI
 struct PlayerControlButtons: View {
     @Binding var interactionState: InteractionState
     @Binding var questionsComplete: Bool
+    let isHandsfree = false/*UserDefaultsManager.isHandfreeEnabled()*/
 
     var themeColor: Color?
     var recordAction: () -> Void
@@ -24,10 +25,10 @@ struct PlayerControlButtons: View {
                 CircularButton(
                     isPlaying: .constant(false),
                     isDownloading: .constant(false),
-                    imageLabel: "mic",
+                    imageLabel: isHandsfree ? "mic" : "abc",
                     color: themeColor ?? .clear,
                     buttonAction: { recordAction() })
-
+//"rectangle.and.hand.point.up.left.fill"
                 
                 CircularPlayButton(
                     interactionState: $interactionState,
@@ -40,9 +41,10 @@ struct PlayerControlButtons: View {
                 CircularButton(
                     isPlaying: .constant(false),
                     isDownloading: .constant(false),
-                    imageLabel: questionsComplete ? "stop.fill" : "forward.end.fill",
+                    imageLabel: questionsComplete ? "forward.end.fill" :"forward.fill" ,
                     color: themeColor ?? .clear,
                     buttonAction: { nextAction() })
+                .disabled(questionsComplete)
                 
             }
             .frame(maxWidth: .infinity)
@@ -59,20 +61,19 @@ struct MiniPlayerControlButtons: View {
     var repeatAction: () -> Void
     var playAction: () -> Void
     var nextAction: () -> Void
+    let isHandsfree = false //UserDefaultsManager.isHandfreeEnabled()
   
     var body: some View {
         VStack(spacing: 5) {
             
             HStack(spacing: 20) {
-                // Repeat Button
                 CircularButton(
                     isPlaying: .constant(false),
                     isDownloading: .constant(false),
-                    imageLabel: "mic",
+                    imageLabel: isHandsfree ? "mic" : "abc",
                     color: themeColor ?? .clear,
                     buttonAction: { repeatAction() })
 
-                
                 CircularPlayButton(
                     interactionState: $interactionState,
                     isDownloading: .constant(false),

@@ -20,7 +20,7 @@ struct MiniPlayerV2: View {
     @StateObject private var generator = ColorGenerator()
     @StateObject var audioContentPlayer = AudioContentPlayer()
     @StateObject var questionPlayer = QuestionPlayer()
-//    @StateObject private var intermissionPlayer = IntermissionPlayerV2()
+    @StateObject var globalTimer = GlobalTimer()
     @StateObject var intermissionPlayer = IntermissionPlayer()
 
     @StateObject var responseListener = ResponseListener()
@@ -34,6 +34,9 @@ struct MiniPlayerV2: View {
     @State var startPlaying: Bool = false
     @State var selectedOptionButton: String? = nil
     @State var miniPlayerState: MiniPlayerState = .minimized
+    @State var presentMiniModal: Bool = false
+    @State var mainThemeColor: Color = .themePurple
+    @State var subThemeColor: Color = .teal
     
     @State var currentPlaylistItemIndex: Int = 0
     @State var currentQuestionIndex: Int = 0
@@ -87,21 +90,25 @@ struct MiniPlayerV2: View {
                 recordAction: {  }
             )
         }
-        .sheet(isPresented: .constant(showMiniPlayerMicModal()), content: {
-            ResponseModalPresenter(interactionState: $interactionState, selectedOption: $selectedOptionButton, mainColor: generator.dominantBackgroundColor, subColor: generator.enhancedDominantColor)
+        .sheet(isPresented: $presentMiniModal) {
+            ResponseModalPresenter(interactionState: $interactionState, selectedOption: $selectedOptionButton, mainColor: mainThemeColor, subColor: subThemeColor)
                 .presentationDetents([.height(140)])
-        })
+        }
         .onAppear {
             setupViewConfigurations()
+            setThemeColors()
+            
             //debugReset()
-            print("MiniPlayer Local index is at: \(self.currentQuestionIndex)")
+        }
+        .onChange(of: expandSheet) { _, _ in
+            selectResponsePresenter()
         }
         .onChange(of: currentQuestionIndex) { _, newValue in
             updateQuestionScriptViewer()
-            print("MiniPlayer Local index is at: \(self.currentQuestionIndex)")
         }
         .onChange(of: user.downloadedQuiz) { _, newPackage in
             updateViewWithPackage(newPackage)
+            setThemeColors()
         }
         .onChange(of: configuration.currentQuizPackage) { _, newPackage in
             updateCurrentQuestions(newPackage)
@@ -122,6 +129,9 @@ struct MiniPlayerV2: View {
         .onChange(of: selectedOptionButton) { _, newOptionSelection in
             registerSelectedOptionButton(newOptionSelection)
         }
+        .onChange(of: globalTimer.interactionState) { _, newState in
+            presentResponseInterface(newState)
+        }
         .onChange(of: interactionState) { _, newState in
             DispatchQueue.main.async {
                 self.interactionStateAction(newState)
@@ -138,6 +148,16 @@ struct MiniPlayerV2: View {
             handleQuizObserverInteractionStateChange(newValue)
         }
     }
+    
+    
+    private func setThemeColors() {
+        generator.updateAllColors(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
+        DispatchQueue.main.async {
+            self.mainThemeColor = generator.dominantBackgroundColor
+            self.subThemeColor = generator.enhancedDominantColor
+        }
+    }
+    
     
     private func playAction() {
         if self.interactionState == .idle || self.interactionState == .pausedPlayback {
@@ -177,8 +197,11 @@ struct MiniPlayerV2: View {
     private func registerSelectedOptionButton(_ selectedButtonOption: String?) {
         guard selectedButtonOption != nil else { return }
         DispatchQueue.main.async {
-            if let selectedButtonOption {
+            if let selectedButtonOption, !selectedButtonOption.isEmptyOrWhiteSpace {
                 self.interactionState = .successfulResponse
+            } else {
+                //self.interactionState = .noResponse
+                //playFeedbacMessage(noResponseFeedback)
             }
         }
     }
@@ -342,17 +365,32 @@ extension MiniPlayerV2 {
         }
     }
     
-    //MARK: Step 2  - InteractionState Sync and Update
    
     
     //MARK: Step 2 Processes  - Record Answer
+    
+    
     func startRecordingAnswer() {
         self.responseListener.recordAnswer()
     }
     
-    func startRecordingAnswerV2(answer options: [String]) {
+    func presentOptionButtons() {
+        DispatchQueue.main.async {
+            self.interactionState = .awaitingResponse
+        }
+    }
+    
+    private func presentMic() {
+        DispatchQueue.main.async {
+            self.interactionState = .isListening
+        }
+    }
+    
+    private func startRecordingAnswerV2(answer options: [String]) {
         self.responseListener.recordAnswerV2(answer: options)
     }
+    
+    
     
     
     func resetQuizAndGetScore() {
@@ -364,9 +402,9 @@ extension MiniPlayerV2 {
         DispatchQueue.main.async {
             print("Reseting Quiz and Saving Score")
             self.correctAnswerCount = 0
-//            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
-//            UserDefaultsManager.updateCurrentPosition(0)
-//            UserDefaultsManager.incrementNumberOfQuizSessions()
+            UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
+            UserDefaultsManager.updateCurrentPosition(0)
+            UserDefaultsManager.incrementNumberOfQuizSessions()
             self.selectedQuizPackage?.quizzesCompleted += 1
             self.currentQuestions.forEach { question in
                 question.selectedOption = ""
@@ -377,7 +415,6 @@ extension MiniPlayerV2 {
     }
     
     
-    
 //    func prepareToUpdateAudioQuiz() async {
 //        guard let package = user.selectedQuizPackage, package.questions.count <= 100 else { return }
 //        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
@@ -385,41 +422,15 @@ extension MiniPlayerV2 {
 //    }
     
     
-    //MARK: TODO - Integrate Method For Continous Play Implementation
-    func updateAudioQuizQuestions() async {
-        let questionCount = UserDefaultsManager.numberOfTestQuestions()
-        
-        if let audioQuiz = user.selectedQuizPackage {
-            let newQuestions = audioQuiz.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
-            var questionsToDownload = newQuestions.shuffled()
-            
-            // Ensure we do not exceed the questionCount
-            if questionsToDownload.count > questionCount {
-                questionsToDownload = Array(questionsToDownload.prefix(questionCount))
-            }
-            
-            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-            await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
-            selectedQuizPackage?.questions = questionsToDownload
-            
-            DispatchQueue.main.async {
-                user.downloadedQuiz = self.selectedQuizPackage
-            }
-        }
-    }
     
-    //Mark: Redundant Method
-    func fetchQuizReview(review readOut: String) async -> String {
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        //let questions = audioQuiz.questions
-        let readOutUrl = await contentBuilder.downloadReadOut(readOut: readOut) ?? ""
-        
-        return readOutUrl
-        
-    }
+    
+  
     
     //MARK: Step 3 Processes - Analyzing Response
-    func validateResponse() {
+    func executeSuccessfulResponseSequence() {
+        if presentMiniModal {
+            self.presentMiniModal = false
+        }
         let response = self.selectedOptionButton ?? responseListener.userTranscript
 
         guard !response.isEmptyOrWhiteSpace else {
@@ -443,45 +454,14 @@ extension MiniPlayerV2 {
         UserDefaultsManager.incrementTotalQuestionsAnswered()
     }
 
-    
-    
-        
-    //MARK: Steps 3: Analyse Response
-    private func analyseButtonResponse() {
-        guard !selectedOption.isEmptyOrWhiteSpace else { return }
-        selectOption(self.selectedOption)
-        UserDefaultsManager.incrementTotalQuestionsAnswered()
-        
-    }
-    
-    //MARK: Step 3 Processes  - Analyzing Answer
-    func analyseResponse() {
-        let response = responseListener.userTranscript
-        
-        guard !response.isEmptyOrWhiteSpace  else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.interactionState = .errorTranscription
-            }
-            
-            return
-        }
-        
-        guard response != "Invalid Response" else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.interactionState = .errorResponse
-            }
-            
-            return
-        }
-        
-        self.selectedOption = response
-        selectOption(self.selectedOption)
-        UserDefaultsManager.incrementTotalQuestionsAnswered()
-    }
+//    private func analyseButtonResponse() {
+//        guard !selectedOption.isEmptyOrWhiteSpace else { return }
+//        selectOption(self.selectedOption)
+//        UserDefaultsManager.incrementTotalQuestionsAnswered()
+//    }
     
     //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
     private func selectOption(_ option: String) {
-
         DispatchQueue.main.async {
             print("Saving response")
             let currentQuestion = self.currentQuestions[self.currentQuestionIndex]
@@ -508,6 +488,18 @@ extension MiniPlayerV2 {
         }
     }
     
+    
+    
+    
+    //Mark: Redundant Method
+    func fetchQuizReview(review readOut: String) async -> String {
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        //let questions = audioQuiz.questions
+        let readOutUrl = await contentBuilder.downloadReadOut(readOut: readOut) ?? ""
+        
+        return readOutUrl
+    }
+    
     func isActivePlay() -> Bool {
         let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
         return activeStates.contains(self.interactionState)
@@ -520,6 +512,29 @@ extension MiniPlayerV2 {
     //MARK: FullScreen Player Observer
     func showMiniPlayerConfirmationModal()  -> Bool  {
         return expandSheet == false && interactionState == .hasResponded
+    }
+    
+    //MARK: TODO - Integrate Method For Continous Play Implementation
+    func updateAudioQuizQuestions() async {
+        let questionCount = UserDefaultsManager.numberOfTestQuestions()
+        
+        if let audioQuiz = user.selectedQuizPackage {
+            let newQuestions = audioQuiz.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
+            var questionsToDownload = newQuestions.shuffled()
+            
+            // Ensure we do not exceed the questionCount
+            if questionsToDownload.count > questionCount {
+                questionsToDownload = Array(questionsToDownload.prefix(questionCount))
+            }
+            
+            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+            await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
+            selectedQuizPackage?.questions = questionsToDownload
+            
+            DispatchQueue.main.async {
+                user.downloadedQuiz = self.selectedQuizPackage
+            }
+        }
     }
 }
 

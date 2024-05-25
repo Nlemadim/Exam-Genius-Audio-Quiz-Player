@@ -17,26 +17,29 @@ struct LaunchPage: View {
             NavigationStack {
                 ZStack {
                     VStack(spacing: 0) {
+                       
                         Image("Logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 280, alignment: .center)
+                            .frame(width: 150, alignment: .center)
                             .padding(.bottom, 30)
-                        Text("Exam Genius BETA")
+                        Text("voqa".uppercased())
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
+                            .kerning(-0.5)
+                        
+                        
                         ProgressView()
                             .foregroundStyle(.teal)
-                            .scaleEffect(2)
+                            .scaleEffect(1)
                             .padding(25)
                             .opacity(isLoadingDefaults ? 1 : 0)
+                           
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(
-                        Image("Logo")
-                            .offset(x: 160, y: 40)
-                            .blur(radius: 100)
+                        .black
                     )
                 }
             }

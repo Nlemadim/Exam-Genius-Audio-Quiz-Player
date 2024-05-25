@@ -40,27 +40,31 @@ struct QuizPlayerSettingsMenu: View {
                 ScrollView(showsIndicators: false) {
                     
                     VStack(spacing: 10) {
+                        
                         CustomSection(header: "Number of Questions") {
+                            //MARK: Number of Questions Stepper
                             NumberOfQuestionsStepper(numberOfQuestions: $numberOfQuestions)
                         }
                         
                         CustomSection(header: "Modes") {
-                            ToggleRow(label: "Standard Quiz", systemImage: "alarm.fill", isOn: $isStandardQuiz) {
-                                UserDefaultsManager.enableQandA($0)
-                            }
                             
-                            ToggleRow(label: "Q&A", systemImage: "book.fill", isOn: $isQandA) {
-                                UserDefaultsManager.enableQandA($0)
+                            //MARK: IsStandardQuiz Toggle (Changes isQandAEnabled to false)
+                            ToggleRow(label: "Standard Quiz", systemImage: "alarm.fill", isOn: $isStandardQuiz) {_ in
+                                
+                            }
+                            //MARK: isQandAEnabled Toggle (Changes isQandAEnabled)
+                            ToggleRow(label: "Q&A", systemImage: "book.fill", isOn: $isQandA) {_ in
                             }
                         }
                         
                         CustomSection(header: "Input Methods") {
-                            ToggleRow(label: "Buttons", systemImage: "rectangle.and.hand.point.up.left.fill", isOn: $isButtonTapMode) {
-                                UserDefaultsManager.enableHandsfree($0)
+                            
+                            //MARK: isButtonTapMode Toggle (Changes isMicrophoneOn to false)
+                            ToggleRow(label: "Buttons", systemImage: "rectangle.and.hand.point.up.left.fill", isOn: $isButtonTapMode) {_ in
                             }
                             
-                            ToggleRow(label: "Mic", systemImage: "mic.fill", isOn: $isMicrophoneOn) {
-                                UserDefaultsManager.enableHandsfree($0)
+                            //MARK: isMicrophoneOn Toggle (Changes isButtonTapMode)
+                            ToggleRow(label: "Mic", systemImage: "mic.fill", isOn: $isMicrophoneOn) {_ in
                             }
                         }
                         
@@ -68,10 +72,7 @@ struct QuizPlayerSettingsMenu: View {
                             ToggleRow(label: "Auto restart", systemImage: "repeat", isOn: $autoRestart) {
                                 UserDefaultsManager.enableContinousPlay($0)
                             }
-                            
-                            
                         }
-                        
                     }
                     .padding(.horizontal)
                     .padding(.top, 20)
@@ -81,23 +82,18 @@ struct QuizPlayerSettingsMenu: View {
                     }
                     .onChange(of: isQandA) { _, newValue in
                         setQuizMode(newValue)
+                        updateToggleView()
+                        UserDefaultsManager.enableQandA(newValue)
                     }
                     .onChange(of: isMicrophoneOn) { _, newValue in
                         setHandsfreeMode(newValue)
+                        UserDefaultsManager.enableHandsfree(newValue)
                     }
-                    .onChange(of: isStandardQuiz) { _, isStandardQuiz in
-                        if isStandardQuiz {
-                            DispatchQueue.main.async {
-                                self.isQandA = false
-                            }
-                        }
+                    .onChange(of: isStandardQuiz) { _, _ in
+                        updateToggleView()
                     }
-                    .onChange(of: isButtonTapMode) { _, isButtonTapMode in
-                        if isButtonTapMode {
-                            DispatchQueue.main.async {
-                                self.isMicrophoneOn = false
-                            }
-                        }
+                    .onChange(of: isButtonTapMode) { _, _ in
+                        updateToggleView()
                     }
                     .onDisappear {
                         DispatchQueue.main.async {
@@ -107,6 +103,27 @@ struct QuizPlayerSettingsMenu: View {
                 }
             }
             .foregroundStyle(.white)
+        }
+    }
+    
+    private func updateToggleView() {
+        DispatchQueue.main.async {
+            if self.isButtonTapMode == true {
+                self.isMicrophoneOn = false
+            }
+            
+            if self.isButtonTapMode == false {
+                self.isMicrophoneOn = true
+            }
+            
+            if self.isStandardQuiz == true {
+                self.isQandA = false
+            }
+            
+            if self.isStandardQuiz == false {
+                self.isQandA = true
+            }
+            
         }
     }
     
@@ -129,8 +146,6 @@ struct QuizPlayerSettingsMenu: View {
             }
         }
     }
-    
-    
 }
 
 

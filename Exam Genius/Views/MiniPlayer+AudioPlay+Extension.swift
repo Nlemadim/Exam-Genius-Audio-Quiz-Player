@@ -70,10 +70,6 @@ extension MiniPlayerV2 {
     func goToNextQuestion() {
         guard currentQuestions.indices.contains(self.currentQuestionIndex) else { return }
         
-//        self.intermissionPlayer.stopAndResetPlayer()
-//        self.audioContentPlayer.stopAndResetPlayer()
-//        self.questionPlayer.stopAndResetPlayer()
-
         currentQuestionIndex += 1
         
         print("Question Count\(self.currentQuestions.count) / CurrentIndex: \(self.currentQuestionIndex)")
@@ -89,6 +85,35 @@ extension MiniPlayerV2 {
         }
     }
     
+    func executeIncorrectAnswerSequence() {
+        let isQandA = UserDefaultsManager.isQandAEnabled()
+        if isQandA {
+            playCorrectionAudio()
+        } else {
+            DispatchQueue.main.async {
+                self.interactionState = .resumingPlayback
+            }
+        }
+    }
+    
+    func executeErrorResponseSequence() {
+        if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
+            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+            UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
+        } else {
+            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseCallout)
+        }
+    }
+    
+    func executeErrorTranscriptionSequence() {
+        if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
+            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+            UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
+        } else {
+            playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout)
+        }
+    }
+    
     func playCorrectionAudio() {
         DispatchQueue.main.async {
             self.interactionState = .nowPlayingCorrection
@@ -100,45 +125,7 @@ extension MiniPlayerV2 {
     }
     
     //MARK: Step 2 Processes - Continue Playing Method
-    private func continuePlaying() {
-        print("Continuation Condition Met")
-        
-        let currentQuestion = self.currentQuestions[self.currentQuestionIndex]
-        let audioFile = currentQuestion.questionAudio
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.interactionState = .isNowPlaying
-            questionPlayer.playAudioFile(audioFile)
-        }
-    }
-    
-    //MARK: Step 2 Processes - Continue Playing Logic
-//    func proceedWithQuiz() {
-//        //Refactor conditional statement
-//        if currentQuestions.indices.contains(currentQuestionIndex) {
-//            //goToNextQuestion()
-//            
-//            DispatchQueue.main.async {
-//                print("proceedWithQuiz func proceeding... CurrentIndex at: \(self.currentQuestionIndex)")
-//                self.currentQuestionIndex += 1
-//                print("proceedWithQuiz func has moved Local index to: \(self.currentQuestionIndex)")
-//                self.playQuestionAtIndex(index:  self.currentQuestionIndex)
-//            }
-//
-//            //self.continuePlaying()
-//            
-//        } else {
-//            DispatchQueue.main.async {
-//                self.interactionFeedbackMessage = "Quiz Complete!. Calculating score..."
-//            }
-//                playEndQuizFeedbackMessage(feedbackMessageUrls?.quizEndingMessage)
-//                //self.currentQuestionIndex = 0
-//                self.interactionState = .reviewing
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                    playQuizReview()
-//                }
-//        }
-//    }
+  
     
     func proceedWithQuiz() {
         // Add a guard statement to check if the currentQuestionIndex is less than or equal to the count of currentQuestions - 1
@@ -194,11 +181,11 @@ extension MiniPlayerV2 {
         self.interactionState = .idle
     }
     
-    func continueFromPause(state: InteractionState) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            playSingleQuizQuestion()
-        }
-    }
+//    func continueFromPause(state: InteractionState) {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            playSingleQuizQuestion()
+//        }
+//    }
     
     func playFeedbackMessage(_ messageUrl: String?) {
         if let feedbackMessageUrl = messageUrl {

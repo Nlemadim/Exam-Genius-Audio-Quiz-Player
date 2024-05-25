@@ -38,7 +38,7 @@ enum QuizPlayerState {
         case .endedQuiz:
             return "Quiz complete"
         case .idle:
-            return "Not Playing"
+            return "Start Quiz"
         case .donePlaying:
             return "done"
         case .isAwaitingResponse:

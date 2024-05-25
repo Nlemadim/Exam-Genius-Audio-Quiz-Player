@@ -83,6 +83,7 @@
 		0B7214412BCAE2B70030664F /* QuizViewPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7214402BCAE2B70030664F /* QuizViewPresentationManager.swift */; };
 		0B75880B2BE56DF300C837F6 /* ExplorePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B75880A2BE56DF300C837F6 /* ExplorePage.swift */; };
 		0B7618BB2B97CB03006C2985 /* AudioQuizResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7618BA2B97CB03006C2985 /* AudioQuizResponseModel.swift */; };
+		0B76D1F22C0196FC008087BA /* GlobalTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B76D1F12C0196FC008087BA /* GlobalTimer.swift */; };
 		0B7FF9F82BD02B5A001A1E05 /* IntermissionPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */; };
 		0B7FF9FA2BD02FBB001A1E05 /* softBell1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B7FF9F92BD02FBB001A1E05 /* softBell1.wav */; };
 		0B7FF9FD2BD02FE0001A1E05 /* errorBell1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */; };
@@ -231,6 +232,7 @@
 		0B7214402BCAE2B70030664F /* QuizViewPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewPresentationManager.swift; sourceTree = "<group>"; };
 		0B75880A2BE56DF300C837F6 /* ExplorePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorePage.swift; sourceTree = "<group>"; };
 		0B7618BA2B97CB03006C2985 /* AudioQuizResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioQuizResponseModel.swift; sourceTree = "<group>"; };
+		0B76D1F12C0196FC008087BA /* GlobalTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalTimer.swift; sourceTree = "<group>"; };
 		0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermissionPlayer.swift; sourceTree = "<group>"; };
 		0B7FF9F92BD02FBB001A1E05 /* softBell1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = softBell1.wav; sourceTree = "<group>"; };
 		0B7FF9FB2BD02FDF001A1E05 /* errorBell1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = errorBell1.wav; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 				0B7FF9F72BD02B5A001A1E05 /* IntermissionPlayer.swift */,
 				0BD93EDD2BD90B30001A58D6 /* VoiceFeedbackMessages.swift */,
 				0BFE30602BEBE25500AC18E3 /* VoiceFeedBack+Extensions.swift */,
+				0B76D1F12C0196FC008087BA /* GlobalTimer.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -990,6 +993,7 @@
 				0B72143D2BCAB81E0030664F /* AudioContentPlayer.swift in Sources */,
 				0B7618BB2B97CB03006C2985 /* AudioQuizResponseModel.swift in Sources */,
 				0B42E3D42B8CFF7900DC3565 /* NetworkService.swift in Sources */,
+				0B76D1F22C0196FC008087BA /* GlobalTimer.swift in Sources */,
 				0B571CA72BF708A700E5BE50 /* OptionButtonsModal.swift in Sources */,
 				0BBCBFAE2B86563E00E9B7A9 /* Exam_GeniusApp.swift in Sources */,
 				0B4ACCFD2B89A61500377BE7 /* SpeechManager.swift in Sources */,

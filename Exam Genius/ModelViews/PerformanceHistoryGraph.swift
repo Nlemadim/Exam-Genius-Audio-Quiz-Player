@@ -14,9 +14,11 @@ struct PerformanceHistoryGraph: View {
     
     var body: some View {
         HStack {
-            Text("Performance History")
-                .fontWeight(.bold)
+            
+            Text("Performance".uppercased())
                 .foregroundStyle(.primary)
+                .fontWeight(.bold)
+                .kerning(-0.5) // Reduces the default spacing between characters
             
             Spacer(minLength: 0)
         }

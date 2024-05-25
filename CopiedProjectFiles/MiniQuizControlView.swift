@@ -20,10 +20,10 @@ struct MiniQuizControlView: View {
     var body: some View {
         HStack(spacing: 20) {
             // Repeat Button
-            Button(action: recordAction) {
-                Image(systemName: "mic.circle")
-                    .font(.title2)
-            }
+//            Button(action: recordAction) {
+//                Image(systemName: "mic.circle")
+//                    .font(.title2)
+//            }
             
             // Play/Pause Button
             Button(action: {
@@ -31,7 +31,7 @@ struct MiniQuizControlView: View {
                 tappedPlay.toggle()
                 
             }) {
-                Image(systemName: isActivePlay() ? "pause.fill" : "play.fill")
+                Image(systemName: tappedPlay ? "pause.fill" : "play.fill")
                     .font(.title2)
             }
             .sensoryFeedback(.start, trigger: tappedPlay)
@@ -45,6 +45,11 @@ struct MiniQuizControlView: View {
         }
         .foregroundStyle(.white)
         .padding(.horizontal)
+        .onChange(of: interactionState) { _, _ in
+            if isActivePlay() == false {
+                tappedPlay = false
+            }
+        }
     }
     
     private func isActivePlay() -> Bool {

@@ -109,10 +109,6 @@ struct HomePage: View {
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
             }
-            .sheet(isPresented: $showSettings) {
-                QuizPlayerSettingsMenu(showSettings: $showSettings)
-                    .presentationDetents([.large])
-            }
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
@@ -147,14 +143,15 @@ struct HomePage: View {
         }
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
-            generator.updateDominantColor(fromImageNamed: backgroundImage)
+            generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
             updateCollections()
             navigateToPlayer()
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
-            BottomMiniPlayer()
-                .opacity(keyboardObserver.isKeyboardVisible || showSettings == true ? 0 : 1)
+            BottomMiniPlayer(color: generator.dominantBackgroundColor)
+                .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
+                
         }
         .preferredColorScheme(.dark)
     }
@@ -198,20 +195,16 @@ struct HomePage: View {
 //    }
     
     @ViewBuilder
-    private func BottomMiniPlayer() -> some View {
-        
+    private func BottomMiniPlayer(color: Color) -> some View {
         ZStack {
             Rectangle()
                 .fill(.clear)
                 .cornerRadius(10)
-                .background(LinearGradient(gradient: Gradient(colors: [generator.dominantBackgroundColor, .black, .black]), startPoint: .top, endPoint: .bottom))
+                .background(LinearGradient(gradient: Gradient(colors: [color, .black, .black]), startPoint: .top, endPoint: .bottom))
                 .overlay {
                     MiniPlayerV2(selectedQuizPackage: $user.downloadedQuiz, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, startPlaying: $isPlaying)
                         .padding(.bottom)
                 }
-        }
-        .onAppear {
-            generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
         }
         .overlay(alignment: .bottom, content: {
             Rectangle()

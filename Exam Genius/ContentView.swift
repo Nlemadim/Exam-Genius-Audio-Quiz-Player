@@ -45,6 +45,7 @@ struct ContentView: View {
             await loadMainVoiceFeedBackMessages()
         }
         .onAppear {
+            UserDefaultsManager.setDefaultResponseTime()
             //            loadUserMainPackage()
             //            fetchDownloadedMainAudioQuiz()
         }

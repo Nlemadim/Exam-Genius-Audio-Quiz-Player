@@ -37,6 +37,14 @@ class UserDefaultsManager {
         }
     }
     
+    static func updateResponseTime(_ responseTime: Int) {
+        UserDefaults.standard.set(responseTime, forKey: "responseTimeKey")
+    }
+    
+    static func setDefaultResponseTime() {
+        UserDefaults.standard.set(6, forKey: "responseTimeKey")
+    }
+    
     static func incrementNumberOfTestsTaken() {
         let currentCount = UserDefaults.standard.integer(forKey: "numberOfTestsTaken")
         UserDefaults.standard.set(currentCount + 1, forKey: "numberOfTestsTaken")
@@ -60,6 +68,10 @@ class UserDefaultsManager {
     static func incrementTotalQuestionsAnswered() {
         let currentCount = UserDefaults.standard.integer(forKey: "totalQuestionsAnswered")
         UserDefaults.standard.set(currentCount + 1, forKey: "totalQuestionsAnswered")
+    }
+    
+    static func resetNumberOfQuestionsAnswered() {
+        UserDefaults.standard.set(0, forKey: "totalQuestionsAnswered")
     }
     
     static func updateHighScore(_ score: Int) {
@@ -193,12 +205,17 @@ class UserDefaultsManager {
         return UserDefaults.standard.integer(forKey: "numberOfTestQuestions")
     }
     
-    static func nameOfTest() -> String {
-        return UserDefaults.standard.string(forKey: "nameOfTest") ?? ""
+    static func quizName() -> String {
+        return UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName") ?? "Unknown Quiz"
     }
     
     static func pointsPerQuestion() -> Int {
         return UserDefaults.standard.integer(forKey: "pointsPerQuestion")
+        
+    }
+    
+    static func responseTime() -> Int {
+        return UserDefaults.standard.integer(forKey: "responseTimeKey")
     }
     
     static func resetAllValues() {
