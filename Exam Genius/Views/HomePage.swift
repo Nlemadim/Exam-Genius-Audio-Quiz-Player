@@ -161,6 +161,7 @@ struct HomePage: View {
             self.themeSubColor = generator.dominantLightToneColor
             updateCollections()
             navigateToPlayer()
+            loadUserDetails()
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
@@ -182,6 +183,8 @@ struct HomePage: View {
             selectedTab = 1
         }
     }
+    
+    
 
     @ViewBuilder
     private func BottomMiniPlayer(color: Color) -> some View {

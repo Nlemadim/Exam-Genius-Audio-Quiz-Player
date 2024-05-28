@@ -196,7 +196,7 @@ extension ContentBuilder {
     
     func buildQuestionsOnly(examName: String) async throws -> Container {
         try await fetchAndStoreAllTopics(examName: examName)
-        let selectedTopics = selectRandomTopics(limit: 5)
+        let selectedTopics = selectRandomTopics(limit: 4)
         await downloadQuestionsForTopics(selectedTopics, examName: examName)
         return container
     }

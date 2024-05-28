@@ -10,9 +10,9 @@ import SwiftUI
 
 final class User: ObservableObject {
     @Published var userName: String = ""
+    @Published var currentUserQuiz: String = UserDefaultsManager.quizName()
     @Published var email: String = ""
-    @Published var accessKey: String = ""
-    @Published var isUsingMic: Bool = false
+    @Published var isUsingMic: Bool = UserDefaultsManager.isHandfreeEnabled()
     @Published var isSignedIn: Bool = false
     @Published var isFirstLaunch: Bool = true
     @Published var hasSelectedAudioQuiz: Bool = false
@@ -37,6 +37,7 @@ final class User: ObservableObject {
             
             // Save the name of the selected quiz package to UserDefaults only if it's not nil
             if let packageName = selectedQuizPackage?.name {
+                UserDefaultsManager.setQuizName(quizName: packageName)
                 UserDefaults.standard.set(packageName, forKey: "userSelectedPackageName")
             }
         }
@@ -48,8 +49,10 @@ final class User: ObservableObject {
             downloadedAudioQuiz = downloadedQuiz
             
             if let quizName = downloadedQuiz?.quizname {
+               
                 UserDefaults.standard.set(quizName, forKey: "userDownloadedAudioQuizName")
             }
         }
     }
+    
 }

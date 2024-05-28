@@ -24,7 +24,10 @@ struct LibraryPage: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach(audioQuizCollection.filter { !$0.questions.isEmpty }, id: \.self) { audioQuiz in
-                        MyLibraryItems(audioQuiz: audioQuiz)
+                        NavigationLink(destination: QuizPlayerDetails(didTapEdit: $didTapEdit)) {
+                            MyLibraryItems(audioQuiz: audioQuiz)
+                        }
+                        
                         Divider().padding()
                     }
                 }

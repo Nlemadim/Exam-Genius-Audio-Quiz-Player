@@ -30,11 +30,14 @@ struct MiniPlayerV2: View {
     
     @Binding var selectedQuizPackage: DownloadedAudioQuiz?
     @Binding var feedbackMessageUrls: FeedBackMessageUrls?
-    @State var expandSheet: Bool = false
+    @State var isQandA: Bool = UserDefaultsManager.isQandAEnabled()
+    
+    
     @Binding var interactionState: InteractionState
     @Binding var refreshQuiz: Bool
     @State var selectedOptionButton: String? = nil
    
+    @State var expandSheet: Bool = false
     @State var presentMiniModal: Bool = false
     @State var mainThemeColor: Color = .purple
     @State var subThemeColor: Color = .teal
@@ -95,9 +98,7 @@ struct MiniPlayerV2: View {
         .sheet(isPresented: .constant(presentMiniPlayerResponder())) {
             ResponseModalPresenter(interactionState: $interactionState, selectedOption: $selectedOptionButton, mainColor: mainThemeColor, subColor: subThemeColor)
                 .presentationDetents([.height(140)])
-                .onDisappear {
-                    presentMiniModal = false
-                }
+                
         }
         .onAppear {
             setupViewConfigurations()
@@ -196,14 +197,16 @@ struct MiniPlayerV2: View {
     }
     
     private func registerSelectedOptionButton(_ selectedButtonOption: String?) {
-        guard selectedButtonOption != nil else { return }
-        DispatchQueue.main.async {
-            if let selectedButtonOption, !selectedButtonOption.isEmptyOrWhiteSpace {
-                self.interactionState = .successfulResponse
-            } else {
-                //self.interactionState = .noResponse
-                //playFeedbacMessage(noResponseFeedback)
+        guard let selectedButton = selectedButtonOption, !selectedButton.isEmptyOrWhiteSpace else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.interactionState = .noResponse
             }
+            
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.interactionState = .successfulResponse
         }
     }
     
@@ -384,7 +387,7 @@ extension MiniPlayerV2 {
         }
     }
     
-    private func startRecordingAnswerV2(answer options: [String]) {
+    func startRecordingAnswerV2(answer options: [String]) {
         self.responseListener.recordAnswerV2(answer: options)
     }
     
@@ -417,16 +420,19 @@ extension MiniPlayerV2 {
 
         guard !response.isEmptyOrWhiteSpace else {
             if self.selectedOptionButton == nil {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.interactionState = .errorTranscription
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .noResponse
                 }
             }
             return
         }
 
-        guard response != "Invalid Response" else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.interactionState = .errorResponse
+        guard response != "Invalid Response" || response != "IncorrectAnswer" else {
+
+            //MARK:TODO Modify to NoResponse
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.interactionState = .isIncorrectAnswer
             }
             return
         }
@@ -455,7 +461,10 @@ extension MiniPlayerV2 {
                 self.correctAnswerCount += 1
                 self.interactionState = .isCorrectAnswer
                 
-                playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
+                if isQandA {
+                    playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
+                }
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                     self.interactionState = .resumingPlayback
                 }

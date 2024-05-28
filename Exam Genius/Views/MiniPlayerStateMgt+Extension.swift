@@ -69,6 +69,11 @@ extension MiniPlayerV2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .successfulResponse
                 }
+                
+            case .noResponse: //Triggered by response Listener & Options Button after recording or selecting answer
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .noResponse
+                }
             
             case .isDonePlayingCorrection: //Triggered by audioContentPlayer after Feedback play
                 self.intermissionPlayer.playErrorTranscriptionBell()
@@ -93,6 +98,12 @@ extension MiniPlayerV2 {
                     dismissAction()
                 }
                 
+            case .noResponse:
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.interactionState = .noResponse
+                   
+                }
+                
             default:
                 break
             }
@@ -104,8 +115,8 @@ extension MiniPlayerV2 {
         switch interactionState {
        
         case .isListening:
-            startRecordingAnswer() //Changes interaction to .isListening
-            //startRecordingAnswerV2(answer: currentQuestions[currentQuestionIndex].options)
+            //startRecordingAnswer() //Changes interaction to .isListening
+            startRecordingAnswerV2(answer: currentQuestions[currentQuestionIndex].options)
         
         case .successfulResponse:
             executeSuccessfulResponseSequence()
@@ -124,8 +135,11 @@ extension MiniPlayerV2 {
         case .playingFeedbackMessage:
             self.interactionState = interactionState
             
-        case .errorTranscription:
-            executeErrorTranscriptionSequence()
+//        case .errorTranscription:
+//            executeErrorTranscriptionSequence()
+            
+        case .noResponse:
+            executeErrorResponseSequence()
             
         case .endedQuiz:
             dismissAction()

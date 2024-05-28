@@ -39,8 +39,7 @@ struct QuizPlayerView: View {
     @State var currentQuestionIndex: Int = 0
     @State var userHighScore: Int = 0
     
-    @State var selectedVoice: String = "Holly"
-    
+    @State var quizName = UserDefaultsManager.quizName()
     let sharedInteractionState = SharedQuizState()
 
     var body: some View {
@@ -136,6 +135,9 @@ struct QuizPlayerView: View {
             .onChange(of: user.downloadedQuiz, { _, _ in
                 updateUserQuizSelection()
             })
+            .onChange(of: performanceCollection, { _, _ in
+                filterPerformanceCollection()
+            })
             .onChange(of: quizPlayerObserver.playerState) { _, newState in
                 DispatchQueue.main.async {
                     syncQuizPlayerState(newState)
@@ -146,9 +148,6 @@ struct QuizPlayerView: View {
                 DispatchQueue.main.async {
                     self.interactionState = newState
                 }
-            }
-            .onChange(of: audioQuizCollection) { newCollection, oldCollection in
-                updateAudioQuizCollectionIfNeeded(newCollection: newCollection, oldCollection: oldCollection)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -201,6 +200,7 @@ struct QuizPlayerView: View {
             self.interactionState = .isNowPlaying
         case .endedQuiz:
             self.interactionState = .isDonePlaying
+            filterPerformanceCollection()
         case .donePlaying:
             self.interactionState = .isDonePlaying
         case .pausedCurrentPlay:
@@ -234,22 +234,12 @@ struct QuizPlayerView: View {
 
     
     private func updateUserQuizSelection() {
-        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
-              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
-              !matchingQuizPackage.questions.isEmpty else {
-            user.downloadedQuiz = nil
-            return
-        }
-        
-        user.downloadedQuiz = matchingQuizPackage
-    
+        print(user.downloadedQuiz?.quizname ?? "No User Quiz selected")
+        guard let downloadedQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == self.quizName }), !downloadedQuiz.questions.isEmpty else { return }
+        user.downloadedQuiz = downloadedQuiz
     }
     
-//    private func loadUserPerformanceHistory() {
-//        guard user.downloadedQuiz != nil else { return }
-//        
-//        self.currentPerformance = performanceCollection.filter { $0.quizName == user.downloadedQuiz?.quizname }
-//    }
+    
     
     private func updateAudioQuizCollectionIfNeeded(newCollection: [AudioQuizPackage], oldCollection: [AudioQuizPackage]) {
         let newPackages = newCollection.filter { newPackage in

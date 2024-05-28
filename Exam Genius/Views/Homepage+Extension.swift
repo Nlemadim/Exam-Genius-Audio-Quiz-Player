@@ -141,6 +141,13 @@ extension HomePage {
         }
     }
     
+    func loadUserDetails() {
+        guard user.downloadedQuiz == nil else { return }
+        let quizName = UserDefaultsManager.quizName()
+        let userQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizName })
+        user.downloadedQuiz = userQuiz
+    }
+    
     
     func getFeedBackMessages() -> FeedBackMessageUrls {
         let userFeedbackMessages = voiceFeedbackMessages.first
@@ -210,6 +217,10 @@ extension HomePage {
         guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == quizName }) else { return }
         
         guard currentQuizPackage.questions.count <= 300 else { return }
+        
+        DispatchQueue.main.async {
+            print("Starting complete download process")
+        }
        
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
         
@@ -223,6 +234,7 @@ extension HomePage {
     }
     
     func refreshQuiz(_ refreshQuiz: Bool) {
+        print("Refresh Tapped")
         if refreshQuiz {
             Task {
                 await updateAudioQuizQuestions()
@@ -262,6 +274,7 @@ extension HomePage {
         
         // Update the UI on the main thread
         DispatchQueue.main.async {
+            print("Quiz Refreshed")
             self.refreshAudioQuiz = false
         }
     }

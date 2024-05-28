@@ -87,8 +87,7 @@ extension MiniPlayerV2 {
     }
     
     func executeIncorrectAnswerSequence() {
-        let isQandA = UserDefaultsManager.isQandAEnabled()
-        if isQandA {
+        if self.isQandA {
             playCorrectionAudio()
         } else {
             DispatchQueue.main.async {
@@ -106,14 +105,14 @@ extension MiniPlayerV2 {
         }
     }
     
-    func executeErrorTranscriptionSequence() {
-        if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
-            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
-            UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
-        } else {
-            playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout)
-        }
-    }
+//    func executeErrorTranscriptionSequence() {
+//        if !UserDefaultsManager.hasRecievedInvalidResponseAdvisory() {
+//            playErrorFeedbackMessage(feedbackMessageUrls?.invalidResponseUserAdvisory)
+//            UserDefaultsManager.updateRecievedInvalidResponseAdvisory()
+//        } else {
+//            playErrorFeedbackMessage(feedbackMessageUrls?.errorTranscriptionCallout)
+//        }
+//    }
     
     func playCorrectionAudio() {
         DispatchQueue.main.async {

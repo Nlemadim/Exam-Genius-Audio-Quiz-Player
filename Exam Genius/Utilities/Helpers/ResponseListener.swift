@@ -63,10 +63,33 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     }
     
     fileprivate func processTranscript(transcript: String) -> String {
-        //self.interactionState = .isProcessing
+        guard !transcript.isEmptyOrWhiteSpace else {
+            self.interactionState = .noResponse
+            return "No Response"
+        }
+        
         let processedTranscript = WordProcessor.processWords(from: transcript)
+        
+        
         return processedTranscript
     }
+    
+    fileprivate func processTranscriptV2(transcript: String, options: [String]) -> String {
+        guard !transcript.isEmptyOrWhiteSpace else {
+            self.interactionState = .noResponse
+            return "No Response"
+        }
+        
+        let processedTranscript = WordProcessorV2.processWords(from: transcript, comparedWords: options)
+        
+        guard processedTranscript != "Invalid Response" else {
+            self.interactionState = .isIncorrectAnswer
+            return "IncorrectAnswer"
+        }
+        
+        return processedTranscript
+    }
+
     
     
     fileprivate func startRecordingAndTranscribingV2(answers options: [String]) {
@@ -101,12 +124,7 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
         self.interactionState = .hasResponded
     }
     
-    fileprivate func processTranscriptV2(transcript: String, options: [String]) -> String {
-        //self.interactionState = .isProcessing
-        let processedTranscript = WordProcessorV2.processWords(from: transcript, comparedWords: options)
-        
-        return processedTranscript
-    }
+    
     
     func speechRecognitionTask(_ task: SFSpeechRecognitionTask, didFinishRecognition recognitionResult: SFSpeechRecognitionResult) {
         // This method is called when the speech recognizer successfully recognizes speech from the audio file.
