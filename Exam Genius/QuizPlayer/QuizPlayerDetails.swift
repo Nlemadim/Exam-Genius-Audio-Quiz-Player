@@ -10,6 +10,7 @@ import SwiftUI
 struct QuizPlayerDetails: View {
     @Environment(\.dismiss) private var dismiss
     @State var currentPage: String = "Summary"
+    @Binding var didTapEdit: Bool
     //For Smooth Page Sliding Effect
     @Namespace var animation
     var body: some View {
@@ -35,6 +36,12 @@ struct QuizPlayerDetails: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+        .onAppear(perform: {
+            didTapEdit = true
+        })
+        .onDisappear(perform: {
+            didTapEdit = false
+        })
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.container, edges: .vertical)
         .coordinateSpace(name: "SCROLL")
@@ -162,6 +169,6 @@ struct QuizPlayerDetails: View {
 }
 
 #Preview {
-    QuizPlayerDetails()
+    QuizPlayerDetails(didTapEdit: .constant(false))
         .preferredColorScheme(.dark)
 }

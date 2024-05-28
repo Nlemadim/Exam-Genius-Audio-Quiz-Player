@@ -25,17 +25,18 @@ struct MiniPlayerV2: View {
 
     @StateObject var responseListener = ResponseListener()
     @StateObject var configuration: MiniPlayerV2Configuration
+    @State var miniPlayerState: MiniPlayerState = .minimized
     @State var currentQuestions: [Question] = []
     
     @Binding var selectedQuizPackage: DownloadedAudioQuiz?
     @Binding var feedbackMessageUrls: FeedBackMessageUrls?
     @State var expandSheet: Bool = false
     @Binding var interactionState: InteractionState
-    @State var startPlaying: Bool = false
+    @Binding var refreshQuiz: Bool
     @State var selectedOptionButton: String? = nil
-    @State var miniPlayerState: MiniPlayerState = .minimized
+   
     @State var presentMiniModal: Bool = false
-    @State var mainThemeColor: Color = .themePurple
+    @State var mainThemeColor: Color = .purple
     @State var subThemeColor: Color = .teal
     
     @State var currentPlaylistItemIndex: Int = 0
@@ -47,11 +48,11 @@ struct MiniPlayerV2: View {
     @State var isCorrectAnswer: Bool = false
     @State var presentConfirmationModal: Bool = false
     
-    init(selectedQuizPackage: Binding<DownloadedAudioQuiz?>, feedbackMessageUrls: Binding<FeedBackMessageUrls?>, interactionState: Binding<InteractionState>, startPlaying: Binding<Bool>) {
+    init(selectedQuizPackage: Binding<DownloadedAudioQuiz?>, feedbackMessageUrls: Binding<FeedBackMessageUrls?>, interactionState: Binding<InteractionState>, refreshQuiz: Binding<Bool>) {
         _selectedQuizPackage = selectedQuizPackage
         _feedbackMessageUrls = feedbackMessageUrls
         _interactionState = interactionState
-        
+        _refreshQuiz = refreshQuiz
         
         let sharedState = SharedQuizState()
         _configuration = StateObject(wrappedValue: MiniPlayerV2Configuration(sharedState: sharedState))
@@ -73,6 +74,7 @@ struct MiniPlayerV2: View {
         .onTapGesture {
             withAnimation {
                 expandSheet.toggle()
+                presentMiniModal = false
             }
         }
         .fullScreenCover(isPresented: $expandSheet/*.constant(expandSheet == true)*/) {
@@ -84,24 +86,22 @@ struct MiniPlayerV2: View {
                 interactionState: $configuration.interactionState,
                 questionTranscript: $interactionFeedbackMessage,
                 expandSheet: $expandSheet,
-                onViewDismiss: { /*expandSheet = false*/ },
+                onViewDismiss: { selectResponsePresenter() },
                 playAction: { playAction() /*playPauseStop()*/ },
                 nextAction: { goToNextQuestion() },
                 recordAction: {  }
             )
         }
-        .sheet(isPresented: $presentMiniModal) {
+        .sheet(isPresented: .constant(presentMiniPlayerResponder())) {
             ResponseModalPresenter(interactionState: $interactionState, selectedOption: $selectedOptionButton, mainColor: mainThemeColor, subColor: subThemeColor)
                 .presentationDetents([.height(140)])
+                .onDisappear {
+                    presentMiniModal = false
+                }
         }
         .onAppear {
             setupViewConfigurations()
             setThemeColors()
-            
-            //debugReset()
-        }
-        .onChange(of: expandSheet) { _, _ in
-            selectResponsePresenter()
         }
         .onChange(of: currentQuestionIndex) { _, newValue in
             updateQuestionScriptViewer()
@@ -160,6 +160,7 @@ struct MiniPlayerV2: View {
     
     
     private func playAction() {
+        selectResponsePresenter()
         if self.interactionState == .idle || self.interactionState == .pausedPlayback {
             startOrContinue()
         } else {
@@ -322,7 +323,7 @@ extension MiniPlayerV2 {
         }
     }
    
-    //error point
+   
     
     var transcript: String {
         return """
@@ -366,10 +367,7 @@ extension MiniPlayerV2 {
     }
     
    
-    
     //MARK: Step 2 Processes  - Record Answer
-    
-    
     func startRecordingAnswer() {
         self.responseListener.recordAnswer()
     }
@@ -389,9 +387,6 @@ extension MiniPlayerV2 {
     private func startRecordingAnswerV2(answer options: [String]) {
         self.responseListener.recordAnswerV2(answer: options)
     }
-    
-    
-    
     
     func resetQuizAndGetScore() {
         let score = calculatedScore(correctAnswers: self.correctAnswerCount, totalQuestions: self.currentQuestions.count)
@@ -413,24 +408,11 @@ extension MiniPlayerV2 {
             }
         }
     }
-    
-    
-//    func prepareToUpdateAudioQuiz() async {
-//        guard let package = user.selectedQuizPackage, package.questions.count <= 100 else { return }
-//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-//        
-//    }
-    
-    
-    
-    
-  
+
     
     //MARK: Step 3 Processes - Analyzing Response
     func executeSuccessfulResponseSequence() {
-        if presentMiniModal {
-            self.presentMiniModal = false
-        }
+        resetMiniplayerResponsePresenter() 
         let response = self.selectedOptionButton ?? responseListener.userTranscript
 
         guard !response.isEmptyOrWhiteSpace else {
@@ -454,11 +436,11 @@ extension MiniPlayerV2 {
         UserDefaultsManager.incrementTotalQuestionsAnswered()
     }
 
-//    private func analyseButtonResponse() {
-//        guard !selectedOption.isEmptyOrWhiteSpace else { return }
-//        selectOption(self.selectedOption)
-//        UserDefaultsManager.incrementTotalQuestionsAnswered()
-//    }
+    private func resetMiniplayerResponsePresenter() {
+        if presentMiniModal {
+            self.presentMiniModal = false
+        }
+    }
     
     //MARK: Step 3 Processes  - Selecting Option and Advancing interactionState to responded or errorResponse
     private func selectOption(_ option: String) {
@@ -506,36 +488,17 @@ extension MiniPlayerV2 {
     }
     
     //MARK: FullScreen Player Observer
-    func showMiniPlayerMicModal() -> Bool {
-        return expandSheet == false && interactionState == .isListening
+    func presentMiniPlayerResponder() -> Bool {
+        return expandSheet == false && interactionState == .isListening || interactionState == .awaitingResponse
     }
+    
     //MARK: FullScreen Player Observer
     func showMiniPlayerConfirmationModal()  -> Bool  {
         return expandSheet == false && interactionState == .hasResponded
     }
     
     //MARK: TODO - Integrate Method For Continous Play Implementation
-    func updateAudioQuizQuestions() async {
-        let questionCount = UserDefaultsManager.numberOfTestQuestions()
-        
-        if let audioQuiz = user.selectedQuizPackage {
-            let newQuestions = audioQuiz.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
-            var questionsToDownload = newQuestions.shuffled()
-            
-            // Ensure we do not exceed the questionCount
-            if questionsToDownload.count > questionCount {
-                questionsToDownload = Array(questionsToDownload.prefix(questionCount))
-            }
-            
-            let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-            await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
-            selectedQuizPackage?.questions = questionsToDownload
-            
-            DispatchQueue.main.async {
-                user.downloadedQuiz = self.selectedQuizPackage
-            }
-        }
-    }
+
 }
 
 @Observable class SharedQuizState {

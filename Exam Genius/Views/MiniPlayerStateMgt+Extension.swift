@@ -31,7 +31,7 @@ extension MiniPlayerV2 {
             self.interactionFeedbackMessage = "\(self.selectedOption) is correct"
             
         case .isIncorrectAnswer:
-            self.interactionFeedbackMessage = "Incorrect!\n The correct option is \(self.currentQuestions[self.currentQuestionIndex].correctOption)"
+            self.interactionFeedbackMessage = "Incorrect!\nThe correct option is \(self.currentQuestions[self.currentQuestionIndex].correctOption)"
         
         case .nowPlayingCorrection:
             self.interactionFeedbackMessage = self.currentQuestions[self.currentQuestionIndex].questionNote
@@ -40,10 +40,8 @@ extension MiniPlayerV2 {
             self.interactionFeedbackMessage = "Moving on..."
             
         case .reviewing:
-            self.interactionFeedbackMessage = "Calculating your score"
-            
-        case.doneReviewing:
             self.interactionFeedbackMessage = scoreReadout()
+            
             
         case.pausedPlayback:
             self.interactionFeedbackMessage = "Resume?"
@@ -60,7 +58,6 @@ extension MiniPlayerV2 {
             switch interactionState {
                 
             case .isDonePlaying://Triggered by QuestionPlayer/
-                self.startPlaying = false
                 intermissionPlayer.playListeningBell()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     prepareResponseInterface()
@@ -176,10 +173,12 @@ extension MiniPlayerV2 {
     }
     
     func selectResponsePresenter() {
-        if expandSheet == false {
-            self.presentMiniModal = true
-        } else {
-            self.presentMiniModal = false
+        DispatchQueue.main.async {
+            if expandSheet   {
+                self.presentMiniModal = false
+            } else if !expandSheet && quizPlayerObserver.playerState == .startedPlayingQuiz || quizPlayerObserver.playerState == .pausedCurrentPlay {
+                self.presentMiniModal = true
+            }
         }
     }
     

@@ -56,10 +56,10 @@ struct LibraryItemView: View {
                         .font(.footnote)
                         .hAlign(.leading)
                         
-                        VUMeterView(interactionState: $interactionState)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .opacity(interactionState == .isNowPlaying ? 1 : 0)
+//                        VUMeterView(interactionState: interactionState)
+//                            .font(.footnote)
+//                            .foregroundStyle(.secondary)
+//                            .opacity(interactionState == .isNowPlaying ? 1 : 0)
                     }
                     .onChange(of: interactionState) { _, interactionState in
                         updateButtonState(interactionState)

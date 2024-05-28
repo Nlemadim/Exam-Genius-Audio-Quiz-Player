@@ -16,7 +16,6 @@ struct QuizPlayerSettingsMenu: View {
     @State private var autoRestart: Bool = UserDefaultsManager.isContinousPlayEnabled()
     @State private var isStandardQuiz: Bool = false
     @State private var isButtonTapMode: Bool = true
-    @Binding var showSettings: Bool
     
     var body: some View {
         NavigationView {
@@ -95,11 +94,7 @@ struct QuizPlayerSettingsMenu: View {
                     .onChange(of: isButtonTapMode) { _, _ in
                         updateToggleView()
                     }
-                    .onDisappear {
-                        DispatchQueue.main.async {
-                            self.showSettings = false
-                        }
-                    }
+        
                 }
             }
             .foregroundStyle(.white)
@@ -150,7 +145,7 @@ struct QuizPlayerSettingsMenu: View {
 
 
 #Preview {
-    QuizPlayerSettingsMenu(showSettings: .constant(false))
+    QuizPlayerSettingsMenu()
         .preferredColorScheme(.dark)
 }
 

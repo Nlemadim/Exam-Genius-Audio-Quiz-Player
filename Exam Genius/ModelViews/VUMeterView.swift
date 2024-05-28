@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 struct VUMeterView: View {
-    @Binding var interactionState: InteractionState
+    @Binding var interactionState: QuizPlayerState
     @State private var randomScales: [CGFloat] = Array(repeating: 0.01, count: 6)
     private let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
 
@@ -26,7 +26,7 @@ struct VUMeterView: View {
             }
         }
         .onReceive(timer) { _ in
-            if interactionState == .isNowPlaying {
+            if interactionState == .startedPlayingQuiz {
                 // Randomize the scale for each bar to simulate activity
                 withAnimation {
                     randomScales = randomScales.map { _ in CGFloat.random(in: 0.1...1.0) }
@@ -34,7 +34,7 @@ struct VUMeterView: View {
             } else {
                 // Reset the scale to minimum when not playing
                 withAnimation {
-                    randomScales = Array(repeating: 0.01, count: 6)
+                    randomScales = Array(repeating: 0.01, count: 4)
                 }
             }
         }
@@ -45,6 +45,6 @@ struct VUMeterView: View {
 }
 
 #Preview {
-    VUMeterView(interactionState: .constant(.isNowPlaying))
+    VUMeterView(interactionState: .constant(.startedPlayingQuiz))
         .preferredColorScheme(.dark)
 }

@@ -16,18 +16,25 @@ struct ResponseModalPresenter: View {
     var body: some View {
         VStack {
             Spacer()
-            
-            switch interactionState {
-            case .isListening:
+            if interactionState == .isListening {
                 MicModalView(interactionState: $interactionState, mainColor: mainColor, subColor: subColor)
-                
-            case .awaitingResponse:
-                OptionButtonsModalView(selectedOption: $selectedOption, mainThemeColor: mainColor, selectionThemeColor: subColor)
-                
-            default:
-                EmptyView()
-                
             }
+            
+            if interactionState == .awaitingResponse {
+                OptionButtonsModalView(selectedOption: $selectedOption, mainThemeColor: mainColor, selectionThemeColor: subColor)
+            }
+            
+//            switch interactionState {
+//            case .isListening:
+//                MicModalView(interactionState: $interactionState, mainColor: mainColor, subColor: subColor)
+//                
+//            case .awaitingResponse:
+//                OptionButtonsModalView(selectedOption: $selectedOption, mainThemeColor: mainColor, selectionThemeColor: subColor)
+//                
+//            default:
+//                EmptyView()
+//                
+//            }
         }
         .frame(maxWidth: .infinity)
         .background(mainColor)

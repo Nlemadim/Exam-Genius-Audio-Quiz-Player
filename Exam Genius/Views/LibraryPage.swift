@@ -15,6 +15,7 @@ struct LibraryPage: View {
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
     @Binding var selectedQuizPackage: AudioQuizPackage?
+    @Binding var didTapEdit: Bool
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
@@ -79,7 +80,7 @@ struct LibraryPage: View {
             }
             
             NavigationLink {
-                QuizPlayerDetails()
+                QuizPlayerDetails(didTapEdit: $didTapEdit)
             } label: {
                 Image(systemName: "ellipsis")
                     .foregroundStyle(.white)

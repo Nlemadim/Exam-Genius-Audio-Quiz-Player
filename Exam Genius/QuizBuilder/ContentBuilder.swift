@@ -196,8 +196,14 @@ extension ContentBuilder {
     
     func buildQuestionsOnly(examName: String) async throws -> Container {
         try await fetchAndStoreAllTopics(examName: examName)
-        let selectedTopics = selectRandomTopics(limit: 3)
+        let selectedTopics = selectRandomTopics(limit: 5)
         await downloadQuestionsForTopics(selectedTopics, examName: examName)
+        return container
+    }
+    
+    func buildCompletePackage(examName: String, topics: [Topic]) async throws -> Container {
+        let numberPerTopic = 5
+        await downloadCompleteQuestionsForAllTopics(topics, examName: examName, number: numberPerTopic)
         return container
     }
     
@@ -220,6 +226,39 @@ extension ContentBuilder {
                 group.addTask {
                     do {
                         let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: 1)
+                        // Processing each question data object
+                        questionDataArray.forEach { questionDataObject in
+                            let questions = questionDataObject.questions.map { questionData in
+                                Question(
+                                    id: UUID(),
+                                    topic: topic.name,
+                                    questionContent: questionData.question,
+                                    options: [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d],
+                                    correctOption: questionData.correctOption,
+                                    questionNote: questionData.overview
+                                )
+                            }
+                            
+                            DispatchQueue.main.async {
+                                // Append directly to the container questions
+                                self.container.questions.append(contentsOf: questions)
+                                print("Downloaded questions for topic: \(topic.name)")
+                            }
+                        }
+                    } catch {
+                        print("Failed to download questions for topic: \(topic.name), error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    private func downloadCompleteQuestionsForAllTopics(_ topics: [Topic], examName: String, number: Int) async {
+        await withTaskGroup(of: Void.self) { group in
+            for topic in topics {
+                group.addTask {
+                    do {
+                        let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: number)
                         // Processing each question data object
                         questionDataArray.forEach { questionDataObject in
                             let questions = questionDataObject.questions.map { questionData in

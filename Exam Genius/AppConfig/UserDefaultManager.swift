@@ -16,6 +16,10 @@ class UserDefaultsManager {
         UserDefaults.standard.set(voice, forKey: "selectedVoice")
     }
     
+    static func setQuizName(quizName: String) {
+        UserDefaults.standard.set(quizName, forKey: "quizName")
+    }
+    
     static func setQuizMode(mode: String) {
         UserDefaults.standard.set(mode, forKey: "quizMode")
     }

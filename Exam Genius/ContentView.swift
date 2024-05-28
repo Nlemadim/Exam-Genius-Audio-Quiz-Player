@@ -46,8 +46,8 @@ struct ContentView: View {
         }
         .onAppear {
             UserDefaultsManager.setDefaultResponseTime()
-            //            loadUserMainPackage()
-            //            fetchDownloadedMainAudioQuiz()
+            loadUserMainPackage()
+            fetchDownloadedMainAudioQuiz()
         }
     }
     
@@ -77,25 +77,27 @@ struct ContentView: View {
     }
     
     func loadUserMainPackage() {
-        guard let userPackageName = UserDefaults.standard.string(forKey: "userSelectedPackageName"),
-              let matchingQuizPackage = audioQuizCollection.first(where: { $0.name == userPackageName }),
-              !matchingQuizPackage.questions.isEmpty else {
+        let quizTitle = UserDefaultsManager.quizName()
+        guard let userPacket = audioQuizCollection.first(where: { $0.name == quizTitle }),
+        !userPacket.questions.isEmpty else {
             user.selectedQuizPackage = nil
             return
         }
-        user.selectedQuizPackage = matchingQuizPackage
+        
+        user.selectedQuizPackage = userPacket
     }
     
     func fetchDownloadedMainAudioQuiz() {
         guard !downloadedAudioQuizCollection.isEmpty else { return }
-        guard let userQuizName = UserDefaults.standard.string(forKey: "userDownloadedAudioQuizName"),
-              let matchingQuizPackage = downloadedAudioQuizCollection.first(where: { $0.quizname == userQuizName }),
-              !matchingQuizPackage.questions.isEmpty else {
+        let quizTitle = UserDefaultsManager.quizName()
+        guard let userAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizTitle }),
+        
+        !userAudioQuiz.questions.isEmpty else {
             user.downloadedQuiz = nil
             return
         }
         
-        user.downloadedQuiz = matchingQuizPackage
+        user.downloadedQuiz = userAudioQuiz
         print("Assigned User Downloaded Quiz")
     }
 }

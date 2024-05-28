@@ -8,24 +8,25 @@
 import SwiftUI
 
 struct SummaryInfoView: View {
-    @State var userHighScore = UserDefaultsManager.userHighScore()
-    @State var quizzesCompleted = UserDefaultsManager.numberOfQuizSessions()
-    @State var totalAnsweredQuestions = UserDefaultsManager.numberOfQuizSessions()
+    var answeredQuestions = UserDefaultsManager.totalQuestionsAnswered()
+    var quizzesCompleted = UserDefaultsManager.numberOfQuizSessions()
+    var totalAnsweredQuestions = UserDefaultsManager.numberOfQuizSessions()
     var highScore: CGFloat
     var numberOfTestsTaken: Int
     
     var body: some View {
            VStack(spacing: 15) {
+               
+               scoreLabel(
+                   withTitle: "Quizzes Completed",
+                   iconName: "doc.questionmark",
+                   score: "\(numberOfTestsTaken)"
+               )
+               
                scoreLabel(
                    withTitle: "High Score",
                    iconName: "trophy",
-                   score: getPercentage(score: Int(userHighScore))
-               )
-
-               scoreLabel(
-                   withTitle: "Quizzes",
-                   iconName: "doc.questionmark",
-                   score: "\(quizzesCompleted)"
+                   score: "\(highScore)%"
                )
                
                scoreLabel(
@@ -35,17 +36,16 @@ struct SummaryInfoView: View {
                )
                
                scoreLabel(
-                   withTitle: "Answered Correctly",
+                   withTitle: "Questions Answered",
                    iconName: "checkmark.circle",
-                   score: "\(numberOfTestsTaken)"
+                   score: "\(answeredQuestions)"
                )
                
                scoreLabel(
-                   withTitle: "Answered Wrong",
-                   iconName: "xmark.circle",
-                   score: "\(numberOfTestsTaken)"
+                   withTitle: "Questions Skipped",
+                   iconName: "forward.arrow",
+                   score: "\(0)"
                )
-               
            }
        }
 
@@ -62,32 +62,9 @@ struct SummaryInfoView: View {
                 .font(.subheadline)
         }
     }
-
-    
-    func calculatedScore(score: Int) -> CGFloat {
-        return CGFloat(score) * 10.0
-    }
-    
-    func getPercentage(score: Int) -> String {
-        let scorePercentage = calculatedScore(score: score)
-        return String(format: "%.0f%%", scorePercentage)
-    }
 }
 
-struct HeaderView: View {
-    let title: String
 
-    var body: some View {
-        HStack {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.semibold)
-            Spacer()
-        }
-        .padding([.top, .horizontal])
-        .hAlign(.leading)
-    }
-}
 
 #Preview {
     SummaryInfoView(highScore: 3, numberOfTestsTaken: 10)

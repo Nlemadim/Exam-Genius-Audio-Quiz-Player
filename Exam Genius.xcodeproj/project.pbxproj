@@ -132,6 +132,7 @@
 		0BE0217C2BD62CBD0054D6EB /* correctBell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0BE0217B2BD62CBD0054D6EB /* correctBell.wav */; };
 		0BE2798E2BBDA16D0006F85B /* MyLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE2798D2BBDA16D0006F85B /* MyLibrary.swift */; };
 		0BE279902BBDADC20006F85B /* CustomTabIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE2798F2BBDADC20006F85B /* CustomTabIcon.swift */; };
+		0BF664DF2C0571A2006D17CC /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF664DE2C0571A2006D17CC /* HeaderView.swift */; };
 		0BFBCAA52BB5B74A006A29C2 /* CustomLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFBCAA42BB5B74A006A29C2 /* CustomLogo.swift */; };
 		0BFE305F2BEBDABF00AC18E3 /* QuizDataManager+VoiceFeedback+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFE305E2BEBDABF00AC18E3 /* QuizDataManager+VoiceFeedback+Extension.swift */; };
 		0BFE30612BEBE25500AC18E3 /* VoiceFeedBack+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFE30602BEBE25500AC18E3 /* VoiceFeedBack+Extensions.swift */; };
@@ -297,6 +298,7 @@
 		0BE694292BB139B0009D5344 /* UsCitizenshipTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UsCitizenshipTest.json; sourceTree = "<group>"; };
 		0BE6942B2BB13A38009D5344 /* UsCitizenshipTestTopics.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UsCitizenshipTestTopics.json; sourceTree = "<group>"; };
 		0BE6942C2BB14070009D5344 /* ActExam.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ActExam.json; sourceTree = "<group>"; };
+		0BF664DE2C0571A2006D17CC /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		0BFBCAA42BB5B74A006A29C2 /* CustomLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogo.swift; sourceTree = "<group>"; };
 		0BFE305E2BEBDABF00AC18E3 /* QuizDataManager+VoiceFeedback+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuizDataManager+VoiceFeedback+Extension.swift"; sourceTree = "<group>"; };
 		0BFE30602BEBE25500AC18E3 /* VoiceFeedBack+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VoiceFeedBack+Extensions.swift"; sourceTree = "<group>"; };
@@ -643,6 +645,7 @@
 				0B0DC8802BC08488009F12A6 /* VUMeterView.swift */,
 				0BD93EDF2BD93F55001A58D6 /* QuestionCountVisualizer.swift */,
 				0B417E732BDADA7300E02D7F /* PerformanceHistoryGraph.swift */,
+				0BF664DE2C0571A2006D17CC /* HeaderView.swift */,
 			);
 			path = ModelViews;
 			sourceTree = "<group>";
@@ -1024,6 +1027,7 @@
 				0BB9DE1F2B865885004F848A /* AudioQuizPackageView.swift in Sources */,
 				0BD93EE02BD93F55001A58D6 /* QuestionCountVisualizer.swift in Sources */,
 				0B709EA62BBE00AB006C5E58 /* AudioQuizHeaderView.swift in Sources */,
+				0BF664DF2C0571A2006D17CC /* HeaderView.swift in Sources */,
 				0BD362162BB3C0A7006BD2B2 /* QuizPlayerViewExtensions.swift in Sources */,
 				0B5774052BE2B16800DE2A07 /* VoqaWaveView.swift in Sources */,
 				0B2A87E32BAE07C0001571DD /* Extensions.swift in Sources */,

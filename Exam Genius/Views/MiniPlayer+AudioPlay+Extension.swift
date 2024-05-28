@@ -73,6 +73,7 @@ extension MiniPlayerV2 {
         currentQuestionIndex += 1
         
         print("Question Count\(self.currentQuestions.count) / CurrentIndex: \(self.currentQuestionIndex)")
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             playSingleQuizQuestion()
         }
@@ -137,8 +138,9 @@ extension MiniPlayerV2 {
             }
             playEndQuizFeedbackMessage(feedbackMessageUrls?.quizEndingMessage)
             //self.currentQuestionIndex = 0
-            self.interactionState = .reviewing
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.interactionState = .reviewing
                 playQuizReview()
             }
             return
@@ -176,7 +178,6 @@ extension MiniPlayerV2 {
         self.intermissionPlayer.stopAndResetPlayer()
         self.audioContentPlayer.stopAndResetPlayer()
         self.questionPlayer.stopAndResetPlayer()
-        self.startPlaying = false
         self.configuration.isSpeaking = false
         self.interactionState = .idle
     }
@@ -264,6 +265,7 @@ extension MiniPlayerV2 {
             self.presentationManager.expandSheet = false
             self.presentationManager.interactionState = .idle
             self.expandSheet = false
+            self.refreshQuiz = true
         }
     }
 }

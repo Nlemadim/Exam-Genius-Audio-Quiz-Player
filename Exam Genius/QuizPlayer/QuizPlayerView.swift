@@ -22,17 +22,23 @@ struct QuizPlayerView: View {
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
+    @State private var answeredQuestions: Int = UserDefaultsManager.totalQuestionsAnswered()
+    @State private var quizzesCompleted: Int = UserDefaultsManager.numberOfQuizSessions()
     @State var interactionState: InteractionState = .idle
     @State var audioQuiz: DownloadedAudioQuiz?
     @State var currentPerformance: [PerformanceModel] = []
-    @Binding var showSettings: Bool
+    
+    @Binding var refreshAudioQuiz: Bool
     
     @State private var expandSheet: Bool = false
     @State var isPlaying: Bool = false
     @State private var playTapped: Bool = false
-    @State var currentQuestionIndex: Int = 0
     @State var isDownloading: Bool = false
     @State var isUsingMic: Bool = false
+    
+    @State var currentQuestionIndex: Int = 0
+    @State var userHighScore: Int = 0
+    
     @State var selectedVoice: String = "Holly"
     
     let sharedInteractionState = SharedQuizState()
@@ -108,8 +114,13 @@ struct QuizPlayerView: View {
                     PerformanceHistoryGraph(history: currentPerformance, mainColor: generator.enhancedDominantColor, subColor: generator.enhancedDominantColor)
                         .padding(.horizontal)
                     
+                    VStack {
+                        HeaderView(title: "Summary")
+                            .padding()
+                        
+                        ActivityInfoView(answeredQuestions: answeredQuestions, quizzesCompleted: quizzesCompleted, highScore: userHighScore, numberOfTestsTaken: 0)
+                    }
                     
-                    //SummaryInfoView()
                     
                     Rectangle()
                         .fill(.black)
@@ -141,29 +152,39 @@ struct QuizPlayerView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: QuizPlayerSettingsMenu(showSettings: $showSettings)) {
-                        Image(systemName: "slider.horizontal.3")
+
+                    NavigationLink(destination: QuizPlayerSettingsMenu()) {
+                        Image(systemName: "gearshape.fill")
                             .foregroundStyle(.white)
                             .padding(.horizontal, 20.0)
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("VOQA")
-                        .font(.title)
-                        .fontWeight(.black)
-                        .kerning(-0.5)
-                        .primaryTextStyleForeground()
+                    NavigationLink(destination: QuizPlayerSettingsMenu()) {
+                        Image(systemName: "slider.horizontal.3")
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 20.0)
+                    }
                 }
             }
         }
     }
+    
+    private func userHighScore(from performances: [PerformanceModel]) -> Int {
+        guard let highestScore = performances.map({ $0.score }).max() else {
+            return 0
+        }
+        return Int(highestScore)
+    }
+
     
     private func filterPerformanceCollection() {
         let quizName = UserDefaultsManager.quizName()
         
         // Filter the performanceCollection based on user's downloaded quiz name
         let filteredPerformance = performanceCollection.filter { $0.quizName == quizName }
+        self.userHighScore = userHighScore(from: filteredPerformance)
         
         // Sort the filtered collection by date in descending order
         let sortedPerformance = filteredPerformance.sorted { $0.date > $1.date }
@@ -191,11 +212,9 @@ struct QuizPlayerView: View {
     }
     
     private func startPlayer() {
-    
         DispatchQueue.main.async {
             self.interactionState = .isNowPlaying
             self.quizPlayerObserver.playerState = .startedPlayingQuiz
-            
         }
     }
     
@@ -203,7 +222,6 @@ struct QuizPlayerView: View {
         DispatchQueue.main.async {
             if self.quizPlayerObserver.playerState == .startedPlayingQuiz {
                 self.quizPlayerObserver.playerState = .pausedCurrentPlay
-               
             }
             
             if self.quizPlayerObserver.playerState == .pausedCurrentPlay {
@@ -319,6 +337,67 @@ struct QuizPlayerView: View {
             audioContentPlayer.playAudioFile(audioFile)
         }
     }
+    
+    @ViewBuilder
+    func ActivityInfoView(
+        answeredQuestions: Int,
+        quizzesCompleted: Int,
+        highScore: Int,
+        numberOfTestsTaken: Int
+    ) -> some View {
+        
+        
+        VStack(spacing: 15) {
+            
+            scoreLabel(
+                withTitle: "Quizzes Completed",
+                iconName: "doc.questionmark",
+                score: "\(numberOfTestsTaken)"
+            )
+            
+            scoreLabel(
+                withTitle: "High Score",
+                iconName: "trophy",
+                score: "\(highScore)%"
+            )
+            
+            scoreLabel(
+                withTitle: "Total Number of Questions",
+                iconName: "questionmark.circle",
+                score: "∞"
+            )
+            
+            scoreLabel(
+                withTitle: "Questions Answered",
+                iconName: "checkmark.circle",
+                score: "\(answeredQuestions)"
+            )
+            
+            scoreLabel(
+                withTitle: "Questions Skipped",
+                iconName: "arrowshape.bounce.forward",
+                score: "\(0)"
+            )
+        }
+        .padding()
+        .background(Color.gray.opacity(0.07).gradient)
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    private func scoreLabel(withTitle title: String, iconName: String, score: String) -> some View {
+        HStack {
+            Image(systemName: iconName)
+                .foregroundStyle(.mint)
+            
+            Text(title)
+                .font(.subheadline)
+            Spacer()
+            Text(score)
+                .font(.subheadline)
+        }
+    }
 }
 
 
@@ -397,9 +476,9 @@ struct NowPlayingView: View {
                 
                 HStack {
                     
-                    VUMeterView(interactionState: .constant(.isNowPlaying))
+                    VUMeterView(interactionState: .constant(animateMeter()))
                     
-                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: generator.dominantBackgroundColor, playAction: {})
+                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: generator.dominantBackgroundColor, playAction: {  })
                             .hAlign(.trailing)
                             //.offset(y: 20)
                 }
@@ -412,6 +491,12 @@ struct NowPlayingView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .onAppear {
+//            animateMeter()
+//        }
+//        .onChange(of: quizPlayerObserver.playerState) { _, _ in
+//            animateMeter()
+//        }
         
     }
     
@@ -422,6 +507,16 @@ struct NowPlayingView: View {
             return "Paused"
         } else {
             return "Start Quiz"
+        }
+    }
+    
+    private func animateMeter() -> QuizPlayerState {
+        if self.interactionState == .startedQuiz {
+            return .startedPlayingQuiz
+        } else if self.interactionState == .pausedPlayback {
+            return .startedPlayingQuiz
+        } else {
+            return .idle
         }
     }
     

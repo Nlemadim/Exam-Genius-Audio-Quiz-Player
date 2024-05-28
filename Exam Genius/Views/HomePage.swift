@@ -41,6 +41,8 @@ struct HomePage: View {
     @State var downloadedAudioQuiz: DownloadedAudioQuiz?
     
     @State var didTapDownload = false
+    @State var didTapEdit = false
+    @State var refreshAudioQuiz = false
     @State var expandSheet: Bool = false
     @State var showSettings: Bool = false
     @State var isDownloading: Bool = false
@@ -53,6 +55,8 @@ struct HomePage: View {
     @State var selectedTab = 0
     @State var currentItem: Int = 0
     @State var backgroundImage: String = ""
+    @State var themeColor: Color = .themePurple
+    @State var themeSubColor: Color = .teal
     
     @Namespace var animation
     
@@ -91,9 +95,7 @@ struct HomePage: View {
                     .zIndex(1)
                 }
                 .task {
-                   // await loadDefaultCollection()
-//                    await loadVoiceFeedBackMessages()
-                    generator.updateDominantColor(fromImageNamed: backgroundImage)
+                   
                 }
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -101,6 +103,14 @@ struct HomePage: View {
                             Image(systemName: "person.circle")
                                 .foregroundStyle(.white)
                         }
+                    }
+                    
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        Text("VOQA")
+                            .font(.title)
+                            .fontWeight(.black)
+                            .kerning(-0.5)
+                            .primaryTextStyleForeground()
                     }
                 }
             }
@@ -118,12 +128,15 @@ struct HomePage: View {
             .onChange(of: didTapPlaySample, { _, newValue in
                 playSampleQuiz(newValue)
             })
+            .onChange(of: refreshAudioQuiz, { _, newValue in
+                refreshQuiz(newValue)
+            })
             .tabItem {
                 TabIcons(title: "Home", icon: "house.fill")
             }
             .tag(0)
 
-            QuizPlayerView(showSettings: $showSettings)
+            QuizPlayerView(refreshAudioQuiz: $refreshAudioQuiz)
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -135,7 +148,7 @@ struct HomePage: View {
                 }
                 .tag(2)
             
-            LibraryPage(selectedQuizPackage: $user.selectedQuizPackage)
+            LibraryPage(selectedQuizPackage: $user.selectedQuizPackage, didTapEdit: $didTapEdit)
                 .tabItem {
                     TabIcons(title: "My Library", icon: "books.vertical.fill")
                 }
@@ -144,13 +157,19 @@ struct HomePage: View {
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
             generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
+            self.themeColor = generator.dominantBackgroundColor
+            self.themeSubColor = generator.dominantLightToneColor
             updateCollections()
             navigateToPlayer()
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
-            BottomMiniPlayer(color: generator.dominantBackgroundColor)
-                .opacity(keyboardObserver.isKeyboardVisible ? 0 : 1)
+            let color: Color = generator.dominantBackgroundColor
+            BottomMiniPlayer(color: color)
+                .opacity(keyboardObserver.isKeyboardVisible || didTapEdit ? 0 : 1)
+                .onAppear(perform: {
+                    generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
+                })
                 
         }
         .preferredColorScheme(.dark)
@@ -163,46 +182,17 @@ struct HomePage: View {
             selectedTab = 1
         }
     }
-    
-//    private func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
-//        
-//        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
-//        
-//        DispatchQueue.main.async {
-//            self.interactionState = .isDownloading
-//        }
-//        
-//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-//       
-//        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
-//        
-//        let audioQuestions = package.questions
-//        
-//        await contentBuilder.downloadAudioQuestions(for: audioQuestions)
-//        
-//        newDownloadedQuiz.questions = audioQuestions
-//        self.downloadedAudioQuiz = newDownloadedQuiz
-//        
-//        modelContext.insert(newDownloadedQuiz)
-//        try! modelContext.save()
-//        
-//        DispatchQueue.main.async {
-//            user.downloadedQuiz = self.downloadedAudioQuiz
-//            UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
-//            self.interactionState = .idle
-//        }
-//        
-//    }
-    
+
     @ViewBuilder
     private func BottomMiniPlayer(color: Color) -> some View {
+        
         ZStack {
             Rectangle()
                 .fill(.clear)
                 .cornerRadius(10)
                 .background(LinearGradient(gradient: Gradient(colors: [color, .black, .black]), startPoint: .top, endPoint: .bottom))
                 .overlay {
-                    MiniPlayerV2(selectedQuizPackage: $user.downloadedQuiz, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, startPlaying: $isPlaying)
+                    MiniPlayerV2(selectedQuizPackage: $user.downloadedQuiz, feedbackMessageUrls: .constant(getFeedBackMessages()), interactionState: $interactionState, refreshQuiz: $refreshAudioQuiz)
                         .padding(.bottom)
                 }
         }

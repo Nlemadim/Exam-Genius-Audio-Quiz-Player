@@ -41,7 +41,6 @@ extension HomePage {
             print("Prepare to download audio questions")
             
             Task {
-                
                 await loadNewAudioQuiz(quiz: audioQuiz)
             }
         }
@@ -74,24 +73,6 @@ extension HomePage {
         //questionPlayer.playSingleAudioQuestion(audioFile: audioFile)
     }
 
-    func resetQuiz() {
-        
-        // Access the questions array from the selected quiz package.
-        let filteredQuestions = user.selectedQuizPackage?.questions.filter { !$0.questionAudio.isEmpty }
-        
-        // Iterate over the filtered questions
-        DispatchQueue.main.async {
-            filteredQuestions?.forEach { question  in
-                //Resetting answered questions
-                question.selectedOption = " "
-                question.isAnswered = false
-                question.isAnsweredCorrectly = false
-            }
-            
-            self.quizPlayerObserver.playerState = .idle
-            packetStatusPrintOut()
-        }
-    }
     
     func packetStatusPrintOut() {
         print("Triggered Reset status Check...")
@@ -160,49 +141,6 @@ extension HomePage {
         }
     }
     
-    func loadDefaultCollection() async {
-        guard audioQuizCollection.isEmpty else { return }
-        
-        let collection = DefaultDatabase().getAllExamDetails()
-        collection.forEach { examDetail in
-            
-            let newPackage = AudioQuizPackage(from: examDetail)
-            
-            modelContext.insert(newPackage)
-            
-            try! modelContext.save()
-        }
-    }
-    
-    
-//    func loadVoiceFeedBackMessages() async {
-//        guard voiceFeedbackMessages.isEmpty else { return }
-//        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-//        let container = VoiceFeedbackContainer(
-//            id: UUID(),
-//            quizStartMessage: "Starting a new quiz now.",
-//            quizEndingMessage: "Great job! This quiz is now complete.",
-//            correctAnswerCallout: "That's the correct Answer!",
-//            skipQuestionMessage: "Thats an invalid response. Skipping this question for now.",
-//            errorTranscriptionMessage: "Error transcribing your response. Skipping this question for now",
-//            finalScoreMessage: "Final score calculated.",
-//            quizStartAudioUrl: "",
-//            quizEndingAudioUrl: "",
-//            correctAnswerCalloutUrl: "",
-//            skipQuestionAudioUrl: "",
-//            errorTranscriptionAudioUrl: "",
-//            finalScoreAudioUrl: ""
-//        )
-//        
-//        let messageData = await contentBuilder.downloadAllFeedbackAudio(for: container)
-//        let newVoiceMessages = VoiceFeedbackMessages(from: messageData)
-//        print("Downloaded new voice feedback messages with id \(newVoiceMessages.id.uuidString) and testing file path start quiz is printing: \(newVoiceMessages.quizEndingAudioUrl)")
-//        
-//        modelContext.insert(newVoiceMessages)
-//        
-//        try! modelContext.save()
-//        
-//    }
     
     func getFeedBackMessages() -> FeedBackMessageUrls {
         let userFeedbackMessages = voiceFeedbackMessages.first
@@ -239,7 +177,6 @@ extension HomePage {
     }
     
     func loadNewAudioQuiz(quiz package: AudioQuizPackage) async {
-       
         // Check if the package name already exists in the downloaded collection
         guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
         
@@ -259,10 +196,76 @@ extension HomePage {
         
         DispatchQueue.main.async {
             user.downloadedQuiz = newDownloadedQuiz
+            UserDefaultsManager.setQuizName(quizName: newDownloadedQuiz.quizname)
             UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
             self.interactionState = .idle
+            Task {
+                try await downloadBasicPackage(package)
+            }
         }
     }
+    
+    private func downloadBasicPackage(_ audioQuiz: AudioQuizPackage) async throws {
+        let quizName = UserDefaultsManager.quizName()
+        guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == quizName }) else { return }
+        
+        guard currentQuizPackage.questions.count <= 300 else { return }
+       
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        
+        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name, topics: audioQuiz.topics)
+        
+        print("Downloaded complete package with \(content.questions.count) Questions without audio")
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+        }
+    }
+    
+    func refreshQuiz(_ refreshQuiz: Bool) {
+        if refreshQuiz {
+            Task {
+                await updateAudioQuizQuestions()
+            }
+        }
+    }
+    
+    private func updateAudioQuizQuestions() async {
+        let questionCount = UserDefaultsManager.numberOfTestQuestions()
+        let currentQuizName = UserDefaultsManager.quizName()
+        
+        guard !currentQuizName.isEmptyOrWhiteSpace else { return }
+        
+        // Filter the current audio quiz
+        guard let currentAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == currentQuizName }) else { return }
+        
+        // Filter the current quiz package
+        guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == currentQuizName }) else { return }
+        
+        // Get new questions from the current quiz package
+        let newQuestions = currentQuizPackage.questions
+        
+        // Filter questions that need to be downloaded
+        var questionsToDownload = newQuestions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
+        
+        // Limit the number of questions to download
+        if questionsToDownload.count > questionCount {
+            questionsToDownload = Array(questionsToDownload.prefix(questionCount))
+        }
+        
+        // Initialize the content builder and download audio questions
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
+        
+        // Update the questions in the current audio quiz
+        currentAudioQuiz.questions = questionsToDownload
+        
+        // Update the UI on the main thread
+        DispatchQueue.main.async {
+            self.refreshAudioQuiz = false
+        }
+    }
+
 }
 
 
