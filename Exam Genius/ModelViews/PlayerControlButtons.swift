@@ -21,13 +21,14 @@ struct PlayerControlButtons: View {
         VStack(spacing: 5) {
             
             HStack(spacing: 30) {
+                Spacer()
                 // Repeat Button
-                CircularButton(
-                    isPlaying: .constant(false),
-                    isDownloading: .constant(false),
-                    imageLabel: isHandsfree ? "mic" : "abc",
-                    color: themeColor ?? .clear,
-                    buttonAction: { recordAction() })
+//                CircularButton(
+//                    isPlaying: .constant(false),
+//                    isDownloading: .constant(false),
+//                    imageLabel: isHandsfree ? "mic" : "abc",
+//                    color: themeColor ?? .clear,
+//                    buttonAction: { recordAction() })
 //"rectangle.and.hand.point.up.left.fill"
                 
                 CircularPlayButton(
@@ -37,14 +38,15 @@ struct PlayerControlButtons: View {
                     playAction: { playAction() }
                 )
                 
+                Spacer()
                 // Next/End Button
-                CircularButton(
-                    isPlaying: .constant(false),
-                    isDownloading: .constant(false),
-                    imageLabel: questionsComplete ? "forward.end.fill" :"forward.fill" ,
-                    color: themeColor ?? .clear,
-                    buttonAction: { nextAction() })
-                .disabled(questionsComplete)
+//                CircularButton(
+//                    isPlaying: .constant(false),
+//                    isDownloading: .constant(false),
+//                    imageLabel: questionsComplete ? "forward.end.fill" :"forward.fill" ,
+//                    color: themeColor ?? .clear,
+//                    buttonAction: { nextAction() })
+//                .disabled(questionsComplete)
                 
             }
             .frame(maxWidth: .infinity)

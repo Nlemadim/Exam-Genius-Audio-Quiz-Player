@@ -66,9 +66,9 @@ extension MiniPlayerV2 {
 
             case .hasResponded: //Triggered by response Listener & Options Button after recording or selecting answer
                 intermissionPlayer.playReceivedResponseBell()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .successfulResponse
-                }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.interactionState = .successfulResponse
+                    }
                 
             case .noResponse: //Triggered by response Listener & Options Button after recording or selecting answer
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -135,11 +135,13 @@ extension MiniPlayerV2 {
         case .playingFeedbackMessage:
             self.interactionState = interactionState
             
-//        case .errorTranscription:
-//            executeErrorTranscriptionSequence()
-            
         case .noResponse:
             executeErrorResponseSequence()
+            
+        case .awaitingResponse:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
+                self.interactionState = .successfulResponse
+            }
             
         case .endedQuiz:
             dismissAction()
@@ -236,7 +238,8 @@ extension MiniPlayerV2 {
         DispatchQueue.main.async {
             self.quizPlayerObserver.playerState = state
             switch state {
-//            case .startedPlayingQuiz:
+            case .startedPlayingQuiz:
+                updateCurrentQuestions(configuration.currentQuizPackage)
 //                self.expandAction()
 //                self.presentationManager.interactionState = .isNowPlaying
             case .restartQuiz:

@@ -59,6 +59,11 @@ class UserDefaultsManager {
         UserDefaults.standard.set(currentCount + 1, forKey: "numberOfQuizSessions")
     }
     
+    static func incrementNumberOfCurrentQuizSessions() {
+        let currentCount = UserDefaults.standard.integer(forKey: "currentQuizSessions")
+        UserDefaults.standard.set(currentCount + 1, forKey: "numberOfQuizSessions")
+    }
+    
     static func updateNumberOfGlobalQuestions() {
         let currentCount = UserDefaults.standard.integer(forKey: "numberOfGlobalQuestions")
         UserDefaults.standard.set(currentCount + 1, forKey: "numberOfGlobalQuestions")
@@ -195,6 +200,10 @@ class UserDefaultsManager {
     
     static func numberOfQuizSessions() -> Int {
         return UserDefaults.standard.integer(forKey: "numberOfQuizSessions")
+    }
+    
+    static func currentQuizSessions() -> Int {
+        return UserDefaults.standard.integer(forKey: "currentQuizSessions")
     }
     
     static func totalQuestionsAnswered() -> Int {

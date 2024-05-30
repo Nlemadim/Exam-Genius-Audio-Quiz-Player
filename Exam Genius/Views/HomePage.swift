@@ -29,6 +29,8 @@ struct HomePage: View {
     
     @State var interactionState: InteractionState = .idle
     @State var myLibInteractionState: InteractionState = .idle
+    @State var defaultQuestionCount = UserDefaultsManager.numberOfTestQuestions()
+    @State var quizName = UserDefaultsManager.quizName()
     
     @State var selectedQuizPackage: AudioQuizPackage?
     @State var topCollectionQuizzes: [AudioQuizPackage] = []
@@ -94,9 +96,6 @@ struct HomePage: View {
                     }
                     .zIndex(1)
                 }
-                .task {
-                   
-                }
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button(action: {}) {
@@ -129,7 +128,14 @@ struct HomePage: View {
                 playSampleQuiz(newValue)
             })
             .onChange(of: refreshAudioQuiz, { _, newValue in
-                refreshQuiz(newValue)
+                //refreshQuiz(newValue)
+            })
+            .onChange(of: user.downloadedQuiz, { _, _ in
+                if let userPackage = user.selectedQuizPackage, userPackage.questions.count <= 300 {
+                    Task {
+                        try await downloadBasicPackage()
+                    }
+                }
             })
             .tabItem {
                 TabIcons(title: "Home", icon: "house.fill")
@@ -161,7 +167,10 @@ struct HomePage: View {
             self.themeSubColor = generator.dominantLightToneColor
             updateCollections()
             navigateToPlayer()
-            loadUserDetails()
+            packetStatusPrintOut()
+            Task {
+                await loadUserDetails()
+            }
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
@@ -205,7 +214,7 @@ struct HomePage: View {
                 .frame(height: 1)
                 .offset(y: -3)
         })
-        .frame(height: 70)
+        .frame(height: 75)
         .offset(y: -49)
     }
 }

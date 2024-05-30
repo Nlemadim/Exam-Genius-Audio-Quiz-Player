@@ -46,6 +46,28 @@ extension HomePage {
         }
     }
     
+    func downloadBasicPackage() async throws {
+        guard let audioQuiz = audioQuizCollection.first(where: { $0.name == self.quizName }) else {
+            return // Exit if audioQuiz is not found
+        }
+        
+        guard audioQuiz.questions.count <= 300 else {
+            return // Exit if there are too many questions in audioQuiz
+        }
+        
+        DispatchQueue.main.async {
+            print("Starting complete download process")
+        }
+       
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name, topics: audioQuiz.topics)
+        
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+        }
+    }
+    
     func downloadSample(_ audioQuiz: AudioQuizPackage) async throws {
         guard audioQuiz.questions.isEmpty else { return }
         DispatchQueue.main.async {
@@ -75,18 +97,21 @@ extension HomePage {
 
     
     func packetStatusPrintOut() {
-        print("Triggered Reset status Check...")
-       
-        let filteredQuestions = user.selectedQuizPackage?.questions.filter { !$0.questionAudio.isEmpty }
-        let answeredQuestions = filteredQuestions?.filter {!$0.selectedOption.isEmptyOrWhiteSpace}
-//        let currentQuestions = filteredQuestions?.count
-//        let answeredQuestionsCount = answeredQuestions?.count
+        print("Status Check...")
+        let userHasPackage = audioQuizCollection.contains(where: {$0.name == self.quizName})
+        let userHasAudioQuiz = downloadedAudioQuizCollection.contains(where: {$0.quizname == self.quizName})
+        let userPackage = audioQuizCollection.first(where: { $0.name == self.quizName })
+        let userQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == self.quizName })
         
-        print("Reset Status")
-        print("Number of Questions: \(String(describing: filteredQuestions))")
-        print("Number of Questions answered: \(String(describing: answeredQuestions))")
-        print("Number of Questions reset: \(String(describing: filteredQuestions))")
-        
+        print(quizName)
+        print("Has Package in Database: \(userHasPackage)")
+        print("Package name: \(userPackage?.name ?? "None")")
+        print("Package questions: \(userPackage?.questions.count ?? 0)")
+        print("Has audioQuiz in Database: \(userHasAudioQuiz)")
+        print("Quiz name: \(userQuiz?.quizname ?? "None")")
+        print("Has selected package: \(user.selectedQuizPackage?.name ?? "None")")
+        print("Has selected package: \(user.downloadedQuiz?.quizname ?? "None")")
+  
     }
 
     
@@ -95,7 +120,9 @@ extension HomePage {
     }
     
     func setQuizObserverAction(observer state: QuizPlayerState) {
-        
+        if state == .startedPlayingQuiz {
+            
+        }
     }
     
     func updatePlayState(interactionState: QuizPlayerState) {
@@ -141,11 +168,57 @@ extension HomePage {
         }
     }
     
-    func loadUserDetails() {
-        guard user.downloadedQuiz == nil else { return }
-        let quizName = UserDefaultsManager.quizName()
-        let userQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizName })
-        user.downloadedQuiz = userQuiz
+    func loadUserDetails() async {
+        guard !self.quizName.isEmptyOrWhiteSpace else {
+            print("Quiz name is unavailable")
+            return }
+        
+        guard let audioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizName }) else {
+            print("No downloaded quiz")
+            return
+        }
+        
+        if audioQuiz.questions.isEmpty {
+            print("Populating audio quiz questions")
+            await loadQuestions(self.quizName)
+            DispatchQueue.main.async {
+                user.downloadedQuiz = audioQuiz
+                print(user.downloadedQuiz?.questions.count ?? 0)
+            }
+            
+        } else {
+            user.downloadedQuiz = audioQuiz
+        }
+    }
+    
+    func loadQuestions(_ quizName: String) async {
+        guard let userPackage = audioQuizCollection.first(where: { $0.name == quizName }),
+              let audioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizName }),
+              !userPackage.questions.isEmpty else {
+            return
+        }
+        
+        // Filter questions that need to be downloaded
+        let questionsToDownload = userPackage.questions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
+        
+        // Fetch random questions limited to the default question count
+        let audioQuestions = Array(questionsToDownload.shuffled().prefix(self.defaultQuestionCount))
+        
+        print(audioQuestions.count)
+        
+        // Download the audio files and update the questions in the audioQuiz
+        await addAudioFiles(audioQuestions)
+        
+        audioQuiz.questions = audioQuestions
+    }
+    
+    
+    
+    private func addAudioFiles(_ questionsToDownload: [Question]) async {
+        print("Adding audioFiles to questions")
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
+        
     }
     
     
@@ -206,38 +279,19 @@ extension HomePage {
             UserDefaultsManager.setQuizName(quizName: newDownloadedQuiz.quizname)
             UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
             self.interactionState = .idle
-            Task {
-                try await downloadBasicPackage(package)
-            }
+            
         }
     }
     
-    private func downloadBasicPackage(_ audioQuiz: AudioQuizPackage) async throws {
-        let quizName = UserDefaultsManager.quizName()
-        guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == quizName }) else { return }
-        
-        guard currentQuizPackage.questions.count <= 300 else { return }
-        
-        DispatchQueue.main.async {
-            print("Starting complete download process")
-        }
-       
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        
-        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name, topics: audioQuiz.topics)
-        
-        print("Downloaded complete package with \(content.questions.count) Questions without audio")
-        DispatchQueue.main.async {
-            audioQuiz.topics.append(contentsOf: content.topics)
-            audioQuiz.questions.append(contentsOf: content.questions)
-        }
-    }
+
+    
+
     
     func refreshQuiz(_ refreshQuiz: Bool) {
         print("Refresh Tapped")
         if refreshQuiz {
             Task {
-                await updateAudioQuizQuestions()
+                //await updateAudioQuizQuestions()
             }
         }
     }
@@ -278,7 +332,8 @@ extension HomePage {
             self.refreshAudioQuiz = false
         }
     }
-
+    
+    
 }
 
 

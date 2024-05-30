@@ -23,6 +23,7 @@ struct QuizPlayerView: View {
     
     @State private var downloadedQuiz: DownloadedAudioQuiz? = nil
     @State private var answeredQuestions: Int = UserDefaultsManager.totalQuestionsAnswered()
+    @State private var questionCount: Int = UserDefaultsManager.numberOfTestQuestions()
     @State private var quizzesCompleted: Int = UserDefaultsManager.numberOfQuizSessions()
     @State var interactionState: InteractionState = .idle
     @State var audioQuiz: DownloadedAudioQuiz?
@@ -127,9 +128,15 @@ struct QuizPlayerView: View {
                 }
             }
             .onAppear {
-                updateUserQuizSelection()
+//                Task {
+//                    await updateAudioQuizQuestions()
+//                }
                 filterPerformanceCollection()
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
+                print(user.downloadedQuiz?.questions.count ?? 0)
+                Task {
+                    //try await downloadBasicPackage()
+                }
 
             }
             .onChange(of: user.downloadedQuiz, { _, _ in
@@ -191,6 +198,72 @@ struct QuizPlayerView: View {
         // Limit the results to the seven most recent entries
         currentPerformance = Array(sortedPerformance.prefix(7))
         print("Loaded \(currentPerformance.count) performance records")
+        print(filteredPerformance.first?.quizName ?? "Performance record Not found")
+    }
+    
+    func downloadBasicPackage() async throws {
+        guard let audioQuiz = audioQuizCollection.first(where: { $0.name == self.quizName }) else {
+            return // Exit if audioQuiz is not found
+        }
+        
+        guard audioQuiz.questions.count <= 300 else {
+            return // Exit if there are too many questions in audioQuiz
+        }
+        
+        DispatchQueue.main.async {
+            print("Starting complete download process")
+        }
+       
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name, topics: audioQuiz.topics)
+        
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+        }
+    }
+    
+    private func updateAudioQuizQuestions() async {
+        guard quizPlayerObserver.playerState != .startedPlayingQuiz || quizPlayerObserver.playerState != .pausedCurrentPlay else { return }
+        DispatchQueue.main.async {
+            self.interactionState = .isDownloading
+        }
+        
+        // Filter the current audio quiz
+        guard let currentAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == self.quizName }) else {
+            DispatchQueue.main.async {
+                self.interactionState = .idle
+            }
+            return
+        }
+        
+        // Check if the number of answered questions is less than a threshold
+        let threshold = questionCount - questionCount / 3
+        //guard currentAudioQuiz.questions.filter({ $0.isAnswered }).count < threshold else { return }
+        guard currentAudioQuiz.questions.count < threshold || currentAudioQuiz.questions.filter({ $0.isAnswered }).count <= questionCount  else { return }
+        // Filter the current quiz package
+        guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == self.quizName }) else { return }
+        
+        // Get new questions from the current quiz package
+        let newQuestions = currentQuizPackage.questions
+        
+        // Filter questions that need to be downloaded
+        var questionsToDownload = newQuestions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
+        
+        // Limit the number of questions to download
+        if questionsToDownload.count > questionCount {
+            questionsToDownload = Array(questionsToDownload.prefix(questionCount))
+        }
+        
+        // Initialize the content builder and download audio questions
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
+        
+        // Update the questions in the current audio quiz
+        currentAudioQuiz.questions = questionsToDownload
+        DispatchQueue.main.async {
+            self.interactionState = .idle
+        }
     }
 
     
@@ -201,6 +274,12 @@ struct QuizPlayerView: View {
         case .endedQuiz:
             self.interactionState = .isDonePlaying
             filterPerformanceCollection()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                Task {
+                    await updateAudioQuizQuestions()
+                }
+            }
+            
         case .donePlaying:
             self.interactionState = .isDonePlaying
         case .pausedCurrentPlay:
@@ -234,9 +313,22 @@ struct QuizPlayerView: View {
 
     
     private func updateUserQuizSelection() {
-        print(user.downloadedQuiz?.quizname ?? "No User Quiz selected")
-        guard let downloadedQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == self.quizName }), !downloadedQuiz.questions.isEmpty else { return }
+       
+        guard let downloadedQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == self.quizName }), !downloadedQuiz.questions.isEmpty else {
+            if downloadedQuiz == nil {
+                print("Did not find quiz in collection")
+            }
+            
+            if let downloadedQuiz = downloadedQuiz, downloadedQuiz.questions.isEmpty {
+                print("Found quiz without questions")
+            }
+            
+            return
+        }
+        
         user.downloadedQuiz = downloadedQuiz
+        
+        print(user.downloadedQuiz?.quizname ?? "No User Quiz selected")
     }
     
     
@@ -466,9 +558,9 @@ struct NowPlayingView: View {
                 
                 HStack {
                     
-                    VUMeterView(interactionState: .constant(animateMeter()))
+                    VUMeterView(interactionState: $interactionState)
                     
-                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(false), color: generator.dominantBackgroundColor, playAction: {  })
+                    CircularPlayButton(interactionState: $interactionState, isDownloading: .constant(interactionState == .isDownloading), color: generator.dominantBackgroundColor, playAction: {  })
                             .hAlign(.trailing)
                             //.offset(y: 20)
                 }

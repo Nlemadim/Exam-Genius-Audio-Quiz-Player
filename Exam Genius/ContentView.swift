@@ -45,6 +45,7 @@ struct ContentView: View {
             await loadMainVoiceFeedBackMessages()
         }
         .onAppear {
+            UserDefaultsManager.setDefaultNumberOfTestQuestions(15)
             UserDefaultsManager.setDefaultResponseTime()
             loadUserMainPackage()
             fetchDownloadedMainAudioQuiz()
@@ -80,11 +81,13 @@ struct ContentView: View {
         let quizTitle = UserDefaultsManager.quizName()
         guard let userPacket = audioQuizCollection.first(where: { $0.name == quizTitle }),
         !userPacket.questions.isEmpty else {
+            print("Content View did not find quiz package in collection")
             user.selectedQuizPackage = nil
             return
         }
-        
+        print("Content view has assigned package to user")
         user.selectedQuizPackage = userPacket
+        UserDefaultsManager.setQuizName(quizName: userPacket.name)
     }
     
     func fetchDownloadedMainAudioQuiz() {
@@ -93,6 +96,7 @@ struct ContentView: View {
         guard let userAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizTitle }),
         
         !userAudioQuiz.questions.isEmpty else {
+            print("Content View did not find downloaded quiz in collection")
             user.downloadedQuiz = nil
             return
         }

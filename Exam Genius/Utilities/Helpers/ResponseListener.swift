@@ -63,10 +63,10 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     }
     
     fileprivate func processTranscript(transcript: String) -> String {
-        guard !transcript.isEmptyOrWhiteSpace else {
-            self.interactionState = .noResponse
-            return "No Response"
-        }
+//        guard !transcript.isEmptyOrWhiteSpace else {
+//            self.interactionState = .noResponse
+//            return "No Response"
+//        }
         
         let processedTranscript = WordProcessor.processWords(from: transcript)
         
@@ -75,17 +75,8 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
     }
     
     fileprivate func processTranscriptV2(transcript: String, options: [String]) -> String {
-        guard !transcript.isEmptyOrWhiteSpace else {
-            self.interactionState = .noResponse
-            return "No Response"
-        }
         
         let processedTranscript = WordProcessorV2.processWords(from: transcript, comparedWords: options)
-        
-        guard processedTranscript != "Invalid Response" else {
-            self.interactionState = .isIncorrectAnswer
-            return "IncorrectAnswer"
-        }
         
         return processedTranscript
     }
@@ -120,8 +111,13 @@ class ResponseListener: NSObject, ObservableObject, AVAudioPlayerDelegate, SFSpe
             }
         
         self.userTranscript = self.selectedOption
-        print("Listener published userTranscript as: \(self.userTranscript)")
-        self.interactionState = .hasResponded
+        
+        if userTranscript.isEmptyOrWhiteSpace {
+            self.interactionState = .noResponse
+        } else {
+            print("Listener published userTranscript as: \(self.userTranscript)")
+            self.interactionState = .hasResponded
+        }
     }
     
     

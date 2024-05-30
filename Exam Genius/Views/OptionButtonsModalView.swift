@@ -40,7 +40,6 @@ struct OptionButtonsModalView: View {
             Spacer()
         }
         .onAppear {
-            selectedOption = nil
             startCountdown()
             print(selectedOption as Any)
         }
@@ -59,7 +58,6 @@ struct OptionButtonsModalView: View {
         }
     }
     
-    
     private func startCountdown() {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             withAnimation(.linear(duration: 1)) {
@@ -68,7 +66,7 @@ struct OptionButtonsModalView: View {
                 } else {
                     timer.invalidate()
                     self.isTimerActive = false
-                    if selectedOption == nil {
+                    if !self.isSelectionMade {
                         self.selectedOption = ""
                     }
                 }
@@ -78,70 +76,73 @@ struct OptionButtonsModalView: View {
 }
 
 
-struct OptionButtonsModalViewV2: View {
-    @Binding var selectedOption: String?
-    @Binding var interactionState: InteractionState
-    @State private var timerCountdown: Int = 5
-    @State private var isTimerActive: Bool = true
-    @State private var isSelectionMade: Bool = false
-    @State private var progressText: String = "Tap and hold to select"
-    var mainThemeColor: Color
-    var selectionThemeColor: Color = .themePurple
-
-    var body: some View {
-        VStack {
-            HStack(spacing: 20) {
-                MultiChoiceButton(label: "A", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
-                MultiChoiceButton(label: "B", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
-                MultiChoiceButton(label: "C", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
-                MultiChoiceButton(label: "D", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
-            }
-            .padding()
-            .padding(.horizontal)
-            .offset(y: -10)
-            .disabled(isSelectionMade) // Disable all buttons if a selection is made
-            
-            VStack(alignment: .center) {
-                Text("Tap to select... \(timerCountdown)")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(mainThemeColor.dynamicTextColor())
-                    .padding(.bottom)
-            }
-            Spacer()
-        }
-        .onAppear {
-            startCountdown()
-        }
-        .onChange(of: selectedOption) { _, newSelectedOption in
-            displaySelection(newSelectedOption)
-        }
-    }
-
-    private func displaySelection(_ selectedOption: String?) {
-        guard let selectedOption = selectedOption, !selectedOption.isEmptyOrWhiteSpace else { return }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.progressText = selectedOption
-            self.interactionState = .hasResponded // Change interactionState to .hasResponded
-        }
-    }
-
-    private func startCountdown() {
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            withAnimation(.linear(duration: 1)) {
-                if self.timerCountdown > 0 {
-                    self.timerCountdown -= 1
-                } else {
-                    timer.invalidate()
-                    self.isTimerActive = false
-                    self.selectedOption = nil
-                    self.interactionState = .noResponse // Change interactionState to .noResponse
-                }
-            }
-        }
-    }
-}
+//
+//struct OptionButtonsModalViewV2: View {
+//    @Binding var selectedOption: String?
+//    @Binding var interactionState: InteractionState
+//    @State private var timerCountdown: Int = 5
+//    @State private var isTimerActive: Bool = true
+//    @State private var isSelectionMade: Bool = false
+//    @State private var progressText: String = "Tap and hold to select"
+//    var mainThemeColor: Color
+//    var selectionThemeColor: Color = .themePurple
+//
+//    var body: some View {
+//        VStack {
+//            HStack(spacing: 20) {
+//                MultiChoiceButton(label: "A", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
+//                MultiChoiceButton(label: "B", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
+//                MultiChoiceButton(label: "C", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
+//                MultiChoiceButton(label: "D", selectedOption: $selectedOption, isSelectionMade: $isSelectionMade, isTimerActive: $isTimerActive, timerCountdown: $timerCountdown)
+//            }
+//            .padding()
+//            .padding(.horizontal)
+//            .offset(y: -10)
+//            .disabled(isSelectionMade) // Disable all buttons if a selection is made
+//            
+//            VStack(alignment: .center) {
+//                Text("Tap to select... \(timerCountdown)")
+//                    .font(.subheadline)
+//                    .fontWeight(.semibold)
+//                    .foregroundStyle(mainThemeColor.dynamicTextColor())
+//                    .padding(.bottom)
+//            }
+//            Spacer()
+//        }
+//        .onAppear {
+//            startCountdown()
+//        }
+//        .onChange(of: selectedOption) { _, newSelectedOption in
+//            displaySelection(newSelectedOption)
+//        }
+//    }
+//
+//    private func displaySelection(_ selectedOption: String?) {
+//        guard let selectedOption = selectedOption, !selectedOption.isEmptyOrWhiteSpace else { return }
+//        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.progressText = selectedOption
+//            
+//        }
+//    }
+//
+//    private func startCountdown() {
+//        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+//            withAnimation(.linear(duration: 1)) {
+//                if self.timerCountdown > 0 {
+//                    self.timerCountdown -= 1
+//                } else {
+//                    timer.invalidate()
+//                    self.isTimerActive = false
+//                    if self.selectedOption == nil {
+//                        self.selectedOption = ""
+//                        self.interactionState = .successfulResponse
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 #Preview {
@@ -300,7 +301,6 @@ struct MultiChoiceButton: View {
     private func resetButton() {
         showProgressRing = false
         fillAmount = 0.0
-       
     }
     
     private func provideHapticFeedback() {
@@ -308,6 +308,7 @@ struct MultiChoiceButton: View {
         generator.impactOccurred()
     }
 }
+
 
 
 

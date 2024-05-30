@@ -31,6 +31,7 @@ struct MiniPlayerV2: View {
     @Binding var selectedQuizPackage: DownloadedAudioQuiz?
     @Binding var feedbackMessageUrls: FeedBackMessageUrls?
     @State var isQandA: Bool = UserDefaultsManager.isQandAEnabled()
+    @State var defaultQuestionCount: Int = UserDefaultsManager.numberOfTestQuestions()
     
     
     @Binding var interactionState: InteractionState
@@ -64,7 +65,11 @@ struct MiniPlayerV2: View {
     var body: some View {
         HStack(spacing: 10) {
             playerThumbnail
-            playerDetails
+            VStack(alignment: .leading, spacing: 0) {
+                playerDetails
+                currentQuizStatus
+                currentQuestionNumber
+            }
             MiniQuizControlView(
                 recordAction: { self.interactionState = .isListening },
                 playPauseAction: { playAction() },
@@ -111,9 +116,9 @@ struct MiniPlayerV2: View {
             updateViewWithPackage(newPackage)
             setThemeColors()
         }
-        .onChange(of: configuration.currentQuizPackage) { _, newPackage in
-            updateCurrentQuestions(newPackage)
-        }
+//        .onChange(of: configuration.currentQuizPackage) { _, newPackage in
+//            updateCurrentQuestions(newPackage)
+//        }
         .onChange(of: questionPlayer.interactionState) { _, newState in
             syncInteractionState(newState)
         }
@@ -127,9 +132,9 @@ struct MiniPlayerV2: View {
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
             syncInteractionState(newState)
         }
-        .onChange(of: selectedOptionButton) { _, newOptionSelection in
-            registerSelectedOptionButton(newOptionSelection)
-        }
+//        .onChange(of: selectedOptionButton) { _, selectedButton in
+//            registerSelectedOptionButton(selectedButton)
+//        }
         .onChange(of: globalTimer.interactionState) { _, newState in
             presentResponseInterface(newState)
         }
@@ -179,35 +184,34 @@ struct MiniPlayerV2: View {
         }
         .frame(width: 45, height: 45)
     }
-    
-    private func simpleDismiss() {
-        presentationManager.expandSheet = false
-        expandSheet = false
-    }
-    
-    func showFullScreen() -> Bool {
-        return expandSheet == true &&  presentationManager.expandSheet == true
-    }
 
     private var playerDetails: some View {
-        Text(user.downloadedQuiz?.shortTitle ?? "No Quiz Selected")
+        Text(user.downloadedQuiz?.shortTitle ?? "No Quiz Selected".uppercased())
             .font(.footnote)
             .foregroundStyle(.white)
+            .fontWeight(.bold)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private func registerSelectedOptionButton(_ selectedButtonOption: String?) {
-        guard let selectedButton = selectedButtonOption, !selectedButton.isEmptyOrWhiteSpace else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.interactionState = .noResponse
-            }
-            
-            return
-        }
+    private var currentQuizStatus: some View {
+        Text(quizPlayerObserver.playerState.status)
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var currentQuestionNumber: some View {
+        Text("Question \(currentQuestionIndex + 1) of \(currentQuestions.count)")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .opacity(quizPlayerObserver.playerState == .startedPlayingQuiz || quizPlayerObserver.playerState == .pausedCurrentPlay && expandSheet == false ? 1 : 0)
+    }
+    
+    func registerSelectedOptionButton(_ selectedButtonOption: String?) {
+        guard selectedButtonOption != nil else { return }
         
-        DispatchQueue.main.async {
-            self.interactionState = .successfulResponse
-        }
+        executeSuccessfulResponseSequence()
     }
     
 //    private func updatePublishedQuestionIndex(value: Int) {
@@ -363,9 +367,22 @@ extension MiniPlayerV2 {
     
     // MARK: QUIZ LOGICS
     //MARK: READY QUESTIONS
+//    func updateCurrentQuestions(_ newPackage: DownloadedAudioQuiz?) {
+//        if let package = newPackage {
+//            self.currentQuestions = package.questions.filter { !$0.questionAudio.isEmpty && !$0.isAnswered }
+//        }
+//    }
+    
     func updateCurrentQuestions(_ newPackage: DownloadedAudioQuiz?) {
         if let package = newPackage {
-            self.currentQuestions = package.questions.filter { !$0.questionAudio.isEmpty }
+            var filteredQuestions = package.questions.filter { !$0.questionAudio.isEmpty && !$0.isAnswered }
+            
+            // Limit the number of questions to defaultQuestionCount
+            if filteredQuestions.count > 15 {
+                filteredQuestions = Array(filteredQuestions.shuffled().prefix(15))
+            }
+            
+            self.currentQuestions = filteredQuestions
         }
     }
     
@@ -403,12 +420,14 @@ extension MiniPlayerV2 {
             UserDefaultsManager.updateCurrentScoreStreak(correctAnswerCount: 0)
             UserDefaultsManager.updateCurrentPosition(0)
             UserDefaultsManager.incrementNumberOfQuizSessions()
+            UserDefaultsManager.incrementNumberOfCurrentQuizSessions()
             self.selectedQuizPackage?.quizzesCompleted += 1
-            self.currentQuestions.forEach { question in
-                question.selectedOption = ""
-                question.isAnswered = false
-                question.isAnsweredCorrectly = false
-            }
+            self.currentQuestions = []
+//            self.currentQuestions.forEach { question in
+//                question.selectedOption = ""
+//                question.isAnswered = false
+//                question.isAnsweredCorrectly = false
+//            }
         }
     }
 
@@ -419,12 +438,11 @@ extension MiniPlayerV2 {
         let response = self.selectedOptionButton ?? responseListener.userTranscript
 
         guard !response.isEmptyOrWhiteSpace else {
-            if self.selectedOptionButton == nil {
-
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.interactionState = .noResponse
+                    
                 }
-            }
+           
             return
         }
 
@@ -439,6 +457,7 @@ extension MiniPlayerV2 {
 
         self.selectedOption = response
         selectOption(self.selectedOption)
+        self.selectedOptionButton = nil
         UserDefaultsManager.incrementTotalQuestionsAnswered()
     }
 
@@ -467,28 +486,18 @@ extension MiniPlayerV2 {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                     self.interactionState = .resumingPlayback
+                   
                 }
                 
             } else {
                 
                 self.interactionState = .isIncorrectAnswer
                 currentQuestion.isAnsweredCorrectly = false
+                
             }
             
             self.isCorrectAnswer = currentQuestion.isAnsweredCorrectly
         }
-    }
-    
-    
-    
-    
-    //Mark: Redundant Method
-    func fetchQuizReview(review readOut: String) async -> String {
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        //let questions = audioQuiz.questions
-        let readOutUrl = await contentBuilder.downloadReadOut(readOut: readOut) ?? ""
-        
-        return readOutUrl
     }
     
     func isActivePlay() -> Bool {
@@ -500,14 +509,16 @@ extension MiniPlayerV2 {
     func presentMiniPlayerResponder() -> Bool {
         return expandSheet == false && interactionState == .isListening || interactionState == .awaitingResponse
     }
-    
-    //MARK: FullScreen Player Observer
-    func showMiniPlayerConfirmationModal()  -> Bool  {
-        return expandSheet == false && interactionState == .hasResponded
-    }
-    
-    //MARK: TODO - Integrate Method For Continous Play Implementation
 
+    
+    //Mark: Redundant Method
+    func fetchQuizReview(review readOut: String) async -> String {
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        //let questions = audioQuiz.questions
+        let readOutUrl = await contentBuilder.downloadReadOut(readOut: readOut) ?? ""
+        
+        return readOutUrl
+    }
 }
 
 @Observable class SharedQuizState {
