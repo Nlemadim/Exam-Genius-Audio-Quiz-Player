@@ -11,6 +11,17 @@ import Combine
 
 class QuizPlayerObserver: ObservableObject {
     @Published var playerState: QuizPlayerState = .idle
+    @Published var currentQuizId: UUID? = nil
+    @Published var themeColor: Color = .themePurple
+}
+
+@Observable class QuizPlayerObserverV2 {
+    var playerState: QuizPlayerState = .idle
+    var currentQuizId: UUID? = nil
+    var themeColor: Color = .themePurple
+    var titleImage: String = "Logo"
+    var title: String = "VOQA"
+    var audioQuizDefaultImage: String = "IconImage"
 }
 
 enum QuizPlayerState {
@@ -24,7 +35,8 @@ enum QuizPlayerState {
     case idle
     case donePlaying
     case isAwaitingResponse
-    
+    case loadingQuiz
+
     var status: String {
         switch self {
         case .startedPlayingQuiz:
@@ -47,6 +59,9 @@ enum QuizPlayerState {
             return "Paused"
         case .restartQuiz:
             return "Restarting"
+        case .loadingQuiz:
+            return "Downloading"
+            
         }
     }
 }

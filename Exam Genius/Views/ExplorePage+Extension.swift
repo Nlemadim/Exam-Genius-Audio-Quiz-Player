@@ -57,7 +57,9 @@ extension ExplorePage {
             audioQuiz.questions.append(contentsOf: content.questions)
             user.selectedQuizPackage = audioQuiz
             self.interactionState = .idle
-            print("Downloaded")
+            Task {
+                await laodNewAudioQuiz(quiz: audioQuiz)
+            }
         }
     }
     

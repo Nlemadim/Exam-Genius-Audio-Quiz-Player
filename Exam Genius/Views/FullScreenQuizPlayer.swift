@@ -20,11 +20,6 @@ struct FullScreenQuizPlayer2: View {
     @State private var quizProgress: CGFloat = 0
     @State private var animateContent: Bool = false
     @State private var timer: Timer?
-    @State var optionA: String = ""
-    @State var optionB: String = ""
-    @State var optionC: String = ""
-    @State var optionD: String = ""
-    @State var question: String = ""
     @Binding var currentQuestionIndex: Int
     @Binding var selectedOptionButton: String?
     @Binding var presentMicModal: Bool
@@ -36,7 +31,7 @@ struct FullScreenQuizPlayer2: View {
     var playAction: () -> Void
     var nextAction: () -> Void
     var recordAction: () -> Void
-    let randomPower = [0, 1.2, 1.7, 3, 2, 1.6, 1.8, 2.7, 2.0, 3.5, 1.4]
+    
     
     //var animation: Namespace.ID
     var body: some View {
@@ -46,6 +41,7 @@ struct FullScreenQuizPlayer2: View {
                     VStack {
                         VStack(spacing: 10){
                             
+                            //Active Quiz Header View
                             HStack {
                                 Image(quizSetter.configuration?.imageUrl ??  "IconImage")
                                     .resizable()

@@ -32,6 +32,7 @@ struct MiniPlayerV2: View {
     @Binding var feedbackMessageUrls: FeedBackMessageUrls?
     @State var isQandA: Bool = UserDefaultsManager.isQandAEnabled()
     @State var defaultQuestionCount: Int = UserDefaultsManager.numberOfTestQuestions()
+    @State var quizName: String = UserDefaultsManager.quizName()
     
     
     @Binding var interactionState: InteractionState
@@ -116,9 +117,9 @@ struct MiniPlayerV2: View {
             updateViewWithPackage(newPackage)
             setThemeColors()
         }
-//        .onChange(of: configuration.currentQuizPackage) { _, newPackage in
-//            updateCurrentQuestions(newPackage)
-//        }
+        .onChange(of: configuration.currentQuizPackage) { _, newPackage in
+            updateCurrentQuestions(newPackage)
+        }
         .onChange(of: questionPlayer.interactionState) { _, newState in
             syncInteractionState(newState)
         }
@@ -132,9 +133,9 @@ struct MiniPlayerV2: View {
         .onChange(of: audioContentPlayer.interactionState) { _, newState in
             syncInteractionState(newState)
         }
-//        .onChange(of: selectedOptionButton) { _, selectedButton in
-//            registerSelectedOptionButton(selectedButton)
-//        }
+        .onChange(of: selectedOptionButton) { _, selectedButton in
+            registerSelectedOptionButton(selectedButton)
+        }
         .onChange(of: globalTimer.interactionState) { _, newState in
             presentResponseInterface(newState)
         }
@@ -211,33 +212,8 @@ struct MiniPlayerV2: View {
     func registerSelectedOptionButton(_ selectedButtonOption: String?) {
         guard selectedButtonOption != nil else { return }
         
-        executeSuccessfulResponseSequence()
+        intermissionPlayer.playReceivedResponseBell()
     }
-    
-//    private func updatePublishedQuestionIndex(value: Int) {
-//        guard currentQuestions.indices.contains(value) else { return }
-//        DispatchQueue.main.async {
-//            if value == 0 {
-//                configuration.currentQuestionIndex =  1
-//                print("Updated config index to : \(configuration.currentQuestionIndex)")
-//            } else {
-//                configuration.currentQuestionIndex = value + 1
-//                print("Updated config index to : \(configuration.currentQuestionIndex)")
-//            }
-//        }
-//    }
-    
-//    private func loadCurrentQuizStatus() {
-//        let isInProgress = UserDefaultsManager.quizInProgress()
-//        print("OnAppear quiz is in progress: \(isInProgress)")
-//        let currentStreak = UserDefaultsManager.currentScoreStreak()
-//        if isInProgress {
-//            self.quizPlayerObserver.playerState = .pausedCurrentPlay
-//            self.interactionState = .pausedPlayback
-//            loadPlayerPositions()
-//            self.correctAnswerCount = currentStreak
-//        }
-//    }
 }
 
 
@@ -430,7 +406,8 @@ extension MiniPlayerV2 {
 //            }
         }
     }
-
+    
+   
     
     //MARK: Step 3 Processes - Analyzing Response
     func executeSuccessfulResponseSequence() {

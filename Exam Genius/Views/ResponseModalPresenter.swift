@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct ResponseModalPresenter: View {
+    @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
+    @EnvironmentObject var user: User
+    @StateObject private var generator = ColorGenerator()
     @Binding var interactionState: InteractionState
     @Binding var selectedOption: String?
-    var mainColor: Color
-    var subColor: Color
+    
+    @State var mainColor: Color
+    @State var subColor: Color
     
     var body: some View {
         VStack {
@@ -27,6 +31,15 @@ struct ResponseModalPresenter: View {
         }
         .frame(maxWidth: .infinity)
         .background(mainColor)
+        .onAppear {
+            updateViewColors()
+        }
+    }
+    
+    func updateViewColors() {
+        generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
+        self.mainColor = generator.dominantBackgroundColor
+        self.subColor = generator.dominantLightToneColor 
     }
 }
 

@@ -36,6 +36,7 @@ struct MiniQuizControlView: View {
                     .font(.title)
             }
             .sensoryFeedback(.start, trigger: tappedPlay)
+            .disabled(interactionState == .isDownloading)
         
             
             // Next Button
@@ -45,7 +46,7 @@ struct MiniQuizControlView: View {
 //            }
 //            .sensoryFeedback(.selection, trigger: tappedPlay)
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(interactionState == .isDownloading ? .gray : .white)
         .padding(.horizontal)
 //        .onChange(of: interactionState) { _, _ in
 //            if isActivePlay() == false {

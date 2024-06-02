@@ -98,12 +98,6 @@ extension MiniPlayerV2 {
                     dismissAction()
                 }
                 
-            case .noResponse:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.interactionState = .noResponse
-                   
-                }
-                
             default:
                 break
             }
@@ -240,7 +234,7 @@ extension MiniPlayerV2 {
             switch state {
             case .startedPlayingQuiz:
                 updateCurrentQuestions(configuration.currentQuizPackage)
-//                self.expandAction()
+                self.expandAction()
 //                self.presentationManager.interactionState = .isNowPlaying
             case .restartQuiz:
                 self.resetQuizAndGetScore()

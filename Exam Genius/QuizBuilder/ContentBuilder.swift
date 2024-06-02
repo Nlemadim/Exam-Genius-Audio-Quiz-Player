@@ -185,10 +185,6 @@ class ContentBuilder {
             return nil
         }
     }
-    
-    private func downloadVoiceFeedBack() {
-        
-    }
 }
 
 
@@ -196,14 +192,21 @@ extension ContentBuilder {
     
     func buildQuestionsOnly(examName: String) async throws -> Container {
         try await fetchAndStoreAllTopics(examName: examName)
-        let selectedTopics = selectRandomTopics(limit: 4)
+        let selectedTopics = selectRandomTopics(limit: 2)
         await downloadQuestionsForTopics(selectedTopics, examName: examName)
         return container
     }
     
     func buildCompletePackage(examName: String, topics: [Topic]) async throws -> Container {
-        let numberPerTopic = 5
+        let numberPerTopic = 2
         await downloadCompleteQuestionsForAllTopics(topics, examName: examName, number: numberPerTopic)
+        return container
+    }
+    
+    func buildQuickQuiz(examName: String, topics: [Topic]) async throws -> Container {
+        let numberPerTopic = 2
+        let randomTopics = selectRandomTopics(limit: 5)
+        await downloadCompleteQuestionsForAllTopics(randomTopics, examName: examName, number: numberPerTopic)
         return container
     }
     

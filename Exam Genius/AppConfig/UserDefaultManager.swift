@@ -114,6 +114,17 @@ class UserDefaultsManager {
         UserDefaults.standard.set(inProgress, forKey: "quizInProgress")
     }
     
+    static func updateHasDownloadedSample(_ isDownloaded: Bool, for quiz: String) {
+        var samplesDictionary = UserDefaults.standard.dictionary(forKey: "sampleDownloads") as? [String: [String: Any]] ?? [String: [String: Any]]()
+        
+        samplesDictionary[quiz] = ["isDownloaded": isDownloaded]
+        
+        UserDefaults.standard.set(samplesDictionary, forKey: "sampleDownloads")
+    }
+
+    
+    
+    
     static func enableContinousFlow() {
         UserDefaults.standard.setValue(true, forKey: "isOnContinuousFlow")
     }
@@ -121,6 +132,16 @@ class UserDefaultsManager {
     static func updateRecievedInvalidResponseAdvisory() {
         UserDefaults.standard.setValue(true, forKey: "hasRecievedInvalidResponseAdvisory")
     }
+    
+    static func hasDownloadedSample(for quiz: String) -> Bool? {
+        guard let samplesDictionary = UserDefaults.standard.dictionary(forKey: "sampleDownloads") as? [String: [String: Any]],
+              let quizData = samplesDictionary[quiz],
+              let isDownloaded = quizData["isDownloaded"] as? Bool else {
+            return nil
+        }
+        return isDownloaded
+    }
+
     
     static func userName() -> String {
         return UserDefaults.standard.string(forKey: "userName") ?? ""
@@ -136,6 +157,12 @@ class UserDefaultsManager {
     
     static func isStudyModeEnabled() -> Bool {
         return UserDefaults.standard.bool(forKey: "isStudyMode")
+        
+    }
+    
+    static func hasDownloadedSample() -> Bool {
+        return UserDefaults.standard.bool(forKey: "hasDownloadedSample")
+
     }
     
     static func isHandfreeEnabled() -> Bool {

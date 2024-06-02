@@ -12,12 +12,24 @@ import SwiftData
 @Model
 class DownloadedAudioQuiz: Identifiable, Hashable {
     @Attribute(.unique) var quizname: String
+    var id: UUID
     var shortTitle: String
     var quizImage: String
     var dateCreated: Date
     var currentIndex: Int
     var quizzesCompleted: Int
     var questions: [Question]
+    
+    init(quizname: String, id: UUID, shortTitle: String, quizImage: String, dateCreated: Date, currentIndex: Int, quizzesCompleted: Int, questions: [Question]) {
+        self.quizname = quizname
+        self.id = id
+        self.shortTitle = shortTitle
+        self.quizImage = quizImage
+        self.dateCreated = dateCreated
+        self.currentIndex = currentIndex
+        self.quizzesCompleted = quizzesCompleted
+        self.questions = questions
+    }
     
     init(quizname: String, shortTitle: String, quizImage: String) {
         self.quizname = quizname
@@ -27,6 +39,7 @@ class DownloadedAudioQuiz: Identifiable, Hashable {
         self.currentIndex = 0
         self.questions = []
         self.quizzesCompleted = 0
+        self.id = UUID()
     }
 }
 

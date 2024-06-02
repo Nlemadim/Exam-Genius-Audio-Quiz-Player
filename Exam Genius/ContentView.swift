@@ -15,7 +15,9 @@ struct ContentView: View {
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    @StateObject private var generator = ColorGenerator()
     let quizDataManager = QuizDataManager()
+    
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     @Query(sort: \VoiceFeedbackMessages.id) var voiceFeedbackMessages: [VoiceFeedbackMessages]
@@ -87,7 +89,9 @@ struct ContentView: View {
         }
         print("Content view has assigned package to user")
         user.selectedQuizPackage = userPacket
+        generator.updateAllColors(fromImageNamed: userPacket.name)
         UserDefaultsManager.setQuizName(quizName: userPacket.name)
+       
     }
     
     func fetchDownloadedMainAudioQuiz() {
@@ -101,7 +105,7 @@ struct ContentView: View {
             return
         }
         
-        user.downloadedQuiz = userAudioQuiz
+       // user.downloadedQuiz = userAudioQuiz
         print("Assigned User Downloaded Quiz")
     }
 }

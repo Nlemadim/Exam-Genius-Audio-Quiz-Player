@@ -16,10 +16,11 @@ struct ExplorePage: View {
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @StateObject var audioContentPlayer = AudioContentPlayer()
-    
+    @State private var quizName = UserDefaultsManager.quizName()
     @State var interactionState: InteractionState = .idle
     @State var selectedQuizPackage: AudioQuizPackage?
     @State var downloadedAudioQuiz: DownloadedAudioQuiz?
+    @State var downloadFullPackage: Bool = false
     @State private var searchText = ""
     @Binding var selectedTab: Int
     @State var didTapSample: Bool = false
@@ -53,7 +54,7 @@ struct ExplorePage: View {
                 }
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapSample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
+                QuizDetailPage(audioQuiz: selectedQuiz)
             }
             .onChange(of: user.selectedQuizPackage, { _, audioQuiz in
                 if let audioQuiz = audioQuiz {
@@ -63,11 +64,13 @@ struct ExplorePage: View {
                     }
                 }
             })
-            .onChange(of: didTapDownload, { _, _ in
-                if let selectePackage = self.selectedQuizPackage, !selectePackage.questions.isEmpty {
-                    user.selectedQuizPackage = self.selectedQuizPackage
-                    selectedTab = 1
-                } else {
+            .onChange(of: didTapDownload, { _, download in
+                print(download)
+                if download {
+                    guard let selectePackage = self.selectedQuizPackage, selectePackage.questions.isEmpty else {
+                        navigateToPlayer(true)
+                        return
+                    }
                     Task {
                         await fetchFullPackage()
                     }
@@ -75,6 +78,20 @@ struct ExplorePage: View {
             })
             .onChange(of: didTapSample, { _, newValue in
                 playSampleQuiz(newValue)
+            })
+            .onChange(of: didTapSample, { _, newValue in
+                playSampleQuiz(newValue)
+            })
+            .onChange(of: goToLibrary, { _, newValue in
+                print(newValue)
+                navigateToPlayer(newValue)
+            })
+            .onChange(of: downloadFullPackage, { _, download in
+                if download {
+                    Task {
+                       try await downloadBasicPackage()
+                    }
+                }
             })
             .navigationTitle("Explore")
             .navigationBarTitleDisplayMode(.large)
@@ -94,32 +111,70 @@ struct ExplorePage: View {
         }
     }
     
+    private func navigateToPlayer(_ navigate: Bool) {
+        if navigate {
+            if let newQuiz = downloadedAudioQuizCollection.first(where: {$0.quizname == self.quizName}) {
+                DispatchQueue.main.async {
+                    user.downloadedQuiz = newQuiz
+                    user.selectedQuizPackage = self.selectedQuizPackage
+                    UserDefaultsManager.setQuizName(quizName: newQuiz.quizname)
+                    self.selectedTab = 1
+                }
+            }
+        }
+    }
+    
     func laodNewAudioQuiz(quiz package: AudioQuizPackage) async  {
         
+        // Check if the package name already exists in the downloaded collection
         guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == package.name }) else { return }
         
         DispatchQueue.main.async {
-            self.interactionState = .isDownloading
+            print("Creating New Audio Quiz")
         }
         
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-       
         let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
-        
         let audioQuestions = package.questions
         
         await contentBuilder.downloadAudioQuestions(for: audioQuestions)
-        
         newDownloadedQuiz.questions = audioQuestions
-        self.downloadedAudioQuiz = newDownloadedQuiz
         
         modelContext.insert(newDownloadedQuiz)
         try! modelContext.save()
         
         DispatchQueue.main.async {
-            user.downloadedQuiz = self.downloadedAudioQuiz
+            user.downloadedQuiz = newDownloadedQuiz
+            UserDefaultsManager.setQuizName(quizName: newDownloadedQuiz.quizname)
             UserDefaults.standard.set(true, forKey: "hasSelectedAudioQuiz")
             self.interactionState = .idle
+            
+        }
+    }
+    
+    private func downloadBasicPackage() async throws {
+        print("Downloading Complete Package")
+        guard let audioQuiz = audioQuizCollection.first(where: { $0.name == self.quizName }) else {
+            print("Package Not Found")
+            return // Exit if audioQuiz is not found
+        }
+        
+        guard audioQuiz.questions.count <= 300 else {
+            return // Exit if there are too many questions in audioQuiz
+        }
+        
+        DispatchQueue.main.async {
+            self.interactionState = .isDownloading
+            print("Starting complete download process")
+        }
+       
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name, topics: audioQuiz.topics)
+        
+        DispatchQueue.main.async {
+            audioQuiz.topics.append(contentsOf: content.topics)
+            audioQuiz.questions.append(contentsOf: content.questions)
+            self.downloadFullPackage = false
         }
     }
 }

@@ -221,16 +221,9 @@ extension MiniPlayerV2 {
     //MARK: Show Full Screen Method
     func expandAction() {
         guard selectedQuizPackage != nil else { return }
-//        let currentPos = UserDefaultsManager.currentPlayPosition()
-//        self.configuration.currentQuestionIndex = currentPos
-        //UserDefaultsManager.updateCurrentQuizStatus(inProgress: true)
-        
         expandSheet = true
-        presentationManager.expandSheet = true
-        
         configuration.interactionState = self.interactionState
         startQuizAudioPlay()
-        
     }
     
     func startOrContinue() {

@@ -16,6 +16,8 @@ struct HomePage: View {
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     
+    let quizPlayerObserverV2 = QuizPlayerObserverV2()
+    
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @Query(sort: \VoiceFeedbackMessages.id) var voiceFeedbackMessages: [VoiceFeedbackMessages]
@@ -51,6 +53,7 @@ struct HomePage: View {
     @State var didTapPlaySample: Bool = false
     @State var isDownloadingSample: Bool = false
     @State var goToLibrary: Bool = false
+    @State var downloadFullPackage: Bool = false
     @State var isPlaying: Bool = false
     
     @State var bottomSheetOffset = -UIScreen.main.bounds.width
@@ -116,25 +119,24 @@ struct HomePage: View {
             /// Hiding tabBar when Sheet is expended
             .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                QuizDetailPage(audioQuiz: selectedQuiz, didTapSample: $didTapPlaySample, didTapDownload: $didTapDownload, goToLibrary: $goToLibrary, interactionState: $interactionState)
+                QuizDetailPage(audioQuiz: selectedQuiz)
             }
             .onChange(of: goToLibrary, { _, newValue in
                 goToUserLibrary(newValue)
             })
-            .onChange(of: didTapDownload, { _, newValue in
-                fetchFullPackage(newValue)
-            })
-            .onChange(of: didTapPlaySample, { _, newValue in
-                playSampleQuiz(newValue)
-            })
-            .onChange(of: refreshAudioQuiz, { _, newValue in
-                //refreshQuiz(newValue)
-            })
-            .onChange(of: user.downloadedQuiz, { _, _ in
-                if let userPackage = user.selectedQuizPackage, userPackage.questions.count <= 300 {
-                    Task {
-                        try await downloadBasicPackage()
+            .onChange(of: user.downloadedQuiz, { _, newValue in
+                if let value = newValue {
+                    selectedTab = 1
+                    generator.updateAllColors(fromImageNamed: value.quizImage)
+                    DispatchQueue.main.async {
+                        quizPlayerObserver.themeColor = generator.dominantBackgroundColor
                     }
+                }
+            })
+            .onChange(of: selectedTab, { _, newValue in
+                print("Selected Tab changed to \(newValue)")
+                if newValue == 1 {
+                    navigateToPlayer()
                 }
             })
             .tabItem {
@@ -163,24 +165,19 @@ struct HomePage: View {
         .onAppear {
             UITabBar.appearance().barTintColor = UIColor.black
             generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
+            self.quizPlayerObserver.themeColor = generator.dominantBackgroundColor
+
             self.themeColor = generator.dominantBackgroundColor
             self.themeSubColor = generator.dominantLightToneColor
             updateCollections()
             navigateToPlayer()
             packetStatusPrintOut()
-            Task {
-                await loadUserDetails()
-            }
+            loadUserDetails()
         }
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
-            let color: Color = generator.dominantBackgroundColor
-            BottomMiniPlayer(color: color)
+            BottomMiniPlayer(color: updateThemeColor())
                 .opacity(keyboardObserver.isKeyboardVisible || didTapEdit ? 0 : 1)
-                .onAppear(perform: {
-                    generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
-                })
-                
         }
         .preferredColorScheme(.dark)
     }
@@ -191,6 +188,10 @@ struct HomePage: View {
         } else {
             selectedTab = 1
         }
+    }
+    
+    private func updateThemeColor() -> Color {
+        return quizPlayerObserver.themeColor
     }
     
     
@@ -221,7 +222,7 @@ struct HomePage: View {
 
 
 #Preview {
-    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
+//    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
     let user = User()
     let appState = AppState()
     let observer = QuizPlayerObserver()
