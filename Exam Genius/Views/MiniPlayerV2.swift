@@ -66,11 +66,13 @@ struct MiniPlayerV2: View {
     var body: some View {
         HStack(spacing: 10) {
             playerThumbnail
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 4) {
                 playerDetails
                 currentQuizStatus
                 currentQuestionNumber
             }
+            .padding(.top, 20)
+            
             MiniQuizControlView(
                 recordAction: { self.interactionState = .isListening },
                 playPauseAction: { playAction() },
@@ -156,7 +158,6 @@ struct MiniPlayerV2: View {
         }
     }
     
-    
     private func setThemeColors() {
         generator.updateAllColors(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
         DispatchQueue.main.async {
@@ -164,7 +165,6 @@ struct MiniPlayerV2: View {
             self.subThemeColor = generator.enhancedDominantColor
         }
     }
-    
     
     private func playAction() {
         selectResponsePresenter()
@@ -187,11 +187,12 @@ struct MiniPlayerV2: View {
     }
 
     private var playerDetails: some View {
-        Text(user.downloadedQuiz?.shortTitle ?? "No Quiz Selected".uppercased())
+        Text(user.downloadedQuiz?.shortTitle ?? "Selected A Quiz".uppercased())
             .font(.footnote)
             .foregroundStyle(.white)
             .fontWeight(.bold)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 4.0)
     }
     
     private var currentQuizStatus: some View {
@@ -199,6 +200,7 @@ struct MiniPlayerV2: View {
             .font(.footnote)
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
+
     }
     
     private var currentQuestionNumber: some View {
@@ -223,7 +225,8 @@ extension MiniPlayerV2 {
         generator.updateAllColors(fromImageNamed: self.configuration.configuration?.imageUrl ?? "")
         if let newPackage = self.selectedQuizPackage {
             configuration.loadQuizConfiguration(quizPackage: newPackage)
-            configuration.quizQuestionCount = selectedQuizPackage?.questions.count ?? 0
+            //configuration.quizQuestionCount = selectedQuizPackage?.questions.count ?? 0
+            configuration.quizQuestionCount = currentQuestions.count
         }
     }
     
@@ -333,11 +336,13 @@ extension MiniPlayerV2 {
         guard currentQuestions.indices.contains(currentQuestionIndex) else { return }
         let question = currentQuestions[currentQuestionIndex].questionContent
         configuration.loadQuestionScriptViewer(question: question)
+        configuration.quizQuestionCount = currentQuestions.count
     }
     
     func updateViewWithPackage(_ newPackage: DownloadedAudioQuiz?) {
         if let package = newPackage {
             configuration.loadQuizConfiguration(quizPackage: package)
+            configuration.quizQuestionCount = currentQuestions.count
         }
     }
     
@@ -359,6 +364,7 @@ extension MiniPlayerV2 {
             }
             
             self.currentQuestions = filteredQuestions
+            configuration.quizQuestionCount = self.currentQuestions.count
         }
     }
     
@@ -407,6 +413,8 @@ extension MiniPlayerV2 {
         }
     }
     
+    
+    
    
     
     //MARK: Step 3 Processes - Analyzing Response
@@ -437,6 +445,20 @@ extension MiniPlayerV2 {
         self.selectedOptionButton = nil
         UserDefaultsManager.incrementTotalQuestionsAnswered()
     }
+    
+    func executeCorrectAnswerSequence() {
+        if self.isQandA {
+            playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                self.interactionState = .resumingPlayback
+            }
+        } else {
+            self.intermissionPlayer.playErrorTranscriptionBell()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.interactionState = .resumingPlayback
+            }
+        }
+    }
 
     private func resetMiniplayerResponsePresenter() {
         if presentMiniModal {
@@ -457,15 +479,8 @@ extension MiniPlayerV2 {
                 self.correctAnswerCount += 1
                 self.interactionState = .isCorrectAnswer
                 
-                if isQandA {
-                    playFeedbackMessage(feedbackMessageUrls?.correctAnswerCallout)
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    self.interactionState = .resumingPlayback
-                   
-                }
-                
+                self.executeCorrectAnswerSequence()
+            
             } else {
                 
                 self.interactionState = .isIncorrectAnswer

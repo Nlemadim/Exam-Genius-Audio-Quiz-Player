@@ -90,7 +90,8 @@ extension MiniPlayerV2 {
         if self.isQandA {
             playCorrectionAudio()
         } else {
-            DispatchQueue.main.async {
+            self.intermissionPlayer.playErrorTranscriptionBell()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.interactionState = .resumingPlayback
             }
         }

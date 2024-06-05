@@ -20,6 +20,7 @@ class UserDefaultsManager {
         UserDefaults.standard.set(quizName, forKey: "quizName")
     }
     
+    
     static func setQuizMode(mode: String) {
         UserDefaults.standard.set(mode, forKey: "quizMode")
     }
@@ -98,6 +99,10 @@ class UserDefaultsManager {
         UserDefaults.standard.setValue(micOn, forKey: "isHandfreeEnabled")
     }
     
+    static func hasFullVersion(_ hasFullVersion: Bool) {
+        UserDefaults.standard.setValue(hasFullVersion, forKey: "hasFullVersion")
+    }
+    
     static func enableQandA(_ isQandA: Bool) {
         UserDefaults.standard.setValue(isQandA, forKey: "isQandAEnabled")
     }
@@ -121,9 +126,15 @@ class UserDefaultsManager {
         
         UserDefaults.standard.set(samplesDictionary, forKey: "sampleDownloads")
     }
+    
+    static func updateHasDownloadedFullVersion(_ isDownloaded: Bool, for quiz: String) {
+        var samplesDictionary = UserDefaults.standard.dictionary(forKey: "hasFullVersion") as? [String: [String: Any]] ?? [String: [String: Any]]()
+        
+        samplesDictionary[quiz] = ["isDownloaded": isDownloaded]
+        
+        UserDefaults.standard.set(samplesDictionary, forKey: "hasFullVersion")
+    }
 
-    
-    
     
     static func enableContinousFlow() {
         UserDefaults.standard.setValue(true, forKey: "isOnContinuousFlow")
@@ -135,6 +146,15 @@ class UserDefaultsManager {
     
     static func hasDownloadedSample(for quiz: String) -> Bool? {
         guard let samplesDictionary = UserDefaults.standard.dictionary(forKey: "sampleDownloads") as? [String: [String: Any]],
+              let quizData = samplesDictionary[quiz],
+              let isDownloaded = quizData["isDownloaded"] as? Bool else {
+            return nil
+        }
+        return isDownloaded
+    }
+    
+    static func hasFullVersion(for quiz: String) -> Bool? {
+        guard let samplesDictionary = UserDefaults.standard.dictionary(forKey: "hasFullVersion") as? [String: [String: Any]],
               let quizData = samplesDictionary[quiz],
               let isDownloaded = quizData["isDownloaded"] as? Bool else {
             return nil

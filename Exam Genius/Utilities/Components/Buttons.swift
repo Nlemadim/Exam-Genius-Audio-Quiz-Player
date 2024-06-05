@@ -35,7 +35,7 @@ struct PlayPauseButton: View {
                         .frame(width: 25, height: 25)
                 }
                 
-                Text(isDownloading ? "Downloading" : (isPlaying ? "Pause Sample Question" : "Play Sample Question"))
+                Text(isDownloading ? "Downloading" : (isPlaying ? "Pause Demo" : "Play Demo Quiz"))
                     .font(.subheadline)
             }
         }
@@ -346,7 +346,7 @@ struct PlaySampleButton: View {
             
         }) {
             HStack(spacing: 4) {
-                Text(interactionState == .isNowPlaying ? "Playing Sample" : "Play Sample")
+                Text(interactionState == .isNowPlaying ? "Playing Demo" : "Play Demo Quiz")
                     .font(.caption2)
                     .fontWeight(.medium)
                     .foregroundStyle(.white)

@@ -56,14 +56,17 @@ extension HomePage {
             print("Quiz name is unavailable")
             return }
         
-        guard let audioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizName }) else {
-            print("No downloaded quiz")
+        if downloadedAudioQuizCollection.isEmpty {
             return
-        }
-        
-        DispatchQueue.main.async {
-            user.downloadedQuiz = audioQuiz
-        }
+        } else {
+            let userPacket = downloadedAudioQuizCollection.first(where: {$0.quizname == self.quizName})
+            let hasFullVersion =  UserDefaultsManager.hasFullVersion(for: userPacket?.quizname ?? "UnKnown") ?? false
+            if hasFullVersion {
+                DispatchQueue.main.async {
+                    user.downloadedQuiz = userPacket
+                }
+            }
+        } 
     }
     
     func getFeedBackMessages() -> FeedBackMessageUrls {

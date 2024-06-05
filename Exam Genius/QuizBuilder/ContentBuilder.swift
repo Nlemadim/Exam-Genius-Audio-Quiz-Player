@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Container {
     var id: UUID
@@ -112,6 +113,8 @@ class ContentBuilder {
         }
     }
     
+    
+    //Modify for determining returning, skipped, modified or new question
     private func determineContext(for index: Int, totalCount: Int) -> String {
         if index == 0 {
             return "New Question"
@@ -170,7 +173,6 @@ class ContentBuilder {
         return fileName
     }
     
-    
     private func saveAudioDataToFile(_ data: Data) -> String? {
         let fileManager = FileManager.default
         let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -185,6 +187,7 @@ class ContentBuilder {
             return nil
         }
     }
+    
 }
 
 
@@ -197,9 +200,16 @@ extension ContentBuilder {
         return container
     }
     
-    func buildCompletePackage(examName: String, topics: [Topic]) async throws -> Container {
+    func buildCompletePackage(examName: String) async throws -> Container {
         let numberPerTopic = 2
-        await downloadCompleteQuestionsForAllTopics(topics, examName: examName, number: numberPerTopic)
+        let downloadedTopics = try await networkService.fetchTopics(context: examName)
+        downloadedTopics.forEach { topic in
+            let packageTopics = Topic(name: topic)
+            container.topics.append(packageTopics)
+        }
+        
+        let questionTopics = container.topics
+        await downloadCompleteQuestionsForAllTopics(questionTopics, examName: examName, number: numberPerTopic)
         return container
     }
     

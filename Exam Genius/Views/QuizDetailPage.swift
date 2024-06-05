@@ -17,21 +17,25 @@ struct QuizDetailPage: View {
     @StateObject private var generator = ColorGenerator()
     @State var quizName = UserDefaultsManager.quizName()
     
+    
     @Bindable var audioQuiz: AudioQuizPackage
+    @Binding var selectedTab: Int
     
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
     
     @State var interactionState: InteractionState = .idle
-
-    @State var downloadButtonLabel: String = "Free Download"
+    
+    @State var downloadButtonLabel: String = "Download Full Version"
     @State var playButtonLabel: String = "Play Sample"
     @State var stillDownloading: Bool = false
     @State var hasDownloadedSample: Bool = false
+    @State var hasFullVersion: Bool = false
     
-    init(audioQuiz: AudioQuizPackage) {
+    init(audioQuiz: AudioQuizPackage, selectedTab: Binding<Int>) {
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
+        _selectedTab = selectedTab
     }
     
     var body: some View {
@@ -68,46 +72,38 @@ struct QuizDetailPage: View {
                                 .foregroundStyle(.primary)
                                 .frame(maxWidth: .infinity)
                                 .hAlign(.center)
-                               
+                            
                         }
                         .frame(height: 300)
                         .frame(maxWidth:.infinity)
                         .padding()
                         .hAlign(.center)
                         
-
-                        VStack(alignment: .leading, spacing: 8.0) {
+                        
+                        VStack(alignment: .leading) {
                             
-                            PlainClearButton(color: generator.dominantBackgroundColor.opacity(interactionState == .isDownloading ? 0 : 1), label: !hasDownloadedSample ? "Download Sample" : interactionState == .isDownloading ? "Downloading" : "Start Quiz") {
-                                fetchOrPlaySample()
-//                                if !hasDownloadedSample {
-//                                    Task {
-//                                        try await downloadQuickQuiz()
-//                                    }
-//                                } else {
-//                                    playQuickQuiz()
-//                                }
+                            PlaySampleButton(interactionState: .constant(.idle), playAction: {fetchOrPlaySample()})
+                                .padding(.horizontal)
+                                .padding()
+                                .hAlign(.center)
+                            
+                            PlainClearButton(color: interactionState == .isDownloading ? generator.dominantBackgroundColor.opacity(0.4) : generator.dominantBackgroundColor, label: !hasFullVersion ? downloadButtonLabel : "Start Quiz") {
+                                goToFullVersion()
                             }
                             .disabled(interactionState == .isDownloading)
                             .padding(.horizontal)
-                            .opacity(hasDownloadedSample ? 0 : 1)
+                            .padding(5)
                             
-                            PlainClearButton(color: generator.dominantBackgroundColor, label: audioQuiz.questions.count < 20 ?  "Download Full Version" : "Go to Player") {
-                                Task {
-                                    try await downloadBasicPackage()
-                                }
-                            }
-                            .disabled(interactionState == .isDownloading)
-                            .padding(.horizontal)
-                    
                             NavigationLink(destination: Text("Customize Page"), label: {
-                                PlainClearButton(color: generator.dominantBackgroundColor.opacity(0.7), label: "Customize") {
+                                PlainClearButton(color: .themePurple, label: "Customize") {
                                     //downloadAudioQuiz()
                                 }
                                 .padding(.horizontal)
+                                .padding(5)
                             })
                         }
-                        .padding()
+                        .padding(.horizontal)
+                        .offset(y: -50)
                         
                         VStack {
                             
@@ -178,6 +174,9 @@ struct QuizDetailPage: View {
         }
         .onAppear {
             updateViewColors()
+            checkSampleAvailability()
+            checkVersionAvailability()
+            
         }
         .preferredColorScheme(.dark)
     }
@@ -190,9 +189,9 @@ struct QuizDetailPage: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
         @State var package = AudioQuizPackage(id: UUID(), name: "The California Bar Examination American History", about: "The California Bar Examination is a rigorous test for aspiring lawyers. It consists of multiple components, including essay questions and performance tests. ", imageUrl: "AmericanHistory-Exam", category: [.legal])
-   
         
-        return QuizDetailPage(audioQuiz: package)
+        
+        return QuizDetailPage(audioQuiz: package, selectedTab: .constant(0))
             .modelContainer(container)
             .environmentObject(user)
             .environmentObject(observer)
@@ -210,8 +209,6 @@ extension QuizDetailPage {
             Task {
                 try await downloadQuickQuiz()
             }
-        } else {
-            playQuickQuiz()
         }
     }
     
@@ -220,6 +217,26 @@ extension QuizDetailPage {
         self.quizPlayerObserver.playerState = .startedPlayingQuiz
         dismiss()
     }
+    
+    func goToFullVersion() {
+        guard let Fullpacket = audioQuizCollection.first(where: {$0.name == self.audioQuiz.name}) else {
+            print("Package Not Found")
+            return
+        }
+        if Fullpacket.questions.count >= 35 {
+            DispatchQueue.main.async {
+                UserDefaultsManager.updateHasDownloadedFullVersion(true, for: self.audioQuiz.name)
+                self.selectedTab = 1
+                dismiss()
+            }
+        } else {
+            Task {
+                try await downloadBasicPackage()
+            }
+        }
+    }
+    
+    
     
     func updateViewColors() {
         generator.updateDominantColor(fromImageNamed: audioQuiz.imageUrl)
@@ -236,8 +253,7 @@ extension QuizDetailPage {
             }
         } else {
             DispatchQueue.main.async {
-                self.interactionState = .idle
-                self.downloadButtonLabel = "Sample Quiz"
+                self.downloadButtonLabel = "Download Full Version"
                 self.playButtonLabel = "Play Sample"
                 
             }
@@ -245,26 +261,37 @@ extension QuizDetailPage {
     }
     
     func downloadBasicPackage() async throws {
-        guard self.audioQuiz.questions.isEmpty else { return }
-       
-        guard let audioQuiz = audioQuizCollection.first(where: { $0.name == audioQuiz.name }) else {
-            print("Package Not Found")
-            return // Exit if audioQuiz is not found
-        }
-        
+        guard !hasFullVersion else { return }
         DispatchQueue.main.async {
             print("Downloading Complete Package")
             self.interactionState = .isDownloading
-            UserDefaultsManager.setQuizName(quizName: audioQuiz.name)
+           
         }
-       
+        
+        guard let audioQuiz = audioQuizCollection.first(where: { $0.name == self.audioQuiz.name }), audioQuiz.questions.count <= 50 else {
+            print("Package Not Found")
+            DispatchQueue.main.async {
+                print("Downloading Complete Package")
+                self.interactionState = .idle
+                self.selectedTab = 1
+                dismiss()
+               
+            }
+            return // Exit if audioQuiz is not found
+        }
+        
+        
+        
         let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
-        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name, topics: audioQuiz.topics)
+        let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name)
         
         DispatchQueue.main.async {
             audioQuiz.topics.append(contentsOf: content.topics)
             audioQuiz.questions.append(contentsOf: content.questions)
             self.interactionState = .idle
+            self.hasFullVersion = true
+            createNewAudioQuiz(audioQuiz)
+            
         }
     }
     
@@ -293,7 +320,7 @@ extension QuizDetailPage {
         } catch {
             print("Failed to save new downloaded quiz: \(error)")
         }
-       
+        
         DispatchQueue.main.async {
             newDownloadedQuiz.questions.append(contentsOf: content.questions)
             user.downloadedQuiz = newDownloadedQuiz
@@ -301,7 +328,35 @@ extension QuizDetailPage {
             self.interactionState = .idle
             self.hasDownloadedSample = true
             UserDefaultsManager.updateHasDownloadedSample(true, for: "\(newDownloadedQuiz.quizname)")
-
+            //Open QuizPlayer Tab
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.selectedTab = 1
+                playQuickQuiz()
+            }
+        }
+    }
+    
+    func createNewAudioQuiz(_ selectedQuizPackage: AudioQuizPackage) {
+        let newDownloadedQuiz = DownloadedAudioQuiz(quizname: selectedQuizPackage.name, shortTitle: selectedQuizPackage.acronym, quizImage: selectedQuizPackage.imageUrl)
+        
+        modelContext.insert(newDownloadedQuiz)
+        
+        do {
+            try modelContext.save()
+            
+        } catch {
+            print("Failed to save new downloaded quiz: \(error)")
+        }
+        
+        DispatchQueue.main.async {
+            user.downloadedQuiz = newDownloadedQuiz
+            print("Saved new downloaded quiz after Full Version Download: \(newDownloadedQuiz.quizname)")
+            UserDefaultsManager.setQuizName(quizName: newDownloadedQuiz.quizname)
+            self.interactionState = .idle
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                self.selectedTab = 1
+//                dismiss()
+//            }
         }
     }
     
@@ -309,6 +364,13 @@ extension QuizDetailPage {
         let sampleAvailable = UserDefaultsManager.hasDownloadedSample(for: self.audioQuiz.name) ?? false
         DispatchQueue.main.async {
             self.hasDownloadedSample = sampleAvailable
+        }
+    }
+    
+    private func checkVersionAvailability() {
+        let hasFullVersion = UserDefaultsManager.hasFullVersion(for: self.audioQuiz.name) ?? false
+        DispatchQueue.main.async {
+            self.hasFullVersion = hasFullVersion
         }
     }
 }

@@ -34,6 +34,7 @@ struct HomePage: View {
     @State var defaultQuestionCount = UserDefaultsManager.numberOfTestQuestions()
     @State var quizName = UserDefaultsManager.quizName()
     
+    
     @State var selectedQuizPackage: AudioQuizPackage?
     @State var topCollectionQuizzes: [AudioQuizPackage] = []
     @State var topFreeCollection: [AudioQuizPackage] = []
@@ -118,25 +119,28 @@ struct HomePage: View {
             }
             /// Hiding tabBar when Sheet is expended
             .toolbar(expandSheet ? .hidden : .visible, for: .tabBar)
-            .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
-                QuizDetailPage(audioQuiz: selectedQuiz)
+            .onAppear {
+                UITabBar.appearance().barTintColor = UIColor.black
+                self.selectedTab = 0
+                generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
+                self.quizPlayerObserver.themeColor = generator.dominantBackgroundColor
+                updateThemeColor()
+                self.themeSubColor = generator.dominantLightToneColor
+                updateCollections()
+               // navigateToPlayer()
+                packetStatusPrintOut()
+                loadUserDetails()
             }
-            .onChange(of: goToLibrary, { _, newValue in
-                goToUserLibrary(newValue)
-            })
+            .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
+                QuizDetailPage(audioQuiz: selectedQuiz, selectedTab: $selectedTab)
+            }
             .onChange(of: user.downloadedQuiz, { _, newValue in
                 if let value = newValue {
-                    selectedTab = 1
-                    generator.updateAllColors(fromImageNamed: value.quizImage)
                     DispatchQueue.main.async {
+                        generator.updateAllColors(fromImageNamed: value.quizImage)
                         quizPlayerObserver.themeColor = generator.dominantBackgroundColor
+                        updateThemeColor()
                     }
-                }
-            })
-            .onChange(of: selectedTab, { _, newValue in
-                print("Selected Tab changed to \(newValue)")
-                if newValue == 1 {
-                    navigateToPlayer()
                 }
             })
             .tabItem {
@@ -144,7 +148,7 @@ struct HomePage: View {
             }
             .tag(0)
 
-            QuizPlayerView(refreshAudioQuiz: $refreshAudioQuiz)
+            QuizPlayerView(selectedTab: $selectedTab)
                 .tabItem {
                     TabIcons(title: "Quiz player", icon: "play.circle")
                 }
@@ -162,22 +166,14 @@ struct HomePage: View {
                 }
                 .tag(3)
         }
-        .onAppear {
-            UITabBar.appearance().barTintColor = UIColor.black
-            generator.updateDominantColor(fromImageNamed: user.selectedQuizPackage?.imageUrl ?? "Logo")
-            self.quizPlayerObserver.themeColor = generator.dominantBackgroundColor
-
-            self.themeColor = generator.dominantBackgroundColor
-            self.themeSubColor = generator.dominantLightToneColor
-            updateCollections()
-            navigateToPlayer()
-            packetStatusPrintOut()
-            loadUserDetails()
-        }
+        
         .tint(.white).activeGlow(.white, radius: 2)
         .safeAreaInset(edge: .bottom) {
-            BottomMiniPlayer(color: updateThemeColor())
+            BottomMiniPlayer(color: generator.dominantBackgroundColor)
                 .opacity(keyboardObserver.isKeyboardVisible || didTapEdit ? 0 : 1)
+                .onAppear {
+                    generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
+                }
         }
         .preferredColorScheme(.dark)
     }
@@ -186,15 +182,19 @@ struct HomePage: View {
         if downloadedAudioQuizCollection.isEmpty {
             return
         } else {
-            selectedTab = 1
+            let userPacket = downloadedAudioQuizCollection.first(where: {$0.quizname == self.quizName})
+            let hasFullVersion =  UserDefaultsManager.hasFullVersion(for: userPacket?.quizname ?? "UnKnown") ?? false
+            if hasFullVersion {
+                user.downloadedQuiz = userPacket
+            }
         }
     }
     
-    private func updateThemeColor() -> Color {
-        return quizPlayerObserver.themeColor
+    private func updateThemeColor() {
+        DispatchQueue.main.async {
+            self.themeColor = quizPlayerObserver.themeColor
+        }
     }
-    
-    
 
     @ViewBuilder
     private func BottomMiniPlayer(color: Color) -> some View {

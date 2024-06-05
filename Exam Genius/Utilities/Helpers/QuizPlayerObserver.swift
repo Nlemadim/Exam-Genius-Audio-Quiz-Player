@@ -36,31 +36,51 @@ enum QuizPlayerState {
     case donePlaying
     case isAwaitingResponse
     case loadingQuiz
+    case playingSample
+    case donePlayingSample
 
     var status: String {
+        
         switch self {
+            
         case .startedPlayingQuiz:
             return "Quiz in Progress"
+            
         case .startedPlayingTopic:
             return "Now Playing"
+            
         case .startedPlayingAd:
             return "Sponsored"
+            
         case .startedPlayingMusic:
             return "mp3 Song"
+            
         case .endedQuiz:
             return "Quiz complete"
+            
         case .idle:
             return "Start A Quiz"
+            
         case .donePlaying:
             return "done"
+            
         case .isAwaitingResponse:
             return "Awaiting Response"
+            
         case .pausedCurrentPlay:
             return "Paused"
+            
         case .restartQuiz:
             return "Restarting"
+            
         case .loadingQuiz:
             return "Downloading"
+            
+        case .playingSample:
+            return "Sample Quiz"
+            
+        case .donePlayingSample:
+            return "Sample Quiz"
             
         }
     }

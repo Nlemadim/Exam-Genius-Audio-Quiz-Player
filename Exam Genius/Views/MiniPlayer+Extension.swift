@@ -44,7 +44,7 @@ extension MiniPlayerV2 {
             DispatchQueue.main.async {
                 self.configuration = newConfiguration
                 self.currentQuizPackage = quizPackage
-                self.quizQuestionCount = quizPackage.questions.count
+               // self.quizQuestionCount = quizPackage.questions.count
             }
         }
         
