@@ -409,7 +409,6 @@ struct MicButtonWithProgressRing: View {
                     .foregroundColor(.white)
                     .symbolEffect(.pulse, options: .repeating, isActive: showProgressRing)
             }
-            
         }
         .onAppear { startFilling() }
     }

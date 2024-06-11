@@ -18,93 +18,103 @@ class NetworkService {
     var updateNetworkStatus: ((NetworkStatus) -> Void)?
     
     func fetchTopics(context: String) async throws -> [String] {
-            // Indicate that fetching topics has started
-            updateNetworkStatus?(.fetchingTopics)
+        // Indicate that fetching topics has started
+        updateNetworkStatus?(.fetchingTopics)
 
-            //base URL
-            let baseUrl = Config.topicRequestURL
-            guard var urlComponents = URLComponents(string: baseUrl) else {
-                updateNetworkStatus?(.errorDownloadingContent("Invalid URL"))
-                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-            }
-
-            urlComponents.queryItems = [URLQueryItem(name: "context", value: context)]
-
-            guard let url = urlComponents.url else {
-                updateNetworkStatus?(.errorDownloadingContent("Failed to construct URL"))
-                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to construct URL"])
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-
-            do {
-                let (data, response) = try await URLSession.shared.data(for: request)
-
-                if let httpResponse = response as? HTTPURLResponse, let rawResponse = String(data: data, encoding: .utf8) {
-                    print("Response HTTP Status code: \(httpResponse.statusCode)")
-                    print("Raw server response: \(rawResponse)")
-                }
-
-                let jsonResponse = try JSONDecoder().decode([String: [String]].self, from: data)
-                guard let topics = jsonResponse["topics"] else {
-                    updateNetworkStatus?(.errorDownloadingContent("Key 'topics' not found in response"))
-                    throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Key 'topics' not found in response"])
-                }
-
-                // Indicate that fetching topics has finished
-                updateNetworkStatus?(.downloaded) // Consider adding a new case for successful completion if needed
-
-                return topics
-            } catch {
-                updateNetworkStatus?(.errorDownloadingContent(error.localizedDescription))
-                throw error
-            }
+        // Base URL
+        let baseUrl = Config.topicRequestURL
+        guard var urlComponents = URLComponents(string: baseUrl) else {
+            updateNetworkStatus?(.errorDownloadingContent("Invalid URL"))
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
         }
 
-//    func fetchQuestions(examName: String, topics: [String], number: Int) async throws -> [QuestionResponse] {
-//        var questionResponses: [QuestionResponse] = []
+        urlComponents.queryItems = [URLQueryItem(name: "context", value: context)]
+
+        guard let url = urlComponents.url else {
+            updateNetworkStatus?(.errorDownloadingContent("Failed to construct URL"))
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to construct URL"])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200 {
+                    let errorMessage = "HTTP Error: \(httpResponse.statusCode)"
+                    print(errorMessage)
+                    print("Raw server response: \(String(data: data, encoding: .utf8) ?? "No response body")")
+                    updateNetworkStatus?(.errorDownloadingContent(errorMessage))
+                    throw NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                }
+                print("Response HTTP Status code: \(httpResponse.statusCode)")
+                print("Raw server response: \(String(data: data, encoding: .utf8) ?? "No response body")")
+            }
+
+            let jsonResponse = try JSONDecoder().decode([String: [String]].self, from: data)
+            
+            guard let topics = jsonResponse["topics"] else {
+                let errorMessage = "Key 'topics' not found in response"
+                updateNetworkStatus?(.errorDownloadingContent(errorMessage))
+                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+            }
+
+            // Indicate that fetching topics has finished
+            updateNetworkStatus?(.downloaded)
+
+            return topics
+        } catch {
+            updateNetworkStatus?(.errorDownloadingContent(error.localizedDescription))
+            throw error
+        }
+    }
+
+//    func fetchTopics(context: String) async throws -> [String] {
+//            // Indicate that fetching topics has started
+//            updateNetworkStatus?(.fetchingTopics)
 //
-//        let baseUrl = Config.questionsRequestURL
-//        let session = URLSession.shared
-//
-//        for topic in topics {
-//            var urlComponents = URLComponents(string: baseUrl)!
-//            // Adjusting the query parameter keys according to the backend expectations
-//            urlComponents.queryItems = [
-//                URLQueryItem(name: "nameValue", value: examName),
-//                URLQueryItem(name: "topicValue", value: topic),
-//                URLQueryItem(name: "numberValue", value: String(number))
-//            ]
-//
-//            guard let url = urlComponents.url else {
-//                throw URLError(.badURL)
+//            //base URL
+//            let baseUrl = Config.topicRequestURL
+//            guard var urlComponents = URLComponents(string: baseUrl) else {
+//                updateNetworkStatus?(.errorDownloadingContent("Invalid URL"))
+//                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
 //            }
 //
-//            print("Requesting URL: \(url.absoluteString)") // Print the URL being requested
+//            urlComponents.queryItems = [URLQueryItem(name: "context", value: context)]
+//
+//            guard let url = urlComponents.url else {
+//                updateNetworkStatus?(.errorDownloadingContent("Failed to construct URL"))
+//                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to construct URL"])
+//            }
+//
+//            var request = URLRequest(url: url)
+//            request.httpMethod = "GET"
 //
 //            do {
-//                let (data, response) = try await session.data(from: url)
-//                
-//                // Debugging: Print the raw response string
-//                if let rawResponseString = String(data: data, encoding: .utf8) {
-//                    print("Raw Response: \(rawResponseString)")
+//                let (data, response) = try await URLSession.shared.data(for: request)
+//
+//                if let httpResponse = response as? HTTPURLResponse, let rawResponse = String(data: data, encoding: .utf8) {
+//                    print("Response HTTP Status code: \(httpResponse.statusCode)")
+//                    print("Raw server response: \(rawResponse)")
 //                }
 //
-//                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-//                    throw URLError(.badServerResponse)
+//                let jsonResponse = try JSONDecoder().decode([String: [String]].self, from: data)
+//                guard let topics = jsonResponse["topics"] else {
+//                    updateNetworkStatus?(.errorDownloadingContent("Key 'topics' not found in response"))
+//                    throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Key 'topics' not found in response"])
 //                }
-//                
-//                let jsonResponse = try JSONDecoder().decode(QuestionResponse.self, from: data)
-//                questionResponses.append(jsonResponse)
+//
+//                // Indicate that fetching topics has finished
+//                updateNetworkStatus?(.downloaded) // Consider adding a new case for successful completion if needed
+//
+//                return topics
 //            } catch {
-//                print("Request to \(url.absoluteString) failed with error: \(error)")
+//                updateNetworkStatus?(.errorDownloadingContent(error.localizedDescription))
 //                throw error
 //            }
 //        }
-//
-//        return questionResponses
-//    }
     
     func fetchAudioData(content: String) async throws -> Data {
         print("Network Service is Fetching Audio data")
@@ -140,42 +150,6 @@ class NetworkService {
         }
         
         return decodedData
-    }
-    
-    func fetchImage(for quizName: String, retryCount: Int = 0) async throws -> String {
-        print("Calling Network")
-        var components = URLComponents(string: Config.imageRequestURL)
-        components?.queryItems = [URLQueryItem(name: "examName", value: quizName)]
-        
-        guard let apiURL = components?.url else {
-            throw NSError(domain: "NetworkService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-        }
-        
-        var request = URLRequest(url: apiURL)
-        request.httpMethod = "GET"
-        
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                throw NSError(domain: "NetworkService", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch image with status code \(statusCode)"])
-            }
-            
-            guard let imageB64 = String(data: data, encoding: .utf8) else {
-                throw NSError(domain: "NetworkService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to decode response"])
-            }
-            
-            return imageB64
-        } catch let error as NSError {
-            if error.code == 429, retryCount < 3 { // Example retry logic for HTTP 429 errors
-                let retryDelay = pow(2.0, Double(retryCount)) // Exponential backoff
-                print("Retrying in \(retryDelay) seconds...")
-                try await Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
-                return try await fetchImage(for: quizName, retryCount: retryCount + 1)
-            } else {
-                throw error
-            }
-        }
     }
     
     func fetchQuestionData(examName: String, topics: [String], number: Int) async throws -> [QuestionDataObject] {

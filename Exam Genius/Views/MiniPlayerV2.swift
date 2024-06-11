@@ -14,6 +14,7 @@ struct MiniPlayerV2: View {
     @EnvironmentObject var user: User
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
+    @EnvironmentObject var errorManager: ErrorManager
     
     @State var questionTranscript: String = ""
     @State var interactionFeedbackMessage: String = ""
@@ -67,9 +68,11 @@ struct MiniPlayerV2: View {
         HStack(spacing: 10) {
             playerThumbnail
             VStack(alignment: .leading, spacing: 4) {
-                playerDetails
-                currentQuizStatus
-                currentQuestionNumber
+                Group {
+                    playerDetails
+                    //currentQuizStatus
+                    currentQuestionNumber
+                }
             }
             .padding(.top, 20)
             
@@ -187,7 +190,7 @@ struct MiniPlayerV2: View {
     }
 
     private var playerDetails: some View {
-        Text(user.downloadedQuiz?.shortTitle ?? "Selected A Quiz".uppercased())
+        Text(user.downloadedQuiz?.shortTitle.uppercased() ?? "Not Playing")
             .font(.footnote)
             .foregroundStyle(.white)
             .fontWeight(.bold)
@@ -505,7 +508,7 @@ extension MiniPlayerV2 {
     
     //Mark: Redundant Method
     func fetchQuizReview(review readOut: String) async -> String {
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared, errorManager: errorManager)
         //let questions = audioQuiz.questions
         let readOutUrl = await contentBuilder.downloadReadOut(readOut: readOut) ?? ""
         

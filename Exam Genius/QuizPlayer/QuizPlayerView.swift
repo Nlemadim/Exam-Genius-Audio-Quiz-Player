@@ -14,6 +14,7 @@ struct QuizPlayerView: View {
     
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var errorManager: ErrorManager
     
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @StateObject private var generator = ColorGenerator()
@@ -141,20 +142,21 @@ struct QuizPlayerView: View {
                 }
             }
             .onAppear {
-                print(quizName)
-                print("Current default question count: \(questionCount)")
-                print(user.downloadedQuiz?.questions.count ?? 0)
                 self.selectedTab = selectedTab
-                getQuizDetails()
-                hasPlayedSample = UserDefaultsManager.hasDownloadedSample(for: self.quizName) ?? false
-                self.hasFullVersion = UserDefaultsManager.hasFullVersion(for: self.quizName) ?? false
-                //checkQuizPacketStatus()
+                checkFullVersionAvailability()
                 refreshQuizQuestions()
                 filterPerformanceCollection()
                 generator.updateAllColors(fromImageNamed: user.downloadedQuiz?.quizImage ?? "Logo")
                 
                 print(user.downloadedQuiz?.questions.count ?? 0)
+                print("User has been selected: \(user.downloadedQuiz != nil)")
                 print("QuizPlayer audioQuiz property has \(self.audioQuiz?.questions.count ?? 0)")
+                print("Selected Quiz name: \(quizName)")
+                print("Current default question count: \(questionCount)")
+                print("Current quiz is full version: \(presentFullVersionModal)")
+                print("Current quiz has Played Sample: \(hasPlayedSample)")
+                print("Current quiz has Played Sample: \(hasFullVersion)")
+                print(user.downloadedQuiz?.questions.count ?? 0)
                 
             }
             .onChange(of: performanceCollection, { _, _ in
@@ -222,35 +224,42 @@ struct QuizPlayerView: View {
         print(filteredPerformance.first?.quizName ?? "Performance record Not found")
     }
     
-    private func getQuizDetails() {
-        guard let currentPackage = audioQuizCollection.first(where: { $0.name == self.quizName }), currentPackage.questions.count < 50 else { return }
-        DispatchQueue.main.async {
-            self.selectedQuizPackage = currentPackage
-            
-            if !hasFullVersion {
-                self.presentFullVersionModal = true
-            }
-        }
-    }
-    
+   
     
     private func reloadQuizQuestions() async {
+        guard user.downloadedQuiz != nil else { return }
         guard quizPlayerObserver.playerState == .endedQuiz || quizPlayerObserver.playerState == .idle else { return }
         
-        guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == self.quizName }) else { return }
-        guard let currentAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == self.quizName }) else { return }
+        guard let currentQuizPackage = audioQuizCollection.first(where: { $0.name == user.downloadedQuiz?.quizname ?? "Unknown" }) else { return }
         
+        print(currentQuizPackage.questions.count)
+        
+        guard let currentAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == user.downloadedQuiz?.quizname ?? "Unknown" }) else { return }
+        
+        guard currentQuizPackage.questions.count >= 50 else {
+            DispatchQueue.main.async {
+                self.selectedQuizPackage = currentQuizPackage
+                self.presentFullVersionModal = true
+            }
+            
+            return
+        }
+        
+        //Start New Download
         DispatchQueue.main.async {
             self.interactionState = .isDownloading
             //self.quizPlayerObserver.playerState = .loadingQuiz
         }
         
-        let newQuestions = currentQuizPackage.questions
-        guard !newQuestions.isEmpty else {
-            self.presentFullVersionModal = true
-            return
+        //Reset any existing Questions if any
+        if !currentAudioQuiz.questions.isEmpty {
+            deleteAudioFiles(for: currentAudioQuiz.questions)
+            currentAudioQuiz.questions.forEach { $0.questionAudio = "" }
+            currentQuizPackage.questions.append(contentsOf: currentAudioQuiz.questions)
+            currentAudioQuiz.questions = []
         }
         
+        let newQuestions = currentQuizPackage.questions
         // Filter questions that need to be downloaded
         var questionsToDownload = newQuestions.filter { $0.questionAudio.isEmptyOrWhiteSpace && !$0.isAnswered }
         
@@ -277,7 +286,7 @@ struct QuizPlayerView: View {
         }
         
         // Initialize the content builder and download audio questions
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared, errorManager: errorManager)
         await contentBuilder.downloadAudioQuestions(for: questionsToDownload)
         
         // Update the questions in the current audio quiz
@@ -288,8 +297,6 @@ struct QuizPlayerView: View {
             print("Downloaded questions count:", currentAudioQuiz.questions.count)
         }
     }
-
-
     
     private func syncQuizPlayerState(_ playerState: QuizPlayerState) {
         switch playerState {
@@ -320,11 +327,13 @@ struct QuizPlayerView: View {
     }
     
     private func checkQuizPacketStatus() {
-        guard let quizPacket = audioQuizCollection.first(where: { $0.name == audioQuiz?.quizname ?? "Unknown"}) else { return }
+        guard let quizPacket = audioQuizCollection.first(where: { $0.name == user.downloadedQuiz?.quizname ?? "Unknown"}) else { return }
         print("Check Packet Status Method registers: \(quizPacket.questions.count) Questions")
-        if quizPacket.questions.isEmpty  {
-            self.selectedQuizPackage = quizPacket
-            self.presentFullVersionModal = true
+        if quizPacket.questions.count < 50  {
+            DispatchQueue.main.async {
+                self.selectedQuizPackage = quizPacket
+                self.presentFullVersionModal = true
+            }
         } else {
             refreshQuizQuestions()
         }
@@ -338,19 +347,26 @@ struct QuizPlayerView: View {
         }
     }
     
+    func checkFullVersionAvailability() {
+        if let userQuiz = user.downloadedQuiz {
+            if let currentQuiz = audioQuizCollection.first(where: {$0.name == userQuiz.quizname}), currentQuiz.questions.count >= 50  {
+                UserDefaultsManager.updateHasDownloadedFullVersion(true, for: userQuiz.quizname)
+                self.hasFullVersion = true
+            } else {
+                presentFullVersionModal = true
+            }
+        }
+    }
+    
     private func startPlayer() {
         guard self.quizPlayerObserver.playerState == .endedQuiz || quizPlayerObserver.playerState == .idle || quizPlayerObserver.playerState == .pausedCurrentPlay else {
             return
         }
         
-        guard hasFullVersion == true else {
-            DispatchQueue.main.async {
-                self.presentFullVersionModal = true
-            }
+        guard let quizToPlay = user.downloadedQuiz, quizToPlay.questions.count >= 15 else {
+            refreshQuizQuestions()
             return
         }
-        
-        guard !user.downloadedQuiz.questions.isEmpty else { return }
         
         DispatchQueue.main.async {
             self.interactionState = .isNowPlaying
@@ -415,7 +431,7 @@ struct QuizPlayerView: View {
         let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
         
         for question in questions {
-            let audioFileName = question.questionAudio
+            var audioFileName = question.questionAudio
             if  !audioFileName.isEmptyOrWhiteSpace {
                 let fileURL = documentsDirectory.appendingPathComponent(audioFileName)
                 do {
@@ -464,7 +480,7 @@ struct QuizPlayerView: View {
             self.interactionState = .isDownloading
         }
         
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared, errorManager: errorManager)
         let newDownloadedQuiz = DownloadedAudioQuiz(quizname: package.name, shortTitle: package.acronym, quizImage: package.imageUrl)
         let audioQuestions = package.questions
         

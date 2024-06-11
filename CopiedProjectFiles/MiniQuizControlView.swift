@@ -15,44 +15,37 @@ struct MiniQuizControlView: View {
     @Binding var interactionState: InteractionState
     
     @State private var tappedPlay: Bool = false
+    
+    @State private var isUsingMic: Bool = UserDefaultsManager.isHandfreeEnabled()
+    
     let imageSize: CGFloat = 18
     
     var body: some View {
         HStack(spacing: 20) {
-            // Repeat Button
-//            Button(action: recordAction) {
-//                Image(systemName: "mic.circle")
-//                    .font(.title2)
-//            }
+            VStack(spacing: 4) {
+                Image(systemName: isUsingMic ? "mic.fill" : "mic.slash")
+                    .font(.headline)
+                    .foregroundStyle(isUsingMic ? interactionState == .isListening ? .red : .orange : .gray)
+                    .onTapGesture {
+                        isUsingMic.toggle()
+                    }
+                Text(isUsingMic ? interactionState == .isListening ? "Listening" : "Ready" : "Off")
+                    .font(.footnote)
+            }
+            .offset(y: 5)
             
-            // Play/Pause Button
-            Spacer()
             Button(action: {
                 playPauseAction()
                 tappedPlay.toggle()
-                
             }) {
                 Image(systemName: interactionState == .isNowPlaying || interactionState == .nowPlayingCorrection || interactionState == .playingFeedbackMessage || interactionState == .playingErrorMessage || interactionState == .resumingPlayback ? "pause.fill" : "play.fill")
                     .font(.title)
             }
             .sensoryFeedback(.start, trigger: tappedPlay)
             .disabled(interactionState == .isDownloading)
-        
-            
-            // Next Button
-//            Button(action: nextAction) {
-//                Image(systemName: "forward.end.fill")
-//                    .font(.title2)
-//            }
-//            .sensoryFeedback(.selection, trigger: tappedPlay)
         }
         .foregroundStyle(interactionState == .isDownloading ? .gray : .white)
         .padding(.horizontal)
-//        .onChange(of: interactionState) { _, _ in
-//            if isActivePlay() == false {
-//                tappedPlay = false
-//            }
-//        }
     }
     
     private func isActivePlay() -> Bool {
@@ -64,7 +57,7 @@ struct MiniQuizControlView: View {
 }
 
 #Preview {
-    MiniQuizControlView(recordAction: {}, playPauseAction: {}, nextAction: {}, repeatAction: {}, interactionState: .constant(.idle))
+    MiniQuizControlView(recordAction: {}, playPauseAction: {}, nextAction: {}, repeatAction: {}, interactionState: .constant(.isListening))
         .preferredColorScheme(.dark)
 }
 

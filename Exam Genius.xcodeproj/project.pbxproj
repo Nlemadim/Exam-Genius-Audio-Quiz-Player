@@ -36,6 +36,8 @@
 		0B2E96912B87F1CC001D8D7B /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2E96902B87F1CC001D8D7B /* ColorGenerator.swift */; };
 		0B304AD22BAFBA870004F56F /* QuestionPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B304AD12BAFBA870004F56F /* QuestionPlayer.swift */; };
 		0B304AD42BAFBD720004F56F /* ResponseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B304AD32BAFBD720004F56F /* ResponseListener.swift */; };
+		0B31FB852C1897B200E80506 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B31FB842C1897B200E80506 /* AppError.swift */; };
+		0B31FB872C18B72E00E80506 /* ConnectionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B31FB862C18B72E00E80506 /* ConnectionMonitor.swift */; };
 		0B417E742BDADA7300E02D7F /* PerformanceHistoryGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B417E732BDADA7300E02D7F /* PerformanceHistoryGraph.swift */; };
 		0B417E762BDADA9400E02D7F /* SummaryInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B417E752BDADA9400E02D7F /* SummaryInfoView.swift */; };
 		0B42E3D42B8CFF7900DC3565 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */; };
@@ -181,6 +183,8 @@
 		0B2E96902B87F1CC001D8D7B /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
 		0B304AD12BAFBA870004F56F /* QuestionPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionPlayer.swift; sourceTree = "<group>"; };
 		0B304AD32BAFBD720004F56F /* ResponseListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseListener.swift; sourceTree = "<group>"; };
+		0B31FB842C1897B200E80506 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		0B31FB862C18B72E00E80506 /* ConnectionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionMonitor.swift; sourceTree = "<group>"; };
 		0B417E732BDADA7300E02D7F /* PerformanceHistoryGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceHistoryGraph.swift; sourceTree = "<group>"; };
 		0B417E752BDADA9400E02D7F /* SummaryInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryInfoView.swift; sourceTree = "<group>"; };
 		0B42E3D32B8CFF7800DC3565 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -478,6 +482,8 @@
 				0BB9DE122B865885004F848A /* AppState.swift */,
 				0B493DD52BE12DBD0090A60C /* QuizDataManager.swift */,
 				0BFE305E2BEBDABF00AC18E3 /* QuizDataManager+VoiceFeedback+Extension.swift */,
+				0B31FB842C1897B200E80506 /* AppError.swift */,
+				0B31FB862C18B72E00E80506 /* ConnectionMonitor.swift */,
 			);
 			name = Dependencies;
 			sourceTree = "<group>";
@@ -922,6 +928,7 @@
 				0BBCBFB02B86563E00E9B7A9 /* ContentView.swift in Sources */,
 				0B2E96882B87C85A001D8D7B /* UIExtensions.swift in Sources */,
 				0B2E968C2B87D1A2001D8D7B /* DefaultDatabase.swift in Sources */,
+				0B31FB852C1897B200E80506 /* AppError.swift in Sources */,
 				0B5774092BE2B27900DE2A07 /* WaveGeometry.swift in Sources */,
 				0B072ABD2BFC097B00BD2890 /* VoiceSelectionToggle.swift in Sources */,
 				0B5774072BE2B20200DE2A07 /* SupportLine.swift in Sources */,
@@ -951,6 +958,7 @@
 				0BBD5AF42B8E8371005BD87B /* AudioQuizSearchCollectionView.swift in Sources */,
 				0B4ACD0D2B89A72300377BE7 /* Misc.swift in Sources */,
 				0B0DC87F2BC0843C009F12A6 /* LibraryItemView.swift in Sources */,
+				0B31FB872C18B72E00E80506 /* ConnectionMonitor.swift in Sources */,
 				0B8C9EEF2B9EC3820032AA80 /* QuizView.swift in Sources */,
 				0BE2798E2BBDA16D0006F85B /* MyLibrary.swift in Sources */,
 				0B2A87E92BAE8BF8001571DD /* MicModalView.swift in Sources */,

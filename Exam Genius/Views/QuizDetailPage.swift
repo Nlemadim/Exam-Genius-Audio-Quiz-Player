@@ -13,6 +13,8 @@ struct QuizDetailPage: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
+    @EnvironmentObject var errorManager: ErrorManager
+    @EnvironmentObject var connectionMonitor: ConnectionMonitor
     
     @StateObject private var generator = ColorGenerator()
     @State var quizName = UserDefaultsManager.quizName()
@@ -32,6 +34,7 @@ struct QuizDetailPage: View {
     @State var stillDownloading: Bool = false
     @State var hasDownloadedSample: Bool = false
     @State var hasFullVersion: Bool = false
+    @State var isDownloadingSample:  Bool = false
     
     init(audioQuiz: AudioQuizPackage, selectedTab: Binding<Int>) {
         _audioQuiz = Bindable(wrappedValue: audioQuiz)
@@ -82,9 +85,10 @@ struct QuizDetailPage: View {
                         
                         VStack(alignment: .leading) {
                             
-                            PlaySampleButton(interactionState: .constant(.idle), playAction: {fetchOrPlaySample()})
+                            PlaySampleButton(interactionState: .constant(sampleButtonInteraction()), playAction: { fetchOrPlaySample() })
                                 .padding(.horizontal)
                                 .padding()
+                                .padding(.top)
                                 .hAlign(.center)
                             
                             PlainClearButton(color: interactionState == .isDownloading ? generator.dominantBackgroundColor.opacity(0.4) : generator.dominantBackgroundColor, label: !hasFullVersion ? downloadButtonLabel : "Start Quiz") {
@@ -103,7 +107,7 @@ struct QuizDetailPage: View {
                             })
                         }
                         .padding(.horizontal)
-                        .offset(y: -50)
+                        .offset(y: -40)
                         
                         VStack {
                             
@@ -171,6 +175,16 @@ struct QuizDetailPage: View {
                     })
                 }
             }
+            .toolbar {
+//                ToolbarItem(placement: .principal) {
+//                    if let error = await errorManager.connectionError, error.displayNotification {
+//                        ConnectionErrorView(error: error)
+//                            .opacity(error.displayNotification ? 1.0 : 0.0)
+//                    } else {
+//                        EmptyView()
+//                    }
+//                }
+            }
         }
         .onAppear {
             updateViewColors()
@@ -178,13 +192,45 @@ struct QuizDetailPage: View {
             checkVersionAvailability()
             
         }
+        .alert(item: $errorManager.currentError) { error in
+            Alert(
+                title: Text(error.alertTitle),
+                message: Text(error.localizedDescription),
+                dismissButton: .default(Text("OK")) {
+                    handleAlertAction(for: error)
+                }
+            )
+        }
         .preferredColorScheme(.dark)
+    }
+    
+    private func handleAlertAction(for error: AppError) {
+        switch error {
+        case .downloadError:
+            // Handle retry logic
+            print("Retrying...")
+        
+        default:
+            break
+        }
+        errorManager.clearError()
+    }
+    
+    func sampleButtonInteraction() -> InteractionState {
+        var state: InteractionState = .idle
+        if isDownloadingSample {
+            state = .isDownloading
+            return state
+        }
+        return state
     }
 }
 
 #Preview {
     do {
         let user = User()
+        let monitor = ConnectionMonitor(forTesting: true)
+        let errorManager = ErrorManager()
         let observer = QuizPlayerObserver()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: AudioQuizPackage.self, configurations: config)
@@ -195,6 +241,14 @@ struct QuizDetailPage: View {
             .modelContainer(container)
             .environmentObject(user)
             .environmentObject(observer)
+            .environmentObject(errorManager)
+            .environmentObject(monitor)
+            .onAppear {
+                // Testing Code
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    monitor.simulateDisconnection() // Simulate disconnection after 5 seconds
+                }
+            }
     } catch {
         return Text("Failed to create Preview: \(error.localizedDescription)")
     }
@@ -207,8 +261,16 @@ extension QuizDetailPage {
     func fetchOrPlaySample() {
         if !hasDownloadedSample {
             Task {
-                try await downloadQuickQuiz()
+                do {
+                    try await downloadQuickQuiz()
+                } catch {
+                    DispatchQueue.main.async {
+                        self.errorManager.handleError(.downloadError(description: "Oops! Something went wrong"))
+                        self.isDownloadingSample = false
+                    }
+                }
             }
+            
         }
     }
     
@@ -231,7 +293,14 @@ extension QuizDetailPage {
             }
         } else {
             Task {
-                try await downloadBasicPackage()
+                do {
+                    try await downloadBasicPackage()
+                } catch {
+                    DispatchQueue.main.async {
+                        self.errorManager.handleError(.downloadError(description: "Oops! Something went wrong"))
+                        self.interactionState = .idle
+                    }
+                }
             }
         }
     }
@@ -255,7 +324,6 @@ extension QuizDetailPage {
             DispatchQueue.main.async {
                 self.downloadButtonLabel = "Download Full Version"
                 self.playButtonLabel = "Play Sample"
-                
             }
         }
     }
@@ -282,7 +350,7 @@ extension QuizDetailPage {
         
         
         
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared, errorManager: errorManager)
         let content = try await contentBuilder.buildCompletePackage(examName: audioQuiz.name)
         
         DispatchQueue.main.async {
@@ -290,6 +358,7 @@ extension QuizDetailPage {
             audioQuiz.questions.append(contentsOf: content.questions)
             self.interactionState = .idle
             self.hasFullVersion = true
+            UserDefaultsManager.updateHasDownloadedFullVersion(true, for: audioQuiz.name)
             createNewAudioQuiz(audioQuiz)
             
         }
@@ -305,11 +374,11 @@ extension QuizDetailPage {
         
         DispatchQueue.main.async {
             print("Downloading Quick Quiz")
-            self.interactionState = .isDownloading
+            self.isDownloadingSample = true
         }
         
         let newDownloadedQuiz = DownloadedAudioQuiz(quizname: self.audioQuiz.name, shortTitle: self.audioQuiz.acronym, quizImage: self.audioQuiz.imageUrl)
-        let contentBuilder = ContentBuilder(networkService: NetworkService.shared)
+        let contentBuilder = ContentBuilder(networkService: NetworkService.shared, errorManager: errorManager)
         let content = try await contentBuilder.buildForProd(for: newDownloadedQuiz.quizname)
         
         modelContext.insert(newDownloadedQuiz)
@@ -327,6 +396,7 @@ extension QuizDetailPage {
             print("Saved new downloaded quiz: \(newDownloadedQuiz.quizname)")
             self.interactionState = .idle
             self.hasDownloadedSample = true
+            self.isDownloadingSample = false
             UserDefaultsManager.updateHasDownloadedSample(true, for: "\(newDownloadedQuiz.quizname)")
             //Open QuizPlayer Tab
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -336,7 +406,9 @@ extension QuizDetailPage {
         }
     }
     
-    func createNewAudioQuiz(_ selectedQuizPackage: AudioQuizPackage) {
+    private func createNewAudioQuiz(_ selectedQuizPackage: AudioQuizPackage) {
+        deleteExistingSample(selectedPackageName: selectedQuizPackage.name)
+        
         let newDownloadedQuiz = DownloadedAudioQuiz(quizname: selectedQuizPackage.name, shortTitle: selectedQuizPackage.acronym, quizImage: selectedQuizPackage.imageUrl)
         
         modelContext.insert(newDownloadedQuiz)
@@ -353,12 +425,42 @@ extension QuizDetailPage {
             print("Saved new downloaded quiz after Full Version Download: \(newDownloadedQuiz.quizname)")
             UserDefaultsManager.setQuizName(quizName: newDownloadedQuiz.quizname)
             self.interactionState = .idle
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                self.selectedTab = 1
-//                dismiss()
-//            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.selectedTab = 1
+                dismiss()
+            }
         }
     }
+    
+    private func deleteExistingSample(selectedPackageName: String) {
+        guard let sampleQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == selectedPackageName }) else { return }
+        let audioQuestions = sampleQuiz.questions
+        deleteAudioFiles(for: audioQuestions)
+        modelContext.delete(sampleQuiz)
+    }
+    
+    private func deleteAudioFiles(for questions: [Question]) {
+        let fileManager = FileManager.default
+        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        for question in questions {
+            var audioFileName = question.questionAudio
+            if  !audioFileName.isEmptyOrWhiteSpace {
+                let fileURL = documentsDirectory.appendingPathComponent(audioFileName)
+                do {
+                    try fileManager.removeItem(at: fileURL)
+                    print("Deleted audio file: \(fileURL)")
+                } catch {
+                    print("Error deleting audio file: \(error)")
+                }
+            }
+            
+            //Reset the swift data model property to default
+            audioFileName = ""
+        }
+    }
+    
+    
     
     private func checkSampleAvailability() {
         let sampleAvailable = UserDefaultsManager.hasDownloadedSample(for: self.audioQuiz.name) ?? false

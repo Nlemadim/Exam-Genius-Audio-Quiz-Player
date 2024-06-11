@@ -82,11 +82,13 @@ struct ContentView: View {
     func loadUserMainPackage() {
         let quizTitle = UserDefaultsManager.quizName()
         guard let userPacket = audioQuizCollection.first(where: { $0.name == quizTitle }),
-        !userPacket.questions.isEmpty else {
-            print("Content View did not find quiz package in collection")
+        userPacket.questions.count >= 50 else {
+            print("Content View did not find full version quiz package in collection")
+            UserDefaultsManager.setQuizName(quizName: "")
             user.selectedQuizPackage = nil
             return
         }
+        
         print("Content view has assigned package to user")
         user.selectedQuizPackage = userPacket
         generator.updateAllColors(fromImageNamed: userPacket.name)
@@ -99,8 +101,9 @@ struct ContentView: View {
         let quizTitle = UserDefaultsManager.quizName()
         guard let userAudioQuiz = downloadedAudioQuizCollection.first(where: { $0.quizname == quizTitle }),
         
-        !userAudioQuiz.questions.isEmpty else {
-            print("Content View did not find downloaded quiz in collection")
+        userAudioQuiz.questions.count >= 15 else {
+            print("Content View did not find Minimum version audio quiz in collection")
+           // print("Current downloaded quiz has: \(userAudioQuiz.questions.count) Qestions")
             user.downloadedQuiz = nil
             return
         }
@@ -110,20 +113,27 @@ struct ContentView: View {
     }
 }
 
+
+
 #Preview {
     let user = User()
     let appState = AppState()
     let observer = QuizPlayerObserver()
     let presentMgr = QuizViewPresentationManager()
+    let errorManager = ErrorManager()
+    let monitor = ConnectionMonitor()
+    
     return ContentView()
         .environmentObject(user)
         .environmentObject(appState)
         .environmentObject(observer)
         .environmentObject(presentMgr)
+        .environmentObject(errorManager)
+        .environmentObject(monitor)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self], inMemory: true)
-    
 }
+
 
 
 /*@Environment(\.scenePhase) var scenePhase

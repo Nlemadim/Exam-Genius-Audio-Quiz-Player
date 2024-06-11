@@ -28,63 +28,109 @@ class ContentBuilder {
     
     var temporaryQuestionContent = [Question]()
     
-    private let networkService: NetworkService // Assuming this is your networking layer
+    private let networkService: NetworkService
+    private let errorManager: ErrorManager?
     
-    init(networkService: NetworkService) {
+//    init(networkService: NetworkService) {
+//        self.networkService = networkService
+//    }
+    
+    init(networkService: NetworkService, errorManager: ErrorManager) {
         self.networkService = networkService
+        self.errorManager = errorManager
     }
-
+    
     func buildForProd(for examName: String) async throws -> Container {
         print("Building test Content")
-        try await buildTopics(examName: examName)
-        try await buildQuestionsProdEnv(examName: examName)
-        await buildAudioQuestionsV2()
-
-        return container
+        do {
+            try await buildTopics(examName: examName)
+            try await buildQuestionsProdEnv(examName: examName)
+            await buildAudioQuestionsV2()
+            return container
+        } catch {
+            await errorManager?.handleError(.downloadError(description: "Failed to build for prod"))
+            throw error
+        }
     }
+
+//    func buildForProd(for examName: String) async throws -> Container {
+//        print("Building test Content")
+//        try await buildTopics(examName: examName)
+//        try await buildQuestionsProdEnv(examName: examName)
+//        await buildAudioQuestionsV2()
+//
+//        return container
+//    }
+    
+//    private func buildTopics(examName: String) async throws {
+//        //MARK: Create Topics for Content
+//        let topics = try await networkService.fetchTopics(context: examName)
+//        
+//        guard topics.count >= 3 else {
+//            throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
+//        }
+//        
+//        topics.forEach { topic in
+//            let containerTopic = Topic(name: topic)
+//            container.topics.append(containerTopic)
+//            
+//        }
+//    }
     
     private func buildTopics(examName: String) async throws {
-        //MARK: Create Topics for Content
-        let topics = try await networkService.fetchTopics(context: examName)
-        
-        guard topics.count >= 3 else {
-            throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
-        }
-        
-        topics.forEach { topic in
-            let containerTopic = Topic(name: topic)
-            container.topics.append(containerTopic)
+        // MARK: Create Topics for Content
+        do {
+            let topics = try await networkService.fetchTopics(context: examName)
             
+            guard topics.count >= 3 else {
+                let errorDescription = "Not enough topics returned from the server."
+                await self.errorManager?.handleError(.downloadError(description: errorDescription))
+                throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: errorDescription])
+            }
+            
+            topics.forEach { topic in
+                let containerTopic = Topic(name: topic)
+                container.topics.append(containerTopic)
+            }
+        } catch {
+            await self.errorManager?.handleError(.downloadError(description: "Failed to build topics"))
+            throw error
         }
     }
-
-    
     
     private func buildQuestionsProdEnv(examName: String) async throws {
-        guard self.container.topics.count >= 3 else {
-            throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
-        }
-        //MARK: Using RandonmTopics for example Quiz demo
-        let randomTopics = container.topics.shuffled().prefix(1)
-        let questionTopics = randomTopics.map{ $0.name }
-        
-        let questionDataObject = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 1)
-        print("Content Builder Data recieved from network Service: \(questionDataObject)")
-        
-        questionDataObject.forEach { questionDataObject in
-            questionDataObject.questions.forEach { questionData in
-                let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
+            guard self.container.topics.count >= 3 else {
+                let errorDescription = "Not enough topics returned from the server."
+                await self.errorManager?.handleError(.downloadError(description: errorDescription))
+                throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: errorDescription])
+            }
+            // MARK: Using Random Topics for example Quiz demo
+            let randomTopics = container.topics.shuffled().prefix(1)
+            let questionTopics = randomTopics.map { $0.name }
+            
+            do {
+                let questionDataObject = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 1)
+                print("Content Builder Data received from network Service: \(questionDataObject)")
                 
-                let newContainerQuestion = Question(id: UUID())
-                newContainerQuestion.questionContent = questionData.question
-                newContainerQuestion.options = optionsArray
-                newContainerQuestion.correctOption = questionData.correctOption
-                newContainerQuestion.questionNote = questionData.overview
-                
-                temporaryQuestionContent.append(newContainerQuestion)
+                questionDataObject.forEach { questionDataObject in
+                    questionDataObject.questions.forEach { questionData in
+                        let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
+                        
+                        let newContainerQuestion = Question(id: UUID())
+                        newContainerQuestion.questionContent = questionData.question
+                        newContainerQuestion.options = optionsArray
+                        newContainerQuestion.correctOption = questionData.correctOption
+                        newContainerQuestion.questionNote = questionData.overview
+                        
+                        temporaryQuestionContent.append(newContainerQuestion)
+                    }
+                }
+            } catch {
+                print("Failed to build questions for prod env: \(error)")
+                await self.errorManager?.handleError(.downloadError(description: "Failed to build questions for prod env"))
+                throw error
             }
         }
-    }
     
     private func buildAudioQuestionsV2() async {
         await withTaskGroup(of: Void.self) { group in
@@ -94,24 +140,83 @@ class ContentBuilder {
                     let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
                     let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
                     
-                    let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
-                    let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut) ?? ""
-                    
-                    let finishedQuestion = Question(id: UUID())
-                    finishedQuestion.questionContent = question.questionContent
-                    finishedQuestion.topic = question.topic
-                    finishedQuestion.options = question.options
-                    finishedQuestion.correctOption = question.correctOption
-                    finishedQuestion.questionAudio = audioUrl
-                    finishedQuestion.questionNoteAudio = questionNoteAudioUrl
-                    
-                    // Safely append to builtQuestions
-                    self.container.questions.append(finishedQuestion)
-                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+                    do {
+                        let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
+                        let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut) ?? ""
+                        
+                        let finishedQuestion = Question(id: UUID())
+                        finishedQuestion.questionContent = question.questionContent
+                        finishedQuestion.topic = question.topic
+                        finishedQuestion.options = question.options
+                        finishedQuestion.correctOption = question.correctOption
+                        finishedQuestion.questionAudio = audioUrl
+                        finishedQuestion.questionNoteAudio = questionNoteAudioUrl
+                        
+                        // Safely append to builtQuestions
+                        DispatchQueue.main.async {
+                            self.container.questions.append(finishedQuestion)
+                            print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+                        }
+                    }
                 }
             }
         }
     }
+
+    
+    
+//    private func buildQuestionsProdEnv(examName: String) async throws {
+//        guard self.container.topics.count >= 3 else {
+//            throw NSError(domain: "ContentBuilder", code: 1, userInfo: [NSLocalizedDescriptionKey: "Not enough topics returned from the server."])
+//        }
+//        //MARK: Using RandonmTopics for example Quiz demo
+//        let randomTopics = container.topics.shuffled().prefix(1)
+//        let questionTopics = randomTopics.map{ $0.name }
+//        
+//        let questionDataObject = try await networkService.fetchQuestionData(examName: examName, topics: questionTopics, number: 1)
+//        print("Content Builder Data recieved from network Service: \(questionDataObject)")
+//        
+//        questionDataObject.forEach { questionDataObject in
+//            questionDataObject.questions.forEach { questionData in
+//                let optionsArray = [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d]
+//                
+//                let newContainerQuestion = Question(id: UUID())
+//                newContainerQuestion.questionContent = questionData.question
+//                newContainerQuestion.options = optionsArray
+//                newContainerQuestion.correctOption = questionData.correctOption
+//                newContainerQuestion.questionNote = questionData.overview
+//                
+//                temporaryQuestionContent.append(newContainerQuestion)
+//            }
+//        }
+//    }
+    
+//    private func buildAudioQuestionsV2() async {
+//        await withTaskGroup(of: Void.self) { group in
+//            for (index, question) in temporaryQuestionContent.enumerated() {
+//                group.addTask {
+//                    let context = self.determineContext(for: index, totalCount: self.temporaryQuestionContent.count)
+//                    let readOut = self.formatQuestionForReadOut(questionContent: question.questionContent, options: question.options, context: context)
+//                    let overViewReadOut = self.formatOverviewForReadout(overviewString: question.questionNote)
+//                    
+//                    let audioUrl = await self.downloadReadOut(readOut: readOut) ?? ""
+//                    let questionNoteAudioUrl = await self.downloadReadOut(readOut: overViewReadOut) ?? ""
+//                    
+//                    let finishedQuestion = Question(id: UUID())
+//                    finishedQuestion.questionContent = question.questionContent
+//                    finishedQuestion.topic = question.topic
+//                    finishedQuestion.options = question.options
+//                    finishedQuestion.correctOption = question.correctOption
+//                    finishedQuestion.questionAudio = audioUrl
+//                    finishedQuestion.questionNoteAudio = questionNoteAudioUrl
+//                    
+//                    // Safely append to builtQuestions
+//                    self.container.questions.append(finishedQuestion)
+//                    print("Content Builder processed: \(self.container.questions.count) Questions with audio files")
+//                }
+//            }
+//        }
+//    }
     
     
     //Modify for determining returning, skipped, modified or new question
@@ -154,7 +259,7 @@ class ContentBuilder {
         
         """
     }
-
+    
     
     func downloadReadOut(readOut: String) async -> String? {
         var fileName: String? = nil
@@ -164,10 +269,14 @@ class ContentBuilder {
                 fileName = savedFileName
                 print("Downloaded and saved audio file name: \(savedFileName)")
             } else {
-                print("Failed to save the audio file.")
+                let errorMessage = "Failed to save the audio file."
+                print(errorMessage)
+                await errorManager?.handleError(.downloadError(description: errorMessage))
             }
         } catch {
-            print("Failed to download audio file: \(error.localizedDescription)")
+            let errorMessage = "Failed to download audio file: \(error.localizedDescription)"
+            print(errorMessage)
+            await errorManager?.handleError(.downloadError(description: errorMessage))
         }
         
         return fileName
@@ -260,6 +369,7 @@ extension ContentBuilder {
                         }
                     } catch {
                         print("Failed to download questions for topic: \(topic.name), error: \(error)")
+                        await self.errorManager?.handleError(.downloadError(description: "Oops something went wrong!"))
                     }
                 }
             }
@@ -267,37 +377,72 @@ extension ContentBuilder {
     }
     
     private func downloadCompleteQuestionsForAllTopics(_ topics: [Topic], examName: String, number: Int) async {
-        await withTaskGroup(of: Void.self) { group in
-            for topic in topics {
-                group.addTask {
-                    do {
-                        let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: number)
-                        // Processing each question data object
-                        questionDataArray.forEach { questionDataObject in
-                            let questions = questionDataObject.questions.map { questionData in
-                                Question(
-                                    id: UUID(),
-                                    topic: topic.name,
-                                    questionContent: questionData.question,
-                                    options: [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d],
-                                    correctOption: questionData.correctOption,
-                                    questionNote: questionData.overview
-                                )
+            await withTaskGroup(of: Void.self) { group in
+                for topic in topics {
+                    group.addTask {
+                        do {
+                            let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: number)
+                            // Processing each question data object
+                            questionDataArray.forEach { questionDataObject in
+                                let questions = questionDataObject.questions.map { questionData in
+                                    Question(
+                                        id: UUID(),
+                                        topic: topic.name,
+                                        questionContent: questionData.question,
+                                        options: [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d],
+                                        correctOption: questionData.correctOption,
+                                        questionNote: questionData.overview
+                                    )
+                                }
+                                
+                                DispatchQueue.main.async {
+                                    // Append directly to the container questions
+                                    self.container.questions.append(contentsOf: questions)
+                                    print("Downloaded questions for topic: \(topic.name)")
+                                }
                             }
-                            
-                            DispatchQueue.main.async {
-                                // Append directly to the container questions
-                                self.container.questions.append(contentsOf: questions)
-                                print("Downloaded questions for topic: \(topic.name)")
-                            }
+                        } catch {
+                            print("Failed to download questions for topic: \(topic.name), error: \(error)")
+                            await self.errorManager?.handleError(.downloadError(description: "Oops something went wrong!"))
                         }
-                    } catch {
-                        print("Failed to download questions for topic: \(topic.name), error: \(error)")
                     }
                 }
             }
         }
-    }
+    
+    
+//    private func downloadCompleteQuestionsForAllTopics(_ topics: [Topic], examName: String, number: Int) async {
+//        await withTaskGroup(of: Void.self) { group in
+//            for topic in topics {
+//                group.addTask {
+//                    do {
+//                        let questionDataArray = try await self.networkService.fetchQuestionData(examName: examName, topics: [topic.name], number: number)
+//                        // Processing each question data object
+//                        questionDataArray.forEach { questionDataObject in
+//                            let questions = questionDataObject.questions.map { questionData in
+//                                Question(
+//                                    id: UUID(),
+//                                    topic: topic.name,
+//                                    questionContent: questionData.question,
+//                                    options: [questionData.options.a, questionData.options.b, questionData.options.c, questionData.options.d],
+//                                    correctOption: questionData.correctOption,
+//                                    questionNote: questionData.overview
+//                                )
+//                            }
+//                            
+//                            DispatchQueue.main.async {
+//                                // Append directly to the container questions
+//                                self.container.questions.append(contentsOf: questions)
+//                                print("Downloaded questions for topic: \(topic.name)")
+//                            }
+//                        }
+//                    } catch {
+//                        print("Failed to download questions for topic: \(topic.name), error: \(error)")
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     
     func downloadAllFeedbackAudio(for voiceFeedback: VoiceFeedbackContainer) async -> VoiceFeedbackContainer {

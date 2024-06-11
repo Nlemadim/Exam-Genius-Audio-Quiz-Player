@@ -15,6 +15,8 @@ struct HomePage: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
+    @EnvironmentObject var errorManager: ErrorManager
+    @EnvironmentObject var connectionMonitor: ConnectionMonitor
     
     let quizPlayerObserverV2 = QuizPlayerObserverV2()
     
@@ -56,6 +58,7 @@ struct HomePage: View {
     @State var goToLibrary: Bool = false
     @State var downloadFullPackage: Bool = false
     @State var isPlaying: Bool = false
+    @State var presentFullVersionModal: Bool = false
     
     @State var bottomSheetOffset = -UIScreen.main.bounds.width
     @State var selectedTab = 0
@@ -83,10 +86,12 @@ struct HomePage: View {
                             
                             HorizontalQuizListView(quizzes: topColledgeCollection, title: "Most popular in the U.S", tapAction: { quiz in
                                 selectedQuizPackage = quiz
+                               
                             })
                             
                             HorizontalQuizListView(quizzes: topProCollection, title: "Top Professional Certifications", tapAction: { quiz in
                                 selectedQuizPackage = quiz
+                                
                             })
                             
                             HorizontalQuizListView(quizzes: cultureAndSociety, title: "Culture And Society", subtitle: "Discover the History, Literature, Innovation of Cultures and Societies Worldwide", tapAction: { quiz in
@@ -115,6 +120,16 @@ struct HomePage: View {
                             .kerning(-0.5)
                             .primaryTextStyleForeground()
                     }
+                    
+                    ToolbarItem(placement: .principal) {
+                        if let error = errorManager.connectionError, error.displayNotification {
+                            ConnectionErrorView(error: error)
+                                .primaryTextStyleForeground()
+                                .opacity(error.displayNotification ? 1.0 : 0.0)
+                        } else {
+                            EmptyView()
+                        }
+                    }
                 }
             }
             /// Hiding tabBar when Sheet is expended
@@ -126,10 +141,17 @@ struct HomePage: View {
                 self.quizPlayerObserver.themeColor = generator.dominantBackgroundColor
                 updateThemeColor()
                 self.themeSubColor = generator.dominantLightToneColor
+                checkUserPacketAvailability()
                 updateCollections()
-               // navigateToPlayer()
                 packetStatusPrintOut()
                 loadUserDetails()
+            }
+            .onChange(of: connectionMonitor.isConnected) {_, isConnected in
+                if isConnected {
+                    errorManager.clearError()
+                } else {
+                    errorManager.handleError(.connectionError(description: ""))
+                }
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, selectedTab: $selectedTab)
@@ -178,6 +200,23 @@ struct HomePage: View {
         .preferredColorScheme(.dark)
     }
     
+    
+    private func checkUserPacketAvailability() {
+        if let userQuiz = user.selectedQuizPackage {
+            print("HomePage has assigned userPacket: \(userQuiz.name)")
+            
+            if let currentQuiz = audioQuizCollection.first(where: {$0.name == userQuiz.name}), currentQuiz.questions.count >= 50  {
+                presentFullVersionModal = false
+                UserDefaultsManager.updateHasDownloadedFullVersion(true, for: userQuiz.name)
+            } else {
+                DispatchQueue.main.async {
+                    self.selectedQuizPackage = userQuiz
+                    presentFullVersionModal = true
+                }
+            }
+        }
+    }
+    
     private func navigateToPlayer() {
         if downloadedAudioQuizCollection.isEmpty {
             return
@@ -222,7 +261,8 @@ struct HomePage: View {
 
 
 #Preview {
-//    let container = DownloadedAudioQuizContainer(name: "California Bar (MBE) California California (MBE) (MBE)", quizImage: "BPTC-Exam")
+    let errorManager = ErrorManager()
+    let monitor = ConnectionMonitor(forTesting: true)
     let user = User()
     let appState = AppState()
     let observer = QuizPlayerObserver()
@@ -232,7 +272,15 @@ struct HomePage: View {
         .environmentObject(appState)
         .environmentObject(observer)
         .environmentObject(presentMgr)
+        .environmentObject(errorManager)
+        .environmentObject(monitor)
         .preferredColorScheme(.dark)
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, VoiceFeedbackMessages.self, DownloadedAudioQuiz.self], inMemory: true)
+        .onAppear {
+            // You can further manipulate the connection status here if needed
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                monitor.simulateDisconnection() // Simulate reconnection after 5 seconds
+            }
+        }
 }
     

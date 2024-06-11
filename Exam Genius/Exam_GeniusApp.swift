@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct Exam_GeniusApp: App {
+    @StateObject private var errorManager = ErrorManager()
+    @StateObject private var connectionMonitor = ConnectionMonitor()
     @StateObject var appState = AppState()
     @StateObject var user = User()
     @StateObject var quizPlayerObserver = QuizPlayerObserver()
@@ -22,6 +24,8 @@ struct Exam_GeniusApp: App {
                 .environmentObject(appState)
                 .environmentObject(quizPlayerObserver)
                 .environmentObject(presentationManager)
+                .environmentObject(errorManager)
+                .environmentObject(connectionMonitor)
                 .preferredColorScheme(.dark)
         }
         .modelContainer(for: [AudioQuizPackage.self, Topic.self, Question.self, PerformanceModel.self, DownloadedAudioQuiz.self, VoiceFeedbackMessages.self])
