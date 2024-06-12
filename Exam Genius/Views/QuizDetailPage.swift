@@ -193,14 +193,35 @@ struct QuizDetailPage: View {
             
         }
         .alert(item: $errorManager.currentError) { error in
-            Alert(
-                title: Text(error.alertTitle),
-                message: Text(error.localizedDescription),
-                dismissButton: .default(Text("OK")) {
-                    handleAlertAction(for: error)
-                }
-            )
+            if hasDownloadedSample {
+                return Alert(
+                    title: Text(error.alertTitle),
+                    message: Text(error.localizedDescription),
+                    dismissButton: .default(Text("Go to QuizPlayer")) {
+                        selectedTab = 1 // Assuming 1 is the tab index for QuizPlayer
+                        errorManager.clearError()
+                        dismiss()
+                    }
+                )
+            } else {
+                return Alert(
+                    title: Text(error.alertTitle),
+                    message: Text(error.localizedDescription),
+                    dismissButton: .default(Text("OK")) {
+                        handleAlertAction(for: error)
+                    }
+                )
+            }
         }
+//        .alert(item: $errorManager.currentError) { error in
+//            Alert(
+//                title: Text(error.alertTitle),
+//                message: Text(error.localizedDescription),
+//                dismissButton: .default(Text("OK")) {
+//                    handleAlertAction(for: error)
+//                }
+//            )
+//        }
         .preferredColorScheme(.dark)
     }
     
@@ -258,21 +279,26 @@ struct QuizDetailPage: View {
 
 extension QuizDetailPage {
     
-    func fetchOrPlaySample() {
-        if !hasDownloadedSample {
-            Task {
-                do {
-                    try await downloadQuickQuiz()
-                } catch {
-                    DispatchQueue.main.async {
-                        self.errorManager.handleError(.downloadError(description: "Oops! Something went wrong"))
-                        self.isDownloadingSample = false
-                    }
+    private func fetchOrPlaySample() {
+        guard !downloadedAudioQuizCollection.contains(where: { $0.quizname == self.audioQuiz.name }) else {
+            hasDownloadedSample = true
+            // Present Go to Library alert
+            errorManager.handleError(.quizContentError(description: "Quiz already downloaded. Go to QuizPlayer."))
+            return
+        }
+        
+        Task {
+            do {
+                try await downloadQuickQuiz()
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorManager.handleError(.downloadError(description: "Oops! Something went wrong"))
+                    self.isDownloadingSample = false
                 }
             }
-            
         }
     }
+
     
     func playQuickQuiz() {
         UserDefaultsManager.enableQandA(true)
@@ -285,6 +311,7 @@ extension QuizDetailPage {
             print("Package Not Found")
             return
         }
+        
         if Fullpacket.questions.count >= 35 {
             DispatchQueue.main.async {
                 UserDefaultsManager.updateHasDownloadedFullVersion(true, for: self.audioQuiz.name)

@@ -15,6 +15,7 @@ struct QuizPlayerView: View {
     @EnvironmentObject var user: User
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var errorManager: ErrorManager
+    @ObservedObject var connectionMonitor = ConnectionMonitor()
     
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @StateObject private var generator = ColorGenerator()
@@ -107,11 +108,7 @@ struct QuizPlayerView: View {
                         
                         NowPlayingView(currentquiz: user.downloadedQuiz, quizPlayerObserver: quizPlayerObserver, generator: generator, questionCount: user.downloadedQuiz?.questions.count ?? 0, currentQuestionIndex: currentQuestionIndex, color: generator.dominantLightToneColor, interactionState: $interactionState, isDownloading: $isDownloading, playAction: {
                             startPlayer()
-//                            if self.quizPlayerObserver.playerState == .endedQuiz || quizPlayerObserver.playerState == .idle {
-//                               
-//                            } else {
-//                                self.quizPlayerObserver.playerState = .restartQuiz
-//                            }
+
                         })
                     }
                     .padding()
@@ -180,18 +177,14 @@ struct QuizPlayerView: View {
                 refreshQuizQuestions()
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-
-                    NavigationLink(destination: QuizPlayerSettingsMenu()) {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 20.0)
-                    }
+                ToolbarItem(placement: .principal) {
+                    ConnectionErrorText(errorMessage: "No internet connection")
+                        .opacity(!connectionMonitor.isConnected ? 1 : 0)
                 }
                 
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: QuizPlayerSettingsMenu()) {
-                        Image(systemName: "slider.horizontal.3")
+                        Image(systemName: "gearshape.fill")
                             .foregroundStyle(.white)
                             .padding(.horizontal, 20.0)
                     }

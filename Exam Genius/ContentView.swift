@@ -17,6 +17,7 @@ struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @StateObject private var generator = ColorGenerator()
     let quizDataManager = QuizDataManager()
+    @ObservedObject var connectionMonitor = ConnectionMonitor()
     
     
     @Query(sort: \AudioQuizPackage.name) var audioQuizCollection: [AudioQuizPackage]
@@ -44,7 +45,7 @@ struct ContentView: View {
         }
         .task {
             await loadMainDefaultCollection()
-            await loadMainVoiceFeedBackMessages()
+           // await loadMainVoiceFeedBackMessages()
         }
         .onAppear {
             UserDefaultsManager.setDefaultNumberOfTestQuestions(15)

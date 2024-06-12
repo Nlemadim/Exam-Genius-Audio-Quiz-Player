@@ -22,27 +22,50 @@ struct MiniQuizControlView: View {
     
     var body: some View {
         HStack(spacing: 20) {
-            VStack(spacing: 4) {
-                Image(systemName: isUsingMic ? "mic.fill" : "mic.slash")
-                    .font(.headline)
-                    .foregroundStyle(isUsingMic ? interactionState == .isListening ? .red : .orange : .gray)
-                    .onTapGesture {
-                        isUsingMic.toggle()
-                    }
-                Text(isUsingMic ? interactionState == .isListening ? "Listening" : "Ready" : "Off")
-                    .font(.footnote)
-            }
-            .offset(y: 5)
+//            VStack(spacing: 6) {
+//                //Change to a button
+//                Image(systemName: isUsingMic ? "mic.fill" : "mic.slash")
+//                    .font(.headline)
+//                    .foregroundStyle(isUsingMic ? interactionState == .isListening ? .red : .orange : .gray)
+//                    .onTapGesture {
+//                        provideHapticFeedback()
+//                        isUsingMic.toggle()
+//                    }
+//                Text(isUsingMic ? interactionState == .isListening ? "Listening" : "Ready" : "Off")
+//                    .font(.footnote)
+//                    .padding(.horizontal)
+//            }
+//            .offset(y: 3)
+            
+            Divider()
+                .frame(height: 50)
+                .foregroundStyle(.secondary)
             
             Button(action: {
                 playPauseAction()
+                provideHapticFeedback()
                 tappedPlay.toggle()
             }) {
                 Image(systemName: interactionState == .isNowPlaying || interactionState == .nowPlayingCorrection || interactionState == .playingFeedbackMessage || interactionState == .playingErrorMessage || interactionState == .resumingPlayback ? "pause.fill" : "play.fill")
                     .font(.title)
+                   
+                
             }
-            .sensoryFeedback(.start, trigger: tappedPlay)
             .disabled(interactionState == .isDownloading)
+            
+            Divider()
+                .frame(height: 50)
+                .foregroundStyle(.secondary)
+            
+            
+            Button(action: {
+                provideHapticFeedback()
+               
+            }) {
+                Image(systemName: "stop.fill")
+                    .font(.title)
+                    
+            }
         }
         .foregroundStyle(interactionState == .isDownloading ? .gray : .white)
         .padding(.horizontal)
@@ -52,6 +75,11 @@ struct MiniQuizControlView: View {
         let activeStates: [InteractionState] = [.isNowPlaying, .nowPlayingCorrection, .playingErrorMessage, .playingFeedbackMessage]
         return activeStates.contains(self.interactionState)
         
+    }
+    
+    private func provideHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
     }
     
 }

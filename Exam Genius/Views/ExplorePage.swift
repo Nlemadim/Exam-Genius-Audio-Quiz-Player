@@ -16,6 +16,7 @@ struct ExplorePage: View {
     @Query(sort: \DownloadedAudioQuiz.quizname) var downloadedAudioQuizCollection: [DownloadedAudioQuiz]
     
     @StateObject var audioContentPlayer = AudioContentPlayer()
+    @ObservedObject var connectionMonitor = ConnectionMonitor()
     @State private var quizName = UserDefaultsManager.quizName()
     @State var interactionState: InteractionState = .idle
     @State var selectedQuizPackage: AudioQuizPackage?
@@ -58,6 +59,12 @@ struct ExplorePage: View {
             }
             .navigationTitle("Explore")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    ConnectionErrorText(errorMessage: "No internet connection")
+                        .opacity(!connectionMonitor.isConnected ? 1 : 0)
+                }
+            }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Name, Acronym or Category")
         }
     }

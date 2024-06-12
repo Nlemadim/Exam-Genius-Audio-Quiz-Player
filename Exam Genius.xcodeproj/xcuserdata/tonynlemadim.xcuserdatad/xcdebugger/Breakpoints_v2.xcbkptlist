@@ -56,8 +56,8 @@
             filePath = "Exam Genius/QuizPlayer/QuizPlayerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "242"
-            endingLineNumber = "242"
+            startingLineNumber = "235"
+            endingLineNumber = "235"
             landmarkName = "reloadQuizQuestions()"
             landmarkType = "7">
          </BreakpointContent>
@@ -72,8 +72,8 @@
             filePath = "Exam Genius/QuizPlayer/QuizPlayerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
             landmarkName = "reloadQuizQuestions()"
             landmarkType = "7">
          </BreakpointContent>

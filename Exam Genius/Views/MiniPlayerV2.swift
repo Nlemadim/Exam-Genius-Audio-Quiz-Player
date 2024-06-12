@@ -15,6 +15,7 @@ struct MiniPlayerV2: View {
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     @EnvironmentObject var errorManager: ErrorManager
+    @ObservedObject var connectionMonitor = ConnectionMonitor()
     
     @State var questionTranscript: String = ""
     @State var interactionFeedbackMessage: String = ""
@@ -74,7 +75,7 @@ struct MiniPlayerV2: View {
                     currentQuestionNumber
                 }
             }
-            .padding(.top, 20)
+            .padding(.top, 10)
             
             MiniQuizControlView(
                 recordAction: { self.interactionState = .isListening },
@@ -212,6 +213,21 @@ struct MiniPlayerV2: View {
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
             .opacity(quizPlayerObserver.playerState == .startedPlayingQuiz || quizPlayerObserver.playerState == .pausedCurrentPlay && expandSheet == false ? 1 : 0)
+    }
+    
+    private var connectionErrorView: some View {
+        VStack {
+            Image(systemName: "wifi.slash")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200, height: 200)
+                .foregroundStyle(.black.dynamicTextColor())
+            Text("No internet connection")
+                .font(.system(size: 18))
+                .foregroundStyle(.black.dynamicTextColor())
+                .padding()
+            
+        }
     }
     
     func registerSelectedOptionButton(_ selectedButtonOption: String?) {

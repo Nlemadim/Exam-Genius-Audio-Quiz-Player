@@ -13,6 +13,7 @@ struct FullScreenQuizPlayer2: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var generator = ColorGenerator()
     @ObservedObject var quizSetter: MiniPlayerV2.MiniPlayerV2Configuration
+    @ObservedObject var connectionMonitor = ConnectionMonitor()
     
     @State var questionsComplete: Bool = false
     @State var isMuted: Bool = false
@@ -99,22 +100,23 @@ struct FullScreenQuizPlayer2: View {
                         
                         VStack(alignment: .center) {
                             ZStack{
-                                Text(quizSetter.questionTranscript)
-                                    .fontWeight(.black)
-                                    .multilineTextAlignment(.center)
-                                    .minimumScaleFactor(0.5)
-                                    .kerning(0.3)
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .padding()
-                                    //.opacity(quizSetter.currentScore.isEmptyOrWhiteSpace ? 1 : 0)
-                                
-//                                Text(quizSetter.currentScore)
-//                                    .fontWeight(.black)
-//                                    .multilineTextAlignment(.center)
-//                                    .kerning(0.3)
-//                                    .frame(maxWidth: .infinity, alignment: .center)
-//                                    .padding()
-//                                    .opacity(quizSetter.currentScore.isEmptyOrWhiteSpace ? 0 : 1)
+                                Group {
+                                    if connectionMonitor.isConnected {
+                                        
+                                        Text(quizSetter.questionTranscript)
+                                            .fontWeight(.black)
+                                            .multilineTextAlignment(.center)
+                                            .minimumScaleFactor(0.5)
+                                            .kerning(0.3)
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                            .padding()
+                                        
+                                    } else {
+                                        
+                                        connectionErrorView
+                                        
+                                    }
+                                }
                             }
                         }
                         .frame(maxHeight: .infinity)
@@ -160,6 +162,21 @@ struct FullScreenQuizPlayer2: View {
                 onViewDismiss()
                 
             })
+        }
+    }
+    
+    private var connectionErrorView: some View {
+        VStack {
+            Image(systemName: "wifi.slash")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200, height: 200)
+                .foregroundStyle(.black.dynamicTextColor())
+            Text("No internet connection")
+                .font(.system(size: 18))
+                .foregroundStyle(.black.dynamicTextColor())
+                .padding()
+            
         }
     }
     

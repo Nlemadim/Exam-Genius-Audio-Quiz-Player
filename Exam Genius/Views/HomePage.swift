@@ -16,7 +16,7 @@ struct HomePage: View {
     @EnvironmentObject var quizPlayerObserver: QuizPlayerObserver
     @EnvironmentObject var presentationManager: QuizViewPresentationManager
     @EnvironmentObject var errorManager: ErrorManager
-    @EnvironmentObject var connectionMonitor: ConnectionMonitor
+    @ObservedObject var connectionMonitor = ConnectionMonitor()
     
     let quizPlayerObserverV2 = QuizPlayerObserverV2()
     
@@ -113,22 +113,18 @@ struct HomePage: View {
                         }
                     }
                     
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                    ToolbarItemGroup(placement: .topBarLeading) {
                         Text("VOQA")
                             .font(.title)
                             .fontWeight(.black)
                             .kerning(-0.5)
                             .primaryTextStyleForeground()
+                            
                     }
                     
-                    ToolbarItem(placement: .principal) {
-                        if let error = errorManager.connectionError, error.displayNotification {
-                            ConnectionErrorView(error: error)
-                                .primaryTextStyleForeground()
-                                .opacity(error.displayNotification ? 1.0 : 0.0)
-                        } else {
-                            EmptyView()
-                        }
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        ConnectionErrorText(errorMessage: "No internet connection")
+                            .opacity(!connectionMonitor.isConnected ? 1 : 0)
                     }
                 }
             }
@@ -145,13 +141,6 @@ struct HomePage: View {
                 updateCollections()
                 packetStatusPrintOut()
                 loadUserDetails()
-            }
-            .onChange(of: connectionMonitor.isConnected) {_, isConnected in
-                if isConnected {
-                    errorManager.clearError()
-                } else {
-                    errorManager.handleError(.connectionError(description: ""))
-                }
             }
             .fullScreenCover(item: $selectedQuizPackage) { selectedQuiz in
                 QuizDetailPage(audioQuiz: selectedQuiz, selectedTab: $selectedTab)

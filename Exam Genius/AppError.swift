@@ -121,6 +121,21 @@ struct ConnectionErrorView: View {
     }
 }
 
+struct ConnectionErrorText: View {
+    let errorMessage: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.red)
+            Text(errorMessage)
+                .font(.caption)
+                .foregroundColor(.red)
+        }
+        .padding(.horizontal)
+    }
+}
+
 
 struct ErrorTestView: View {
     @EnvironmentObject var errorManager: ErrorManager
